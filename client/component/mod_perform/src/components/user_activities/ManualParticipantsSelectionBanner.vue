@@ -18,7 +18,7 @@
 
 <template>
   <div class="tui-performManualParticipantSelectionBanner">
-    <ActionCard>
+    <ActionCard :has-shadow="true">
       <template v-slot:card-body>
         <span>{{
           $str(

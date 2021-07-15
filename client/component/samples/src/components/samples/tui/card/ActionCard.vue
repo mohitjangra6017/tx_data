@@ -21,7 +21,7 @@
     A visual UI component
 
     <SamplesExample>
-      <ActionCard :stacked="stacked">
+      <ActionCard :has-shadow="true" :stacked="stacked">
         <template v-slot:card-body>
           <span class="tui-samples--highlight">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

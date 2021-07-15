@@ -18,6 +18,8 @@ information provided here is intended especially for developers.
   * SCSS changes
 * Updated notification banner to provide a slot for custom content
   * Template and SCSS changes
+* Updated ActionCard.vue to accept two additional props, has-shadow property now has to be manually provided and is no longer enabled by default
+  * Template changes
 
 === 14.0 ===
 

@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <ActionCard class="tui-elementResponseReportingActionCard">
+  <ActionCard class="tui-elementResponseReportingActionCard" :has-shadow="true">
     <template v-slot:card-body>
       <span v-html="countString" />
     </template>

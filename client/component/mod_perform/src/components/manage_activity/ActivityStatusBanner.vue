@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <ActionCard>
+  <ActionCard :has-shadow="true">
     <template v-slot:card-body>
       <!-- Draft Message -->
       <template v-if="state === ACTIVITY_STATUS_DRAFT">

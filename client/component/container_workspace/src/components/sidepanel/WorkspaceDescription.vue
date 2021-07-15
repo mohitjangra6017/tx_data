@@ -16,7 +16,7 @@
   @module container_workspace
 -->
 <template>
-  <ActionCard class="tui-workspaceDescription">
+  <ActionCard class="tui-workspaceDescription" :has-shadow="true">
     <div slot="card-body" class="tui-workspaceDescription__body">
       <p class="tui-workspaceDescription__time">
         {{ timeDescription }}

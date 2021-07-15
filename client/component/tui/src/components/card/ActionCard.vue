@@ -20,7 +20,8 @@
   <Card
     class="tui-actionCard"
     :class="[stacked && 'tui-actionCard--stacked']"
-    :has-shadow="true"
+    :has-shadow="hasShadow"
+    :no-border="noBorder"
   >
     <div class="tui-actionCard__body">
       <slot name="card-body" />
@@ -40,6 +41,8 @@ export default {
   },
 
   props: {
+    hasShadow: Boolean,
+    noBorder: Boolean,
     stacked: Boolean,
   },
 };

@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <ActionCard class="tui-instanceInfoCard">
+  <ActionCard class="tui-instanceInfoCard" :has-shadow="true">
     <template v-slot:card-body>
       <div>
         <h3 class="tui-instanceInfoCard__title">
