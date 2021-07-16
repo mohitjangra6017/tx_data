@@ -56,7 +56,8 @@ class company_goal extends formatter {
             'target_date' => date_field_formatter::class,
             'proficiency_expected' => null,
             'full_name' => string_field_formatter::class,
-            'type_id' => null
+            'type_id' => null,
+            'goal_scope' => null,
         ];
     }
 

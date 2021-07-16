@@ -23,6 +23,10 @@
 
 namespace hierarchy_goal\entity;
 
+// Not sure why personal goals require this ...
+require_once("{$CFG->dirroot}/totara/hierarchy/prefix/goal/lib.php");
+
+use goal;
 use core\entity\user;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
@@ -49,9 +53,23 @@ use core\orm\entity\relations\belongs_to;
  * @property-read personal_goal_type $type personal goal type
  * @property-read scale $scale goal scoring scale
  * @property-read scale_value $scale_value goal score
+ * @property-read string $goal_scope
  */
 class personal_goal extends entity {
     public const TABLE = 'goal_personal';
+
+    protected $extra_attributes = [
+        'goal_scope',
+    ];
+
+    /**
+     * Return the goal scope
+     *
+     * @return string
+     */
+    protected function get_goal_scope_attribute() {
+        return goal::GOAL_SCOPE_PERSONAL;
+    }
 
     /**
      * Establishes the relationship with user entities.

@@ -59,7 +59,8 @@ class personal_goal extends formatter {
             'scale_value' => null,
             'deleted' => null,
             'type_id' => null,
-            'visible' => null
+            'visible' => null,
+            'goal_scope' => null,
         ];
     }
 

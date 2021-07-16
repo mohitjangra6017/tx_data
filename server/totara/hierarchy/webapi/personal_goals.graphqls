@@ -39,6 +39,10 @@ type totara_hierarchy_personal_goal {
   Goal status.
   """
   scale_value: totara_hierarchy_goal_scale_value
+  """
+  Goal scope.
+  """
+  goal_scope: totara_hierarchy_goal_scope!
 }
 
 """

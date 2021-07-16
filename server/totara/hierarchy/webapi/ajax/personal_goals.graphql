@@ -7,6 +7,7 @@ query totara_hierarchy_personal_goals(
       user_id
       name
       description
+      goal_scope
       assignment_type {
         type {
           name

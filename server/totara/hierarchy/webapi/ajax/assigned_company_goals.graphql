@@ -10,6 +10,7 @@ query totara_hierarchy_assigned_company_goals(
         full_name
         description
         target_date
+        goal_scope
       }
       assignment_types {
         type {

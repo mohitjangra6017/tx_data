@@ -52,6 +52,9 @@ class goal extends hierarchy {
     const SCOPE_COMPANY = 2;
     const SCOPE_PERSONAL = 1;
 
+    const GOAL_SCOPE_COMPANY = 'COMPANY';
+    const GOAL_SCOPE_PERSONAL = 'PERSONAL';
+
     /**
      * The base table prefix for the class.
      */

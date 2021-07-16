@@ -36,6 +36,10 @@ type totara_hierarchy_company_goal {
   Goal completion target date if any.
   """
   target_date(format: core_date_format = DATE): core_date
+  """
+  Goal scope.
+  """
+  goal_scope: totara_hierarchy_goal_scope!
 }
 
 """

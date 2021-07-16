@@ -141,6 +141,7 @@ class personal_goal_assignment extends goal_assignment_content_type {
                 'id' => $personal_goal->id,
                 'display_name' => $personal_goal_formatter->format('name', self::TEXT_FORMAT),
                 'description' => $personal_goal_formatter->format('description', format::FORMAT_HTML),
+                'goal_scope' => goal::GOAL_SCOPE_PERSONAL,
             ],
             'status' => $goal_status_scale_value
                 ? $this->format_scale_value($goal_status_scale_value)

@@ -146,6 +146,7 @@ class company_goal_assignment extends goal_assignment_content_type {
                 'id' => $company_goal_assignment->id,
                 'display_name' => $company_goal_formatter->format('full_name', self::TEXT_FORMAT),
                 'description' => $company_goal_formatter->format('description', format::FORMAT_HTML),
+                'goal_scope' => goal::GOAL_SCOPE_COMPANY,
             ],
             'status' => $this->format_scale_value($goal_status_scale_value),
             'scale_values' => $this->format_scale_values($goal_status_scale_value->scale),

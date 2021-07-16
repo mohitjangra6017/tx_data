@@ -23,6 +23,7 @@
 
 namespace hierarchy_goal\entity;
 
+use goal;
 use totara_hierarchy\entity\hierarchy_item;
 use core\orm\entity\relations\belongs_to;
 
@@ -47,9 +48,23 @@ use core\orm\entity\relations\belongs_to;
  * @property int $typeid goal type ID
  * @property string $sortthread sort order
  * @property-read company_goal_type $type company goal type
+ * @property-read string $goal_scope
  */
 class company_goal extends hierarchy_item {
     public const TABLE = 'goal';
+
+    protected $extra_attributes = [
+        'goal_scope',
+    ];
+
+    /**
+     * Return the goal scope
+     *
+     * @return string
+     */
+    protected function get_goal_scope_attribute() {
+        return goal::GOAL_SCOPE_COMPANY;
+    }
 
     /**
      * Establishes the relationship with user entities.
@@ -59,4 +74,5 @@ class company_goal extends hierarchy_item {
     public function type(): belongs_to {
         return $this->belongs_to(company_goal_type::class, 'typeid');
     }
+
 }
