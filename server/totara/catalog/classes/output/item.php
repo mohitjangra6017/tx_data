@@ -110,10 +110,16 @@ abstract class item extends template {
         }
 
         $imagedataholderkey = $provider->get_data_holder_config('image');
+        $logodataholderkey = $provider->get_data_holder_config('logo');
         if (!empty($imagedataholderkey) && $config->get_value('image_enabled')) {
             $imagedataholders = $provider->get_dataholders(formatter::TYPE_PLACEHOLDER_IMAGE);
             if (!empty($imagedataholders[$imagedataholderkey])) {
                 $dataholder = $imagedataholders[$imagedataholderkey];
+                $requireddataholders[] = new required_dataholder($dataholder, formatter::TYPE_PLACEHOLDER_IMAGE);
+            }
+
+            if (!empty($imagedataholders[$logodataholderkey])) {
+                $dataholder = $imagedataholders[$logodataholderkey];
                 $requireddataholders[] = new required_dataholder($dataholder, formatter::TYPE_PLACEHOLDER_IMAGE);
             }
         }
@@ -170,6 +176,9 @@ abstract class item extends template {
         if ($data->image_enabled) {
             $imagedataholderkey = $provider->get_data_holder_config('image');
             $data->image = $object->data[formatter::TYPE_PLACEHOLDER_IMAGE][$imagedataholderkey] ?? '';
+
+            $logodataholderkey = $provider->get_data_holder_config('logo');
+            $data->logo = $object->data[formatter::TYPE_PLACEHOLDER_IMAGE][$logodataholderkey] ?? '';
         }
 
         $data->hero_data_text_enabled = false;

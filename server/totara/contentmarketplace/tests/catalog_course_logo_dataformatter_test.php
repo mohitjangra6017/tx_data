@@ -21,28 +21,25 @@
  * @package totara_contentmarketplace
  */
 
-use core\event\course_module_deleted;
+use core_course\totara_catalog\course\dataholder_factory\course_logo;
 use core_phpunit\testcase;
+use totara_contentmarketplace\testing\generator;
 use totara_contentmarketplace\course\course_builder;
 use totara_contentmarketplace\testing\mock\create_course_interactor;
-use totara_contentmarketplace\testing\generator;
 use totara_contentmarketplace\testing\helper;
-use container_course\course;
+use totara_catalog\dataformatter\formatter;
+use totara_contentmarketplace\totara_catalog\course_logo_dataholder_factory;
 
-class totara_contentmarketplace_course_source_testcase extends testcase {
+
+class totara_contentmarketplace_catalog_course_logo_dataformatter_testcase extends testcase {
+
     /**
      * @return void
      */
-    public function test_course_source_created(): void {
-        global $DB;
-
-        $this->setAdminUser();
-        self::assertEquals(
-            0,
-            $DB->count_records('totara_contentmarketplace_course_source')
-        );
-
+    public function test_course_logo_dataformatter(): void {
+        self::setAdminUser();
         $admin = get_admin();
+
         $marketplace_generator = generator::instance();
         $learning_object = $marketplace_generator->create_learning_object('contentmarketplace_linkedin');
 
@@ -51,22 +48,26 @@ class totara_contentmarketplace_course_source_testcase extends testcase {
             helper::get_default_course_category_id(),
             new create_course_interactor($admin->id)
         );
-
         $result = $course_builder->create_course();
-        self::assertTrue($result->is_successful());
 
-        $records = $DB->get_records('totara_contentmarketplace_course_source');
-        self::assertCount(1, $records);
+        $data_holders = course_logo::get_dataholders();
+        $this->assertCount(1, $data_holders);
 
-        $record = reset($records);
-        self::assertEquals($learning_object->get_id(), $record->learning_object_id);
-        self::assertEquals($learning_object::get_marketplace_component(), $record->marketplace_component);
-        self::assertEquals($result->get_course_id(), $record->course_id);
+        $data_holder = current($data_holders);
+        self::assertEquals(course_logo_dataholder_factory::DATAHOLDER_KEY, $data_holder->key);
+        self::assertEquals(course_logo_dataholder_factory::DATAHOLDER_NAME, $data_holder->name);
 
-        // Delete the course
-        $course = course::from_id($result->get_course_id());
-        $course->delete();
-        self::assertFalse($DB->record_exists('course', ['id' => $result->get_course_id()]));
-        self::assertCount(0, $DB->get_records('totara_contentmarketplace_course_source'));
+        $context = context_course::instance($result->get_course_id());
+        $result = $data_holder->get_formatted_value(
+            formatter::TYPE_PLACEHOLDER_IMAGE,
+            [
+                'marketplace_component' => $learning_object::get_marketplace_component(),
+                'learning_object_id' => $learning_object->get_id(),
+            ],
+            $context
+        );
+        self::assertNotEmpty($result);
+        self::assertNotEmpty($result->url);
+        self::assertEquals(get_string('logo_alt',  $learning_object::get_marketplace_component()), $result->alt);
     }
 }

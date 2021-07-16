@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 use container_course\course as container_course;
 use core_course\workflow_manager\coursecreate;
 use totara_catalog\provider;
+use totara_contentmarketplace\totara_catalog\course_logo_dataholder_factory;
 use totara_contentmarketplace\workflow_manager\exploremarketplace;
 use totara_customfield\totara_catalog\dataholder_factory as customfield_dataholder_factory;
 
@@ -104,6 +105,7 @@ class course extends provider {
                 ],
                 'image'       => 'image',
                 'progressbar' => 'progressbar',
+                'logo'        => course_logo_dataholder_factory::get_course_logo_key()
             ];
         }
 

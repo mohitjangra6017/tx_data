@@ -86,6 +86,19 @@ $catalog_item_wide-image_ratio: $catalog_item_wide-image_height / $catalog_item_
         background-size: cover;
         height: 100%;
         width: 100%;
+
+        &_background {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          padding: 8px;
+          background-color: white;
+        }
+
+        &_logo {
+          height: 20px;
+          width: 70px;
+        }
       }
     }
   }

@@ -78,4 +78,15 @@ final class contentmarketplace extends contentmarketplace_parent {
 
         return new moodle_url("/admin/settings.php", ['section' => $section_name]);
     }
+
+    /**
+     * @return string|null
+     */
+    public function get_mini_logo_url(): ?string {
+        global $OUTPUT;
+        return $OUTPUT->image_url(
+            'logo_small_transparent',
+            'contentmarketplace_linkedin',
+        )->out();
+    }
 }

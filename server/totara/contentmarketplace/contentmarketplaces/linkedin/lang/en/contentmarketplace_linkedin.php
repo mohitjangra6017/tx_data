@@ -92,6 +92,7 @@ $string['language_filter_label'] = 'Language';
 $string['learning_objects_group'] = 'Learning objects {$a}';
 $string['learning_object_titles'] = 'titles';
 $string['learning_object_title_list_item'] = '* {$a}';
+$string['logo_alt'] = 'Linkedin Learning\'s logo';
 $string['page_link_placeholder'] = "page link";
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';

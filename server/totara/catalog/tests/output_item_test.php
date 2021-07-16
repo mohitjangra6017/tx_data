@@ -126,6 +126,7 @@ class totara_catalog_output_item_testcase extends advanced_testcase {
                     'url' => 'http://example.com/course/defaultimage.svg',
                     'alt' => 'Test image 1',
                 ],
+            'logo' => null,
             'hero_data_text_enabled' => false,
             'hero_data_icon_enabled' => false,
             'hero_data_type' => 'none',
@@ -179,7 +180,7 @@ class totara_catalog_output_item_testcase extends advanced_testcase {
                 [
                     ['image_enabled' => '0'],
                     ['image_enabled' => false],
-                    ['image'],
+                    ['image', 'logo'],
                 ],
 
                 [

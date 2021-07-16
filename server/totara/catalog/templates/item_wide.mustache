@@ -65,6 +65,8 @@
     * text_placeholders_enabled: bool, has text placeholders
     * title: string, title for item
     * redirecturl: text, url to redirect to on click if details pop-up is disabled
+    * logo -> alt: string, URL alt text
+    * logo -> url: string, URL of image
 
     Example context (json):
     {
@@ -77,6 +79,10 @@
         "image": {
             "url": "http:\/\/localhost\/v12\/learn\/pluginfile.php\/1\/course\/defaultimage\/244323205\/Fallout%20Shelter%20app%20logo.png",
             "alt": "v12"
+        },
+        "logo": {
+            "url": "https://example.com/logo.jpg",
+            "alt": "Linkedin Learning's logo"
         },
         "hero_data_text_enabled": false,
         "hero_data_icon_enabled": true,
@@ -120,7 +126,13 @@
         <div class="tw-catalogItemWide__image">
             <div class="tw-catalogItemWide__image_ratio">
                 {{#image}}{{#url}}
-                    <div class="tw-catalogItemWide__image_ratio_img" style="background-image: url('{{{url}}}')"></div>
+                    <div class="tw-catalogItemWide__image_ratio_img" style="background-image: url('{{{url}}}')">
+                        {{#logo}}
+                            <div class="tw-catalogItemWide__image_ratio_img_background">
+                                <img src="{{{url}}}" alt="{{alt}}" class="tw-catalogItemWide__image_ratio_img_logo">
+                            </div>
+                        {{/logo}}
+                    </div>
                 {{/url}}{{/image}}
             </div>
         </div>

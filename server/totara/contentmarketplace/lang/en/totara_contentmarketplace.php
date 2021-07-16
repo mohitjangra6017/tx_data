@@ -87,6 +87,7 @@ $string['load_more'] = 'Load more';
 $string['loading_details'] = 'Loading details...';
 $string['loading_filters'] = 'Loading filters...';
 $string['loading_search_results'] = 'Loading search results...';
+$string['logo_alt'] = 'Content marketplace logo image';
 $string['manage_available_content'] = 'Manage available content';
 $string['manage_content_marketplaces'] = 'Manage Content Marketplaces';
 $string['messageprovider:notification'] = 'Content marketplace feature notification';

@@ -207,4 +207,20 @@ abstract class contentmarketplace {
         return "content-marketplace://{$this->name}/{$id}";
     }
 
+    /**
+     * By default this function will return null which means that the content marketplace does not have
+     * a logo yet. Override the function to returns the logo url at child plugin info.
+     *
+     * @return string|null
+     */
+    public function get_mini_logo_url(): ?string {
+        global $PAGE;
+        $logo = $this->get_plugin_directory() . '/pix/logo.png';
+
+        if (!file_exists($logo)) {
+            return null;
+        }
+
+        return $PAGE->theme->image_url('logo', $this->get_plugin_name())->out();
+    }
 }
