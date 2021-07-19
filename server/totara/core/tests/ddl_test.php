@@ -1968,7 +1968,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
         $table = new xmldb_table('test_table');
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null);
-        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'suspended']);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'SUSPENDED']);
         $table->add_field('deleted', XMLDB_TYPE_INTEGER, '1', null, null, null, null, null, ['0', '1']);
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
@@ -1995,7 +1995,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'def';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = 0;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2004,7 +2004,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'ghi';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = null;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2060,6 +2060,30 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
             $this->assertInstanceOf(dml_write_exception::class, $e);
         }
         $this->assertCount(3, $DB->get_records('test_table'));
+
+        try {
+            $record = new stdClass();
+            $record->name = 'xyz';
+            $record->status = 'Active';
+            $record->deleted = 1;
+            $DB->insert_record('test_table', $record);
+            $this->fail('Exception expected');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertCount(3, $DB->get_records('test_table'));
+
+        try {
+            $record = new stdClass();
+            $record->name = 'xyz';
+            $record->status = 'suspended';
+            $record->deleted = 1;
+            $DB->insert_record('test_table', $record);
+            $this->fail('Exception expected');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertCount(3, $DB->get_records('test_table'));
     }
 
     public function test_create_table_allowed_values_file() {
@@ -2080,7 +2104,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'def';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = 0;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2089,7 +2113,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'ghi';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = null;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2123,6 +2147,30 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
             $this->assertInstanceOf(dml_write_exception::class, $e);
         }
         $this->assertCount(3, $DB->get_records('test_table'));
+
+        try {
+            $record = new stdClass();
+            $record->name = 'xyz';
+            $record->status = 'Active';
+            $record->deleted = 1;
+            $DB->insert_record('test_table', $record);
+            $this->fail('Exception expected');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertCount(3, $DB->get_records('test_table'));
+
+        try {
+            $record = new stdClass();
+            $record->name = 'xyz';
+            $record->status = 'suspended';
+            $record->deleted = 1;
+            $DB->insert_record('test_table', $record);
+            $this->fail('Exception expected');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertCount(3, $DB->get_records('test_table'));
     }
 
     public function test_add_field_allowed_values() {
@@ -2138,7 +2186,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
         $this->assertTrue($dbman->table_exists('test_table'));
         $this->assertFalse($dbman->field_allowed_values_constraint_exists($table, $table->getField('name')));
 
-        $field = new xmldb_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'suspended']);
+        $field = new xmldb_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'SUSPENDED']);
         $dbman->add_field($table, $field);
         if (!$this->is_mysql57()) {
             $this->assertTrue($dbman->field_allowed_values_constraint_exists($table, $field));
@@ -2165,7 +2213,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'def';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = 0;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2174,7 +2222,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'ghi';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = null;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2208,6 +2256,30 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
             $this->assertInstanceOf(dml_write_exception::class, $e);
         }
         $this->assertCount(3, $DB->get_records('test_table'));
+
+        try {
+            $record = new stdClass();
+            $record->name = 'xyz';
+            $record->status = 'Active';
+            $record->deleted = 1;
+            $DB->insert_record('test_table', $record);
+            $this->fail('Exception expected');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertCount(3, $DB->get_records('test_table'));
+
+        try {
+            $record = new stdClass();
+            $record->name = 'xyz';
+            $record->status = 'suspended';
+            $record->deleted = 1;
+            $DB->insert_record('test_table', $record);
+            $this->fail('Exception expected');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertCount(3, $DB->get_records('test_table'));
     }
 
     public function test_field_remove_allowed_values() {
@@ -2217,7 +2289,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
         $table = new xmldb_table('test_table');
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null);
-        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'suspended']);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'SUSPENDED']);
         $table->add_field('deleted', XMLDB_TYPE_INTEGER, '1', null, null, null, null, null, ['0', '1']);
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
@@ -2268,7 +2340,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
         $this->assertFalse($dbman->field_allowed_values_constraint_exists($table, $table->getField('status')));
         $this->assertFalse($dbman->field_allowed_values_constraint_exists($table, $table->getField('deleted')));
 
-        $field = new xmldb_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'suspended']);
+        $field = new xmldb_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'SUSPENDED']);
         $dbman->change_field_allowed_values($table, $field);
         if (!$this->is_mysql57()) {
             $this->assertTrue($dbman->field_allowed_values_constraint_exists($table, $field));
@@ -2295,7 +2367,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'def';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = 0;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2304,7 +2376,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
 
         $record = new stdClass();
         $record->name = 'ghi';
-        $record->status = 'suspended';
+        $record->status = 'SUSPENDED';
         $record->deleted = null;
 
         $record->id = $DB->insert_record('test_table', $record);
@@ -2347,7 +2419,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
         $table = new xmldb_table('test_table');
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null);
-        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'suspended']);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, ['active', 'SUSPENDED']);
         $table->add_field('deleted', XMLDB_TYPE_INTEGER, '1', null, null, null, null, null, [0, 1]);
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
@@ -2395,7 +2467,7 @@ class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
         try {
             $record = new stdClass();
             $record->name = 'xyz';
-            $record->status = 'suspended';
+            $record->status = 'SUSPENDED';
             $record->deleted = 2;
             $DB->insert_record('test_table', $record);
             $this->fail('Exception expected');
