@@ -71,7 +71,21 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
                 'images' => (object) [],
                 'lastUpdatedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
                 'publishedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
-                'urls' => (object) []
+                'urls' => (object) [],
+                'descriptionIncludingHtml' => (object) [
+                    'value' => /** @lang text */'Hello <i>world</i>',
+                    'locale' => (object) [
+                        'language' => 'en',
+                        'country' => 'US'
+                    ]
+                ],
+                'shortDescription' => (object) [
+                    'value' => 'short description',
+                    'locale' => (object) [
+                        'language' => 'en',
+                        'country' => 'US'
+                    ]
+                ],
             ]
         ];
 
@@ -83,5 +97,20 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
 
         self::assertEquals($time_now, $element->get_last_updated_at()->get_timestamp());
         self::assertEquals($time_now, $element->get_published_at()->get_timestamp());
+
+        self::assertEquals("Hello <i>world</i>", $element->get_description_include_html());
+        self::assertEquals("en_US", $element->get_description_include_html_locale()->__toString());
+
+        self::assertEquals("short description", $element->get_short_description_value());
+        self::assertEquals("en_US", $element->get_short_description_locale()->__toString());
+        self::assertEquals(constants::DIFFICULTY_LEVEL_BEGINNER, $element->get_level());
+
+        self::assertNull($element->get_primary_image_url());
+        self::assertNull($element->get_web_launch_url());
+        self::assertNull($element->get_sso_launch_url());
+
+        self::assertEquals(constants::ASSET_TYPE_COURSE, $element->get_type());
+        self::assertIsArray($element->get_classifications());
+        self::assertEmpty($element->get_classifications());
     }
 }

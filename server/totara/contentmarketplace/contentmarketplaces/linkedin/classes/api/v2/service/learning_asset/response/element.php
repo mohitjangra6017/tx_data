@@ -82,7 +82,7 @@ class element extends base_element {
      * @return timestamp
      */
     public function get_last_updated_at(): timestamp {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         return new timestamp($details->lastUpdatedAt, timestamp::MILLISECONDS);
     }
 
@@ -93,7 +93,7 @@ class element extends base_element {
      * @return timestamp
      */
     public function get_published_at(): timestamp {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         return new timestamp($details->publishedAt, timestamp::MILLISECONDS);
     }
 
@@ -104,7 +104,7 @@ class element extends base_element {
      * @return timestamp|null
      */
     public function get_retired_at(): ?timestamp {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         if (!isset($details->retiredAt)) {
             return null;
         }
@@ -116,7 +116,7 @@ class element extends base_element {
      * @return string|null
      */
     public function get_description_value(): ?string {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         if (!isset($details->description)) {
             return null;
         }
@@ -128,7 +128,7 @@ class element extends base_element {
      * @return locale|null
      */
     public function get_description_locale(): ?locale {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         if (!isset($details->description)) {
             return null;
         }
@@ -141,7 +141,7 @@ class element extends base_element {
      * @return string|null
      */
     public function get_description_include_html(): ?string {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
 
         if (!isset($details->descriptionIncludingHtml)) {
             return null;
@@ -155,7 +155,7 @@ class element extends base_element {
      * @return locale|null
      */
     public function get_description_include_html_locale(): ?locale {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
 
         if (!isset($details->descriptionIncludingHtml)) {
             return null;
@@ -169,7 +169,7 @@ class element extends base_element {
      * @return string|null
      */
     public function get_short_description_value(): ?string {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         if (!isset($details->shortDescription)) {
             return null;
         }
@@ -181,7 +181,7 @@ class element extends base_element {
      * @return locale|null
      */
     public function get_short_description_locale(): ?locale {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         if (!isset($details->shortDescription)) {
             return null;
         }
@@ -194,14 +194,17 @@ class element extends base_element {
      * @return string|null
      */
     public function get_level(): ?string {
-        return $this->json_data->details->level ?? null;
+        $details = $this->get_asset_details();
+        return $details->level ?? null;
     }
 
     /**
      * @return string|null
      */
     public function get_primary_image_url(): ?string {
-        $images = $this->json_data->details->images;
+        $details = $this->get_asset_details();
+        $images = $details->images;
+
         return $images->primary ?? null;
     }
 
@@ -209,7 +212,7 @@ class element extends base_element {
      * @return timespan|null
      */
     public function get_time_to_complete(): ?timespan {
-        $details = $this->json_data->details;
+        $details = $this->get_asset_details();
         if (!isset($details->timeToComplete)) {
             return null;
         }
@@ -222,7 +225,9 @@ class element extends base_element {
      * @return string|null
      */
     public function get_web_launch_url(): ?string {
-        $urls = $this->json_data->details->urls;
+        $details = $this->get_asset_details();
+        $urls = $details->urls;
+
         return $urls->webLaunch ?? null;
     }
 
@@ -230,7 +235,9 @@ class element extends base_element {
      * @return string|null
      */
     public function get_sso_launch_url(): ?string {
-        $urls = $this->json_data->details->urls;
+        $details = $this->get_asset_details();
+        $urls = $details->urls;
+
         return $urls->ssoLaunch ?? null;
     }
 
@@ -245,7 +252,7 @@ class element extends base_element {
      * @return classification_with_path[]
      */
     public function get_classifications(): array {
-        $detail = $this->json_data->details;
+        $detail = $this->get_asset_details();
         if (!isset($detail->classifications)) {
             return [];
         }

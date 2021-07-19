@@ -51,14 +51,4 @@ class content_marketplace extends entity {
      * @var bool
      */
     public const SET_UPDATED_WHEN_CREATED = true;
-
-    /**
-     * Using PHP dark magic to convert boolean-like integer into boolean data type.
-     *
-     * @param bool $value
-     * @return bool
-     */
-    protected function get_completion_on_launch_attribute(bool $value): bool {
-        return $value;
-    }
 }

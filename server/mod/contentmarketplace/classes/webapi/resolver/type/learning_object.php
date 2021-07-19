@@ -29,8 +29,6 @@ use core\webapi\type_resolver;
 use core\webapi\execution_context;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 
-
-
 final class learning_object implements type_resolver {
     /**
      * @param string $field

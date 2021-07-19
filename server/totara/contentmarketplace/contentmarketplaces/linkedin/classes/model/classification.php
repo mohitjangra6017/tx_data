@@ -89,4 +89,27 @@ class classification extends model {
     public function get_children(): collection {
         return $this->entity->children->map_to(self::class);
     }
+
+    /**
+     * Refreshing the entity, with parameter to determine whether should
+     * the refresh also reload the relation or not.
+     *
+     * @param bool $with_relationships
+     * @return $this
+     */
+    public function refresh(bool $with_relationships = false): classification {
+        $this->entity->refresh();
+
+        if ($with_relationships) {
+            if ($this->entity->relation_loaded("children")) {
+                $this->entity->load_relation("children");
+            }
+
+            if ($this->entity->relation_loaded("parents")) {
+                $this->entity->load_relation("parents");
+            }
+        }
+
+        return $this;
+    }
 }

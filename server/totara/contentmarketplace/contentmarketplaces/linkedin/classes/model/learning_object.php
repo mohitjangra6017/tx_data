@@ -269,4 +269,12 @@ class learning_object extends model implements detailed_model {
             return totara_course_is_viewable($course->to_record(), user::logged_in()->id);
         });
     }
+
+    /**
+     * @return learning_object
+     */
+    public function refresh(): learning_object {
+        $this->entity->refresh();
+        return $this;
+    }
 }

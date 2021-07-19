@@ -37,7 +37,7 @@ class learning_objects_selected_filters extends learning_objects_filter_options 
 
     /**
      * learning_objects_selected_filter_labels constructor.
-     * @param int[][] $selected_filters Associative array of filter type => IDs array
+     * @param array $selected_filters Associative array of filter type => IDs array
      */
     public function __construct(array $selected_filters) {
         parent::__construct($selected_filters['language']);

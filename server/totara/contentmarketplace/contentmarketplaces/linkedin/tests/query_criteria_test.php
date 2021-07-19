@@ -233,4 +233,88 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
             $moodle_url->out(false)
         );
     }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_last_modified_after(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url("http://example.com");
+
+        $criteria->set_last_modified_after(1000);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            "http://example.com?q=criteria&assetFilteringCriteria.lastModifiedAfter=1000",
+            $moodle_url->out(false),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_keyword(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url("http://example.com");
+
+        $criteria->set_keyword("help");
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            "http://example.com?q=criteria&assetFilteringCriteria.keyword=help",
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_url_with_include_retired(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url("http://example.com");
+
+        $criteria->set_include_retired(true);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            "http://example.com?q=criteria&assetRetrievalCriteria.includeRetired=true",
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_url_with_expand_depth(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url("http://example.com");
+
+        $criteria->set_expand_depth(2);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            "http://example.com?q=criteria&assetRetrievalCriteria.expandDepth=2",
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_url_with_classifications(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url("http://example.com");
+
+        $criteria->set_classifications(["urn:li:category:251"]);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            sprintf(
+                "http://example.com?q=criteria&assetFilteringCriteria.classifications%s=%s",
+                urlencode("[0]"),
+                urlencode("urn:li:category:251")
+            ),
+            $moodle_url->out(false)
+        );
+    }
 }

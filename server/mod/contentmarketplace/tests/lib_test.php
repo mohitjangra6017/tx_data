@@ -28,8 +28,9 @@ use core_container\entity\module;
 use core_phpunit\testcase;
 use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\entity\content_marketplace;
-use mod_contentmarketplace\entity\content_marketplace as entity;
+use mod_contentmarketplace\model\content_marketplace as model;
 use mod_contentmarketplace\exception\non_exist_learning_object;
+use mod_contentmarketplace\output\content_marketplace_logo;
 use totara_contentmarketplace\testing\generator as totara_content_marketplace_generator;
 
 class mod_contentmarketplace_lib_testcase extends testcase {
@@ -77,11 +78,11 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         $db = builder::get_db();
 
         self::assertTrue($db->record_exists('course_modules', ['id' => $course_module->get_id()]));
-        self::assertTrue($db->record_exists(entity::TABLE, ['id' => $course_module->get_instance()]));
+        self::assertTrue($db->record_exists(content_marketplace::TABLE, ['id' => $course_module->get_instance()]));
 
         self::assertTrue(
             $db->record_exists(
-                entity::TABLE,
+                content_marketplace::TABLE,
                 [
                     'id' => $course_module->get_instance(),
                     'name' => $learning_object->get_name()
@@ -150,10 +151,10 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         $id = contentmarketplace_add_instance($module_info);
         $db = builder::get_db();
 
-        self::assertTrue($db->record_exists(entity::TABLE, ['id' => $id]));
+        self::assertTrue($db->record_exists(content_marketplace::TABLE, ['id' => $id]));
         self::assertTrue(
             $db->record_exists(
-                entity::TABLE,
+                content_marketplace::TABLE,
                 [
                     'id' => $id,
                     'name' => $learning_object->get_name()
@@ -287,5 +288,58 @@ class mod_contentmarketplace_lib_testcase extends testcase {
             COMPLETION_TRACKING_NONE,
             $db->get_field(module::TABLE, 'completion', ['id' => $module->get_id()])
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_cm_info_view(): void {
+        global $OUTPUT;
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $content_marketplace = $generator->create_module("contentmarketplace", ["course" => $course->id]);
+        [$course, $cm] = get_course_and_cm_from_cmid($content_marketplace->cmid);
+        $cm_info = cm_info::create($cm);
+
+        // We have to use ReflectionClass to avoid the magic function being invoked.
+        $reflection_class = new ReflectionClass($cm_info);
+        $property = $reflection_class->getProperty("afterlink");
+
+        $property->setAccessible(true);
+        self::assertNull($property->getValue($cm_info));
+
+        // Now start invoke the magic function to get the after link text.
+        self::assertNotEmpty($cm_info->afterlink);
+
+        // Assert the rendered content.
+        $model = model::from_course_module_id($cm->id);
+        $logo = content_marketplace_logo::create_from_model($model);
+        self::assertEquals(
+            $OUTPUT->render($logo),
+            $cm_info->afterlink
+        );
+    }
+
+    /**
+     * This test is to make sure that if we ever change the support flag,
+     * it should be aware of consequences.
+     *
+     * @return void
+     */
+    public function test_check_supports_flag(): void {
+        self::assertFalse(contentmarketplace_supports(FEATURE_NO_VIEW_LINK));
+        self::assertFalse(contentmarketplace_supports(FEATURE_MOD_INTRO));
+
+        // This will be changed later on
+        self::assertFalse(contentmarketplace_supports(FEATURE_BACKUP_MOODLE2));
+
+        self::assertNull(contentmarketplace_supports(FEATURE_COMPLETION_HAS_RULES));
+        self::assertNull(contentmarketplace_supports(FEATURE_COMMENT));
+        self::assertNull(contentmarketplace_supports(FEATURE_ADVANCED_GRADING));
+        self::assertNull(contentmarketplace_supports(FEATURE_GRADE_HAS_GRADE));
+        self::assertNull(contentmarketplace_supports(FEATURE_GRADE_OUTCOMES));
+        self::assertNull(contentmarketplace_supports(FEATURE_CONTROLS_GRADE_VISIBILITY));
     }
 }
