@@ -28,6 +28,7 @@ use core\webapi\execution_context;
 use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\formatter\field\text_field_formatter;
 use hierarchy_organisation\entity\organisation as organisation_entity;
+use totara_core\advanced_feature;
 
 /**
  * Organisation hierarchy type.
@@ -57,6 +58,11 @@ class organisation implements \core\webapi\type_resolver {
 
         if (!$organisation instanceof \stdClass) {
             throw new \coding_exception('Only organisation records from the database are accepted ' . gettype($organisation));
+        }
+
+        if (advanced_feature::is_disabled('organisations')) {
+            // You should have checked before resolving to this type.
+            throw new \coding_exception('Organisations have been disabled.');
         }
 
         // Basic field handling, these fields require no formatting, but may or may not be nullable.

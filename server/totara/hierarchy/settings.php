@@ -61,7 +61,8 @@ $ADMIN->add(
         'organisationmanage',
         get_string('organisationmanage', 'totara_hierarchy'),
         "{$CFG->wwwroot}/totara/hierarchy/framework/index.php?prefix=organisation",
-        ['totara/hierarchy:vieworganisationframeworks']
+        ['totara/hierarchy:vieworganisationframeworks'],
+        advanced_feature::is_disabled('organisations')
     )
 );
 
@@ -75,7 +76,8 @@ $ADMIN->add(
             'totara/hierarchy:createorganisationtype',
             'totara/hierarchy:updateorganisationtype',
             'totara/hierarchy:deleteorganisationtype'
-        ]
+        ],
+        advanced_feature::is_disabled('organisations')
     )
 );
 

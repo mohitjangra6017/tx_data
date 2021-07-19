@@ -65,7 +65,9 @@ class create_assignment implements mutation_resolver, has_middleware {
         if (!advanced_feature::is_disabled('positions')) {
             $jobassignment->positionid = $args['positionid'] ?? null;
         }
-        $jobassignment->organisationid = $args['organisationid'] ?? null;
+        if (!advanced_feature::is_disabled('organisations')) {
+            $jobassignment->organisationid = $args['organisationid'] ?? null;
+        }
         $jobassignment->startdate = $args['startdate'] ?? null;
         $jobassignment->enddate = $args['enddate'] ?? null;
         $jobassignment->managerjaid = $args['managerjaid'] ?? null;

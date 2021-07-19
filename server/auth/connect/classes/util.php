@@ -1397,6 +1397,10 @@ class util {
             return true;
         }
 
+        if (advanced_feature::is_disabled('organisations')) {
+            return true;
+        }
+
         $data = array(
             'serveridnumber' => $server->serveridnumber,
             'serversecret' => $server->serversecret,

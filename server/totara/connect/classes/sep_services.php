@@ -397,6 +397,16 @@ class sep_services {
             );
         }
 
+        if (advanced_feature::is_disabled('organisations')) {
+            return array(
+                'status' => 'success',
+                'data' => array(
+                    'frameworks' => null,
+                    'organisations' => null,
+                ),
+            );
+        }
+
         $sql = "SELECT f.*
                   FROM {org_framework} f
                   JOIN {totara_connect_client_org_frameworks} cf ON cf.fid = f.id

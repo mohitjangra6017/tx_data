@@ -81,6 +81,11 @@ if ($canassign) {
             unset($groups['pos']);
         }
 
+        // If hierarchy organisations are disabled then don't included them in the options.
+        if (advanced_feature::is_disabled('organisations')) {
+            unset($groups['org']);
+        }
+
         $options = array_merge(array("" => get_string('assigngroup', 'totara_core')), $groups);
         echo html_writer::select($options, 'groupselector', null, null, array('class' => 'group_selector', 'itemid' => $itemid));
     } else if ($feedback360->status == feedback360::STATUS_CLOSED) {

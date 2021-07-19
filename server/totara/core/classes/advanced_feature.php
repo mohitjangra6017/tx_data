@@ -139,6 +139,7 @@ class advanced_feature {
             'learningplans',
             'myteam',
             'ml_recommender',
+            'organisations',
             'performance_activities',
             'positions',
             'programs',

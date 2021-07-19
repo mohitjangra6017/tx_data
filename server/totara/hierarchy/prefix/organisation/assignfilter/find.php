@@ -30,6 +30,8 @@ require_once($CFG->dirroot.'/totara/core/dialogs/dialog_content_hierarchy.class.
 require_once($CFG->dirroot.'/totara/hierarchy/prefix/organisation/lib.php');
 require_once($CFG->dirroot.'/totara/core/js/lib/setup.php');
 
+use totara_core\advanced_feature;
+
 // Page title
 $pagetitle = 'assignorganisations';
 
@@ -60,6 +62,12 @@ $PAGE->set_context(context_system::instance());
 if (isguestuser()) {
     echo html_writer::tag('div', get_string('noguest', 'error'), array('class' => 'notifyproblem'));
     die;
+}
+
+// Check if organisations are enabled.
+if (advanced_feature::is_disabled('organisations')) {
+    echo html_writer::tag('div', get_string('organisationsdisabled', 'totara_hierarchy'), array('class' => 'notifyproblem'));
+    die();
 }
 
 ///

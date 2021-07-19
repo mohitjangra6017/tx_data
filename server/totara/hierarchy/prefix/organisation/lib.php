@@ -507,4 +507,13 @@ class organisation extends hierarchy {
             'comp_assignments' => get_string('delete_organisation_archive_assignments', 'totara_hierarchy', $data['comp_assignments']),
         ]);
     }
+
+    /**
+     * Check if the organisation feature is enabled.  If not, display an error.
+     */
+    public static function check_feature_enabled() {
+        if (advanced_feature::is_disabled('organisations')) {
+            print_error('error:organisationsdisabled', 'totara_hierarchy');
+        }
+    }
 }

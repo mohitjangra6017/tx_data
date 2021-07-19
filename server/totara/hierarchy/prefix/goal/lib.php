@@ -240,6 +240,11 @@ class goal extends hierarchy {
             unset($options['pos']);
         }
 
+        // Only allow hierarchy organisations to be added if it's enabled.
+        if (advanced_feature::is_disabled('organisations')) {
+            unset($options['org']);
+        }
+
         // Get all assignments for $item.
         $assignments = $assignclass->get_current_assigned_groups();
 

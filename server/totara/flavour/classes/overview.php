@@ -102,7 +102,7 @@ class overview implements \renderable {
         // Settings to display in the overview report.
         $components = array(
             'moodle' => array(
-                'feature_organisationalhierarchy' => '1',   // Fake setting to mimic organisational hierarchies.
+                'enableorganisations'             => null,  // Learn Professional.
                 'feature_audiencemanagement'      => '1',   // Fake setting to mimic audience management.
                 'feature_facetoface'              => '1',   // Fake setting to mimic facetoface.
                 'enablebadges'                    => null,  // Totara.

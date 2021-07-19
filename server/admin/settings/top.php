@@ -47,7 +47,7 @@ $ADMIN->add('root', new admin_category('audiences', new lang_string('cohorts', '
 $ADMIN->add('root', new admin_category('roles', new lang_string('permissions', 'role')));
 $ADMIN->add('root', new admin_category('userdata', new lang_string('pluginname', 'totara_userdata')));
 $ADMIN->add('root', new admin_category('positions', get_string('positions', 'totara_hierarchy'), advanced_feature::is_disabled('positions')));
-$ADMIN->add('root', new admin_category('organisations', get_string('organisations', 'totara_hierarchy')));
+$ADMIN->add('root', new admin_category('organisations', get_string('organisations', 'totara_hierarchy'), advanced_feature::is_disabled('organisations')));
 $ADMIN->add('root', new admin_category('competencies', get_string('competencies', 'totara_hierarchy'), advanced_feature::is_disabled('competencies')));
 $ADMIN->add('root', new admin_category('goals', get_string('goals', 'totara_hierarchy'), advanced_feature::is_disabled('goals')));
 $ADMIN->add('root', new admin_category('totara_plan', new lang_string('learningplans', 'totara_plan'),

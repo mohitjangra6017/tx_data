@@ -341,7 +341,7 @@ class track extends model {
      * @return bool
      */
     public function get_can_assign_organisations(): bool {
-        return has_all_capabilities(
+        return advanced_feature::is_enabled('organisations') && has_all_capabilities(
             [
                 'totara/hierarchy:vieworganisationframeworks',
                 'totara/hierarchy:vieworganisation',

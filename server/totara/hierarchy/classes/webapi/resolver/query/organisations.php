@@ -23,6 +23,7 @@
 
 namespace totara_hierarchy\webapi\resolver\query;
 
+use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_user_capability;
 use hierarchy_organisation\data_providers\organisations as organisations_provider;
 use core\pagination\cursor;
@@ -64,6 +65,7 @@ class organisations implements query_resolver, has_middleware {
     public static function get_middleware(): array {
         return [
             new require_login(),
+            new require_advanced_feature('organisations'),
             new require_user_capability('totara/hierarchy:vieworganisation'),
         ];
     }

@@ -122,6 +122,11 @@ function cohort_rules_get_menu_options() {
                 continue;
             }
 
+            // We also need to check organisations, for the same reasons as positions.
+            if ($groupname === 'org' && advanced_feature::is_disabled('organisations')) {
+                continue;
+            }
+
             $curlabel = get_string("rulegroup-{$groupname}", 'totara_cohort');
             $rulesmenu[$curlabel] = array();
 

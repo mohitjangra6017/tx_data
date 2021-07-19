@@ -117,6 +117,11 @@ abstract class totara_sync_source_jobassignment extends totara_sync_source {
             $this->disabled_fields[] = 'posidnumber';
         }
 
+        if (advanced_feature::is_disabled('organisations')) {
+            $this->set_config('import_orgidnumber', '0');
+            $this->disabled_fields[] = 'orgidnumber';
+        }
+
         parent::__construct();
     }
 

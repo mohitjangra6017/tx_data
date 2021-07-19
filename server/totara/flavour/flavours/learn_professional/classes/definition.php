@@ -77,6 +77,7 @@ class definition extends \totara_flavour\definition {
                 'enablelearningplans' => advanced_feature::DISABLED,
                 'enablecertifications' => advanced_feature::DISABLED,
                 'enablepositions' => advanced_feature::DISABLED,
+                'enableorganisations' => advanced_feature::DISABLED,
                 // Disable Engage only features
                 'enableengage_resources' => advanced_feature::DISABLED,
                 'enablecontainer_workspace' => advanced_feature::DISABLED,

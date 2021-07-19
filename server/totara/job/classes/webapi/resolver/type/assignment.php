@@ -175,6 +175,9 @@ class assignment implements \core\webapi\type_resolver {
      * @return bool
      */
     private static function can_view_organisation(job_assignment $job): bool {
+        if (advanced_feature::is_disabled('organisations')) {
+            return false;
+        }
         return has_capability('totara/hierarchy:vieworganisation', \context_user::instance($job->userid));
     }
     /**

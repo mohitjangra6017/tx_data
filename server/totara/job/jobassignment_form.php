@@ -173,16 +173,18 @@ class job_assignment_form extends moodleform {
             $mform->addHelpButton('positionselector', 'chooseposition', 'totara_job');
         }
 
-        $org_class = strlen($organisationtitle) ? 'nonempty' : '';
-        $mform->addElement('static', 'organisationselector', get_string('organisation', 'totara_job'),
-            html_writer::tag('span', format_string($organisationtitle), array('class' => $org_class, 'id' => 'organisationtitle')) .
-            ($canedit ? html_writer::empty_tag('input', array('type' => 'button', 'value' => get_string('chooseorganisation', 'totara_job'), 'id' => 'show-organisation-dialog')) : '')
-        )->set_allow_xss(true);
+        if (!advanced_feature::is_disabled('organisations')) {
+            $org_class = strlen($organisationtitle) ? 'nonempty' : '';
+            $mform->addElement('static', 'organisationselector', get_string('organisation', 'totara_job'),
+                html_writer::tag('span', format_string($organisationtitle), array('class' => $org_class, 'id' => 'organisationtitle')) .
+                ($canedit ? html_writer::empty_tag('input', array('type' => 'button', 'value' => get_string('chooseorganisation', 'totara_job'), 'id' => 'show-organisation-dialog')) : '')
+            )->set_allow_xss(true);
 
-        $mform->addElement('hidden', 'organisationid');
-        $mform->setType('organisationid', PARAM_INT);
-        $mform->setDefault('organisationid', 0);
-        $mform->addHelpButton('organisationselector', 'chooseorganisation', 'totara_job');
+            $mform->addElement('hidden', 'organisationid');
+            $mform->setType('organisationid', PARAM_INT);
+            $mform->setDefault('organisationid', 0);
+            $mform->addHelpButton('organisationselector', 'chooseorganisation', 'totara_job');
+        }
 
         if (advanced_feature::is_enabled('appraisals') || advanced_feature::is_enabled('performance_activities')) {
             // Show appraiser.

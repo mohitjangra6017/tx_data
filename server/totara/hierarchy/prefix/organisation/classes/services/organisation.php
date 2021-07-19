@@ -34,6 +34,7 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use hierarchy_organisation\entity\organisation as organisation_entity;
+use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -84,6 +85,8 @@ class organisation extends \external_api {
      * @return array
      */
     public static function index(array $filters, int $page, string $order, string $direction) {
+        advanced_feature::require('organisations');
+
         if (!has_capability('totara/hierarchy:vieworganisation', context_system::instance())
             || !has_capability('totara/hierarchy:vieworganisationframeworks', context_system::instance())
         ) {
@@ -180,6 +183,7 @@ class organisation extends \external_api {
      * @return array
      */
     public static function show(int $id, array $options) {
+        advanced_feature::require('organisations');
         $context = context_system::instance();
 
         require_capability('totara/hierarchy:vieworganisation', $context);

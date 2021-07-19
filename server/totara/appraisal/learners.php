@@ -138,6 +138,11 @@ if ($canassign) {
             unset($grouptypes['pos']);
         }
 
+        // If the hierarchy organisations feature is disabled then remove it from the Assign User Group menu.
+        if (advanced_feature::is_disabled('organisations') && array_key_exists('org', $grouptypes)) {
+            unset($grouptypes['org']);
+        }
+
         $options = array_merge(array("" => get_string('assigngroup', 'totara_core')),
                 $grouptypes);
         echo html_writer::select($options, 'groupselector', null, null,

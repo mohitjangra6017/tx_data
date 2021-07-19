@@ -220,6 +220,13 @@ if ($hassiteconfig && isset($optionalsubsystems)) {
         advanced_feature::ENABLED));
 
     $optionalsubsystems->add(
+        new totara_core_admin_setting_feature_checkbox(
+            'enableorganisations',
+        new lang_string('enableorganisations', 'totara_hierarchy'),
+        new lang_string('enableorganisations_desc', 'totara_hierarchy'),
+            advanced_feature::ENABLED));
+
+    $optionalsubsystems->add(
         new admin_setting_configcheckbox(
             'totara_job_allowmultiplejobs',
             new lang_string('setting:allowmultiplejobs', 'totara_job'),

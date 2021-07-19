@@ -24,6 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+use totara_core\advanced_feature;
 
 class rb_source_org extends rb_base_source {
     function __construct() {
@@ -42,6 +43,15 @@ class rb_source_org extends rb_base_source {
         $this->usedcomponents[] = 'totara_hierarchy';
 
         parent::__construct();
+    }
+
+    /**
+     * Check if the report source is disabled and should be ignored.
+     *
+     * @return boolean If the report should be ignored or not.
+     */
+    public static function is_source_ignored() {
+        return advanced_feature::is_disabled('organisations');
     }
 
     /**

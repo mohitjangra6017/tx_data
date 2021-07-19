@@ -22,9 +22,19 @@
  */
 
 namespace totara_customfield\prefix;
+use totara_core\advanced_feature;
+
 defined('MOODLE_INTERNAL') || die();
 
 class organisation_type extends hierarchy_type {
+
+    public function is_feature_type_disabled() {
+        return advanced_feature::is_disabled('organisations');
+    }
+
+    public function is_feature_type_enabled() {
+        return advanced_feature::is_enabled('organisations');
+    }
 
     public function get_capability_managefield() {
         return 'totara/hierarchy:organisationmanagecustomfield';

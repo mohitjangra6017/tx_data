@@ -27,6 +27,8 @@ require_once($CFG->dirroot.'/totara/core/utils.php');
 require_once($CFG->dirroot.'/totara/reportbuilder/filters/lib.php');
 require_once($CFG->dirroot.'/totara/reportbuilder/filters/hierarchy_multi.php');
 
+use totara_core\advanced_feature;
+
 $ids = required_param('ids', PARAM_SEQUENCE);
 $ids = array_filter(explode(',', $ids));
 $filtername = required_param('filtername', PARAM_ALPHANUMEXT);
@@ -38,6 +40,19 @@ if (isguestuser()) {
 }
 
 require_login();
+
+// All hierarchy items can be viewed by any real user.
+if (isguestuser()) {
+    echo html_writer::tag('div', get_string('noguest', 'error'), array('class' => 'notifyproblem'));
+    die;
+}
+
+// Check if organisations are enabled.
+if (advanced_feature::is_disabled('organisations')) {
+    echo html_writer::tag('div', get_string('organisationsdisabled', 'totara_hierarchy'), array('class' => 'notifyproblem'));
+    die();
+}
+
 $PAGE->set_context(context_system::instance());
 
 echo $OUTPUT->container_start('list-' . $filtername);

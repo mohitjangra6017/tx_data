@@ -244,6 +244,9 @@ function totara_sync_get_elements($onlyenabled=false) {
         if ($element == 'comp' && advanced_feature::is_disabled('competencies')) {
             continue;
         }
+        if ($element == 'org' && advanced_feature::is_disabled('organisations')) {
+            continue;
+        }
 
         if ($onlyenabled) {
             if (!get_config('totara_sync', 'element_'.$element.'_enabled')) {

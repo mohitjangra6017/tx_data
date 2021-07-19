@@ -81,17 +81,19 @@ class totara_connect_form_client_add extends moodleform {
             }
         }
 
-        $options = array();
-        $frameworks = $DB->get_records('org_framework', array('visible' => 1), 'sortorder ASC');
-        foreach ($frameworks as $framework) {
-            $options[$framework->id] = $framework->fullname;
-            if ($framework->idnumber !== '') {
-                $options[$framework->id] .= ' [' . $framework->idnumber . ']';
+        if (!advanced_feature::is_disabled('organisations')) {
+            $options = array();
+            $frameworks = $DB->get_records('org_framework', array('visible' => 1), 'sortorder ASC');
+            foreach ($frameworks as $framework) {
+                $options[$framework->id] = $framework->fullname;
+                if ($framework->idnumber !== '') {
+                    $options[$framework->id] .= ' [' . $framework->idnumber . ']';
+                }
             }
-        }
-        if ($options) {
-            $mform->addElement('select', 'organisationframeworks', get_string('organisationframeworks', 'totara_connect'), $options, array('multiple' => true));
-            $mform->addHelpButton('organisationframeworks', 'organisationframeworks', 'totara_connect');
+            if ($options) {
+                $mform->addElement('select', 'organisationframeworks', get_string('organisationframeworks', 'totara_connect'), $options, array('multiple' => true));
+                $mform->addHelpButton('organisationframeworks', 'organisationframeworks', 'totara_connect');
+            }
         }
 
         $mform->addElement('advcheckbox', 'addnewcourses', get_string('addnewcourses', 'totara_connect'));

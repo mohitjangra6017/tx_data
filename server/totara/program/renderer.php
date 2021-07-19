@@ -258,6 +258,8 @@ class totara_program_renderer extends plugin_renderer_base {
         foreach ($categories as $category) {
             if (get_class($category) === 'positions_category' && advanced_feature::is_disabled('positions')) {
                 $canadd = false;
+            } else if (get_class($category) === 'organisations_category' && advanced_feature::is_disabled('organisations')) {
+                $canadd = false;
             } else if ($program->has_expired()) {
                 $canadd = false;
             } else {

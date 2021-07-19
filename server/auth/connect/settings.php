@@ -68,8 +68,10 @@ if (!advanced_feature::is_disabled('positions')) {
         new lang_string('syncpositions', 'auth_connect'), new lang_string('syncpositions_desc', 'auth_connect'), 0));
 }
 
-$settingspage->add(new admin_setting_configcheckbox('auth_connect/syncorganisations',
+if (!advanced_feature::is_disabled('organisations')) {
+    $settingspage->add(new admin_setting_configcheckbox('auth_connect/syncorganisations',
     new lang_string('syncorganisations', 'auth_connect'), new lang_string('syncorganisations_desc', 'auth_connect'), 0));
+}
 
 $settingspage->add(new admin_setting_configcheckbox('auth_connect/allowpluginsepservices',
     new lang_string('allowpluginsepservices', 'auth_connect'), new lang_string('allowpluginsepservices_desc', 'auth_connect'), 0));

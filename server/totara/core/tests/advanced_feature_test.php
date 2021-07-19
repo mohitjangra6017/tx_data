@@ -80,36 +80,42 @@ class totara_core_advanced_feature_testcase extends advanced_testcase {
         }
     }
 
-    public function test_feature_checks() {
+    /**
+     * Pairs of config key names and their corresponding advanced feature keys
+     *
+     * @return string[][]
+     */
+    public function feature_checks_provider(): array {
+        return [
+            'enablepositions' => ['enablepositions', 'positions'],
+            'enablecompetencies' => ['enablecompetencies', 'competencies'],
+            'enableorganisations' => ['enableorganisations', 'organisations'],
+        ];
+    }
+
+    /**
+     * @dataProvider feature_checks_provider
+     * @param string $config_key
+     * @param string $feature_key
+     */
+    public function test_feature_checks(string $config_key, string $feature_key) {
         global $CFG;
 
-        unset_config('enablepositions');
-        unset_config('enablecompetencies');
-
-        $this->assertObjectNotHasAttribute('enablepositions', $CFG);
-        $this->assertObjectNotHasAttribute('enablecompetencies', $CFG);
-
         // If there's no config setting at all it's neither disabled not visible nor hidden
-        $this->assertFalse(advanced_feature::is_disabled('positions'));
-        $this->assertFalse(advanced_feature::is_disabled('competencies'));
-        $this->assertFalse(advanced_feature::is_enabled('positions'));
-        $this->assertFalse(advanced_feature::is_enabled('competencies'));
+        unset_config($config_key);
+        $this->assertObjectNotHasAttribute($config_key, $CFG);
+        $this->assertFalse(advanced_feature::is_disabled($feature_key));
+        $this->assertFalse(advanced_feature::is_enabled($feature_key));
 
-        set_config('enablepositions', advanced_feature::DISABLED);
-        set_config('enablecompetencies', advanced_feature::DISABLED);
+        // If config exists and is set to disabled, then it should not show as enabled.
+        set_config($config_key, advanced_feature::DISABLED);
+        $this->assertTrue(advanced_feature::is_disabled($feature_key));
+        $this->assertFalse(advanced_feature::is_enabled($feature_key));
 
-        $this->assertTrue(advanced_feature::is_disabled('positions'));
-        $this->assertTrue(advanced_feature::is_disabled('competencies'));
-        $this->assertFalse(advanced_feature::is_enabled('positions'));
-        $this->assertFalse(advanced_feature::is_enabled('competencies'));
-
-        set_config('enablepositions', advanced_feature::ENABLED);
-        set_config('enablecompetencies', advanced_feature::ENABLED);
-
-        $this->assertFalse(advanced_feature::is_disabled('positions'));
-        $this->assertFalse(advanced_feature::is_disabled('competencies'));
-        $this->assertTrue(advanced_feature::is_enabled('positions'));
-        $this->assertTrue(advanced_feature::is_enabled('competencies'));
+        // If config exists and is set to enabled, then it should not show as disabled.
+        set_config($config_key, advanced_feature::ENABLED);
+        $this->assertFalse(advanced_feature::is_disabled($feature_key));
+        $this->assertTrue(advanced_feature::is_enabled($feature_key));
     }
 
     public function test_unknown_feature() {
