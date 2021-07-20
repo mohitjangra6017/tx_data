@@ -78,7 +78,7 @@ class contentmarketplace_linkedin_entity_classification_testcase extends testcas
             // Hence we have to check against partially of the message
             $message = $e->getMessage();
             self::assertStringContainsString('Error writing to database', $message);
-            self::assertStringContainsString('duplicate key value', $message);
+            self::assertStringContainsString('duplicate', strtolower($message));
         }
 
         self::assertEquals(1, $db->count_records(classification::TABLE));
@@ -143,7 +143,7 @@ class contentmarketplace_linkedin_entity_classification_testcase extends testcas
             // Hence we have to check against partially of the message
             $message = $e->getMessage();
             self::assertStringContainsString('Error writing to database', $message);
-            self::assertStringContainsString('duplicate key value', $message);
+            self::assertStringContainsString('duplicate', strtolower($message));
         }
 
         // There should only still one record.

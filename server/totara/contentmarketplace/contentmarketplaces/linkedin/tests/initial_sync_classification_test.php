@@ -178,7 +178,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
 
             // Different db vendor will yield different errors, this is the best we can assert for now.
             self::assertStringContainsString("error writing to database", strtolower($message));
-            self::assertStringContainsString("duplicate key value", strtolower($message));
+            self::assertStringContainsString("duplicate", strtolower($message));
         }
 
         self::assertEquals(1, $db->count_records(classification::TABLE));

@@ -246,7 +246,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
             // Different db vendor will yield different errors, this is the best we can assert for now.
             self::assertStringContainsString("error writing to database", strtolower($message));
-            self::assertStringContainsString("duplicate key value", strtolower($message));
+            self::assertStringContainsString("duplicate", strtolower($message));
         }
     }
 

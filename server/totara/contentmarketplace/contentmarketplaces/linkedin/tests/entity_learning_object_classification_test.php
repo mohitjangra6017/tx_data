@@ -81,7 +81,7 @@ class contentmarketplace_linkedin_entity_learning_object_classification_testcase
             $message = $e->getMessage();
 
             self::assertStringContainsString('Error writing to database', $message);
-            self::assertStringContainsString('duplicate key value', $message);
+            self::assertStringContainsString('duplicate', strtolower($message));
         }
     }
 
