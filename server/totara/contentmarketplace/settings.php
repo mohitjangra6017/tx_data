@@ -88,7 +88,9 @@ $sub_plugins = $manager->get_subplugins_of_plugin('totara_contentmarketplace');
 
 /** @var contentmarketplace $plugin */
 foreach ($sub_plugins as $plugin) {
-    $plugin->load_settings($ADMIN, 'contentmarketplace', $has_setting_config);
+    if ($plugin->is_enabled()) {
+        $plugin->load_settings($ADMIN, 'contentmarketplace', $has_setting_config);
+    }
 }
 
 // Clearing these local variables just in case some other scripts that get included might prefer to these.
