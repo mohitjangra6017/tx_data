@@ -5,6 +5,24 @@ extend type Query {
   mobile_findlearning_view_catalog(
     limit_from: Int
   ): mobile_findlearning_catalog_page!
+
+  """
+  Return a page of filtered catalog items the current user can view.
+  """
+  mobile_findlearning_filter_catalog(
+    limit_from: Int
+    filter_data: mobile_findlearning_filter_input!
+  ): mobile_findlearning_catalog_page!
+}
+
+"""
+filter parameters to retrieve a filtered page of data
+"""
+input mobile_findlearning_filter_input {
+  """
+  The value for the full text search filter.
+  """
+  catalog_fts: String
 }
 
 """
@@ -57,6 +75,14 @@ type mobile_findlearning_catalog_item {
   The URL of the catalog items image
   """
   image_url: String
+  """
+  The rich text summary for the catalog items description - note that this is not the summary, it is a field designated in the catalog settings.
+  """
+  summary(format: core_format = MOBILE): String
+  """
+  The format of the catalog items summary
+  """
+  summary_format: core_format
   """
   The alt text associated with the catalog items image
   """

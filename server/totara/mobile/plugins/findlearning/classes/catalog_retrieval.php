@@ -28,10 +28,8 @@ use totara_catalog\catalog_retrieval as core_retrieval;
 use totara_catalog\datasearch\datasearch;
 use totara_catalog\hook\exclude_item;
 
-use totara_catalog\local\filter_handler;
-use totara_catalog\local\feature_handler;
-
 use mobile_findlearning\provider_handler;
+use mobile_findlearning\filter_handler;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -42,14 +40,13 @@ class catalog_retrieval extends core_retrieval {
 
     /**
      * Get a page of objects. Assumes that all datasearch filters have been set up with whatever the current
-     * parameters are, and that featured learning has been configured.
+     * parameters are
      *
      * Each 'object' contains:
      * - int id (from catalog table)
      * - int objectid
      * - string objecttype
      * - int contextid
-     * - bool featured (optional, depending on configuration)
      *
      * @param int $pagesize
      * @param int $limitfrom
@@ -61,7 +58,7 @@ class catalog_retrieval extends core_retrieval {
         int $pagesize,
         int $limitfrom,
         int $maxcount = -1,
-        string $orderbykey = 'featured'
+        string $orderbykey = 'alpha'
     ): \stdClass {
         global $DB;
 
@@ -117,14 +114,6 @@ class catalog_retrieval extends core_retrieval {
                     continue;
                 }
 
-                // If we want to modify any record of a catalog, probably here is a good place to
-                // have another seperate hook for it.
-
-                // Unfortunately, there should not have a hook to add new record(s) into the list
-                // of the result, because adding new record(s) will break the core functionality of
-                // the catalog's pagination. Furthermore, we should not encourage the third party to
-                // do so, because any record(s) added on the fly will not have any sorting supports
-
                 // Not excluded, so add it to the results;
                 $objects[] = $record;
 
@@ -158,5 +147,72 @@ class catalog_retrieval extends core_retrieval {
         $page->endofrecords = $endofrecords;
 
         return $page;
+    }
+
+    /**
+     * Overriding totara_catalog\catalog_retrieval::get_sql()
+     * Simplifies the sql required to get catalog results.
+     *
+     * @param string $orderbykey
+     * @return array [$selectsql, $countsql, $params]
+     */
+    public function get_sql(string $orderbykey): array {
+        $outputcolumns = 'catalog.id, catalog.objecttype, catalog.objectid, catalog.contextid';
+
+        $config = config::instance();
+
+        list($orderbycolumns, $orderbysort) = $this->get_order_by_sql($orderbykey);
+        $outputcolumns .= ', ' . $orderbycolumns;
+
+        $search = new datasearch(
+            '{catalog} catalog',
+            $outputcolumns,
+            $orderbysort
+        );
+
+        foreach (filter_handler::instance()->get_mobile_filters() as $filter) {
+            if ($filter->datafilter->is_active()) {
+                $search->add_filter($filter->datafilter);
+            }
+        }
+
+        return $search->get_sql();
+    }
+
+    /**
+     * Overriding totara_catalog\catalog_retrieval::get_order_by_sql()
+     * Simplified sort order function, using in this order of availability search, alpha, time
+     *
+     * @param string $orderbykey
+     * @return array [$orderbycolumns, $orderbysort]
+     */
+    private function get_order_by_sql(string $orderbykey): array {
+        $searching = filter_handler::instance()->get_full_text_search_filter()->datafilter->is_active();
+        if (!$this->alphabetical_sorting_enabled()) {
+            // We can't order alphabetically, so order by search/time.
+            if ($searching) {
+                return [
+                    'catalogfts.score, catalog.sorttime',
+                    'catalogfts.score DESC, catalog.sorttime DESC, id DESC'
+                ];
+            }
+
+            return [
+                'catalog.sorttime',
+                'catalog.sorttime DESC, id DESC'
+            ];
+        } else {
+            if ($searching) {
+                return [
+                    'catalogfts.score, catalog.sorttext',
+                    'catalogfts.score DESC, catalog.sorttext ASC'
+                ];
+            }
+            // Otherwise we default to ordering by
+            return [
+                'catalog.sorttext',
+                'catalog.sorttext ASC'
+            ];
+        }
     }
 }

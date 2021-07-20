@@ -24,9 +24,7 @@
 namespace mobile_findlearning\formatter;
 
 use core\webapi\formatter\formatter;
-use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
-use core\webapi\formatter\field\text_field_formatter;
 
 /**
  * Formatter for catalog items
@@ -41,6 +39,7 @@ class catalog_item_formatter extends formatter {
             'itemid' => null, // Core_id.
             'title' => string_field_formatter::class,
             'item_type' => string_field_formatter::class,
+            'summary' => null, // Note: pre-formatted as html via catalog dataholder.
             'image_enabled' => null, // Boolean.
             'image_alt' => string_field_formatter::class,
             'image_url' => null, // URL string.

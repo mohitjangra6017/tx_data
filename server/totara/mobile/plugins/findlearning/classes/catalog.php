@@ -24,9 +24,10 @@
 namespace mobile_findlearning;
 
 use totara_catalog\output\catalog as core_catalog;
-use mobile_findlearning\provider_handler;
-use mobile_findlearning\catalog_retrieval;
+use totara_catalog\local\full_text_search_filter;
 use mobile_findlearning\item_mobile as mobile_item;
+use mobile_findlearning\catalog_retrieval;
+use mobile_findlearning\provider_handler;
 use mobile_findlearning\config;
 
 defined('MOODLE_INTERNAL') || die();
@@ -46,7 +47,14 @@ class catalog extends core_catalog {
      * @return object - The page object containing the items we want.
      */
     public static function load_catalog_page_objects($limitfrom = 0) {
-        $itemsper = 10; // Hardcoded for now but could easily be an admin setting
+        // Hardcoded for now but could easily be an admin setting
+        $itemsper = 20;
+
+        // TODO - when it's a setting remove this and set the setting in tests.
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            $itemsper = 10;
+        }
+
         $maxcount = -1;
         $orderbykey = 'alpha'; // also accepts 'featured'... guessing that's a setting
 
@@ -71,93 +79,47 @@ class catalog extends core_catalog {
     }
 
     /**
-     * Filter items
+     * Filter the page items
      *
-     * @param string $search - an optional search term for the fts filter
-     *
+     * @param int $limitfrom - Where in the objects to start looking for another page
+     * @param arrat $filterparams - The paramaters used to define filters.
+     * @return object - The page object containing the items we want.
      */
-    public static function load_filtered_page_objects($search = '') {
-        $itemsper = 10;
-        $limitfrom = 0;
+    public static function load_filtered_page_objects($limitfrom = 0, $filterparams = []) {
+        // Hardcoded for now but could easily be an admin setting
+        $itemsper = 20;
+
+        // TODO - when it's a setting remove this and set the setting in tests.
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            $itemsper = 10;
+        }
+
         $maxcount = -1;
         $orderbykey = 'alpha'; // also accepts 'featured'... guessing that's a setting
 
-        $catalog = new catalog_retrieval();
+        // Setup the filters.
+        $paramdata = [];
+        $filterhandler = filter_handler::instance();
+        $filters = $filterhandler->get_mobile_filters();
+        foreach ($filters as $filter) {
+            $optionalparams = $filter->selector->get_optional_params();
+            foreach ($optionalparams as $optionalparam) {
+                if (isset($filterparams[$optionalparam->key])) {
+                    $paramdata[$optionalparam->key] = $filterparams[$optionalparam->key];
+                }
+            }
 
+            $filter->selector->set_current_data($paramdata);
+            $standarddata = $filter->selector->get_data();
+            $filter->datafilter->set_current_data($standarddata);
+        }
+
+        $catalog = new catalog_retrieval();
         $page = $catalog->get_page_of_objects($itemsper, $limitfrom, $maxcount, $orderbykey);
         $objects = $page->objects;
 
-        // Experimental
-        /* TL-31555 will look into overriding filters
-         * $filterhandler = filter_handler::instance();
-         * foreach ($filterhandler->get_active_filters() as $filter) {
-         *     $optionalparams = $filter->selector->get_optional_params();
-         *
-         *     $paramdata = [];
-         *     foreach ($optionalparams as $optionalparam) {
-         *         if (isset($filterparams[$optionalparam->key])) {
-         *             $paramdata[$optionalparam->key] = $filterparams[$optionalparam->key];
-         *         }
-         *     }
-         *
-         *     $filter->selector->set_current_data($paramdata);
-         *     $standarddata = $filter->selector->get_data();
-         *     $filter->datafilter->set_current_data($standarddata);
-         * }
-         *
-         *
-         * $strs = array_map(function($filter) {
-         *     $res = new \stdClass();
-         *     switch ($filter->template_name) {
-         *         case "totara_core/select_multi":
-         *             $res->label = $filter->template_data['title'];
-         *
-         *             $selected = array_reduce($filter->template_data['options'], function($value, $option) {
-         *                 if ($option->active && $value === null) {
-         *                     return $option->name;
-         *                 } else if ($option->active) {
-         *                     return $value . ', ' . $option->name;
-         *                 } else {
-         *                     return $value;
-         *                 }
-         *             }, null);
-         *
-         *             if ($selected === null) {
-         *                 $res = null;
-         *             } else {
-         *                 $res->content = $selected;
-         *             }
-         *
-         *             break;
-         *         case "totara_core/select_tree":
-         *             $res->label = $filter->template_data['title'];
-         *             if (is_string($filter->template_data['active_name'])) {
-         *                 $res->content = $filter->template_data['active_name'];
-         *             } else if (get_class($filter->template_data['active_name']) == 'lang_string') {
-         *                 $res->content = $filter->template_data['active_name']->out();
-         *             }
-         *             break;
-         *         case "totara_core/select_search_text":
-         *             if ($filter->template_data['current_val']) {
-         *                 $res->label = $filter->template_data['title'];
-         *                 $res->content = $filter->template_data['current_val'];
-         *             } else {
-         *                 $res = null;
-         *             }
-         *             break;
-         *         default:
-         *             $res = "unknown template name:". $filter['template_name'];
-         *             break;
-         *     };
-         *     return $res;
-         * }, $selectors);
-         *
-         * $data->sr_content = array_values(array_filter($strs));
-         */
-
-        $providerhandler = provider_handler::instance();
-
         $requireddataholders = [];
+        $providerhandler = provider_handler::instance();
         foreach ($objects as $object) {
             if (empty($requireddataholders[$object->objecttype])) {
                 $provider = $providerhandler->get_provider($object->objecttype);
@@ -167,7 +129,7 @@ class catalog extends core_catalog {
 
         // load all the required data.
         $objects = $providerhandler->get_data_for_objects($objects, $requireddataholders);
-        return $objects;
+        return $page;
     }
 
     /**

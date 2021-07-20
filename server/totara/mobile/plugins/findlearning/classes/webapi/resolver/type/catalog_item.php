@@ -25,7 +25,7 @@
 namespace mobile_findlearning\webapi\resolver\type;
 
 use \core\webapi\type_resolver;
-use core\webapi\execution_context;
+use \core\webapi\execution_context;
 use \mobile_findlearning\formatter\catalog_item_formatter as item_formatter;
 use \mobile_findlearning\item_mobile as mobile_item;
 
@@ -63,6 +63,14 @@ class catalog_item implements type_resolver {
                 return $data->objecttype;
             case 'image_enabled':
                 return isset($data->image_enabled) ?? false;
+            case 'summary':
+                // This one needs a bit of special handling.
+                $data->summary = self::find_dataholder_contents($object->data, 'summary_rich');
+                break;
+            case 'summary_format':
+                // Note: The catalog dataholder has pre-formatted this, even if it was saved as json
+                // it has been formatted into HTML by this point.
+                return 'HTML';
             case 'image_url':
             case 'image_alt':
                 $enabled = isset($data->image_enabled) ?? false;
@@ -91,6 +99,21 @@ class catalog_item implements type_resolver {
         }
 
         return $formatted;
+    }
+
+    /**
+     * Extract the summary from the list of additional dataholders.
+     */
+    private static function find_dataholder_contents($dataholders, $key = 'summary_rich'): string {
+        $data = '';
+        foreach ($dataholders as $dataholder) {
+            if (isset($dataholder[$key])) {
+                $data = $dataholder[$key];
+                break;
+            }
+        }
+
+        return $data;
     }
 
     /**

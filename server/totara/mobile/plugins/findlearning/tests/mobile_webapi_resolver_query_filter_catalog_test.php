@@ -30,7 +30,7 @@ use totara_engage\access\access;
 /**
  * Note: This also tests the catalog_item resolver since that's contained within the page.
  */
-class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends advanced_testcase {
+class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends advanced_testcase {
 
     use webapi_phpunit_helper;
 
@@ -144,7 +144,28 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
         $this->expectException(moodle_exception::class);
         $this->expectExceptionMessage('Course or activity not accessible. (You are not logged in)');
 
-        $result = $this->resolve_graphql_query('mobile_findlearning_view_catalog', []);
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                "filter_data" => []
+            ]
+        );
+    }
+
+    /**
+     * Test the results of the query when required arguments are omitted.
+     */
+    public function test_resolve_missing_arguments() {
+        $users = $this->create_faux_catalog_items();
+        $this->setGuestUser();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('missing required arguments for query');
+
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            []
+        );
     }
 
     /**
@@ -154,8 +175,13 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
         $users = $this->create_faux_catalog_items();
         $this->setGuestUser();
 
-        // Guests can view catalog items but it won't contain any articles or playlists
-        $result = $this->resolve_graphql_query('mobile_findlearning_view_catalog', []);
+        // Guests can view cataog items but it won't contain any articles or playlists
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'filter_data' => []
+            ]
+        );
 
         // Check the page contains the expected data / ordering.
         $expected = [
@@ -171,19 +197,25 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
             9 => ['type' => 'course', 'name' => 'Prog content 1']
         ];
 
+        $this->assertEquals('12', $result->maxcount); // The total number of unchecked records.
+        $this->assertEquals('18', $result->limitfrom); // The number of checked records.
+        $this->assertFalse($result->endofrecords); // Whether this page is the last.
+
         foreach ($result->objects as $item) {
             $expect = array_shift($expected);
             $this->assertSame($expect['type'], $item->objecttype);
             $this->assertSame($expect['name'], $item->sorttext);
         }
 
-        $this->assertEquals('12', $result->maxcount); // The total number of unchecked records.
-        $this->assertEquals('18', $result->limitfrom); // The number of checked records.
-        $this->assertFalse($result->endofrecords); // Whether this page is the last.
-
         // Check the second/final page.
         $limit = $result->limitfrom;
-        $result = $this->resolve_graphql_query('mobile_findlearning_view_catalog', ['limit_from' => $limit]);
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'limit_from' => $limit,
+                'filter_data' => []
+            ]
+        );
         $expected = [
             0 => ['type' => 'course', 'name' => 'Prog content 2'],
             1 => ['type' => 'course', 'name' => 'Prog content 3']
@@ -198,6 +230,31 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
         $this->assertEquals('20', $result->maxcount); // The total number of unchecked records.
         $this->assertEquals('20', $result->limitfrom); // The number of checked records.
         $this->assertTrue($result->endofrecords); // Whether this page is the last.
+
+        // Now check the results when filtering the data.
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'limit_from' => 0,
+                'filter_data' => [
+                    'catalog_fts' => 'beta'
+                ]
+            ]
+        );
+
+        $expected = [
+            0 => ['type' => 'course', 'name' => 'Beta course'],
+        ];
+
+        $this->assertEquals('1', $result->maxcount); // The total number of unchecked records.
+        $this->assertEquals('3', $result->limitfrom); // The number of checked records, theres 2 we couldn't see.
+        $this->assertTrue($result->endofrecords); // Whether this page is the last.
+
+        foreach ($result->objects as $item) {
+            $expect = array_shift($expected);
+            $this->assertSame($expect['type'], $item->objecttype);
+            $this->assertSame($expect['name'], $item->sorttext);
+        }
     }
 
     /**
@@ -209,7 +266,12 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
         $this->setUser($u1->id);
 
         // Get the results for the regular user u1.
-        $result = $this->resolve_graphql_query('mobile_findlearning_view_catalog', []);
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'filter_data' => []
+            ]
+        );
 
         // Check the page contains the expected data / ordering.
         $expected = [
@@ -231,9 +293,33 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
             $this->assertSame($expect['name'], $item->sorttext);
         }
 
-        $this->assertEquals('16', $result->maxcount); // The total number of unchecked records.
-        $this->assertEquals('14', $result->limitfrom); // The number of checked records.
-        $this->assertFalse($result->endofrecords); // Whether this page is the last.
+        // Now check the results when filtering the data.
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'limit_from' => 0,
+                'filter_data' => [
+                    'catalog_fts' => 'beta'
+                ]
+            ]
+        );
+
+        $expected = [
+            0 => ['type' => 'engage_article', 'name' => 'Beta article'],
+            1 => ['type' => 'course', 'name' => 'Beta course'],
+            2 => ['type' => 'playlist', 'name' => 'Beta playlist'],
+        ];
+
+        $this->assertEquals('3', $result->maxcount); // The total number of unchecked records.
+        $this->assertEquals('3', $result->limitfrom); // The number of checked records, theres 2 we couldn't see.
+        $this->assertTrue($result->endofrecords); // Whether this page is the last.
+
+        foreach ($result->objects as $item) {
+            $expect = array_shift($expected);
+            $this->assertSame($expect['type'], $item->objecttype);
+            $this->assertSame($expect['name'], $item->sorttext);
+        }
+
     }
 
     /**
@@ -245,7 +331,12 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
 
 
         // Get the results for the regular user u1.
-        $result = $this->resolve_graphql_query('mobile_findlearning_view_catalog', []);
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'filter_data' => []
+            ]
+        );
 
         // Check the page contains the expected data / ordering.
         $expected = [
@@ -270,6 +361,33 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
         $this->assertEquals('18', $result->maxcount); // The total number of unchecked records.
         $this->assertEquals('12', $result->limitfrom); // The number of checked records.
         $this->assertFalse($result->endofrecords); // Whether this page is the last.
+
+        // Now check the results when filtering the data.
+        $result = $this->resolve_graphql_query(
+            'mobile_findlearning_filter_catalog',
+            [
+                'limit_from' => 0,
+                'filter_data' => [
+                    'catalog_fts' => 'beta'
+                ]
+            ]
+        );
+
+        $expected = [
+            0 => ['type' => 'engage_article', 'name' => 'Beta article'],
+            1 => ['type' => 'course', 'name' => 'Beta course'],
+            2 => ['type' => 'playlist', 'name' => 'Beta playlist'],
+        ];
+
+        $this->assertEquals('3', $result->maxcount); // The total number of unchecked records.
+        $this->assertEquals('3', $result->limitfrom); // The number of checked records, theres 2 we couldn't see.
+        $this->assertTrue($result->endofrecords); // Whether this page is the last.
+
+        foreach ($result->objects as $item) {
+            $expect = array_shift($expected);
+            $this->assertSame($expect['type'], $item->objecttype);
+            $this->assertSame($expect['name'], $item->sorttext);
+        }
     }
 
     /**
@@ -283,8 +401,11 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
 
         try {
             $result = \totara_webapi\graphql::execute_operation(
-                \core\webapi\execution_context::create('mobile', 'mobile_findlearning_view_catalog'),
-                []
+                \core\webapi\execution_context::create('mobile', 'mobile_findlearning_filter_catalog'),
+                [
+                    'limit_from' => 0,
+                    'filter_data' => []
+                ]
             );
 
             $data = $result->toArray()['data'];
@@ -315,6 +436,43 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends ad
             $this->assertEquals('16', $page['maxCount']); // The total number of unchecked records.
             $this->assertEquals('14', $page['pointer']); // The number of checked records.
             $this->assertFalse($page['finalPage']); // Whether this page is the last.
+        } catch (\moodle_exception $ex) {
+            $this->fail($ex->getMessage());
+        }
+
+        // Now again but with a filter.
+        try {
+            $result = \totara_webapi\graphql::execute_operation(
+                \core\webapi\execution_context::create('mobile', 'mobile_findlearning_filter_catalog'),
+                [
+                    'limit_from' => 0,
+                    'filter_data' => [
+                        'catalog_fts' => 'beta'
+                    ]
+                ]
+            );
+
+            $data = $result->toArray()['data'];
+
+            $this->assertNotEmpty($data['catalogPage']);
+            $page = $data['catalogPage'];
+
+            $expected = [
+                0 => ['type' => 'engage_article', 'name' => 'Beta article'],
+                1 => ['type' => 'course', 'name' => 'Beta course'],
+                2 => ['type' => 'playlist', 'name' => 'Beta playlist'],
+            ];
+
+            foreach ($page['items'] as $item) {
+                $expect = array_shift($expected);
+                $this->assertSame($expect['type'], $item['itemType']);
+                $this->assertSame($expect['name'], $item['title']);
+                $this->assertMatchesRegularExpression('|^https://www\.example\.com/.*|', $item['mobileImage']);
+            }
+
+            $this->assertEquals('3', $page['maxCount']); // The total number of unchecked records.
+            $this->assertEquals('3', $page['pointer']); // The number of checked records.
+            $this->assertTrue($page['finalPage']); // Whether this page is the last.
         } catch (\moodle_exception $ex) {
             $this->fail($ex->getMessage());
         }

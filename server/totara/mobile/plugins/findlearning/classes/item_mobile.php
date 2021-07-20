@@ -108,6 +108,13 @@ class item_mobile extends item {
             }
         }
 
+        // Add the summary dataholder for courses, note this would also work from progs/certs but not resources/playlists.
+        $richtextdataholders = $provider->get_dataholders(formatter::TYPE_PLACEHOLDER_RICH_TEXT);
+        if (!empty($richtextdataholders['summary_rich'])) {
+            $dataholder = $richtextdataholders['summary_rich'];
+            $requireddataholders[] = new required_dataholder($dataholder, formatter::TYPE_PLACEHOLDER_RICH_TEXT);
+        }
+
         return $requireddataholders;
     }
 
