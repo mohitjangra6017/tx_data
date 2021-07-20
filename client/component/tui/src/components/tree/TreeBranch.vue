@@ -25,6 +25,7 @@
     }"
   >
     <div
+      v-if="hasContent || children"
       class="tui-treeBranch__trigger"
       :class="{ 'tui-treeBranch__trigger--top': topLevel }"
     >
@@ -50,7 +51,12 @@
         <!-- Branch label (Can be text, button or link) -->
 
         <template v-if="$scopedSlots['custom-label']">
-          <slot name="custom-label" :label="label" />
+          <slot
+            name="custom-label"
+            :label="label"
+            :link-url="linkUrl"
+            :top-level="topLevel"
+          />
         </template>
 
         <template v-else>
@@ -126,9 +132,9 @@
 
               <template
                 v-if="$scopedSlots['custom-label']"
-                v-slot:custom-label="{ label }"
+                v-slot:custom-label="{ label, linkUrl }"
               >
-                <slot name="custom-label" :label="label" />
+                <slot name="custom-label" :label="label" :link-url="linkUrl" />
               </template>
 
               <template v-slot:side="{ sideContent }">
@@ -171,7 +177,10 @@ export default {
   props: {
     branchId: String,
     children: Array,
-    content: Object,
+    content: {
+      type: Object,
+      default: () => ({}),
+    },
     depth: Number,
     depthLimit: Number,
     headerLevel: {
@@ -212,6 +221,15 @@ export default {
      */
     headerTag() {
       return 'h' + this.headerLevel;
+    },
+
+    /**
+     * Check if there is custom content
+     *
+     * @return {Boolean}
+     */
+    hasContent() {
+      return Object.keys(this.content).length;
     },
 
     /**
@@ -290,6 +308,11 @@ export default {
     getOutputContent() {
       let content = this.content;
 
+      // If no content & no depth limit
+      if (!this.hasContent && !this.depthLimit) {
+        return {};
+      }
+
       content.subContent = [];
       // Get content data from removed children
       if (this.depth === this.depthLimit && this.children.length) {
@@ -334,6 +357,7 @@ export default {
 .tui-treeBranch {
   display: flex;
   width: 100%;
+  padding: 1px 0;
 
   &--top {
     position: relative;
@@ -343,7 +367,7 @@ export default {
   &--separator {
     &:after {
       position: absolute;
-      bottom: 1px;
+      bottom: 0;
       left: 0;
       width: 100%;
       border-bottom: var(--border-width-thin) solid var(--color-neutral-5);
@@ -357,7 +381,9 @@ export default {
   }
 
   &__trigger {
-    padding-top: calc(var(--gap-1) / 2);
+    position: relative;
+    top: calc(var(--gap-1) / 2);
+    height: 1em;
 
     &-btn {
       left: calc(var(--gap-1) / 2 * -1);

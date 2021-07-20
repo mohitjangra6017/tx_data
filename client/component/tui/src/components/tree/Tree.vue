@@ -53,9 +53,14 @@
 
       <template
         v-if="$scopedSlots['custom-label']"
-        v-slot:custom-label="{ label }"
+        v-slot:custom-label="{ label, linkUrl, topLevel }"
       >
-        <slot name="custom-label" :label="label" />
+        <slot
+          name="custom-label"
+          :label="label"
+          :link-url="linkUrl"
+          :top-level="topLevel"
+        />
       </template>
     </TreeBranch>
   </div>
