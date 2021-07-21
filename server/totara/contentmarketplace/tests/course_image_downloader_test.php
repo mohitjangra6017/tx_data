@@ -93,4 +93,61 @@ class totara_contentmarketplace_course_image_downloader_testcase extends testcas
             )
         );
     }
+
+    /**
+     * @return void
+     */
+    public function test_compare_and_update(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/filelib.php");
+
+        $test_image = file_get_contents("{$CFG->dirroot}/lib/tests/fixtures/image_test.png");
+        curl::mock_response($test_image);
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $fs = get_file_storage();
+        $context_course = context_course::instance($course->id);
+
+        $downloader = new course_image_downloader($course->id, "https://example.com/old_image.jpg");
+        $downloader->download_image_for_course();
+
+        self::assertTrue(
+            $fs->file_exists(
+                $context_course->id,
+                'course',
+                'images',
+                0,
+                '/',
+                'old_image.jpg'
+            )
+        );
+
+        $test_image = file_get_contents("{$CFG->dirroot}/lib/tests/fixtures/image_test.png");
+        curl::mock_response($test_image);
+
+        $downloader->compare_and_update(new course_image_downloader($course->id, "https://example.com/new_image.jpg"));
+        self::assertFalse(
+            $fs->file_exists(
+                $context_course->id,
+                'course',
+                'images',
+                0,
+                '/',
+                'old_image.jpg'
+            )
+        );
+
+        self::assertTrue(
+            $fs->file_exists(
+                $context_course->id,
+                'course',
+                'images',
+                0,
+                '/',
+                'new_image.jpg'
+            )
+        );
+    }
 }

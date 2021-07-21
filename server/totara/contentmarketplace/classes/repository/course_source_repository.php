@@ -44,4 +44,19 @@ class course_source_repository extends repository {
 
         $repository->delete();
     }
+
+    /**
+     * @param int $learning_object_id
+     * @param string $marketplace_component
+     * @return course_source|null
+     */
+    public function find_by_id_and_component(int $learning_object_id, string $marketplace_component): ?course_source {
+        /** @var course_source $entity */
+        $entity = course_source::repository()
+            ->where('learning_object_id', $learning_object_id)
+            ->where('marketplace_component', $marketplace_component)
+            ->one();
+
+        return $entity;
+    }
 }

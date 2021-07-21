@@ -27,6 +27,7 @@ use Closure;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
+use contentmarketplace_linkedin\event\learning_object_updated;
 use contentmarketplace_linkedin\learning_object\resolver;
 use core\entity\user;
 use core\orm\entity\model;
@@ -134,10 +135,13 @@ class learning_object extends model implements detailed_model {
      * @return static
      */
     public function update_from_element(element $element): self {
-        $data_record = static::get_record_data_from_element($element);
+        $old_entity = clone($this->entity);
 
+        $data_record = static::get_record_data_from_element($element);
         $this->entity->set_attributes_from_record($data_record);
         $this->entity->save();
+
+        (learning_object_updated::from_learning_object($this, $old_entity))->trigger();
 
         return $this;
     }

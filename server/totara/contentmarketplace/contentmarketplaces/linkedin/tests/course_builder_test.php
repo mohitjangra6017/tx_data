@@ -58,8 +58,8 @@ class contentmarketplace_linkedin_course_builder_testcase extends testcase {
         // As admin user, the enrolment should not be needed for the admin.
         self::assertFalse(
             $db->record_exists_sql(
-                ' 
-                    SELECT 1 FROM "ttr_enrol" e 
+                '
+                    SELECT 1 FROM "ttr_enrol" e
                     INNER JOIN "ttr_user_enrolments" ue ON e.id = ue.enrolid
                     WHERE e.courseid = :course_id AND ue.userid = :user_id
                 ',

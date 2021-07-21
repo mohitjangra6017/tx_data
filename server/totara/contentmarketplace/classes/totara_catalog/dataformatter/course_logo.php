@@ -89,7 +89,7 @@ class course_logo extends formatter {
     private function get_image_alt(string $sub_plugin): string {
         if (get_string_manager()->string_exists('logo_alt', $sub_plugin)) {
             // Using the string from the actual content marketplace plugin.
-           return get_string('logo_alt', $sub_plugin);
+            return get_string('logo_alt', $sub_plugin);
         }
 
         // Fallback to the string provided by totara_contentmarketplace.

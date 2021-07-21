@@ -23,7 +23,7 @@
 namespace mod_contentmarketplace\entity;
 
 use core\orm\entity\entity;
-use stdClass;
+use mod_contentmarketplace\repository\content_marketplace_repository;
 
 /**
  * Entity class represent for table "ttr_contentmarketplace"
@@ -51,4 +51,11 @@ class content_marketplace extends entity {
      * @var bool
      */
     public const SET_UPDATED_WHEN_CREATED = true;
+
+    /**
+     * @return string
+     */
+    public static function repository_class_name(): string {
+        return content_marketplace_repository::class;
+    }
 }
