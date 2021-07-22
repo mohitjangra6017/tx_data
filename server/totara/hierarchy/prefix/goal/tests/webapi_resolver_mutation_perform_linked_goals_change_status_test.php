@@ -46,10 +46,6 @@ class hierarchy_goal_webapi_resolver_mutation_linked_goals_change_status_testcas
     protected function setUp(): void {
         parent::setUp();
 
-        if (!core_component::get_plugin_directory('performelement', 'linked_review')) {
-            self::markTestSkipped('Required linked review plugin is not present');
-        }
-
         $this->data = $this->create_activity_data(goal::SCOPE_PERSONAL);
     }
 

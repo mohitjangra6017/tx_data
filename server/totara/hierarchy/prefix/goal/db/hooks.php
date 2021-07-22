@@ -1,8 +1,8 @@
 <?php
-/*
- * This file is part of Totara LMS
+/**
+ * This file is part of Totara Learn
  *
- * Copyright (C) 2010 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author David Curry <david.curry@totaralms.com>
- * @package totara
- * @subpackage hierarchy
+ * @author Matthias Bonk <matthias.bonk@totaralearning.com>
  */
 
-defined('MOODLE_INTERNAL') || die();
+use hierarchy_goal\watcher\section_relationship_deletion_check;
+use mod_perform\hook\pre_section_relationship_deleted;
 
-$plugin->version  = 2021072600;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021052500;       // Requires this Totara version.
-$plugin->component = 'hierarchy_goal'; // To check on upgrade, that module sits in correct place
+$watchers = [
+    [
+        'hookname' => pre_section_relationship_deleted::class,
+        'callback' => [section_relationship_deletion_check::class, 'can_delete'],
+    ],
+];

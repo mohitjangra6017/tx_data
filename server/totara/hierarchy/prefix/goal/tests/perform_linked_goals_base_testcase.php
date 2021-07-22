@@ -38,6 +38,15 @@ require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
 
 abstract class perform_linked_goals_base_testcase extends testcase {
 
+    protected function setUp(): void {
+        if (!core_component::get_plugin_directory('mod', 'perform')
+            || !core_component::get_plugin_directory('performelement', 'linked_review')
+        ) {
+            self::markTestSkipped('Perform or the linked review element plugin is not installed');
+        }
+        parent::setUp();
+    }
+
     protected function create_activity_data(int $goal_type): stdClass {
         self::setAdminUser();
 
@@ -72,13 +81,17 @@ abstract class perform_linked_goals_base_testcase extends testcase {
             $section,
             ['relationship' => constants::RELATIONSHIP_SUBJECT]
         );
+        $appraiser_section_relationship = $perform_generator->create_section_relationship(
+            $section,
+            ['relationship' => constants::RELATIONSHIP_APPRAISER]
+        );
         $element = element::create($activity->get_context(), 'linked_review', 'title', '', json_encode([
             'content_type' => 'personal_goal',
             'content_type_settings' => [
                 'enable_status_change' => true,
                 'status_change_relationship' => $perform_generator->get_core_relationship(constants::RELATIONSHIP_MANAGER)->id
             ],
-            'selection_relationships' => [$manager_section_relationship->core_relationship_id],
+            'selection_relationships' => [$subject_section_relationship->core_relationship_id],
         ]));
 
         $section_element = $perform_generator->create_section_element($section, $element);
@@ -107,6 +120,13 @@ abstract class perform_linked_goals_base_testcase extends testcase {
             $subject_instance1->id,
             $section,
             $subject_section_relationship->core_relationship->id
+        );
+        $perform_generator->create_participant_instance_and_section(
+            $activity,
+            $subject_user,
+            $subject_instance1->id,
+            $section,
+            $appraiser_section_relationship->core_relationship->id
         );
         $subject_participant_section2 = $perform_generator->create_participant_instance_and_section(
             $activity,

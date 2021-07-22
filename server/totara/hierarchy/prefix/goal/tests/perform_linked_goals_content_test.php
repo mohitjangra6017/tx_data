@@ -55,15 +55,6 @@ require_once __DIR__ . '/perform_linked_goals_base_testcase.php';
  */
 class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linked_goals_base_testcase {
 
-    protected function setUp(): void {
-        if (!core_component::get_plugin_directory('mod', 'perform')
-            || !core_component::get_plugin_directory('performelement', 'linked_review')
-        ) {
-            self::markTestSkipped('Perform or the linked review element plugin is not installed');
-        }
-        parent::setUp();
-    }
-
     /**
      * @return string[][]
      */

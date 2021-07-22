@@ -192,7 +192,7 @@ class totara_webapi_server_test extends advanced_testcase {
 
         $result = $server->handle_request($request);
 
-        $expected_result = "/\\{\"data\"\:\{\"totara_webapi_status\"\:\{\"status\"\:\"ok\"\,\"timestamp\"\:\"[0-9]+\"\}\}\}/";
+        $expected_result = "/\\{\"data\"\:\{\"totara_webapi_status\"\:\{\"status\"\:\"ok\"\,\"timestamp\"\:\"[0-9]+\",\"date\"\:\"[0-9]{2}\/[0-9]{2}\/[0-9]{4}\"\}\}\}/";
 
         $this->expectOutputRegex($expected_result);
         $server->send_response($result, false);
