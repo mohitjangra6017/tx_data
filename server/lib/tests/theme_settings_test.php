@@ -31,6 +31,7 @@ use core\theme\file\logo_image;
 use core\theme\helper;
 use core\theme\settings;
 use core_course\theme\file\course_image;
+use core_phpunit\testcase;
 use totara_certification\theme\file\certification_image;
 use totara_program\theme\file\program_image;
 use totara_tui\local\locator\bundle;
@@ -40,8 +41,7 @@ use totara_tui\local\mediation\styles\mediator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_core\hook\manager as hook_manager;
 
-
-class core_theme_settings_testcase extends advanced_testcase {
+class core_theme_settings_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
@@ -960,7 +960,7 @@ class core_theme_settings_testcase extends advanced_testcase {
                     [
                         'name' => 'formcustom_field_customcss',
                         'type' => 'text',
-                        'value' => 'body {background-color: pink;}',
+                        'value' => 'body > * . * {background-color: pink;}',
                     ]
                 ]
             ]
@@ -973,7 +973,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $rev = time();
         [$css, $messages, $file] = $this->get_resolver($rev, 'p', 0);
         $this->assertStringContainsString(
-            'body {background-color: pink;}',
+            'body > * . * {background-color: pink;}',
             $css
         );
     }

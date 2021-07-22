@@ -257,8 +257,11 @@ final class settings {
      *
      * @param array $properties
      * @return array
+     *
+     * @deprecated since Totara 15.0
      */
     public function clean_properties(array $properties): array {
+        debugging('\core\theme\settings::clean_properties is deprecated', DEBUG_DEVELOPER);
         foreach ($properties as &$property) {
             $property['value'] = clean_text(
                 $property['value'],
@@ -298,11 +301,6 @@ final class settings {
 
         $condition = $this->get_config_parameters();
 
-        // First clean all categories and their properties.
-        foreach ($categories as &$category) {
-            $category['properties'] = $this->clean_properties($category['properties']);
-        }
-
         // Update per category if found, otherwise insert new record.
         $cats = $categories;
         if ($record = $DB->get_record('config_plugins', $condition)) {
@@ -311,7 +309,7 @@ final class settings {
                 // Update category if found.
                 foreach ($cats as &$cat) {
                     if ($cat['name'] === $category['name']) {
-                        $cat['properties'] = $this->clean_properties($category['properties']);
+                        $cat['properties'] = $category['properties'];
                         continue 2;
                     }
                 }
@@ -465,7 +463,6 @@ final class settings {
                         }
                     }
                 }
-                continue;
             }
         }
 

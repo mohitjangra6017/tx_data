@@ -1,6 +1,9 @@
 This file describes API changes in core theme libraries and APIs,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* Deprecated function \core\theme\settings::clean_properties to allow raw input and output for theme settings
+
 === 14.0 ===
 
 * Added optional second parameter (bool $include_default_file_categories) to function core\theme\settings::get_categories
