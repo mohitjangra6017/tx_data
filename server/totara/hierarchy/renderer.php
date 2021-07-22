@@ -730,6 +730,7 @@ class totara_hierarchy_renderer extends plugin_renderer_base {
 
             if ($display) {
                 $assignment->targetdate = '';
+                $assignment->is_personal = true;
                 $hierarchy = hierarchy::load_hierarchy('goal');
                 $namelink = $hierarchy->display_hierarchy_item($assignment, true, false, $personalcustomfields, $personalgoaltypes);
             }

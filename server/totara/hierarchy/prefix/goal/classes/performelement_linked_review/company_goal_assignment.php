@@ -24,6 +24,7 @@
 namespace hierarchy_goal\performelement_linked_review;
 
 use coding_exception;
+use context_system;
 use core\collection;
 use core\date_format;
 use core\format;
@@ -138,7 +139,7 @@ class company_goal_assignment extends goal_assignment_content_type {
             ? company_goal_perform_status::get_existing_status($company_goal_assignment->goalid, $subject_instance->id)
             : null;
 
-        $company_goal_formatter = new company_goal_formatter($company_goal_assignment->goal, $this->context);
+        $company_goal_formatter = new company_goal_formatter($company_goal_assignment->goal, context_system::instance());
 
         return [
             'id' => $company_goal_assignment->id,

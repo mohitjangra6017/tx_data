@@ -23,6 +23,7 @@
 
 namespace hierarchy_goal\performelement_linked_review;
 
+use context_system;
 use core\collection;
 use core\date_format;
 use core\format;
@@ -133,7 +134,10 @@ class personal_goal_assignment extends goal_assignment_content_type {
             ? personal_goal_perform_status::get_existing_status($personal_goal->id, $subject_instance->id)
             : null;
 
-        $personal_goal_formatter = new personal_goal($personal_goal, $this->context);
+        $personal_goal_formatter = new personal_goal(
+            $personal_goal,
+            context_user::instance($subject_instance->subject_user_id)
+        );
 
         return [
             'id' => $personal_goal->id,

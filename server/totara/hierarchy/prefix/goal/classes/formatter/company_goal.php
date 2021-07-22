@@ -22,6 +22,7 @@
  */
 
 namespace hierarchy_goal\formatter;
+use context_system;
 use core\webapi\formatter\formatter;
 use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
@@ -40,12 +41,13 @@ class company_goal extends formatter {
             'id' => null,
             'short_name' => string_field_formatter::class,
             'description' => function ($value, text_field_formatter $formatter) {
-                $component = 'goal';
-                $filearea = 'description';
+                $component = 'totara_hierarchy';
+                $filearea = 'goal';
+                $context = context_system::instance();
                 $itemid = $this->object->id;
 
                 return $formatter
-                    ->set_pluginfile_url_options($this->context, $component, $filearea, $itemid)
+                    ->set_pluginfile_url_options($context, $component, $filearea, $itemid)
                     ->format($value);
             },
             'id_number' => null,

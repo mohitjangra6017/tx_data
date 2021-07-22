@@ -1642,8 +1642,12 @@ class goal extends hierarchy {
             $out .= html_writer::empty_tag('br');
             // Print description if available.
             if ($record->description) {
+                $context = context_system::instance();
+                if ($this->prefix == 'goal' && isset($record->is_personal) && $record->is_personal === true) {
+                    $context = context_user::instance($record->userid);
+                }
                 $record->description = file_rewrite_pluginfile_urls($record->description, 'pluginfile.php',
-                    context_system::instance()->id, 'totara_hierarchy', $this->shortprefix, $record->id);
+                    $context->id, 'totara_hierarchy', $this->shortprefix, $record->id);
                 $safetext = format_text($record->description, FORMAT_HTML);
                 $out .= html_writer::tag('div', html_writer::tag('strong', get_string('description') . ': ') .
                     $safetext, array('class' => 'itemdescription ' . $cssclass));
