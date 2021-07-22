@@ -33,6 +33,7 @@
         <FormSelect
           :id="$id('select-content-type')"
           char-length="20"
+          :disabled="hasExistingType"
           name="content_type"
           :options="contentTypes"
           :validations="v => [v.required()]"
@@ -162,6 +163,15 @@ export default {
       return this.section.section_relationships
         .map(x => x.core_relationship)
         .filter(({ idnumber }) => idnumber != 'perform_external');
+    },
+
+    /**
+     * Has existing selected review type
+     *
+     * @return {boolean}
+     */
+    hasExistingType() {
+      return this.rawData && this.rawData.content_type ? true : false;
     },
 
     /**
