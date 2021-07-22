@@ -1,4 +1,4 @@
-@totara_workflow
+@totara_workflow @totara_contentmarketplace @contentmarketplace_goone
 Feature: Visit a workflow and experience the different possible behaviours
 
   # We must set up content marketplace so we have a second create course workflow to test with
@@ -7,28 +7,25 @@ Feature: Visit a workflow and experience the different possible behaviours
     And I log in as "admin"
     And I set the following administration settings values:
       | catalogtype | enhanced |
-    And I navigate to "Setup Content Marketplaces" node in "Site administration > Content Marketplace"
-    And I should see "What is Content Marketplace?"
-    And I should see "Enable" in the ".contentmarketplace_goone" "css_element"
-    When I click on "Enable" "link" in the ".contentmarketplace_goone" "css_element"
+    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I click on "Set up" "link" in the ".contentmarketplace_goone" "css_element"
     And I switch to "setup" window
     And I should see "Allow Totara to access GO1"
     And the following should exist in the "state" table:
       | full_name       | Admin User         |
       | email           | moodle@example.com |
       | users_total     | 1                  |
-    And I click on "Authorize Totara" "button"
+    When I click on "Authorize Totara" "button"
     And I switch to the main window
     Then I should see "Subscription details"
     And I should see "testing.mygo1.com"
-    And I click on "Continue" "button"
-    And I should see "All content (82,137)"
-    And I click on "Save and explore GO1" "button"
-    And I should see "Explore Content Marketplace: GO1"
+    When I click on "Continue" "button"
+    Then I should see "All content (82,137)"
+    When I click on "Save and explore GO1" "button"
+    Then I should see "Explore Content Marketplace: GO1"
     And I should see "82,137 results"
-    And I am on site homepage
-    And I navigate to "Manage Content Marketplaces" node in "Site administration > Content Marketplace"
-    And I should not see "What is Content Marketplace?"
+    When I am on site homepage
+    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
 
   @javascript @_switch_window
   Scenario: Pass through a workflow with multiple available options
