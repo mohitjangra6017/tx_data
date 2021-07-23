@@ -134,6 +134,7 @@ Chart.pluginService.register({
             dataset.backgroundColor = backgroundColors;
           }
         });
+        chart.config.options.scales.xAxes[0].ticks.autoSkip = false;
         break;
       }
 
