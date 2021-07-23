@@ -2,5 +2,6 @@ query totara_webapi_status_nosession {
   totara_webapi_status {
     status
     timestamp
+    date: timestamp(format: DATELONG)
   }
 }

@@ -1,5 +1,0 @@
-query totara_webapi_date_today($format: core_date_format = DATELONG) {
-  totara_webapi_status {
-    timestamp(format: $format)
-  }
-}

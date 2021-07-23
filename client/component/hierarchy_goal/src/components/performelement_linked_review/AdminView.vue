@@ -28,7 +28,7 @@
 import ParticipantContent from 'hierarchy_goal/components/performelement_linked_review/ParticipantContent';
 
 // GraphQL
-import dateTodayQuery from 'totara_webapi/graphql/date_today';
+import dateTodayQuery from 'totara_webapi/graphql/status';
 
 export default {
   components: {
@@ -45,7 +45,7 @@ export default {
     dateToday: {
       query: dateTodayQuery,
       update({ totara_webapi_status }) {
-        return totara_webapi_status.timestamp;
+        return totara_webapi_status.date;
       },
     },
   },
