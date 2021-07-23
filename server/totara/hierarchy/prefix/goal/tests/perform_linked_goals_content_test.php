@@ -23,6 +23,7 @@
 
 use core\collection;
 use core\date_format;
+use core\orm\query\builder;
 use core\webapi\formatter\field\date_field_formatter;
 use hierarchy_goal\entity\company_goal;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
@@ -257,6 +258,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
     public function test_load_personal_goal_items(): void {
         $data = $this->create_activity_data(goal::SCOPE_PERSONAL);
         $user = $data->subject_user;
+        $manager_user = $data->manager_user;
         $goal1 = $data->goal1;
         $goal2 = $data->goal2;
 
@@ -324,6 +326,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             ],
             'scale_values' => $expected_scale1,
             'target_date' => $formatted_targetdate,
+            'can_view_goal_details' => true,
             'can_change_status' => false,
             'can_view_status' => true,
             'status_change' => null,
@@ -347,6 +350,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             'status' => null,
             'scale_values' => null,
             'target_date' => null,
+            'can_view_goal_details' => true,
             'can_change_status' => false,
             'can_view_status' => true,
             'status_change' => null,
@@ -395,11 +399,77 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             ->where('userid', $user->id)
             ->one(true);
         self::assertEquals($new_scale_value->id, $goal_personal->scalevalueid);
+
+        // Now without the proper capability you cannot view the details for make sure that property is correctly set
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        unassign_capability('totara/hierarchy:viewownpersonalgoal', $role_id, context_system::instance()->id);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            collection::new([['content_id' => $goal1->id]]),
+            null,
+            true,
+            $created_at
+        );
+        self::assertCount(1, $result);
+
+        $goal1_result_item = $result[$goal1->id];
+
+        self::assertFalse($goal1_result_item['can_view_goal_details']);
+
+        self::setUser($manager_user);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            collection::new([['content_id' => $goal1->id]]),
+            null,
+            true,
+            $created_at
+        );
+        self::assertCount(1, $result);
+
+        $goal1_result_item = $result[$goal1->id];
+
+        self::assertTrue($goal1_result_item['can_view_goal_details']);
+
+        // Now without the proper capability you cannot view the details for make sure that property is correctly set
+        $role_id = builder::table('role')->where('shortname', 'staffmanager')->value('id');
+        unassign_capability('totara/hierarchy:viewstaffpersonalgoal', $role_id);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            collection::new([['content_id' => $goal1->id]]),
+            null,
+            true,
+            $created_at
+        );
+        self::assertCount(1, $result);
+
+        $goal1_result_item = $result[$goal1->id];
+
+        self::assertFalse($goal1_result_item['can_view_goal_details']);
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/hierarchy:viewallgoals', CAP_ALLOW, $role_id, context_system::instance()->id);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            collection::new([['content_id' => $goal1->id]]),
+            null,
+            true,
+            $created_at
+        );
+        self::assertCount(1, $result);
+
+        $goal1_result_item = $result[$goal1->id];
+
+        self::assertTrue($goal1_result_item['can_view_goal_details']);
     }
 
     public function test_load_company_goal_items(): void {
         $data = $this->create_activity_data(goal::SCOPE_COMPANY);
         $user = $data->subject_user;
+        $manager_user = $data->manager_user;
         $goal1 = $data->goal1;
         $goal2 = $data->goal2;
 
@@ -464,7 +534,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
         $expected_content_goal1 = [
             'id' => $goal_assignment_goal1->id,
             'goal' => [
-                'id' => $goal_assignment_goal1->id,
+                'id' => $goal_assignment_goal1->goalid,
                 'display_name' => $goal1->fullname,
                 'description' => $goal1->description,
                 'goal_scope' => 'COMPANY'
@@ -475,6 +545,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             ],
             'scale_values' => $expected_scale1,
             'target_date' => $formatted_target_date,
+            'can_view_goal_details' => true,
             'can_change_status' => false,
             'can_view_status' => true,
             'status_change' => null,
@@ -490,7 +561,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
         $expected_content_goal2 = [
             'id' => $goal_assignment_goal2->id,
             'goal' => [
-                'id' => $goal_assignment_goal2->id,
+                'id' => $goal_assignment_goal2->goalid,
                 'display_name' => $goal2->fullname,
                 'description' => $goal2->description,
                 'goal_scope' => 'COMPANY'
@@ -501,6 +572,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             ],
             'scale_values' => $expected_scale1,
             'target_date' => null,
+            'can_view_goal_details' => true,
             'can_change_status' => false,
             'can_view_status' => true,
             'status_change' => null,
@@ -549,6 +621,60 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             ->where('userid', $user->id)
             ->one(true);
         self::assertEquals($new_scale_value->id, $goal_record->scalevalueid);
+
+        self::setUser($manager_user);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            $content_items,
+            null,
+            true,
+            $created_at
+        );
+
+        $goal1_result_item = array_filter($result, static function (array $item) use ($goal_assignment_goal1) {
+            return (int)$item['id'] === (int)$goal_assignment_goal1->id;
+        });
+        $goal1_result_item = array_shift($goal1_result_item);
+
+        self::assertTrue($goal1_result_item['can_view_goal_details']);
+
+        // Now without the proper capability you cannot view the details for make sure that property is correctly set
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        unassign_capability('totara/hierarchy:viewgoal', $role_id, context_system::instance()->id);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            $content_items,
+            null,
+            true,
+            $created_at
+        );
+
+        $goal1_result_item = array_filter($result, static function (array $item) use ($goal_assignment_goal1) {
+            return (int)$item['id'] === (int)$goal_assignment_goal1->id;
+        });
+        $goal1_result_item = array_shift($goal1_result_item);
+
+        self::assertFalse($goal1_result_item['can_view_goal_details']);
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/hierarchy:viewallgoals', CAP_ALLOW, $role_id, context_system::instance()->id);
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            $content_items,
+            null,
+            true,
+            $created_at
+        );
+
+        $goal1_result_item = array_filter($result, static function (array $item) use ($goal_assignment_goal1) {
+            return (int)$item['id'] === (int)$goal_assignment_goal1->id;
+        });
+        $goal1_result_item = array_shift($goal1_result_item);
+
+        self::assertTrue($goal1_result_item['can_view_goal_details']);
     }
 
     public function test_get_goal_status_permissions(): void {

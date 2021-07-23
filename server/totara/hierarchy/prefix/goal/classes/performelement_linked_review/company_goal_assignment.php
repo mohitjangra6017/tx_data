@@ -25,6 +25,7 @@ namespace hierarchy_goal\performelement_linked_review;
 
 use coding_exception;
 use context_system;
+use context_user;
 use core\collection;
 use core\date_format;
 use core\format;
@@ -126,7 +127,6 @@ class company_goal_assignment extends goal_assignment_content_type {
         bool $can_change_status,
         bool $can_view_status
     ): array {
-
         $goal_status_scale_value = goal_helper::get_goal_scale_value_at_timestamp(
             goal::SCOPE_COMPANY,
             $company_goal_assignment->id,
@@ -144,7 +144,7 @@ class company_goal_assignment extends goal_assignment_content_type {
         return [
             'id' => $company_goal_assignment->id,
             'goal' => [
-                'id' => $company_goal_assignment->id,
+                'id' => $company_goal_assignment->goalid,
                 'display_name' => $company_goal_formatter->format('full_name', self::TEXT_FORMAT),
                 'description' => $company_goal_formatter->format('description', format::FORMAT_HTML),
                 'goal_scope' => goal::GOAL_SCOPE_COMPANY,
@@ -154,6 +154,7 @@ class company_goal_assignment extends goal_assignment_content_type {
             'target_date' => ($company_goal_assignment->goal->targetdate > 0)
                 ? $company_goal_formatter->format('target_date', date_format::FORMAT_DATE)
                 : null,
+            'can_view_goal_details' => $this->can_view_goal_details(),
             'can_change_status' => $can_change_status,
             'can_view_status' => $can_view_status,
             'status_change' => $existing_status_change
@@ -161,4 +162,14 @@ class company_goal_assignment extends goal_assignment_content_type {
                 : null,
         ];
     }
+
+    /**
+     * Can the current user view the goals details
+     *
+     * @return bool
+     */
+    private function can_view_goal_details(): bool {
+        return has_any_capability(['totara/hierarchy:viewallgoals', 'totara/hierarchy:viewgoal'], context_system::instance());
+    }
+
 }

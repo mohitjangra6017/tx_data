@@ -80,6 +80,7 @@
                 :content="getContent(item.content)"
                 :created-at="item.created_at_date"
                 :from-print="fromPrint"
+                :is-external-participant="isExternalParticipant"
                 :participant-instance-id="participantInstanceId"
                 :subject-user="subjectUser"
               />

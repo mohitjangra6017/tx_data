@@ -21,7 +21,7 @@
   <div v-if="competencyContentExists" class="tui-linkedReviewViewCompetency">
     <h4 class="tui-linkedReviewViewCompetency__title">
       <a
-        v-if="!fromPrint && !preview"
+        v-if="!fromPrint && !preview && !isExternalParticipant"
         :href="competencyUrl"
         :aria-label="
           $str(
@@ -131,6 +131,7 @@ export default {
     },
     createdAt: String,
     fromPrint: Boolean,
+    isExternalParticipant: Boolean,
     preview: Boolean,
     subjectUser: Object,
   },

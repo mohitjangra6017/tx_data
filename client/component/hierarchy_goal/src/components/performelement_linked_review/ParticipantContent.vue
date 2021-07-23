@@ -20,7 +20,12 @@
   <div v-if="goalContentExists" class="tui-linkedReviewViewGoal">
     <h4 class="tui-linkedReviewViewGoal__title">
       <a
-        v-if="!preview"
+        v-if="
+          !fromPrint &&
+            !preview &&
+            !isExternalParticipant &&
+            content.can_view_goal_details
+        "
         :href="goalUrl"
         :aria-label="
           $str('selected_goal', 'hierarchy_goal', content.goal.display_name)
@@ -80,7 +85,6 @@
 <script>
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
-import { COMPANY_GOAL } from '../../js/constants';
 
 export default {
   components: {
@@ -92,6 +96,8 @@ export default {
     content: {
       type: Object,
     },
+    fromPrint: Boolean,
+    isExternalParticipant: Boolean,
     preview: Boolean,
     createdAt: String,
   },
@@ -102,7 +108,11 @@ export default {
      * @return {String}
      */
     goalUrl() {
-      if (this.content.content_type === COMPANY_GOAL) {
+      if (!this.content) {
+        return '';
+      }
+
+      if (this.content.goal.goal_scope === 'COMPANY') {
         return this.$url('/totara/hierarchy/item/view.php', {
           id: this.content.goal.id,
           prefix: 'goal',
@@ -124,10 +134,10 @@ export default {
         return false;
       }
 
-      if (this.content.content_type === COMPANY_GOAL) {
+      if (this.content.goal.goal_scope === 'COMPANY') {
         return this.content.goal && this.content.status;
       } else {
-        return this.content.goal ? true : false;
+        return !!this.content.goal;
       }
     },
 

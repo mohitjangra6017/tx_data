@@ -24,6 +24,7 @@
 namespace hierarchy_goal\performelement_linked_review;
 
 use context_system;
+use context_user;
 use core\collection;
 use core\date_format;
 use core\format;
@@ -156,6 +157,7 @@ class personal_goal_assignment extends goal_assignment_content_type {
             'target_date' => ($personal_goal->targetdate > 0)
                 ? $personal_goal_formatter->format('target_date', date_format::FORMAT_DATE)
                 : null,
+            'can_view_goal_details' => $this->can_view_goal_details($subject_instance),
             'can_change_status' => $can_change_status,
             'can_view_status' => $can_view_status,
             'status_change' => $existing_status_change
@@ -163,4 +165,28 @@ class personal_goal_assignment extends goal_assignment_content_type {
                 : null,
         ];
     }
+
+    /**
+     * Can the current user view the goals details
+     *
+     * @param subject_instance $subject_instance
+     * @return bool
+     */
+    private function can_view_goal_details(subject_instance $subject_instance): bool {
+        global $USER;
+
+        if (has_capability('totara/hierarchy:viewallgoals', context_system::instance())) {
+            $can_view_goal_details = true;
+        } else {
+            $context = context_user::instance($subject_instance->subject_user_id);
+            if ($USER->id == $subject_instance->subject_user_id) {
+                $can_view_goal_details = has_capability('totara/hierarchy:viewownpersonalgoal', $context);
+            } else {
+                $can_view_goal_details = has_capability('totara/hierarchy:viewstaffpersonalgoal', $context);
+            }
+        }
+
+        return $can_view_goal_details;
+    }
+
 }

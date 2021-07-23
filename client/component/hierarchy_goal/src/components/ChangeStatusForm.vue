@@ -295,7 +295,7 @@ export default {
           variables: {
             input: {
               participant_instance_id: this.participantInstanceId,
-              goal_assignment_id: this.data.goal.id,
+              goal_assignment_id: this.data.id,
               goal_type: this.data.goal.goal_scope,
               scale_value_id: this.selectedGoalStatusId,
               section_element_id: this.sectionElementId,
