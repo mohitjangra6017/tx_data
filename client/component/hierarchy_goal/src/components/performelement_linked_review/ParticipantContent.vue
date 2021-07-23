@@ -44,7 +44,10 @@
     />
 
     <div class="tui-linkedReviewViewGoal__overview">
-      <div v-if="!preview && content.status && content.target_date">
+      <div
+        v-if="!preview && content.status && content.target_date"
+        class="tui-linkedReviewViewGoal__timestamp"
+      >
         {{ createdAt }}
       </div>
       <div v-if="goalBarVisible" class="tui-linkedReviewViewGoal__bar">
@@ -179,6 +182,10 @@ export default {
     & > * + * {
       margin-top: var(--gap-1);
     }
+  }
+
+  &__timestamp {
+    @include tui-font-body-small();
   }
 
   &__bar {
