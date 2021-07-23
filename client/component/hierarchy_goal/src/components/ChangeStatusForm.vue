@@ -18,7 +18,11 @@ Please contact [licensing@totaralearning.com] for more information.
 
 <template>
   <div v-if="isStatusChangePossible" class="tui-linkedReviewChangeStatus">
-    <ChangeStatus :status="data.status_change">
+    <ChangeStatus
+      :from-print="fromPrint"
+      :status="data.status_change"
+      :required="required"
+    >
       <template v-slot:display>
         <Grid class="tui-linkedReviewChangeStatus__summary" :stack-at="700">
           <GridItem :units="4">
@@ -52,43 +56,61 @@ Please contact [licensing@totaralearning.com] for more information.
         </Grid>
       </template>
       <template v-slot:form="{ titleId }">
-        <div
+        <Uniform
           v-if="content.can_change_status && content.scale_values"
           class="tui-linkedReviewChangeStatus__form"
+          input-width="full"
+          :vertical="true"
+          :initial-values="initialValues"
+          @submit="confirmGoalSelection"
         >
-          <Uniform
-            input-width="full"
-            :vertical="true"
-            :initial-values="initialValues"
-            @submit="confirmGoalSelection"
+          <FormRow
+            v-if="!fromPrint"
+            :label="
+              $str(
+                'goal_status_response_subject',
+                'hierarchy_goal',
+                userRelationship
+              )
+            "
           >
-            <FormRow
-              :label="
-                $str(
-                  'goal_status_response_subject',
-                  'hierarchy_goal',
-                  userRelationship
-                )
-              "
-            >
-              <div class="tui-linkedReviewChangeStatus__statusWrapper">
-                <FormSelect
-                  :aria-labelledby="titleId"
-                  name="status"
-                  :options="statusOptions"
-                  char-length="15"
+            <div class="tui-linkedReviewChangeStatus__statusWrapper">
+              <FormSelect
+                :aria-labelledby="titleId"
+                name="status"
+                :options="statusOptions"
+                char-length="15"
+              />
+              <div>
+                <Button
+                  :styleclass="{ primary: true, small: true }"
+                  :text="$str('submit_status', 'hierarchy_goal')"
+                  type="submit"
                 />
-                <div>
-                  <Button
-                    :styleclass="{ primary: true, small: true }"
-                    :text="$str('submit_status', 'hierarchy_goal')"
-                    type="submit"
-                  />
-                </div>
               </div>
-            </FormRow>
-          </Uniform>
-        </div>
+            </div>
+          </FormRow>
+          <FormRow
+            v-else
+            :label="
+              $str(
+                'goal_status_response_subject',
+                'hierarchy_goal',
+                userRelationship
+              )
+            "
+          >
+            <FormRadioGroup name="status">
+              <Radio
+                v-for="item in statusOptions"
+                :key="item.id"
+                :value="item.id"
+              >
+                {{ item.label }}
+              </Radio>
+            </FormRadioGroup>
+          </FormRow>
+        </Uniform>
         <div
           v-else-if="isPersonalGoal && !content.scale_values"
           class="tui-linkedReviewChangeStatus__unavailableMessage"
@@ -135,12 +157,17 @@ Please contact [licensing@totaralearning.com] for more information.
 import Button from 'tui/components/buttons/Button';
 import ChangeStatus from 'hierarchy_goal/components/ChangeStatus';
 import ConfirmationModal from 'tui/components/modal/ConfirmationModal';
-import { FormRow, FormSelect, Uniform } from 'tui/components/uniform';
+import {
+  FormRadioGroup,
+  FormRow,
+  FormSelect,
+  Uniform,
+} from 'tui/components/uniform';
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
+import Radio from 'tui/components/form/Radio';
 import { notify } from 'tui/notifications';
 import { PERSONAL_GOAL } from '../js/constants';
-
 // Query
 import goalStatusUpdate from 'hierarchy_goal/graphql/perform_linked_goals_change_status';
 
@@ -149,10 +176,12 @@ export default {
     Button,
     ChangeStatus,
     ConfirmationModal,
+    FormRadioGroup,
     FormRow,
     FormSelect,
     Grid,
     GridItem,
+    Radio,
     Uniform,
   },
 
@@ -208,7 +237,9 @@ export default {
           label: option.name,
         };
       });
-      options.unshift(defaultOpt);
+      if (!this.fromPrint) {
+        options.unshift(defaultOpt);
+      }
       return options;
     },
 
