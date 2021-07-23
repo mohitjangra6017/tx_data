@@ -38,6 +38,11 @@ Please contact [licensing@totaralearning.com] for more information.
             </template>
           </GridItem>
           <GridItem :units="2">
+            <span
+              class="tui-linkedReviewChangeStatus__summary-dateAccessibleTitle"
+            >
+              {{ $str('a11y_goal_status_updated_date', 'hierarchy_goal') }}
+            </span>
             <span>{{ data.status_change.created_at }}</span>
           </GridItem>
           <GridItem :units="6">
@@ -354,6 +359,7 @@ export default {
 <lang-strings>
 {
   "hierarchy_goal": [
+    "a11y_goal_status_updated_date",
     "goal_status_updated_error",
     "goal_confirmation_body_1",
     "goal_confirmation_body_2",
@@ -374,6 +380,10 @@ export default {
 <style lang="scss">
 .tui-linkedReviewChangeStatus {
   &__summary {
+    &-dateAccessibleTitle {
+      @include sr-only();
+    }
+
     &-status {
       @include tui-font-heavy();
     }

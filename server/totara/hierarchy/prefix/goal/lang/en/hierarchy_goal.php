@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['a11y_goal_status_updated_date'] = 'Date updated:';
 $string['add_company_goals'] = 'Add company goals';
 $string['add_personal_goals'] = 'Add personal goals';
 $string['awaiting_company_selection_text'] = 'Awaiting company goal selection from a {$a}.';
