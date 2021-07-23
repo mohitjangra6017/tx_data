@@ -86,6 +86,7 @@ export default {
 
 <style lang="scss">
 .tui-goalLinkedReviewChangeStatus {
+  max-width: 1200px;
   padding: var(--gap-4) 0;
   border-top: var(--border-width-thin) solid var(--color-neutral-7);
   border-bottom: var(--border-width-normal) solid var(--color-neutral-7);
