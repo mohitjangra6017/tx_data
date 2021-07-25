@@ -73,9 +73,9 @@ export default {
 <lang-strings>
   {
     "hierarchy_goal": [
-      "example_goal_title",
       "example_goal_description",
-      "example_goal_status"
+      "example_goal_status",
+      "example_goal_title"
     ]
   }
 </lang-strings>

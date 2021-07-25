@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import SelectContent from 'performelement_linked_review/components/SelectContent';
 import AssignedCompanyGoalAdder from 'totara_hierarchy/components/adder/AssignedCompanyGoalAdder';
 import PersonalGoalAdder from 'totara_hierarchy/components/adder/PersonalGoalAdder';
+import SelectContent from 'performelement_linked_review/components/SelectContent';
 import { COMPANY_GOAL } from '../../js/constants';
 
 export default {
@@ -59,6 +59,7 @@ export default {
       type: Boolean,
       required: true,
     },
+    contentType: String,
     coreRelationship: Array,
     isDraft: Boolean,
     participantInstanceId: {
@@ -70,7 +71,6 @@ export default {
     sectionElementId: String,
     subjectUser: Object,
     userId: Number,
-    contentType: String,
   },
 
   methods: {

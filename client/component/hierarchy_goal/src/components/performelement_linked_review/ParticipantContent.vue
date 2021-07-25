@@ -17,7 +17,11 @@
 -->
 
 <template>
-  <div v-if="goalContentExists" class="tui-linkedReviewViewGoal">
+  <div
+    v-if="goalContentExists"
+    class="tui-linkedReviewViewGoal"
+    :class="{ 'tui-linkedReviewViewGoal--print': fromPrint }"
+  >
     <h4 class="tui-linkedReviewViewGoal__title">
       <a
         v-if="
@@ -26,10 +30,10 @@
             !isExternalParticipant &&
             content.can_view_goal_details
         "
-        :href="goalUrl"
         :aria-label="
           $str('selected_goal', 'hierarchy_goal', content.goal.display_name)
         "
+        :href="goalUrl"
       >
         {{ content.goal.display_name }}
       </a>
@@ -53,14 +57,17 @@
       <div v-if="goalBarVisible" class="tui-linkedReviewViewGoal__bar">
         <Grid :stack-at="600">
           <GridItem :units="3">
-            <template v-if="content.status">
-              <span class="tui-linkedReviewViewGoal__bar-label">
+            <div
+              v-if="content.status"
+              class="tui-linkedReviewViewGoal__bar-status"
+            >
+              <span class="tui-linkedReviewViewGoal__bar-statusLabel">
                 {{ $str('goal_status', 'hierarchy_goal') }}
               </span>
-              <span class="tui-linkedReviewViewGoal__bar-value">
+              <span class="tui-linkedReviewViewGoal__bar-statusValue">
                 {{ content.status.name }}
               </span>
-            </template>
+            </div>
           </GridItem>
           <GridItem :units="5">
             <div
@@ -80,7 +87,7 @@
     </div>
   </div>
 
-  <div v-else class="tui-linkedReviewViewGoalMissing">
+  <div v-else class="tui-linkedReviewViewGoal__missing">
     {{ $str('perform_review_goal_missing', 'hierarchy_goal') }}
   </div>
 </template>
@@ -99,10 +106,10 @@ export default {
     content: {
       type: Object,
     },
+    createdAt: String,
     fromPrint: Boolean,
     isExternalParticipant: Boolean,
     preview: Boolean,
-    createdAt: String,
   },
 
   computed: {
@@ -194,13 +201,13 @@ export default {
     background: var(--color-neutral-1);
     border: var(--border-width-thin) solid var(--color-neutral-5);
 
-    &-status {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
+    &-statusValue {
+      padding-left: var(--gap-2);
+      @include tui-font-heavy();
 
-      & > * + * {
-        margin-left: var(--gap-2);
+      .tui-linkedReviewViewGoal--print & {
+        display: block;
+        padding: 0;
       }
     }
 
@@ -215,7 +222,7 @@ export default {
     }
 
     &-wrap {
-      padding-left: var(--gap-4);
+      padding-left: var(--gap-2);
       border-color: var(--color-neutral-6);
       border-style: solid;
       border-width: 0 0 0 var(--border-width-thick);
