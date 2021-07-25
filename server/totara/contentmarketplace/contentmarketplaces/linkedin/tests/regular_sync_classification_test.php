@@ -31,6 +31,7 @@ use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
 use totara_contentmarketplace\token\token;
 use totara_core\http\clients\simple_mock_client;
+use contentmarketplace_linkedin\dto\locale;
 
 class contentmarketplace_linkedin_regulary_sync_classification_testcase extends testcase {
     /**
@@ -96,6 +97,7 @@ class contentmarketplace_linkedin_regulary_sync_classification_testcase extends 
 
         $action = new sync_classifications(false, new null_progress_trace(), $client);
         $action->set_classification_types(constants::CLASSIFICATION_TYPE_TOPIC);
+        $action->set_locales(new locale("en", "US"));
         $action->invoke();
 
         // Nothing is added, but one classification is updated.
@@ -123,7 +125,6 @@ class contentmarketplace_linkedin_regulary_sync_classification_testcase extends 
 
         self::assertCount(1, $elements);
 
-
         $client = new simple_mock_client();
         $client->mock_queue($generator->create_json_response($json_response));
 
@@ -136,6 +137,7 @@ class contentmarketplace_linkedin_regulary_sync_classification_testcase extends 
 
         $action = new sync_classifications(false, new null_progress_trace(), $client);
         $action->set_classification_types(constants::CLASSIFICATION_TYPE_TOPIC);
+        $action->set_locales(new locale("en", "US"));
         $action->invoke();
 
         self::assertEquals(1, $db->count_records(classification::TABLE));

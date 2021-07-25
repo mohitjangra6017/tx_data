@@ -27,6 +27,8 @@ use contentmarketplace_linkedin\api\response\result;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\data_provider\locales;
+use contentmarketplace_linkedin\dto\locale;
 use contentmarketplace_linkedin\dto\timespan;
 use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\classification_relationship;
@@ -40,11 +42,29 @@ use totara_contentmarketplace\testing\learning_object_generator;
 use totara_contentmarketplace\token\token;
 use totara_core\http\response;
 use totara_core\http\response_code;
+use ReflectionClass;
 
 /**
  * @method static generator instance()
  */
 class generator extends component_generator implements learning_object_generator {
+    /**
+     * Whether the locale provider had been modified or not with static memory.
+     * This flag is only help to speed up the test, by not having to reset the list
+     * of locales all the times.
+     *
+     * @var bool
+     */
+    private $locales_provider_modified;
+
+    /**
+     * Constructor of the generator.
+     */
+    protected function __construct() {
+        parent::__construct();
+        $this->locales_provider_modified = false;
+    }
+
     /**
      * Set the configuration item for client_id.
      *
@@ -404,5 +424,40 @@ class generator extends component_generator implements learning_object_generator
         $map->save();
 
         return $map;
+    }
+
+    /**
+     * @param locale ...$locales
+     * @return void
+     */
+    public function setup_locales_for_locales_provider(locale ...$locales): void {
+        // Set up the locales.
+        $ref_class = new ReflectionClass(locales::class);
+        $property = $ref_class->getProperty("default_locales");
+        $property->setAccessible(true);
+
+        $property->setValue($locales);
+        $property->setAccessible(false);
+
+        $this->locales_provider_modified = true;
+    }
+
+    /**
+     * Reset the default locales for the locales provider.
+     * @return void
+     */
+    public function reset_locales_for_locales_provider(): void {
+        if (!$this->locales_provider_modified) {
+            return;
+        }
+
+        $ref_class = new ReflectionClass(locales::class);
+        $property = $ref_class->getProperty("default_locales");
+        $property->setAccessible(true);
+
+        $property->setValue(null);
+        $property->setAccessible(false);
+
+        $this->locales_provider_modified = false;
     }
 }

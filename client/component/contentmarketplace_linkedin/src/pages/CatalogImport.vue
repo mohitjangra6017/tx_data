@@ -166,6 +166,9 @@ import courseCategoriesQuery from 'contentmarketplace_linkedin/graphql/catalog_i
 import createCourseMutation from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
 import filterOptionsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects_filter_options';
 import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
+import localesQuery from 'contentmarketplace_linkedin/graphql/catalog_import_available_locales';
+
+const LANGUAGE_ENGLISH = 'en';
 
 export default {
   components: {
@@ -198,13 +201,9 @@ export default {
         subjects: [],
         time_to_complete: [],
       },
-      // Available language options for primary filter
-      languageFilterOptions: [
-        {
-          id: 'en',
-          label: this.$str('language_en', 'contentmarketplace_linkedin'),
-        },
-      ],
+      // Available language options for primary filter.
+      // This will be populated via the graphql call.
+      languageFilterOptions: [],
       // Available learning content populated by learningObjectsQuery
       learningObjects: {
         items: [],
@@ -251,7 +250,7 @@ export default {
       // Selected course ID's
       selectedItems: [],
       // Selected language value from primary filter
-      selectedLanguage: 'en',
+      selectedLanguage: LANGUAGE_ENGLISH,
       // Selected sort filter value
       selectedSortOrderFilter: 'LATEST',
       // Setting initial filters
@@ -355,8 +354,18 @@ export default {
           },
         };
       },
+      skip() {
+        // Skip this query, when the language filter options is not populated yet.
+        return this.languageFilterOptions.length === 0;
+      },
       update({ result: data }) {
         return data;
+      },
+    },
+    languageFilterOptions: {
+      query: localesQuery,
+      update({ locales }) {
+        return locales;
       },
     },
   },
@@ -412,6 +421,12 @@ export default {
 
       if (key === 'sortby') {
         this.selectedSortOrderFilter = urlParams[key];
+      }
+
+      if (key === 'language') {
+        // The validation of language is done at the back-end, prior to the point
+        // where this page is rendered.
+        this.selectedLanguage = urlParams[key];
       }
     });
 
@@ -567,6 +582,10 @@ export default {
         urlData.sortby = this.selectedSortOrderFilter;
       }
 
+      if (this.selectedLanguage !== LANGUAGE_ENGLISH) {
+        urlData.language = this.selectedLanguage;
+      }
+
       const pageUrl = url(window.location.pathname, urlData);
       window.history.pushState(null, null, pageUrl);
     },
@@ -699,7 +718,6 @@ export default {
       "catalog_title",
       "catalog_review_title",
       "content_creation_unknown_failure",
-      "language_en",
       "sort_filter_alphabetical",
       "sort_filter_latest"
     ],

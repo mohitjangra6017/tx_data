@@ -65,7 +65,6 @@ class sub_asset extends structure {
                                             ],
                                             'contents' => [
                                                 'type' => type::ARRAY,
-                                                'maxItems' => 0,
                                             ],
                                         ],
                                     ],

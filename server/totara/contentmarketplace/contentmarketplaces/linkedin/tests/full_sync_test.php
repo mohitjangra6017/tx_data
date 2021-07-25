@@ -22,6 +22,7 @@
  */
 
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\data_provider\locales;
 use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\entity\learning_object;
@@ -48,6 +49,7 @@ class contentmarketplace_linkedin_full_sync_testcase extends testcase {
 
         // Enable content marketplace linkedin.
         contentmarketplace::plugin('linkedin')->enable();
+        $generator->setup_locales_for_locales_provider(new locale("en", "US"));
     }
 
     /**

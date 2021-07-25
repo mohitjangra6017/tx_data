@@ -34,6 +34,7 @@ use totara_contentmarketplace\token\token;
 use totara_core\http\clients\simple_mock_client;
 use totara_core\http\response;
 use totara_core\http\response_code;
+use contentmarketplace_linkedin\dto\locale;
 
 class contentmarketplace_linkedin_sync_classification_testcase extends testcase {
     /**
@@ -63,6 +64,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
 
         $action = new sync_classifications(true, new null_progress_trace(), $client);
         $action->set_classification_types(constants::CLASSIFICATION_TYPE_LIBRARY);
+        $action->set_locales(new locale("en", "US"));
         $action->invoke();
 
         // After the sync happened.
@@ -91,6 +93,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
 
         $action = new sync_classifications(true, new null_progress_trace(), $client);
         $action->set_classification_types(constants::CLASSIFICATION_TYPE_LIBRARY);
+        $action->set_locales(new locale("en", "US"));
         $action->invoke();
 
         self::assertEquals(3, $db->count_records(classification::TABLE));
@@ -213,6 +216,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
         self::assertEquals(0, $db->count_records(classification::TABLE));
         $action = new sync_classifications(true, new null_progress_trace(), $client);
         $action->set_classification_types(constants::CLASSIFICATION_TYPE_TOPIC);
+        $action->set_locales(new locale("en", "US"));
         $action->invoke();
 
         self::assertEquals(2, $db->count_records(classification::TABLE));

@@ -566,4 +566,74 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         self::assertIsArray($course);
         self::assertEquals($result->get_course_id(), $course['id']);
     }
+
+    /**
+     * @return void
+     */
+    public function test_fetch_selected_learning_objects_ignore_all_other_filters(): void {
+        $generator = generator::instance();
+
+        $learning_object_one = $generator->create_learning_object("urn:lyndaCourse:252", ["locale_language" => "en"]);
+        $learning_object_two = $generator->create_learning_object("urn:lyndaCourse:496", ["locale_language" => "ja"]);
+
+        $result_one = $this->resolve_graphql_query(
+            $this->get_graphql_name(catalog_import_learning_objects::class),
+            [
+                "input" => [
+                    "filters" => [
+                        "language" => "en",
+                        "subjects" => []
+                    ],
+                    "sort_by" => "LATEST",
+                    "pagination" => [
+                        "page" => null,
+                        "limit" => null
+                    ]
+                ]
+            ]
+        );
+
+        self::assertIsArray($result_one);
+        self::assertArrayHasKey("items", $result_one);
+
+        /** @var collection $result_one_items */
+        $result_one_items = $result_one["items"];
+        self::assertInstanceOf(collection::class, $result_one_items);
+
+        self::assertEquals(1, $result_one_items->count());
+
+        /** @var learning_object $single_item */
+        $single_item = $result_one_items->first();
+        self::assertInstanceOf(learning_object::class, $single_item);
+
+        self::assertNotEquals($learning_object_two->id, $single_item->id);
+        self::assertEquals($learning_object_one->id, $single_item->id);
+
+        $result_two = $this->resolve_graphql_query(
+            $this->get_graphql_name(catalog_import_learning_objects::class),
+            [
+                "input" => [
+                    "filters" => [
+                        "language" => "en",
+                        "ids" => [$learning_object_one->id, $learning_object_two->id],
+                        "subjects" => []
+                    ],
+                    "sort_by" => "LATEST",
+                    "pagination" => [
+                        "page" => null,
+                        "limit" => null
+                    ]
+                ]
+            ]
+        );
+
+        self::assertIsArray($result_two);
+        self::assertArrayHasKey("items", $result_two);
+
+        /** @var collection $result_two_items */
+        $result_two_items = $result_two["items"];
+        self::assertInstanceOf(collection::class, $result_two_items);
+        self::assertNotEquals(1, $result_two_items->count());
+        self::assertEquals(2, $result_two_items->count());
+    }
 }

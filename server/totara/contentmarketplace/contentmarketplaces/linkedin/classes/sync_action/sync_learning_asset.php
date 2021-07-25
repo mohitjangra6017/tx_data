@@ -232,6 +232,7 @@ class sync_learning_asset extends sync_action implements external_sync {
             $time_start = microtime(true);
 
             $criteria = new criteria();
+            $criteria->set_licensed_only(true);
             $criteria->set_asset_types([$asset_type]);
 
             if (!$this->is_initial_run && $this->sync_with_last_time_modified) {

@@ -28,6 +28,7 @@ use contentmarketplace_linkedin\api\v2\service\learning_classification\response\
 use contentmarketplace_linkedin\api\v2\service\learning_classification\service;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\data_provider\locales;
 use contentmarketplace_linkedin\dto\locale;
 use contentmarketplace_linkedin\entity\classification;
 use progress_trace;
@@ -82,9 +83,7 @@ class sync_classifications extends sync_action implements external_sync {
             constants::CLASSIFICATION_TYPE_TOPIC
         ];
 
-        $this->target_locales = [
-            new locale('en', 'US')
-        ];
+        $this->target_locales = locales::get_default();
     }
 
     /**

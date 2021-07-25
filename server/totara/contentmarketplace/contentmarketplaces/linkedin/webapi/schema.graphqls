@@ -132,6 +132,24 @@ type contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_
   time_to_complete: [contentmarketplace_linkedin_catalog_import_filter_node!]!
 }
 
+type contentmarketplace_linkedin_locale {
+  """
+  A code string, that machine can understand.
+  """
+  language: String!
+  """
+  The country code, that machine can understand.
+  Sometimes country is not provided by Linkedin, hence this field
+  is nullable.
+  """
+  country: String
+  """
+  A label that is a translate version of language code string.
+  This is meant for human to read.
+  """
+  language_label: String!
+}
+
 """
 Applicable filters for the learning objects query.
 """
@@ -186,6 +204,11 @@ extend type Query {
   Query to return the course categories that are availble.
   """
   contentmarketplace_linkedin_catalog_import_course_categories: [core_category!]!
+
+  """
+  Query to return the available locales within linkedin content marketplace.
+  """
+  contentmarketplace_linkedin_available_locales: [contentmarketplace_linkedin_locale!]!
 }
 
 extend type Mutation {

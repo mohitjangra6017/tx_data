@@ -45,8 +45,17 @@ final class catalog_import_learning_objects implements query_resolver, has_middl
         $provider = new learning_objects();
         $provider_filters = $input_params['filters'];
         $provider_filters['is_retired'] = false; // Hard-coded to only return non-retired (i.e. active) learning.
-        $provider->add_filters($provider_filters);
 
+        // The list of ids are provided, then it is most likely about fetching the list of selelcted
+        // learning object items. Therefore we need to ignore all the other filters.
+        if (!empty($provider_filters["ids"])) {
+            // Ignore all the other filters. AKA remove them.
+            $provider_filters = [
+                "ids" => $provider_filters["ids"]
+            ];
+        }
+
+        $provider->add_filters($provider_filters);
         $provider->sort_by($input_params['sort_by']);
         $result = $provider->get_offset_page($input_params['pagination']);
 

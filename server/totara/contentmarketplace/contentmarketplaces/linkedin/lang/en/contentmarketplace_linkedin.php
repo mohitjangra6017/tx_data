@@ -87,7 +87,6 @@ Please re-attempt the import by following this link: [learning_objects:catalog_i
 $string['import_course_partial_failure_resolver_name'] = "Failed to import several courses";
 $string['import_course_partial_failure_subject'] = "LinkedIn Learning import failure";
 $string['import_course_partial_failure_title'] = "LinkedIn Learning import failure";
-$string['language_en'] = 'English';
 $string['language_filter_label'] = 'Language';
 $string['learning_objects_group'] = 'Learning objects {$a}';
 $string['learning_object_titles'] = 'titles';
