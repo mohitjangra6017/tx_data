@@ -22,7 +22,7 @@
       :units="units"
       :loading="$apollo.loading"
       :loading-more="loadingMore"
-      :cards="contribution.cards"
+      :cards="displayCards"
       :total-cards="contribution.cursor.total"
       :show-heading="false"
       :grid-direction="gridDirection"
@@ -93,6 +93,31 @@ export default {
     canContribute() {
       return this.interactor.can_share_resources;
     },
+
+    /**
+     * Adds the Contribute card if the current user can contribute
+     * to the workspace
+     *
+     * @returns {Array} this.contribution.cards prepended with the
+     * add resource card if a user is able to
+     */
+    displayCards() {
+      if (this.canContribute) {
+        return [
+          {
+            instanceid: this.workspaceId,
+            component: 'WorkspaceContributeCard',
+            tuicomponent:
+              'container_workspace/components/card/WorkspaceContributeCard',
+            // Populate all the default data.
+            name: '',
+            user: {},
+          },
+        ].concat(this.contribution.cards);
+      } else {
+        return this.contribution.cards;
+      }
+    },
   },
 
   created() {
@@ -131,7 +156,7 @@ export default {
       update({ contribution: { cursor, cards } }) {
         return {
           cursor: cursor,
-          cards: this.canContribute ? this.$_addContributeCard(cards) : cards,
+          cards: cards,
         };
       },
       skip() {
@@ -141,25 +166,6 @@ export default {
   },
 
   methods: {
-    /**
-     *
-     * @param {Array} cards
-     * @return {Array}
-     */
-    $_addContributeCard(cards) {
-      return [
-        {
-          instanceid: this.workspaceId,
-          component: 'WorkspaceContributeCard',
-          tuicomponent:
-            'container_workspace/components/card/WorkspaceContributeCard',
-          // Populate all the default data.
-          name: '',
-          user: {},
-        },
-      ].concat(cards);
-    },
-
     adderOpen() {
       this.showAdder = true;
     },
