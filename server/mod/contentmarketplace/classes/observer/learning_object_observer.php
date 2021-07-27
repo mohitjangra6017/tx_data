@@ -53,6 +53,5 @@ final class learning_object_observer {
             $entity->name = $event->get_learning_object_name();
             $entity->update();
         }
-
     }
 }

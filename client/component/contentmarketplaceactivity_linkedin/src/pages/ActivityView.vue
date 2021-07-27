@@ -105,6 +105,7 @@
               $str('activity_set_self_completion', 'mod_contentmarketplace')
             "
             :toggle-first="true"
+            @input="setCompletionHandler"
           />
         </div>
         <div class="tui-linkedinActivity__details">
@@ -165,9 +166,11 @@ import PageBackLink from 'tui/components/layouts/PageBackLink';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 // Utils
 import { getAllBranchKeys } from 'tui/components/tree/util';
+import { notify } from 'tui/notifications';
 
 // GraphQL
 import LinkedinActivityQuery from 'contentmarketplaceactivity_linkedin/graphql/linkedin_activity';
+import toggleSelfCompletionMutation from 'mod_contentmarketplace/graphql/set_self_completion';
 
 export default {
   components: {
@@ -574,6 +577,32 @@ export default {
       },
     },
   },
+  methods: {
+    async setCompletionHandler() {
+      try {
+        let {
+          data: { result },
+        } = await this.$apollo.mutate({
+          mutation: toggleSelfCompletionMutation,
+          refetchAll: false,
+          variables: {
+            cm_id: this.cmId,
+            status: this.setCompletion,
+          },
+        });
+
+        this.setCompletion = result;
+      } catch (e) {
+        notify({
+          message: this.$str(
+            this.setCompletion ? 'toggle_on_error' : 'toggle_off_error',
+            'mod_contentmarketplace'
+          ),
+          type: 'error',
+        });
+      }
+    },
+  },
 };
 </script>
 
@@ -590,6 +619,8 @@ export default {
       "course_details",
       "enrol",
       "launch_in_new_window",
+      "toggle_off_error",
+      "toggle_on_error",
       "updated_at",
       "viewing_as_guest",
       "viewing_as_enrollable_guest"

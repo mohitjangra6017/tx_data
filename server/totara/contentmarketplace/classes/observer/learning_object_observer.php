@@ -49,7 +49,7 @@ final class learning_object_observer {
 
         $new_course = [];
 
-        foreach (['description' => 'summary' , 'name' => 'fullname'] as $key => $value) {
+        foreach (['description' => 'summary', 'name' => 'fullname'] as $key => $value) {
             if (!$event->validate_data_key($key)) {
                 throw new coding_exception("The key {$key} of event data is incorrect");
             }
@@ -81,8 +81,6 @@ final class learning_object_observer {
         if (count($new_course) == 0) {
             return;
         }
-
         course_helper::update_course($course->id, (object)$new_course, null);
-
     }
 }

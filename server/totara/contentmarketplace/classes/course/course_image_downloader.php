@@ -131,7 +131,7 @@ class course_image_downloader {
                 }
 
                 // If current filename is not the same as old one, it means course admin has been updated image manually.
-                if ($file->get_filename() == $old_filename ) {
+                if ($file->get_filename() == $old_filename) {
                     $temp_file = $file;
                     $image_not_changed = true;
                 }

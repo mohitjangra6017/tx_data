@@ -162,7 +162,7 @@ abstract class base_learning_object_updated extends base {
     /**
      * @return string
      */
-    public function get_new_image(): string  {
+    public function get_new_image(): string {
         return $this->get_image();
     }
 

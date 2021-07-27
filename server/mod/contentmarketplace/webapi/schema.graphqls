@@ -8,3 +8,10 @@ type mod_contentmarketplace_content_marketplace {
   name(format: core_format = PLAIN): String!
   completion_condition: Boolean
 }
+
+extend type Mutation {
+  mod_contentmarketplace_set_self_completion(
+    cm_id: core_id!
+    status: param_boolean!
+  ): Boolean!
+}

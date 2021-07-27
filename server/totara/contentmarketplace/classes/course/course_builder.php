@@ -257,6 +257,7 @@ class course_builder {
         $module_info->learning_object_marketplace_component = $this->learning_object::get_marketplace_component();
         $module_info->learning_object_id = $this->learning_object->get_id();
         $module_info->section = $this->default_section_number;
+        $module_info->completion = COMPLETION_TRACKING_MANUAL;
 
         $actor_id = $this->course_interactor->get_actor_id();
         if (!course_helper::is_module_addable('contentmarketplace', $course, $actor_id)) {
