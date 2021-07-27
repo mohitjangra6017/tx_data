@@ -118,3 +118,17 @@ exports[`presentation/tag/TagList.vue Checks snapshot 1`] = `
   <!---->
 </div>
 `;
+
+exports[`presentation/tag/TagList.vue closeOnClick is passed through dropdown 1`] = `
+<dropdown-stub
+  animation="default"
+  canclose="true"
+  closeonclick="true"
+  contextmode="contained"
+  matchwidth="true"
+  position="bottom-left"
+  role="menu"
+>
+   
+</dropdown-stub>
+`;

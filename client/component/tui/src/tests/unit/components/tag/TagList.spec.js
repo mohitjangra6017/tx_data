@@ -16,7 +16,7 @@
  * @module tui
  */
 
-import { mount } from '@vue/test-utils';
+import { mount, shallowMount } from '@vue/test-utils';
 import component from 'tui/components/tag/TagList.vue';
 let wrapper;
 
@@ -51,6 +51,19 @@ describe('presentation/tag/TagList.vue', () => {
   });
 
   it('Checks snapshot', () => {
+    expect(wrapper.element).toMatchSnapshot();
+  });
+
+  it('closeOnClick is false by default', () => {
+    expect(wrapper.vm.closeOnClick).toBe(false);
+  });
+
+  it('closeOnClick is passed through dropdown', () => {
+    wrapper = shallowMount(component, {
+      stubs,
+      data,
+      propsData: Object.assign(propsData, { closeOnClick: true }),
+    });
     expect(wrapper.element).toMatchSnapshot();
   });
 });

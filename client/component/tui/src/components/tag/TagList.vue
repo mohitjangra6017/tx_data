@@ -18,7 +18,7 @@
 
 <template>
   <Dropdown
-    :close-on-click="false"
+    :close-on-click="closeOnClick"
     :separator="separator"
     match-width
     :fixed-height="!!virtualScrollOptions"
@@ -169,6 +169,10 @@ export default {
     items: Array,
     filter: String,
     separator: {
+      type: Boolean,
+      default: false,
+    },
+    closeOnClick: {
       type: Boolean,
       default: false,
     },
