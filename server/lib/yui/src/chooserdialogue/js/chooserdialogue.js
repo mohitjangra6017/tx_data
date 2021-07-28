@@ -395,7 +395,7 @@ Y.extend(CHOOSERDIALOGUE, Y.Base, {
          */
         closeButtonTitle: {
             validator: Y.Lang.isString,
-            value: 'Close'
+            value: M.util.get_string('closebuttontitle')
         }
     }
 });

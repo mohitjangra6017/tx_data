@@ -83,6 +83,7 @@ Y.extend(DIALOGUE, Y.Panel, {
         if (this.get('closeButton') !== false) {
             // The buttons constructor does not allow custom attributes
             this.get('buttons').header[0].setAttribute('title', this.get('closeButtonTitle'));
+            this.get('buttons').header[0].append(Y.Node.create('<span class="sr-only">' + this.get('closeButtonTitle') + '</span>'));
         }
 
         // Initialise the element cache.
