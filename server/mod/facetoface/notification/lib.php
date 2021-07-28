@@ -2110,7 +2110,18 @@ function facetoface_notification_loop_session_placeholders($msg, $session, $room
                 if (!$attachments[$attachment_collection]->is_empty()) {
                     $values = [];
                     foreach ($attachments[$attachment_collection] as $attachment) {
-                        $url = new moodle_url("/mod/facetoface/reports/{$attachment_collection}.php", ["{$attachment_type}id" => $attachment->get_id()]);
+                        $url = new moodle_url(
+                            "/mod/facetoface/reports/{$attachment_collection}.php",
+                            [
+                                "{$attachment_type}id" => $attachment->get_id(),
+
+                                // Make sure that we are including the session date id into the attachment.
+                                "sdid" => $sessiondate->id,
+
+                                // Allow the user to go to seminar view.
+                                "b" => "/mod/facetoface/view.php?f={$session->facetoface}"
+                            ]
+                        );
                         //Totara: resource title is linked
                         $partial = html_writer::link($url, $attachment->get_name(), ['title' => get_string("{$attachment_type}details", 'mod_facetoface')]);
                         if ($attachment_type == 'room') {
