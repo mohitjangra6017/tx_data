@@ -26,8 +26,7 @@ use contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_ob
 use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\testing\helper;
-use totara_tui\tree\branch;
-use totara_tui\tree\leaf;
+use totara_core\tui\tree\tree_node;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use contentmarketplace_linkedin\testing\generator;
 
@@ -40,8 +39,9 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
     private const QUERY = 'contentmarketplace_linkedin_catalog_import_learning_objects_filter_options';
 
-    private const TYPE_BRANCH = 'totara_tui_tree_branch';
-    private const TYPE_LEAF = 'totara_tui_tree_leaf';
+    private const NODE_TYPE = 'totara_core_tui_tree_node';
+
+    private const CONTENT_TYPE = 'contentmarketplace_linkedin_catalog_import_filter_select_option';
 
     protected function setUp(): void {
         parent::setUp();
@@ -52,66 +52,62 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
     public function test_resolve_asset_types(): void {
         $result = $this->resolve_graphql_query(self::QUERY);
-        $assert_types_branch = reset($result['asset_type']);
+        $assert_types_node = reset($result['asset_type']);
 
         $expected_data = [
             'id' => 'asset_types',
             'label' => 'Type',
             'content' => [
-                'items' => [
-                    [
-                        'id' => 'COURSE',
-                        'label' => 'Courses',
-                    ],
-                    [
-                        'id' => 'VIDEO',
-                        'label' => 'Videos',
-                    ]
+                [
+                    'id' => 'COURSE',
+                    'label' => 'Courses',
                 ],
+                [
+                    'id' => 'VIDEO',
+                    'label' => 'Videos',
+                ]
             ],
         ];
 
-        $this->assertEquals($expected_data, $this->resolve_branch($assert_types_branch));
+        $this->assertEquals($expected_data, $this->resolve_node($assert_types_node));
     }
 
     public function test_resolve_time_to_complete(): void {
         $result = $this->resolve_graphql_query(self::QUERY);
-        $assert_types_branch = reset($result['time_to_complete']);
+        $assert_types_node = reset($result['time_to_complete']);
 
         $expected_data = [
             'id' => 'time_to_complete',
             'label' => 'Time to Complete',
             'content' => [
-                'items' => [
-                    [
-                        'id' => '{"max":600}',
-                        'label' => '< 10 mins',
-                    ],
-                    [
-                        'id' => '{"min":600,"max":1800}',
-                        'label' => '10 - 30 mins',
-                    ],
-                    [
-                        'id' => '{"min":1800,"max":3600}',
-                        'label' => '30 - 60 mins',
-                    ],
-                    [
-                        'id' => '{"min":3600,"max":7200}',
-                        'label' => '1 - 2 hours',
-                    ],
-                    [
-                        'id' => '{"min":7200,"max":10800}',
-                        'label' => '2 - 3 hours',
-                    ],
-                    [
-                        'id' => '{"min":10800}',
-                        'label' => '3+ hours',
-                    ],
+                [
+                    'id' => '{"max":600}',
+                    'label' => '< 10 mins',
+                ],
+                [
+                    'id' => '{"min":600,"max":1800}',
+                    'label' => '10 - 30 mins',
+                ],
+                [
+                    'id' => '{"min":1800,"max":3600}',
+                    'label' => '30 - 60 mins',
+                ],
+                [
+                    'id' => '{"min":3600,"max":7200}',
+                    'label' => '1 - 2 hours',
+                ],
+                [
+                    'id' => '{"min":7200,"max":10800}',
+                    'label' => '2 - 3 hours',
+                ],
+                [
+                    'id' => '{"min":10800}',
+                    'label' => '3+ hours',
                 ],
             ],
         ];
 
-        $this->assertEquals($expected_data, $this->resolve_branch($assert_types_branch));
+        $this->assertEquals($expected_data, $this->resolve_node($assert_types_node));
     }
 
     public function test_plugin_disabled(): void {
@@ -155,31 +151,26 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             $this->get_graphql_name(catalog_import_learning_objects_filter_options::class)
         );
 
-        $assert_types_branch = reset($result['subjects']);
-        $resolved_branches = $this->resolve_branch($assert_types_branch);
+        $assert_types_node = reset($result['subjects']);
+        $resolved_nodes = $this->resolve_node($assert_types_node);
 
-        self::assertEquals(
-            [
-                'id' => 'subjects',
-                'label' => get_string('catalog_filter_subjects', 'contentmarketplace_linkedin'),
-                'children' => [
-                    [
-                        'id' => $classification_1->id,
-                        'label' => $classification_1->name,
-                        'content' => [
-                            'items' => [
-                                [
-                                    'id' => $classification_2->id,
-                                    'label' => $classification_2->name
-                                ]
-                            ]
-
+        $expected = [
+            'id' => 'subjects',
+            'label' => get_string('catalog_filter_subjects', 'contentmarketplace_linkedin'),
+            'children' => [
+                [
+                    'id' => $classification_1->id,
+                    'label' => $classification_1->name,
+                    'content' => [
+                        [
+                            'id' => $classification_2->id,
+                            'label' => $classification_2->name
                         ]
                     ]
                 ]
-            ],
-            $resolved_branches
-        );
+            ]
+        ];
+        self::assertEquals($expected, $resolved_nodes);
     }
 
     /**
@@ -215,13 +206,13 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             ]
         );
 
-        $branch = reset($result['subjects']);
+        $node = reset($result['subjects']);
         self::assertEquals(
             [
                 'id' => 'subjects',
                 'label' => get_string('catalog_filter_subjects', 'contentmarketplace_linkedin', 'ja')
             ],
-            $this->resolve_branch($branch)
+            $this->resolve_node($node)
         );
     }
 
@@ -229,36 +220,31 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
      * Recursively resolves the tree using the GraphQL type fields.
      * This will return basically the same result as a query via Apollo would.
      *
-     * @param branch $tree_branch
+     * @param tree_node $node
      * @return array
      */
-    private function resolve_branch(branch $tree_branch): array {
-        $result = $this->resolve_leaf($tree_branch);
+    private function resolve_node(tree_node $node): array {
+        $result = [
+            'id' => $this->resolve_graphql_type(self::NODE_TYPE, 'id', $node),
+            'label' => $this->resolve_graphql_type(self::NODE_TYPE, 'label', $node),
+        ];
 
-        $content = $this->resolve_graphql_type(self::TYPE_BRANCH, 'content', $tree_branch);
-        foreach ($content['items'] as $item) {
-            $result['content']['items'][] = $this->resolve_leaf($item);
+        $children = $this->resolve_graphql_type(self::NODE_TYPE, 'children', $node);
+        foreach ($children as $child) {
+            $result['children'][] = $this->resolve_node($child);
         }
 
-        $children = $this->resolve_graphql_type(self::TYPE_BRANCH, 'children', $tree_branch);
-        foreach ($children as $child) {
-            $result['children'][] = $this->resolve_branch($child);
+        $content = $this->resolve_graphql_type(self::NODE_TYPE, 'content', $node);
+        if (isset($content)) {
+            foreach ($content as $item) {
+                $result['content'][] = [
+                    'id' => $this->resolve_graphql_type(self::CONTENT_TYPE, 'id', $item),
+                    'label' => $this->resolve_graphql_type(self::CONTENT_TYPE, 'label', $item),
+                ];
+            }
         }
 
         return $result;
-    }
-
-    /**
-     * Resolve an individual leaf.
-     *
-     * @param leaf $tree_leaf
-     * @return array
-     */
-    private function resolve_leaf(leaf $tree_leaf): array {
-        return [
-            'id' => $this->resolve_graphql_type(self::TYPE_LEAF, 'id', $tree_leaf),
-            'label' => $this->resolve_graphql_type(self::TYPE_LEAF, 'label', $tree_leaf),
-        ];
     }
 
 }

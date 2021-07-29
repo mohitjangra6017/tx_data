@@ -46,7 +46,7 @@
         v-model="selectedFilters"
         :content-id="contentId"
         :filters="filters"
-        :open-branches="openBranches"
+        :open-nodes="openNodes"
       />
     </template>
 
@@ -196,7 +196,7 @@ export default {
       categoryOptions: [],
       filters: {
         subjects: [],
-        timeToComplete: [],
+        time_to_complete: [],
       },
       // Available language options for primary filter
       languageFilterOptions: [
@@ -213,10 +213,10 @@ export default {
       },
       // URL key of marketplace
       marketplace: 'linkedin',
-      // Open Filter tree branches
-      openBranches: {
+      // Open Filter tree nodes
+      openNodes: {
         subjects: ['subjects'],
-        timeToComplete: [],
+        time_to_complete: [],
       },
       // items per page limit
       paginationLimit: 20,
@@ -246,7 +246,7 @@ export default {
       selectedFilters: {
         search: '',
         subjects: [],
-        timeToComplete: [],
+        time_to_complete: [],
       },
       // Selected course ID's
       selectedItems: [],
@@ -292,7 +292,7 @@ export default {
               language: this.selectedLanguage,
               search: this.trimmedSearch,
               subjects: this.selectedFilters.subjects,
-              time_to_complete: this.selectedFilters.timeToComplete,
+              time_to_complete: this.selectedFilters.time_to_complete,
             },
             pagination: {
               limit: this.paginationLimit,
@@ -356,13 +356,7 @@ export default {
         };
       },
       update({ result: data }) {
-        data = JSON.parse(JSON.stringify(data));
-
-        let filterOptions = {
-          subjects: data.subjects,
-          timeToComplete: data.time_to_complete,
-        };
-        return filterOptions;
+        return data;
       },
     },
   },
@@ -484,7 +478,7 @@ export default {
       this.selectedFilters = {
         search: '',
         subjects: [],
-        timeToComplete: [],
+        time_to_complete: [],
       };
     },
 

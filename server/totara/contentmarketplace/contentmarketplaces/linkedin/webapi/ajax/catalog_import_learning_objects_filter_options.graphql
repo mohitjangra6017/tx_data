@@ -16,14 +16,12 @@ query contentmarketplace_linkedin_catalog_import_learning_objects_filter_options
   }
 }
 
-fragment contentmarketplace_linkedin_catalog_import_filter_option on totara_tui_tree_branch {
+fragment contentmarketplace_linkedin_catalog_import_filter_option on contentmarketplace_linkedin_catalog_import_filter_node {
   __typename
   id
   label
   content {
-    items {
-      id
-      label
-    }
+    id
+    label
   }
 }

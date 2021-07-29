@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,23 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
+ * @author  Mark Metcalfe <mark.metcalfe@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 
-namespace contentmarketplace_linkedin\tree;
+namespace contentmarketplace_linkedin\dto;
 
 use coding_exception;
-use contentmarketplace_linkedin\dto\timespan;
-use totara_tui\tree\leaf;
 
-/**
- * Class timespan_leaf
- */
-final class timespan_leaf extends leaf {
+final class tree_filter_timespan_option extends tree_filter_select_option {
 
     /**
-     * timespan_leaf constructor.
      * @param timespan|null $minimum_range
      * @param timespan|null $maximum_range
      * @param string $label

@@ -103,11 +103,33 @@ type contentmarketplace_linkedin_catalog_import_create_course_result {
 }
 
 """
+A filter multi-select option for display on the catalogue import page.
+"""
+type contentmarketplace_linkedin_catalog_import_filter_select_option {
+  id: String!
+  label: String!
+}
+
+"""
+A filter node for display on the catalogue import page.
+"""
+type contentmarketplace_linkedin_catalog_import_filter_node implements totara_core_tui_tree_node_interface {
+  id: String!
+  label(format: core_format = PLAIN): String!
+  """
+  Unused
+  """
+  linkUrl: String
+  children: [contentmarketplace_linkedin_catalog_import_filter_node!]!
+  content: [contentmarketplace_linkedin_catalog_import_filter_select_option!]
+}
+
+"""
 Output of the learning objects filter options query.
 """
 type contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result {
-  subjects: [totara_tui_tree_branch!]!
-  time_to_complete: [totara_tui_tree_branch!]!
+  subjects: [contentmarketplace_linkedin_catalog_import_filter_node!]!
+  time_to_complete: [contentmarketplace_linkedin_catalog_import_filter_node!]!
 }
 
 """

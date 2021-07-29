@@ -34,7 +34,7 @@
     <div>
       <!-- Subject tree filter -->
       <Tree
-        v-model="openBranches.subjects"
+        v-model="openNodes.subjects"
         :header-level="4"
         :separator="true"
         :tree-data="filters.subjects"
@@ -43,7 +43,7 @@
           <MultiSelectFilter
             v-model="value.subjects"
             :hidden-title="true"
-            :options="content.items"
+            :options="content"
             :title="label"
             :visible-item-limit="5"
           />
@@ -52,16 +52,16 @@
 
       <!-- Time tree filter -->
       <Tree
-        v-model="openBranches.timeToComplete"
+        v-model="openNodes.time_to_complete"
         :header-level="4"
         :separator="true"
-        :tree-data="filters.timeToComplete"
+        :tree-data="filters.time_to_complete"
       >
         <template v-slot:content="{ content, label }">
           <MultiSelectFilter
-            v-model="value.timeToComplete"
+            v-model="value.time_to_complete"
             :hidden-title="true"
-            :options="content.items"
+            :options="content"
             :title="label"
             :visible-item-limit="5"
           />
@@ -91,7 +91,7 @@ export default {
       type: Object,
       required: true,
     },
-    openBranches: Object,
+    openNodes: Object,
     value: Object,
   },
 };

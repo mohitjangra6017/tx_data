@@ -24,9 +24,9 @@
 namespace contentmarketplace_linkedin\data_provider;
 
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\dto\tree_filter_select_option;
 use contentmarketplace_linkedin\entity\classification;
-use totara_tui\tree\branch;
-use totara_tui\tree\leaf;
+use core\collection;
 
 class learning_objects_selected_filters extends learning_objects_filter_options {
 
@@ -66,24 +66,38 @@ class learning_objects_selected_filters extends learning_objects_filter_options 
      * @return string[]
      */
     public function get(): array {
-        return array_merge(
-            $this->get_subject_labels(),
-            self::get_tree_labels_from_ids($this->get_asset_types(), $this->selected_filters['asset_type'] ?? []),
-            self::get_tree_labels_from_ids($this->get_time_to_complete(), $this->selected_filters['time_to_complete']),
+        $subject_labels = $this->get_subject_labels();
+
+        $asset_type_labels = $this->get_option_labels(
+            $this->get_asset_type_options(),
+            $this->selected_filters['asset_type'] ?? []
         );
+
+        $time_to_complete_labels = $this->get_option_labels(
+            $this->get_time_to_complete_options(),
+            $this->selected_filters['time_to_complete'] ?? []
+        );
+
+        return array_merge($subject_labels, $asset_type_labels, $time_to_complete_labels);
     }
 
     /**
-     * Get the labels from a tree from the given IDs.
+     * Get a filtered set of filter option labels from a set of selected IDs.
      *
-     * @param branch $tree
-     * @param int[] $ids
      * @return string[]
      */
-    private static function get_tree_labels_from_ids(branch $tree, array $ids): array {
-        return array_map(static function (leaf $node) {
-            return $node->get_label();
-        }, array_values($tree->get_nodes_from_ids($ids)));
+    private function get_option_labels(collection $options, array $selected_ids): array {
+        return $options
+            ->filter(function (tree_filter_select_option $option) use ($selected_ids) {
+                return in_array($option->get_id(), $selected_ids);
+            })
+            ->sort(function (tree_filter_select_option $option_a, tree_filter_select_option $option_b) {
+                return $option_a->get_label() <=> $option_b->get_label();
+            })
+            ->map(function (tree_filter_select_option $option) {
+                return $option->get_label();
+            })
+            ->all();
     }
 
 }

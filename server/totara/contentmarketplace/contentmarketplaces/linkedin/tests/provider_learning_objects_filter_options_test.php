@@ -24,9 +24,8 @@
 use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\data_provider\learning_objects_filter_options;
 use core_phpunit\testcase;
-use totara_tui\tree\branch;
 use contentmarketplace_linkedin\testing\generator;
-use totara_tui\tree\leaf;
+use totara_core\tui\tree\tree_node;
 
 class contentmarketplace_linkedin_provider_learning_objects_filter_options_testcase extends testcase {
     /**
@@ -46,11 +45,10 @@ class contentmarketplace_linkedin_provider_learning_objects_filter_options_testc
         self::assertNotEmpty($result["subjects"]);
         self::assertCount(1, $result["subjects"]);
 
-        /** @var branch $root */
+        /** @var tree_node $root */
         $root = reset($result["subjects"]);
         self::assertTrue($root->is_root());
-        self::assertEmpty($root->get_branches());
-        self::assertEmpty($root->get_leaves());
+        self::assertEmpty($root->get_children());
     }
 
     /**
@@ -81,29 +79,29 @@ class contentmarketplace_linkedin_provider_learning_objects_filter_options_testc
         self::assertIsArray($result["subjects"]);
         self::assertCount(1, $result["subjects"]);
 
-        /** @var branch $root */
+        /** @var tree_node $root */
         $root = reset($result["subjects"]);
-        self::assertEmpty($root->get_leaves());
         self::assertTrue($root->is_root());
 
-        $branches = $root->get_branches();
-        self::assertNotEmpty($branches);
-        self::assertCount(1, $branches);
+        $nodes = $root->get_children();
+        self::assertNotEmpty($nodes);
+        self::assertCount(1, $nodes);
 
-        $branch = reset($branches);
-        self::assertFalse($branch->is_root());
-        self::assertEmpty($branch->get_branches());
-        self::assertEquals($library->id, $branch->get_id());
-        self::assertEquals($library->name, $branch->get_label());
+        /** @var tree_node $node */
+        $node = reset($nodes);
+        self::assertFalse($node->is_root());
+        self::assertEmpty($node->get_children());
+        self::assertEquals($library->id, $node->get_id());
+        self::assertEquals($library->name, $node->get_label());
 
-        $leaves = $branch->get_leaves();
-        self::assertNotEmpty($leaves);
-        self::assertCount(1, $leaves);
+        $content = $node->get_content();
+        self::assertNotEmpty($content);
+        self::assertCount(1, $content);
 
-        /** @var leaf $leaf */
-        $leaf = reset($leaves);
-        self::assertEquals($course->id, $leaf->get_id());
-        self::assertEquals($course->name, $leaf->get_label());
+        /** @var tree_node $node */
+        $node = reset($content);
+        self::assertEquals($course->id, $node->get_id());
+        self::assertEquals($course->name, $node->get_label());
     }
 
     /**
@@ -118,25 +116,25 @@ class contentmarketplace_linkedin_provider_learning_objects_filter_options_testc
         self::assertIsArray($result["asset_type"]);
         self::assertCount(1, $result["asset_type"]);
 
-        /** @var branch $root */
+        /** @var tree_node $root */
         $root = reset($result["asset_type"]);
         self::assertTrue($root->is_root());
-        self::assertEmpty($root->get_branches());
+        self::assertEmpty($root->get_children());
 
-        $leaves = $root->get_leaves();
-        self::assertNotEmpty($leaves);
-        self::assertCount(2, $leaves);
+        $content = $root->get_content();
+        self::assertNotEmpty($content);
+        self::assertCount(2, $content);
 
-        /** @var leaf $first */
-        $first = reset($leaves);
+        /** @var tree_node $first */
+        $first = reset($content);
         self::assertEquals(constants::ASSET_TYPE_COURSE, $first->get_id());
         self::assertEquals(
             get_string("asset_type_course_plural", "contentmarketplace_linkedin"),
             $first->get_label()
         );
 
-        /** @var leaf $last */
-        $last = end($leaves);
+        /** @var tree_node $last */
+        $last = end($content);
         self::assertEquals(constants::ASSET_TYPE_VIDEO, $last->get_id());
         self::assertEquals(
             get_string("asset_type_video_plural", "contentmarketplace_linkedin"),
@@ -157,16 +155,16 @@ class contentmarketplace_linkedin_provider_learning_objects_filter_options_testc
         self::assertIsArray($result["time_to_complete"]);
         self::assertCount(1, $result["time_to_complete"]);
 
-        /** @var branch $root */
+        /** @var tree_node $root */
         $root = reset($result["time_to_complete"]);
         self::assertTrue($root->is_root());
-        self::assertEmpty($root->get_branches());
+        self::assertEmpty($root->get_children());
 
-        $leaves = $root->get_leaves();
-        self::assertNotEmpty($leaves);
-        self::assertCount(6, $leaves);
+        $content = $root->get_content();
+        self::assertNotEmpty($content);
+        self::assertCount(6, $content);
 
-        $leaves_data_in_order = [
+        $node_data_in_order = [
             [
                 "id" => json_encode(["max" => 10 * MINSECS]),
                 "label" => get_string("catalog_filter_timespan_under_10_minutes", "contentmarketplace_linkedin"),
@@ -220,11 +218,11 @@ class contentmarketplace_linkedin_provider_learning_objects_filter_options_testc
             ]
         ];
 
-        foreach ($leaves as $i => $leaf) {
-            $expected = $leaves_data_in_order[$i];
+        foreach ($content as $i => $node) {
+            $expected = $node_data_in_order[$i];
 
-            self::assertEquals($expected["id"], $leaf->get_id());
-            self::assertEquals($expected["label"], $leaf->get_label());
+            self::assertEquals($expected["id"], $node->get_id());
+            self::assertEquals($expected["label"], $node->get_label());
         }
     }
 }

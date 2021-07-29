@@ -35,6 +35,8 @@ use contentmarketplace_linkedin\dto\timestamp;
  * @method static element create(stdClass $json_data, bool $skip_validation = false)
  */
 class element extends base_element {
+// phpcs:disable Totara.NamingConventions.ValidVariableName.LowerCaseUnderscores
+
     /**
      * @return string
      */
@@ -283,4 +285,6 @@ class element extends base_element {
 
         return $classifications;
     }
+
+// phpcs:enable
 }
