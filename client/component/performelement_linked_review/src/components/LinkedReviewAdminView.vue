@@ -19,7 +19,7 @@
 <template>
   <div class="tui-linkedReviewAdminView">
     <Card class="tui-linkedReviewAdminView__card" :no-border="true">
-      <Component :is="getTypeComponent()" />
+      <Component :is="getTypeComponent()" :data="data" />
     </Card>
 
     <div class="tui-linkedReviewAdminView__questions">

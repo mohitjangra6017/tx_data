@@ -15,9 +15,7 @@
  * @author Arshad Anwer <arshad.anwer@totaralearning.com>
  * @module hierarchy_goal
  */
-
-// We need to define the constants that we want to use across multiple components here
-// because the theme overrides don't support having more than one export per vue file.
-
 export const COMPANY_GOAL = 'company_goal';
 export const PERSONAL_GOAL = 'personal_goal';
+export const GOAL_SCOPE_COMPANY = 'COMPANY';
+export const GOAL_SCOPE_PERSONAL = 'PERSONAL';

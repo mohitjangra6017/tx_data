@@ -29,10 +29,23 @@ import ParticipantContent from 'hierarchy_goal/components/performelement_linked_
 
 // GraphQL
 import dateTodayQuery from 'totara_webapi/graphql/status';
+import {
+  COMPANY_GOAL,
+  GOAL_SCOPE_COMPANY,
+  GOAL_SCOPE_PERSONAL,
+  PERSONAL_GOAL,
+} from '../../js/constants';
 
 export default {
   components: {
     ParticipantContent,
+  },
+
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
   },
 
   data() {
@@ -50,16 +63,35 @@ export default {
     },
   },
 
+  computed: {
+    /**
+     * The goal type subset.
+     * @return {?string}
+     */
+    goalScope() {
+      switch (this.data.content_type) {
+        case PERSONAL_GOAL:
+          return GOAL_SCOPE_PERSONAL;
+        case COMPANY_GOAL:
+          return GOAL_SCOPE_COMPANY;
+        default:
+          return null;
+      }
+    },
+  },
+
   methods: {
     /**
      * Set placeholder data for preview view
      *
+     * @return {Object}
      */
     getPreviewData() {
       return {
         goal: {
           display_name: this.$str('example_goal_title', 'hierarchy_goal'),
           description: this.$str('example_goal_description', 'hierarchy_goal'),
+          goal_scope: this.goalScope,
         },
         target_date: this.dateToday,
         status: this.$str('example_goal_status', 'hierarchy_goal'),
@@ -71,11 +103,11 @@ export default {
 </script>
 
 <lang-strings>
-  {
-    "hierarchy_goal": [
-      "example_goal_description",
-      "example_goal_status",
-      "example_goal_title"
-    ]
-  }
+{
+  "hierarchy_goal": [
+    "example_goal_description",
+    "example_goal_status",
+    "example_goal_title"
+  ]
+}
 </lang-strings>

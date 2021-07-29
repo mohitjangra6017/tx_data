@@ -182,7 +182,7 @@ class behat_mod_perform extends behat_base {
      * @throws ExpectationException
      */
     public function i_should_see_perform_question_is_unanswered(string $element_type, string $question_text): void {
-         $this->i_should_see_perform_question_is_answered_with($element_type, $question_text, '');
+        $this->i_should_see_perform_question_is_answered_with($element_type, $question_text, '');
     }
 
     /**
@@ -367,7 +367,7 @@ class behat_mod_perform extends behat_base {
     }
 
     /**
-     * @Given /^I should see perform "([^"]*)" question "([^"]*)" is saved with options "([^"]*)"$/
+     * @Then /^I should see perform "([^"]*)" question "([^"]*)" is saved with options "([^"]*)"$/
      * @param string $type
      * @param string $question_text
      * @param string $question_options
@@ -974,27 +974,57 @@ class behat_mod_perform extends behat_base {
     }
 
     /**
+     * @Then /^I should see "([^"]*)" in the "([^"]*)" "([^"]*)" of perform admin element "([^"]*)"$/
+     * @param string $expected_text
+     * @param string $selector
+     * @param string $locator
+     * @param string $element_title
+     */
+    public function i_should_see_in_the_of_perform_admin_element(
+        string $expected_text,
+        string $locator,
+        string $selector,
+        string $element_title
+    ): void {
+        $question = $this->find_admin_question_from_text($element_title);
+
+        /** @var behat_general $behat_general */
+        $behat_general = behat_context_helper::get('behat_general');
+
+        [$selector, $locator] = $behat_general->transform_selector($selector, $locator);
+
+        $element = $question->find($selector, $locator);
+
+
+        if ($element === null) {
+            $this->fail(sprintf("\"%s\" element \"%s\" not found in perform element: \"%s\"", $selector, $locator, $element_title));
+        }
+
+        if (strpos($element->getText(), $expected_text) === false) {
+            $this->fail(sprintf("\"%s\" did not contain the text: \"%s\"", $element_title, $expected_text));
+        }
+    }
+
+    /**
      * @param string $action_type
      * @param string $question_text
      * @return NodeElement|null
      */
     private function find_action_for_question(string $action_type, string $question_text): ?NodeElement {
-        /** @var NodeElement[] $questions */
-        $questions = $this->find_all('css', self::QUESTION_DISPLAY_LOCATOR);
+        $question = $this->find_admin_question_from_text($question_text);
 
-        foreach ($questions as $question) {
-            $title = $question->find('css', self::EDIT_QUESTION_DISPLAY_TITLE_LOCATOR);
-            $actual_title = trim(str_replace('*','', $title->getText()));
-
-            if ($actual_title == $question_text) {
-                $action_button = $question
-                    ->find('css', self::QUESTION_DISPLAY_LOCATOR)
-                    ->find('css', 'button[title*="' . $action_type . '"]');
-                if ($action_button) {
-                    return $action_button;
-                }
-            }
+        if ($question === null) {
+            return null;
         }
+
+        $action_button = $question
+            ->find('css', self::QUESTION_DISPLAY_LOCATOR)
+            ->find('css', 'button[title*="' . $action_type . '"]');
+
+        if ($action_button) {
+            return $action_button;
+        }
+
         return null;
     }
 

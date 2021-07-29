@@ -133,8 +133,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
      */
     public function goal_content_type_names_data_provider(): array {
         return [
-            ['personal_goal', 'Personal Goal'],
-            ['company_goal', 'Company Goal'],
+            'Personal goal' => ['personal_goal', 'Personal goal'],
+            'Company goal' => ['company_goal', 'Company goal'],
         ];
     }
 

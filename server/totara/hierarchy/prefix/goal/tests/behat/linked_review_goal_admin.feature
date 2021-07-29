@@ -90,8 +90,14 @@ Feature: Manage performance activity review goal element.
     When I am on homepage
     And I navigate to the edit perform activities page for activity "First Activity"
     And I click on "Edit content elements" "link_or_button"
-    Then I should see "Review company goal"
-    And I should see "Review personal goal"
+
+    Then I should see "Company goal" in the ".tui-linkedReviewViewGoal__contentType" "css_element" of perform admin element "Review company goal"
+    And I should see "Goals example" in the ".tui-linkedReviewViewGoal__title" "css_element" of perform admin element "Review company goal"
+    And I should see "This is an example" in the ".tui-linkedReviewViewGoal__description" "css_element" of perform admin element "Review company goal"
+
+    And I should see "Personal goal" in the ".tui-linkedReviewViewGoal__contentType" "css_element" of perform admin element "Review personal goal"
+    And I should see "Goals example" in the ".tui-linkedReviewViewGoal__title" "css_element" of perform admin element "Review personal goal"
+    And I should see "This is an example" in the ".tui-linkedReviewViewGoal__description" "css_element" of perform admin element "Review personal goal"
 
     # Now edit an element
     When I click on the Edit element button for question "Review company goal"

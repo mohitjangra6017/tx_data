@@ -24,19 +24,19 @@ Feature: Verify own and team goals pages can be accessed
 
     Given I log in as "user1"
     And I am on "Goals" page
-    Then I should see "Personal Goals"
+    Then I should see "Personal goals"
 
   Scenario: Verify that own goals page can be accessed for a user is just a manager in one job assignment
 
     Given I log in as "user3"
     And I am on "Goals" page
-    Then I should see "Personal Goals"
+    Then I should see "Personal goals"
 
   Scenario: Verify that own goals page can be accessed for a user is a manager in one job assignment and team member in another
 
     Given I log in as "user2"
     And I am on "Goals" page
-    Then I should see "Personal Goals"
+    Then I should see "Personal goals"
 
   Scenario: Verify that team members goals page can be accessed for a user who has a manager and is a manager in the same job assignment
 
@@ -69,4 +69,3 @@ Feature: Verify own and team goals pages can be accessed
     Then I should see "User2 User2"
     When I click on "Goals" "link" in the "User2 User2" "table_row"
     Then I should see "User2 User2's Goals"
-

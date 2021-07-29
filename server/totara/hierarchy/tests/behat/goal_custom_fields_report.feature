@@ -90,7 +90,7 @@ Feature: Verify I can see all appropriate fields in the goal custom fields repor
       | targetdate[day]     | 15                  |
     And I press "Save changes"
     And I set the field with xpath "//a[text()='Company Goal 2']/ancestor::tr//select[@name='scalevalueid']" to "Good"
-    And I set the field with xpath "//a[text()='Think of more goals']/ancestor::tr//select[@name='scalevalueid']" to "Goal In Progress"
+    And I set the field with xpath "//a[text()='Think of more goals']/ancestor::tr//select[@name='scalevalueid']" to "Goal in progress"
 
     And I log out
     And I log in as "admin"
@@ -110,8 +110,8 @@ Feature: Verify I can see all appropriate fields in the goal custom fields repor
     Then I should see "5 records shown" in the ".rb-record-count" "css_element"
     And the following should exist in the "report_goal_custom_fields_report" table:
       | User's Fullname | Goal Name           | Personal or Company  | Goal Type | Status           | Target date |
-      | Admin User      | Company Goal 1      | Company              | No Type   | Goal Assigned    |             |
+      | Admin User      | Company Goal 1      | Company              | No Type   | Goal assigned    |             |
       | Admin User      | Personal Goal 1     | Personal             | No Type   |                  |             |
-      | Bob1 learner1   | Company Goal 1      | Company              | No Type   | Goal Assigned    |             |
+      | Bob1 learner1   | Company Goal 1      | Company              | No Type   | Goal assigned    |             |
       | Bob1 learner1   | Company Goal 2      | Company              | No Type   | Good             | 5 Aug 2017  |
-      | Bob1 learner1   | Think of more goals | Personal             | No Type   | Goal In Progress | 15 Aug 2030 |
+      | Bob1 learner1   | Think of more goals | Personal             | No Type   | Goal in progress | 15 Aug 2030 |

@@ -22,6 +22,12 @@
     class="tui-linkedReviewViewGoal"
     :class="{ 'tui-linkedReviewViewGoal--print': fromPrint }"
   >
+    <div
+      v-if="contentTypeDisplayName"
+      class="tui-linkedReviewViewGoal__contentType"
+    >
+      {{ contentTypeDisplayName }}
+    </div>
     <h4 class="tui-linkedReviewViewGoal__title">
       <a
         v-if="
@@ -95,6 +101,7 @@
 <script>
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
+import { GOAL_SCOPE_COMPANY, GOAL_SCOPE_PERSONAL } from '../../js/constants';
 
 export default {
   components: {
@@ -114,6 +121,20 @@ export default {
 
   computed: {
     /**
+     * The type of content in a human readable form.
+     * @return {String}
+     */
+    contentTypeDisplayName() {
+      switch (this.content.goal.goal_scope) {
+        case GOAL_SCOPE_PERSONAL:
+          return this.$str('personalgoal', 'totara_hierarchy');
+        case GOAL_SCOPE_COMPANY:
+          return this.$str('companygoal', 'totara_hierarchy');
+        default:
+          return '';
+      }
+    },
+    /**
      * Provide url for goal
      * @return {String}
      */
@@ -122,7 +143,7 @@ export default {
         return '';
       }
 
-      if (this.content.goal.goal_scope === 'COMPANY') {
+      if (this.content.goal.goal_scope === GOAL_SCOPE_COMPANY) {
         return this.$url('/totara/hierarchy/item/view.php', {
           id: this.content.goal.id,
           prefix: 'goal',
@@ -164,14 +185,18 @@ export default {
 </script>
 
 <lang-strings>
-  {
-    "hierarchy_goal": [
-      "goal_status",
-      "target_date",
-      "perform_review_goal_missing",
-      "selected_goal"
-    ]
-  }
+{
+  "hierarchy_goal": [
+    "goal_status",
+    "target_date",
+    "perform_review_goal_missing",
+    "selected_goal"
+  ],
+  "totara_hierarchy": [
+    "companygoal",
+    "personalgoal"
+  ]
+}
 </lang-strings>
 
 <style lang="scss">
@@ -180,9 +205,14 @@ export default {
     margin-top: var(--gap-4);
   }
 
+  &__contentType {
+    @include tui-font-body-small();
+  }
+
   &__title {
     @include tui-font-heading-x-small();
-    margin: 0;
+    margin-top: var(--gap-2);
+    margin-bottom: 0;
   }
 
   &__overview {

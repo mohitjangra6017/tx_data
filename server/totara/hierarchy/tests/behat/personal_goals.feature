@@ -116,7 +116,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
   Scenario: Verify the Show Details button show the details of the personal goal
     When I log in as "learner1"
     And I am on "Goals" page
-    Then I should see "Personal Goals"
+    Then I should see "Personal goals"
 
     # Create a new personal goal
     When I press "Add personal goal"
@@ -229,7 +229,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
     When I log out
     And I log in as "learner1"
     And I am on "Goals" page
-    Then I should see "Personal Goals"
+    Then I should see "Personal goals"
 
     # Create a new personal goal
     When I press "Add personal goal"
@@ -300,7 +300,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
     And I switch to "Content" tab
     And I set the field "datatype" to "Goals"
     And I press "submitbutton"
-    And I set the field "Question" to "Please review your personal goals"
+    And I set the field "Question" to "Please review your Personal goals"
     And I set the field "Include personal goal custom fields" to "1"
     # Get the learner and their manager to participate in the appraisal.
     And I set the field "roles[1][2]" to "1"
@@ -308,7 +308,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
     And I set the field "roles[2][2]" to "1"
     And I set the field "roles[2][6]" to "1"
     And I press "Save changes"
-    Then I should see "Please review your personal goals"
+    Then I should see "Please review your Personal goals"
 
     # Assign a user to the appraisal.
     When I follow "Assignments"
@@ -412,7 +412,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
     When I log out
     And I log in as "learner1"
     And I am on "Goals" page
-    Then I should see "Personal Goals"
+    Then I should see "Personal goals"
 
     # Create a new personal goal
     When I press "Add personal goal"
@@ -432,7 +432,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
 
     # Add the personal goal to the appraisal.
     When I press "Choose goals to review"
-    And I set the field "goaltypeselector" to "Personal Goals"
+    And I set the field "goaltypeselector" to "Personal goals"
     And I follow "Personal Goal 1"
     And I click on "Save" "button" in the "Choose goals to review" "totaradialogue"
     And I wait "1" seconds
@@ -544,9 +544,9 @@ Feature: Verify creation and use of personal goal types and custom fields.
     And I switch to "Content" tab
     And I set the field "datatype" to "Goals"
     And I press "submitbutton"
-    And I set the field "Question" to "Please review your personal goals"
+    And I set the field "Question" to "Please review your Personal goals"
     And I set the field "Include personal goal custom fields" to "1"
-    # Automatically add all personal goals to review
+    # Automatically add all Personal goals to review
     And I click on "#id_selection_selectpersonal_4" "css_element"
     And I set the field "Multiple fields" to "1"
     And I set the field with xpath "//input[@id='id_choice_0_option']" to "Goal question 1"
@@ -559,7 +559,7 @@ Feature: Verify creation and use of personal goal types and custom fields.
     And I set the field "roles[2][2]" to "1"
     And I set the field "roles[2][6]" to "1"
     And I press "Save changes"
-    Then I should see "Please review your personal goals"
+    Then I should see "Please review your Personal goals"
 
     # Assign a user to the appraisal.
     When I follow "Assignments"

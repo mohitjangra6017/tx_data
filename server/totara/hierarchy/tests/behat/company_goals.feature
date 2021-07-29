@@ -8,38 +8,38 @@ Feature: Verify creation and use of company goal types and custom fields.
       | learner1 | Learner1  | Learner1 | learner1@example.com |
     And the following "goal frameworks" exist in "totara_hierarchy" plugin:
       | fullname                 | idnumber |
-      | Company Goal Framework 1 | CGF1     |
+      | Company goal Framework 1 | CGF1     |
     And the following "goals" exist in "totara_hierarchy" plugin:
       | fullname       | idnumber | goal_framework |
-      | Company Goal 1 | CG1      | CGF1           |
-      | Company Goal 2 | CG2      | CGF1           |
+      | Company goal 1 | CG1      | CGF1           |
+      | Company goal 2 | CG2      | CGF1           |
 
   Scenario: Verify a goal type can be successfully created, updated and deleted.
 
-    # Create a new Company Goal Type
+    # Create a new Company goal Type
     Given I log in as "admin"
     And I navigate to "Manage company goal types" node in "Site administration > Goals"
     And I press "Add a new company goal type"
     And I set the following fields to these values:
-      | Type full name         | Company Goal Type 1             |
+      | Type full name         | Company goal type 1             |
       | Goal type ID number    | CGT1                            |
-      | Goal type description  | Company Goal Type 1 description |
+      | Goal type description  | Company goal type 1 description |
     When I press "Save changes"
-    Then I should see "The goal type \"Company Goal Type 1\" has been created"
+    Then I should see "The goal type \"Company goal type 1\" has been created"
 
     # Update the Company Goal Type.
     When I click on "Edit" "link" in the ".generaltable" "css_element"
     And I set the following fields to these values:
-      | Type full name         | Company Goal Type 1a               |
+      | Type full name         | Company goal type 1a               |
       | Goal type ID number    | CGT1a                              |
-      | Goal type description  | Company Goal Type 1a description   |
+      | Goal type description  | Company goal type 1a description   |
     And I press "Save changes"
-    Then I should see "The goal type \"Company Goal Type 1a\" has been updated"
+    Then I should see "The goal type \"Company goal type 1a\" has been updated"
 
     # Delete the Company Goal Type.
     When I click on "Delete" "link" in the ".generaltable" "css_element"
     And I press "Continue"
-    Then I should see "The goal type \"Company Goal Type 1a\" has been completely deleted."
+    Then I should see "The goal type \"Company goal type 1a\" has been completely deleted."
     And I should see "No goal types"
 
   @_file_upload @totara_customfield
@@ -50,14 +50,14 @@ Feature: Verify creation and use of company goal types and custom fields.
     And I navigate to "Manage company goal types" node in "Site administration > Goals"
     And I press "Add a new company goal type"
     And I set the following fields to these values:
-      | Type full name         | Company Goal Type 1  |
+      | Type full name         | Company goal type 1  |
       | Goal type ID number    | CGT1 |
     # Save the changes.
     When I press "Save changes"
-    Then I should see "The goal type \"Company Goal Type 1\" has been created"
+    Then I should see "The goal type \"Company goal type 1\" has been created"
 
     # Select the goal type to create custom fields for.
-    When I follow "Company Goal Type 1"
+    When I follow "Company goal type 1"
     Then I should see "No fields have been defined"
 
     # Create a checkbox.
@@ -135,7 +135,7 @@ Feature: Verify creation and use of company goal types and custom fields.
 
     # Add some data to the custom fields on the company goals.
     When I navigate to "Manage goals" node in "Site administration > Goals"
-    And I follow "Company Goal Framework 1"
+    And I follow "Company goal Framework 1"
     And I click on "Edit" "link" in the ".totaratable" "css_element"
     And I press "Change type"
     And I press "Choose"
@@ -158,7 +158,7 @@ Feature: Verify creation and use of company goal types and custom fields.
     And I upload "/totara/hierarchy/tests/behat/fixtures/logo.png" file to "File 1" filemanager
     And I press "Save changes"
     # Check that all the data has been added to the company goal.
-    Then I should see "Company Goal Type 1" in the ".dl-horizontal" "css_element"
+    Then I should see "Company goal type 1" in the ".dl-horizontal" "css_element"
     And I should see "Yes" in the ".dl-horizontal" "css_element"
     And I should see "31 December 2035" in the ".dl-horizontal" "css_element"
     And I should see "logo.png" in the ".dl-horizontal" "css_element"
@@ -172,17 +172,17 @@ Feature: Verify creation and use of company goal types and custom fields.
     When I log out
     And I log in as "learner1"
     And I am on "Goals" page
-    Then I should see "Company Goals"
+    Then I should see "Company goals"
 
     # Add a company goal to the learner goals.
     When I press "Add company goal"
-    And I follow "Company Goal 1"
+    And I follow "Company goal 1"
     And I press "Save"
-    Then I should see "Company Goal 1"
+    Then I should see "Company goal 1"
 
     # Check the correct data is visible on the goal.
     And I press "Show details"
-    Then I should see "Type: Company Goal Type 1"
+    Then I should see "Type: Company goal type 1"
     And I should see "Checkbox 1: Yes"
     And I should see "Datetime 1: 31 December 2035"
     And I should see "logo.png"
