@@ -17,27 +17,27 @@
  */
 
 /**
- * Return an array of available branch ID's included in the dataset
+ * Return an array of available node ID's included in the dataset
  *
  * @param {array} data
  * @returns {array}
  */
-export function getAllBranchKeys(data) {
+export function getAllNodeKeys(data) {
   /**
-   * Gets available list of branch ID's
+   * Gets available list of node ID's
    *
-   * @param {Object} branch
+   * @param {Object} node
    */
-  function getKeyList(branch) {
+  function getKeyList(node) {
     // Add Id to list if not already included (check for duplicates)
-    if (!fullKeyList.includes(branch.id)) {
-      fullKeyList.push(branch.id);
+    if (!fullKeyList.includes(node.id)) {
+      fullKeyList.push(node.id);
     }
 
     // If there is child data iterate through it
-    if (branch.children) {
-      branch.children.forEach(subBranch => {
-        getKeyList(subBranch);
+    if (node.children) {
+      node.children.forEach(subNode => {
+        getKeyList(subNode);
       });
     }
   }
@@ -58,24 +58,24 @@ export function getAllBranchKeys(data) {
  */
 export function getAllParentKeys(data, key) {
   /**
-   * Gets parent branch ID's for provided key
+   * Gets parent node ID's for provided key
    *
-   * @param {Object} branch
+   * @param {Object} node
    * @param {string} key
    */
-  function getKeyList(branch, path) {
+  function getKeyList(node, path) {
     let currentPath = [].concat(path);
-    currentPath.push(branch.id);
+    currentPath.push(node.id);
 
-    if (branch.id === key) {
+    if (node.id === key) {
       fullPath = currentPath;
       return;
     }
 
     // If there is child data iterate through it
-    if (branch.children) {
-      branch.children.forEach(subBranch => {
-        getKeyList(subBranch, currentPath);
+    if (node.children) {
+      node.children.forEach(subNode => {
+        getKeyList(subNode, currentPath);
       });
     }
   }

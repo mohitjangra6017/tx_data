@@ -18,10 +18,10 @@
 
 <template>
   <div ref="tree" class="tui-tree">
-    <TreeBranch
-      v-for="(tree, index) in treeData"
+    <TreeNode
+      v-for="(tree, index) in mutableTreeData"
       :key="tree.id"
-      :branch-id="tree.id"
+      :node-id="tree.id"
       :children="tree.children"
       :content="tree.content"
       :depth="1"
@@ -62,28 +62,28 @@
           :top-level="topLevel"
         />
       </template>
-    </TreeBranch>
+    </TreeNode>
   </div>
 </template>
 
 <script>
 import { getTabbableElements } from 'tui/dom/focus';
 import { isRtl } from 'tui/i18n';
-import TreeBranch from 'tui/components/tree/TreeBranch';
+import TreeNode from 'tui/components/tree/TreeNode';
 
 export default {
   components: {
-    TreeBranch,
+    TreeNode,
   },
 
   props: {
-    // Limit the depth of branches in the tree
+    // Limit the depth of nodes in the tree
     depthLimit: Number,
     // Number for header tag level
     headerLevel: Number,
-    // String (null), link or button for branch label
+    // String (null), link or button for node label
     labelType: String,
-    // Visually display a separator between top level branches
+    // Visually display a separator between top level nodes
     separator: Boolean,
     /*
     Tree data structure
@@ -92,17 +92,31 @@ export default {
         id: 'continents',
         // String, displayed label
         label: 'Continents',
-        // Data which will be provided to the slot
+        // Data which will be provided to the slot (can any type, e.g. array or string, not just object)
         content: {},
-        // Branch data, must follow same structure as parent
+        // Node data, must follow same structure as parent
         children: [],
       }]
     */
     treeData: Array,
-    // List of expanded branch ID's
+    // List of expanded node ID's
     value: {
       required: true,
       type: Array,
+    },
+  },
+
+  computed: {
+    /**
+     * Get a mutable version of the tree data.
+     */
+    mutableTreeData() {
+      if (this.treeData != null && !Object.isExtensible(this.treeData)) {
+        // This is necessary in order to be able to use tree data that has come from Apollo.
+        // Apollo returns non-extensible data, but we need to be able to modify the structure when rendering the tree.
+        return JSON.parse(JSON.stringify(this.treeData));
+      }
+      return this.treeData;
     },
   },
 
@@ -116,20 +130,20 @@ export default {
 
   methods: {
     /**
-     * expand or collapse provided branch
+     * expand or collapse provided node
      *
-     * @param {Array} branch
+     * @param {Array} node
      */
-    updateExpanded(branch) {
+    updateExpanded(node) {
       let openList = this.value;
-      if (branch.expanded) {
+      if (node.expanded) {
         // Add to list if not already included
-        if (!openList.includes(branch.key)) {
-          openList.push(branch.key);
+        if (!openList.includes(node.key)) {
+          openList.push(node.key);
         }
       } else {
         // Remove from list
-        openList = openList.filter(x => x !== branch.key);
+        openList = openList.filter(x => x !== node.key);
       }
 
       this.$emit('input', openList);

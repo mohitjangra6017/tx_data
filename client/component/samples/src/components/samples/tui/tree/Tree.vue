@@ -88,8 +88,8 @@
       </FormRow>
 
       <FormRow label="Toggle">
-        <Button text="Collapse all" @click="collapseAllBranches()" />
-        <Button text="Expand all" @click="expandAllBranches()" />
+        <Button text="Collapse all" @click="collapseAllNodes()" />
+        <Button text="Expand all" @click="expandAllNodes()" />
       </FormRow>
 
       <FormRow label="Expand Continents">
@@ -122,7 +122,7 @@ import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample'
 import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 import Tree from 'tui/components/tree/Tree';
-import { getAllBranchKeys, getAllParentKeys } from 'tui/components/tree/util';
+import { getAllNodeKeys, getAllParentKeys } from 'tui/components/tree/util';
 
 export default {
   components: {
@@ -419,7 +419,7 @@ export default {
 
   computed: {
     /**
-     * Toggle expanded state of continents & oceanic branches
+     * Toggle expanded state of continents & oceanic nodes
      *
      * @return {Array}
      */
@@ -439,7 +439,7 @@ export default {
 
   watch: {
     /**
-     * Check if this branch should be expanded
+     * Check if this node should be expanded
      *
      */
     expandContinents(expanded) {
@@ -447,8 +447,8 @@ export default {
     },
 
     /**
-     * Check if this branch should be expanded
-     * Also expand it's parent branches when expanding
+     * Check if this node should be expanded
+     * Also expand it's parent nodes when expanding
      *
      */
     expandOceanic(expanded) {
@@ -462,30 +462,30 @@ export default {
   },
 
   mounted() {
-    this.allKeys = getAllBranchKeys(this.tree);
+    this.allKeys = getAllNodeKeys(this.tree);
   },
 
   methods: {
     /**
-     * Collapse all branches
+     * Collapse all nodes
      *
      */
-    collapseAllBranches() {
+    collapseAllNodes() {
       this.expandedList = [];
     },
 
     /**
-     * Expand all branches
+     * Expand all nodes
      *
      */
-    expandAllBranches() {
+    expandAllNodes() {
       this.expandedList = this.allKeys;
     },
 
     /**
      * Flatten sub element data
      * This allows for content to be displayed
-     * from branches removed by the depth limit
+     * from nodes removed by the depth limit
      *
      * @param {Array} data
      * @return {Array}
@@ -517,7 +517,7 @@ export default {
     },
 
     /**
-     * Toggle expand state of branch
+     * Toggle expand state of node
      *
      * @param {Boolean} expanded
      * @param {String} key

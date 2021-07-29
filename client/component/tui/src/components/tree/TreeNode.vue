@@ -18,21 +18,21 @@
 
 <template>
   <div
-    class="tui-treeBranch"
+    class="tui-treeNode"
     :class="{
-      'tui-treeBranch--top': topLevel,
-      'tui-treeBranch--separator': separator && topLevel,
+      'tui-treeNode--top': topLevel,
+      'tui-treeNode--separator': separator && topLevel,
     }"
   >
     <div
-      v-if="hasContent || children"
-      class="tui-treeBranch__trigger"
-      :class="{ 'tui-treeBranch__trigger--top': topLevel }"
+      v-if="hasContent || hasChildren"
+      class="tui-treeNode__trigger"
+      :class="{ 'tui-treeNode__trigger--top': topLevel }"
     >
-      <!-- Branch expand trigger -->
+      <!-- Node expand trigger -->
       <ButtonIcon
         ref="trigger"
-        class="tui-treeBranch__trigger-btn"
+        class="tui-treeNode__trigger-btn"
         :styleclass="{ transparent: true }"
         :aria-expanded="open.toString()"
         :aria-controls="regionId"
@@ -45,10 +45,10 @@
         <ExpandIcon v-else />
       </ButtonIcon>
     </div>
-    <div class="tui-treeBranch__content">
-      <!-- Branch bar -->
-      <div class="tui-treeBranch__bar">
-        <!-- Branch label (Can be text, button or link) -->
+    <div class="tui-treeNode__content">
+      <!-- Node bar -->
+      <div class="tui-treeNode__bar">
+        <!-- Node label (Can be text, button or link) -->
 
         <template v-if="$scopedSlots['custom-label']">
           <slot
@@ -62,17 +62,17 @@
         <template v-else>
           <Button
             v-if="labelType === 'button'"
-            :id="branchLabelId"
-            class="tui-treeBranch__bar-btn"
+            :id="nodeLabelId"
+            class="tui-treeNode__bar-btn"
             :styleclass="{ primary: true, transparent: true }"
             :text="label"
-            @click="$emit('label-click', branchId)"
+            @click="$emit('label-click', nodeId)"
           />
 
           <a
             v-else-if="labelType === 'link' && linkUrl"
-            :id="branchLabelId"
-            class="tui-treeBranch__bar-link"
+            :id="nodeLabelId"
+            class="tui-treeNode__bar-link"
             :href="linkUrl"
           >
             {{ label }}
@@ -81,14 +81,14 @@
           <component
             :is="headerTag"
             v-else
-            :id="branchLabelId"
-            class="tui-treeBranch__bar-label"
+            :id="nodeLabelId"
+            class="tui-treeNode__bar-label"
           >
             {{ label }}
           </component>
         </template>
 
-        <div class="tui-treeBranch__bar-side">
+        <div class="tui-treeNode__bar-side">
           <slot v-if="sideContent" name="side" :sideContent="sideContent" />
         </div>
       </div>
@@ -97,15 +97,15 @@
         {{ regionAccessibleLabel }}
       </span>
       <div v-show="open" :id="regionId" role="region" :aria-label="label">
-        <!-- Sub-branches -->
+        <!-- Sub-nodes -->
         <template v-if="depth !== depthLimit">
           <div
             v-for="(child, index) in children"
             :key="child.id"
-            class="tui-treeBranch__child"
+            class="tui-treeNode__child"
           >
-            <TreeBranch
-              :branch-id="child.id"
+            <TreeNode
+              :node-id="child.id"
               :children="child.children"
               :content="child.content"
               :depth="depth + 1"
@@ -140,17 +140,17 @@
               <template v-slot:side="{ sideContent }">
                 <slot name="side" :sideContent="sideContent" />
               </template>
-            </TreeBranch>
+            </TreeNode>
           </div>
         </template>
 
-        <!-- Branch leaves -->
-        <div class="tui-treeBranch__leaf">
+        <!-- Node leaves -->
+        <div class="tui-treeNode__leaf">
           <slot
             name="content"
             :content="getOutputContent()"
             :label="label"
-            :labelledBy="branchLabelId"
+            :labelledBy="nodeLabelId"
           />
         </div>
       </div>
@@ -165,7 +165,7 @@ import CollapseIcon from 'tui/components/icons/Collapse';
 import ExpandIcon from 'tui/components/icons/Expand';
 
 export default {
-  name: 'TreeBranch',
+  name: 'TreeNode',
 
   components: {
     Button,
@@ -175,12 +175,9 @@ export default {
   },
 
   props: {
-    branchId: String,
+    nodeId: String,
     children: Array,
-    content: {
-      type: Object,
-      default: () => ({}),
-    },
+    content: [Array, Boolean, Number, Object, String],
     depth: Number,
     depthLimit: Number,
     headerLevel: {
@@ -211,12 +208,12 @@ export default {
      *
      * @return {String}
      */
-    branchLabelId() {
+    nodeLabelId() {
       return this.$id('label');
     },
 
     /**
-     * Provide the correct header tag for branch label
+     * Provide the correct header tag for node label
      *
      */
     headerTag() {
@@ -229,7 +226,16 @@ export default {
      * @return {Boolean}
      */
     hasContent() {
-      return Object.keys(this.content).length;
+      return this.content != null;
+    },
+
+    /**
+     * Check if there is at least one child tree node.
+     *
+     * @return {Boolean}
+     */
+    hasChildren() {
+      return this.children != null && this.children.length > 0;
     },
 
     /**
@@ -267,7 +273,7 @@ export default {
 
   watch: {
     /**
-     * Check if this branch should be expanded
+     * Check if this node should be expanded
      *
      */
     openList(list) {
@@ -281,12 +287,12 @@ export default {
 
   methods: {
     /**
-     * set the open (expanded) state of the branch
+     * set the open (expanded) state of the node
      *
      * @param {Array} list
      */
     setOpenState(list) {
-      this.open = list.includes(this.branchId);
+      this.open = list.includes(this.nodeId);
     },
 
     /**
@@ -295,7 +301,7 @@ export default {
      */
     toggleExpand() {
       this.$emit('expanded', {
-        key: this.branchId,
+        key: this.nodeId,
         expanded: !this.open,
       });
     },
@@ -310,14 +316,14 @@ export default {
 
       // If no content & no depth limit
       if (!this.hasContent && !this.depthLimit) {
-        return {};
+        return null;
       }
 
       content.subContent = [];
       // Get content data from removed children
       if (this.depth === this.depthLimit && this.children.length) {
-        this.children.forEach((subBranch, index) => {
-          content.subContent[index] = this.getSubContent(subBranch);
+        this.children.forEach((subNode, index) => {
+          content.subContent[index] = this.getSubContent(subNode);
         });
       }
 
@@ -325,21 +331,21 @@ export default {
     },
 
     /**
-     * Get the content from branches removed by the depth limit
+     * Get the content from nodes removed by the depth limit
      *
-     * @param {Object} branch
+     * @param {Object} node
      * @return {Object}
      */
-    getSubContent(branch) {
-      if (!branch.children.length) {
-        return branch.content;
+    getSubContent(node) {
+      if (!node.children.length) {
+        return node.content;
       }
 
-      branch.content.subContent = [];
-      branch.children.forEach((subBranch, index) => {
-        branch.content.subContent[index] = this.getSubContent(subBranch);
+      node.content.subContent = [];
+      node.children.forEach((subNode, index) => {
+        node.content.subContent[index] = this.getSubContent(subNode);
       });
-      return branch.content;
+      return node.content;
     },
   },
 };
@@ -354,7 +360,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-treeBranch {
+.tui-treeNode {
   display: flex;
   width: 100%;
   padding: 1px 0;
@@ -391,7 +397,7 @@ export default {
     }
 
     &--top {
-      .tui-treeBranch__trigger-btn {
+      .tui-treeNode__trigger-btn {
         left: 0;
       }
     }
