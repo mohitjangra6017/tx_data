@@ -1,0 +1,65 @@
+type core_enrol_course_info {
+  """
+  Whether the user has currently completed the course
+  """
+  is_complete: Boolean!
+  """
+  Whether the user is currently enrolled in the course
+  """
+  is_enrolled: Boolean!
+  """
+  Whether the course allows guest access
+  """
+  guest_access: Boolean!
+  """
+  Whether the course has self-enrolment options for the user
+  """
+  can_enrol: Boolean!
+  """
+  Whether the user has capabilities to access the course regardless of enrolment
+  """
+  can_view: Boolean!
+  """
+  information on any enabled guest or selfenrolment instances
+  """
+  enrolment_options: [core_enrol_instance]!
+}
+
+type core_enrol_instance {
+  """
+  The id of the active course enrolment instance
+  """
+  id: core_id!
+  """
+  The type of enrolment, i.e. guest, self
+  """
+  type: String!
+  """
+  The name of the role that the enrolment would assign
+  """
+  role_name: String
+  """
+  The name of the enrolment type
+  """
+  custom_name: String
+  """
+  The sort order of the enrolment type
+  """
+  sort_order: Int
+  """
+  Whether the enrolment requires a password or not
+  """
+  password_required: Boolean
+}
+
+extend type Query {
+  """
+  Return a single course from its ID if the user can access it
+  """
+  core_enrol_course_info(
+    """
+    The mandatory id of the course
+    """
+    courseid: core_id!
+  ): core_enrol_course_info
+}
