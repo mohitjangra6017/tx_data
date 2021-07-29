@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Vernon Denny <vernon.denny@totaralearning.com>
- * @package ml_recommender
+ * @author Cody Finegan <cody.finegan@totaralearning.com>
+ * @package ml_service
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021052501;             // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2021052500;             // Requires this Totara version
-$plugin->component = 'ml_recommender';   // Full name of the plugin (used for diagnostics)
-
-$plugin->dependencies = [
-    'totara_engage' => 2020101200,
-    'totara_playlist' => 2020101200,
-    'engage_article' => 2020101200,
-    'container_workspace' => 2020101200,
-    'ml_service' => 2021072900,
-];
+$string['error_no_config_defined'] = 'The ml_service_url configuration option has not been defined.';
+$string['healthy'] = 'Healthy';
+$string['pluginname'] = 'Machine Learning Service';
+$string['unhealthy'] = 'Unhealthy';
+$string['unknown'] = 'Unknown';

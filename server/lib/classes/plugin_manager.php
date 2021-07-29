@@ -1386,7 +1386,7 @@ class core_plugin_manager {
             ),
 
             'ml' => array(
-                'recommender'
+                'recommender', 'service',
             ),
 
             'plagiarism' => array(

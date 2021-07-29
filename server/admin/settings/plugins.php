@@ -612,6 +612,16 @@ if ($hassiteconfig) {
         )
     );
 
+    $env_page->add(
+        new admin_setting_configtext(
+            'ml_service_url',
+            get_string('ml_service_url_label', 'ml'),
+            get_string('ml_service_url_description', 'ml'),
+            'http://localhost:5000',
+            PARAM_URL
+        )
+    );
+
     $ADMIN->add('machine_learning_settings', $env_page);
 
     foreach (core_plugin_manager::instance()->get_plugins_of_type('ml') as $plugin) {

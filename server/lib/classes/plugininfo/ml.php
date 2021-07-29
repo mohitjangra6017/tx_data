@@ -135,4 +135,13 @@ class ml extends base {
     public static function get_manage_url() {
         return new moodle_url('/admin/machine_learning.php');
     }
+
+    /**
+     * If true, this ML plugin can be toggled on/off on the settings page
+     *
+     * @return bool
+     */
+    public function can_toggle(): bool {
+        return true;
+    }
 }
