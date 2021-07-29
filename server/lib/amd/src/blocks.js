@@ -51,14 +51,14 @@ define(['jquery', 'core/templates'], function ($, templates) {
 
             if (title && action && collapsible) {
                 templates.renderIcon('block-hide', config.tooltipVisible).done(function (html) {
-                    var hideicon = $('<a href="#" title="' + config.tooltipVisible + '" class="block-hider-hide">' + html + '</a>');
+                    var hideicon = $('<a href="#" title="' + config.tooltipVisible + '" class="block-hider-hide" role="button" aria-expanded="true">' + html + '</a>');
 
                     hideicon.click(handleClick);
                     hideicon.keypress(handlekeypress);
                     action.append(hideicon);
                 });
                 templates.renderIcon('block-show', config.tooltipHidden).done(function (html) {
-                    var showicon = $('<a href="#" title="' + config.tooltipHidden + '" class="block-hider-show">' + html + '</a>');
+                    var showicon = $('<a href="#" title="' + config.tooltipHidden + '" class="block-hider-show" role="button" aria-expanded="false">' + html + '</a>');
 
                     showicon.click(handleClick);
                     showicon.keypress(handlekeypress);

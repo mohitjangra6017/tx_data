@@ -23,7 +23,7 @@ M.core.dock.ensureMoveToIconExists = function(blocknode) {
             .done(function (html) {
             var blockaction = localblocknode.one('.block_action');
             if (blockaction) {
-                blockaction.prepend('<a href="#" class="moveto customcommand requiresjs">' + html + '</a>');
+                blockaction.prepend('<a href="#" class="moveto customcommand requiresjs" role="button">' + html + '</a>');
             } else {
                 var commands = localblocknode.one('.header .title .commands');
                 if (localblocknode.one('.header .title')) {
