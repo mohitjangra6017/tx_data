@@ -50,6 +50,10 @@ define(['core/templates'], function(templates) {
                 if (e.target.closest('[data-tw-totaraNav-toggle]') || e.target.closest('[data-tw-totaranav-list-close]')) {
                     that.widget.querySelector('[data-tw-totaraNav-list]').classList.toggle('totaraNav_prim--list_showMobile');
                     that.widget.querySelector('[data-tw-totaraNav-list]').classList.toggle('totaraNav_prim--list_hideMobile');
+
+                    var expandval = that.widget.querySelector('[data-tw-totaraNav-toggle]').getAttribute('aria-expanded');
+                    var newexpandval = expandval == "true" ? "false" : "true";
+                    that.widget.querySelector('[data-tw-totaraNav-toggle]').setAttribute('aria-expanded', newexpandval);
                     if (e.target.closest('[data-tw-totaraNav-toggle]')) {
                         that.widget.querySelector('[data-tw-totaranav-list-close]').focus();
                     }
@@ -162,6 +166,7 @@ define(['core/templates'], function(templates) {
                     if (!e.target.closest('[data-tw-totaraNav-list]') && !e.target.closest('[data-tw-totaraNav-toggle]')) {
                         that.widget.querySelector('[data-tw-totaraNav-list]').classList.remove('totaraNav_prim--list_showMobile');
                         that.widget.querySelector('[data-tw-totaraNav-list]').classList.add('totaraNav_prim--list_hideMobile');
+                        that.widget.querySelector('[data-tw-totaraNav-toggle]').setAttribute('aria-expanded', false);
                     }
                 });
             }
