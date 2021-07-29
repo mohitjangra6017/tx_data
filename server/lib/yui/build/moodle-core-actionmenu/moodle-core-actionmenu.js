@@ -152,6 +152,7 @@ ACTIONMENU.prototype = {
         }
         align = menucontent.getData('align') || this.get('align').join('-');
         menu.one(SELECTOR.TOGGLE).set('aria-haspopup', true);
+        menu.one(SELECTOR.TOGGLE).set('aria-expanded', false);
         menucontent.set('aria-hidden', true);
         if (!menucontent.hasClass('align-' + align)) {
             menucontent.addClass('align-' + align);
@@ -258,6 +259,7 @@ ACTIONMENU.prototype = {
         if (this.dialogue) {
             this.dialogue.removeClass('show');
             this.dialogue.one(SELECTOR.MENUCONTENT).set('aria-hidden', true);
+            this.dialogue.one(SELECTOR.TOGGLE).set('aria-expanded', false);
             this.dialogue = null;
         }
         for (var i in this.events) {
@@ -449,6 +451,9 @@ ACTIONMENU.prototype = {
             this.menulink = e.target.ancestor(SELECTOR.TOGGLE, true);
         }
         this.constrain(menucontent.set('aria-hidden', false));
+
+        // Set aria expanded when opening menu
+        this.menulink.set('aria-expanded', true);
 
         // Totara: Support delayload
         this.delayLoadMenu(menu, function() {
