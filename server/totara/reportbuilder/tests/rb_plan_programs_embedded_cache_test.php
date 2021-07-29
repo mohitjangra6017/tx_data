@@ -40,16 +40,27 @@ class totara_reportbuilder_rb_plan_programs_embedded_cache_testcase extends repo
 
 
     protected $report_builder_columns_data = array(
-                        array('id' => 61, 'reportid' => 13, 'type' => 'program', 'value' => 'proglinkicon',
-                              'heading' => 'A', 'sortorder' => 1),
-                        array('id' => 62, 'reportid' => 13, 'type' => 'program', 'value' => 'mandatory',
-                              'heading' => 'B', 'sortorder' => 2),
-                        array('id' => 63, 'reportid' => 13, 'type' => 'program', 'value' => 'recurring',
-                              'heading' => 'C', 'sortorder' => 3),
-                        array('id' => 64, 'reportid' => 13, 'type' => 'program', 'value' => 'timedue',
-                              'heading' => 'D', 'sortorder' => 4),
-                        array('id' => 65, 'reportid' => 13, 'type' => 'program_completion', 'value' => 'status',
-                              'heading' => 'E', 'sortorder' => 5));
+        array(
+            'id' => 61, 'reportid' => 13, 'type' => 'program', 'value' => 'proglinkicon',
+            'heading' => 'A', 'sortorder' => 1
+        ),
+        array(
+            'id' => 62, 'reportid' => 13, 'type' => 'program', 'value' => 'assigned',
+            'heading' => 'B', 'sortorder' => 2
+        ),
+        array(
+            'id' => 63, 'reportid' => 13, 'type' => 'program', 'value' => 'recurring',
+            'heading' => 'C', 'sortorder' => 3
+        ),
+        array(
+            'id' => 64, 'reportid' => 13, 'type' => 'program', 'value' => 'timedue',
+            'heading' => 'D', 'sortorder' => 4
+        ),
+        array(
+            'id' => 65, 'reportid' => 13, 'type' => 'program_completion', 'value' => 'status',
+            'heading' => 'E', 'sortorder' => 5
+        )
+    );
 
     protected $report_builder_filters_data = array(
                         array('id' => 29, 'reportid' => 13, 'type' => 'program', 'value' => 'fullname',

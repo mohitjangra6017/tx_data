@@ -230,6 +230,7 @@ class rb_source_dp_program extends rb_base_source {
             )
         );
 
+        /** Deprecated since Totara 12 */
         $columnoptions[] = new rb_column_option(
             'program',
             'mandatory',
@@ -238,6 +239,18 @@ class rb_source_dp_program extends rb_base_source {
             array(
                 'joins' => 'prog_user_assignment',
                 'displayfunc' => 'program_mandatory_status',
+                'deprecated' => true
+            )
+        );
+
+        $columnoptions[] = new rb_column_option(
+            'program',
+            'assigned',
+            get_string('programassigned', 'totara_program'),
+            "prog_user_assignment.id",
+            array(
+                'joins' => 'prog_user_assignment',
+                'displayfunc' => 'program_assigned',
             )
         );
 

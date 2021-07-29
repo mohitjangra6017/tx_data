@@ -2,7 +2,7 @@
 /*
  * This file is part of Totara Learn
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Simon Player <simon.player@totaralearning.com>
+ * @author Murali Nair <murali.nair@totaralearning.com>
  * @package totara_program
  */
 
@@ -25,14 +25,9 @@ namespace totara_program\rb\display;
 use totara_reportbuilder\rb\display\base;
 
 /**
- * Display class intended for mandatory status
- *
- * @author Simon Player <simon.player@totaralearning.com>
- * @package totara_program
- * @deprecated Since Totara 12.34
+ * Display class intended for program assignment status.
  */
-class program_mandatory_status extends base {
-
+class program_assigned extends base {
     /**
      * Handles the display
      *
@@ -44,8 +39,19 @@ class program_mandatory_status extends base {
      * @return string
      */
     public static function display($value, $format, \stdClass $row, \rb_column $column, \reportbuilder $report) {
-        debugging('program_mandatory_status has been deprecated since Totara 12.34. Use totara_program\rb\display\program_assigned instead', DEBUG_DEVELOPER);
-        return program_assigned::display($value, $format, $row, $column, $report);
+        global $OUTPUT;
+
+        $isexport = ($format !== 'html');
+
+        if (!empty($value)) {
+            if ($isexport) {
+                return get_string('yes');
+            } else {
+                return $OUTPUT->pix_icon('i/valid', get_string('yes'));
+            }
+        }
+
+        return get_string('no');
     }
 
     /**
@@ -57,7 +63,6 @@ class program_mandatory_status extends base {
      * @return bool
      */
     public static function is_graphable(\rb_column $column, \rb_column_option $option, \reportbuilder $report) {
-        debugging('program_mandatory_status has been deprecated since Totara 12.34. Use totara_program\rb\display\program_assigned instead', DEBUG_DEVELOPER);
-        return program_assigned::is_graphable($column, $option, $report);
+        return false;
     }
 }

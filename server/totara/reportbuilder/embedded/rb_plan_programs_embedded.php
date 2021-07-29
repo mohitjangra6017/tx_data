@@ -50,8 +50,8 @@ class rb_plan_programs_embedded extends rb_base_embedded {
             ),
             array(
                 'type' => 'program',
-                'value' => 'mandatory',
-                'heading' => get_string('mandatory', 'totara_program'),
+                'value' => 'assigned',
+                'heading' => get_string('programassigned', 'totara_program'),
             ),
             array(
                 'type' => 'program',
