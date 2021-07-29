@@ -21,22 +21,8 @@
  * @package mod_contentmarketplace
  */
 
-namespace mod_contentmarketplace\formatter;
+defined('MOODLE_INTERNAL') || die();
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
-
-class content_marketplace extends entity_model_formatter {
-    /**
-     * @inheritDoc
-     */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-        ];
-    }
-}
+$subplugins = [
+    'contentmarketplaceactivity' => 'mod/contentmarketplace/contentmarketplaces',
+];

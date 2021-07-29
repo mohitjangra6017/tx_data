@@ -97,28 +97,6 @@ class mod_contentmarketplace_webapi_type_content_marketplace_testcase extends te
     /**
      * @return void
      */
-    public function test_resolve_field_learning_object(): void {
-        $generator = self::getDataGenerator();
-        $course = $generator->create_course();
-
-        $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
-        $content_marketplace = content_marketplace::from_course_module_id($cm->cmid);
-
-        self::assertEquals(
-            $content_marketplace->get_learning_object(),
-            $this->resolve_graphql_type(
-                $this->get_graphql_name(type_content_marketplace::class),
-                'learning_object',
-                $content_marketplace,
-                [],
-                $content_marketplace->get_context()
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function test_resolve_field_cm_id(): void {
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
@@ -131,6 +109,28 @@ class mod_contentmarketplace_webapi_type_content_marketplace_testcase extends te
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_content_marketplace::class),
                 'cm_id',
+                $content_marketplace,
+                [],
+                $content_marketplace->get_context()
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_field_completion_condition(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
+        $content_marketplace = content_marketplace::from_course_module_id($cm->cmid);
+
+        self::assertEquals(
+            $cm->completion_condition,
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(type_content_marketplace::class),
+                'completion_condition',
                 $content_marketplace,
                 [],
                 $content_marketplace->get_context()

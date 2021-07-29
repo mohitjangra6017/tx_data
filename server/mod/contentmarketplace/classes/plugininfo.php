@@ -20,23 +20,18 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package mod_contentmarketplace
  */
+namespace mod_contentmarketplace;
 
-namespace mod_contentmarketplace\formatter;
+use core\plugininfo\mod;
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
-
-class content_marketplace extends entity_model_formatter {
+class plugininfo extends mod {
     /**
      * @inheritDoc
      */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-        ];
+    public function is_uninstall_allowed() {
+        if ($this->name === 'contentmarketplace') {
+            return false;
+        }
+        return parent::is_uninstall_allowed();
     }
 }

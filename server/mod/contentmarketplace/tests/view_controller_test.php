@@ -47,13 +47,16 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
         self::setAdminUser();
         $controller = new view($cm->cmid);
 
+        $component = $cm->learning_object_marketplace_component;
+        $plugin = $this->get_subplugin_name($component);
+
         ob_start();
         $controller->process();
         $content = ob_get_contents();
         ob_end_clean();
 
         $tui_view = new tui_view(
-            'mod_contentmarketplace/pages/ContentMarketplaceView',
+            "{$plugin}/pages/ActivityView",
             ['cm-id' => (int) $cm->cmid]
         );
 
@@ -112,13 +115,16 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
         self::setUser($user);
         $controller = new view($cm->cmid);
 
+        $component = $cm->learning_object_marketplace_component;
+        $plugin = $this->get_subplugin_name($component);
+
         ob_start();
         $controller->process();
         $content = ob_get_contents();
         ob_end_clean();
 
         $view = new tui_view(
-            'mod_contentmarketplace/pages/ContentMarketplaceView',
+            "{$plugin}/pages/ActivityView",
             ['cm-id' => (int) $cm->cmid]
         );
 
@@ -231,6 +237,8 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         self::setGuestUser();
         $controller = new view($cm->cmid);
+        $component = $cm->learning_object_marketplace_component;
+        $plugin = $this->get_subplugin_name($component);
 
         ob_start();
         $controller->process();
@@ -238,11 +246,20 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
         ob_end_clean();
 
         $view = new tui_view(
-            'mod_contentmarketplace/pages/ContentMarketplaceView',
+            "{$plugin}/pages/ActivityView",
             ['cm-id' => (int) $cm->cmid]
         );
 
         $view->set_title($cm->name);
         self::assertEquals($view->render(), $content);
+    }
+
+    /**
+     * @param string $component
+     * @return string
+     */
+    private function get_subplugin_name(string $component): string {
+        [$plugin_type, $plugin_name] = core_component::normalize_component($component);
+        return 'contentmarketplaceactivity_' . $plugin_name;
     }
 }

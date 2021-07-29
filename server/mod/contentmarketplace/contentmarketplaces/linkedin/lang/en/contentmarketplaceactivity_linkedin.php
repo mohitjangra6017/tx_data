@@ -18,25 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package mod_contentmarketplace
+ * @package contentmarketplaceactivity_linkedin
  */
 
-namespace mod_contentmarketplace\formatter;
+defined('MOODLE_INTERNAL') || die();
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
-
-class content_marketplace extends entity_model_formatter {
-    /**
-     * @inheritDoc
-     */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-        ];
-    }
-}
+$string['pluginname'] = 'Contentmarketplace Linkedin activity';

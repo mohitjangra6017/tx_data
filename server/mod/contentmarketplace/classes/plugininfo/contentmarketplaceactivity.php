@@ -21,22 +21,17 @@
  * @package mod_contentmarketplace
  */
 
-namespace mod_contentmarketplace\formatter;
+namespace mod_contentmarketplace\plugininfo;
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
+use core\plugininfo\base;
 
-class content_marketplace extends entity_model_formatter {
+class contentmarketplaceactivity extends base {
+
     /**
-     * @inheritDoc
+     * @return bool
      */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-        ];
+    public function is_uninstall_allowed() {
+        return false;
     }
+
 }

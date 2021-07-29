@@ -1,11 +1,3 @@
-type mod_contentmarketplace_learning_obejct implements totara_contentmarketplace_learning_object {
-  id: core_id!
-  name(format: core_format = PLAIN): String!
-  language: String!
-  image_url: String
-  description(format: core_format = PLAIN): String
-}
-
 type mod_contentmarketplace_content_marketplace {
   id: core_id!
   """
@@ -14,14 +6,5 @@ type mod_contentmarketplace_content_marketplace {
   cm_id: core_id!
   course: core_id!
   name(format: core_format = PLAIN): String!
-  learning_object: mod_contentmarketplace_learning_obejct!
-}
-
-extend type Query {
-  """
-  Query to return the metadata for a specific contentmarketplace learning object from course module id.
-  """
-  mod_contentmarketplace_content_marketplace(
-    cm_id: core_id!
-  ): mod_contentmarketplace_content_marketplace!
+  completion_condition: Boolean
 }

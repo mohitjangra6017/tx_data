@@ -18,17 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package mod_contentmarketplace
+ * @package contentmarketplaceactivity_linkedin
  */
 
 use core_phpunit\testcase;
 use totara_webapi\phpunit\webapi_phpunit_helper;
-use mod_contentmarketplace\webapi\resolver\query\content_marketplace;
 use mod_contentmarketplace\model\content_marketplace as model;
-use container_course\course;
+use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 
-class mod_contemplate_webapi_resolver_query_content_marketplace_testcase extends testcase {
+class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activity_test_testcase extends testcase {
     use webapi_phpunit_helper;
+
+    /**
+     * @var string
+     */
+    protected const QUERY_NAME = 'contentmarketplaceactivity_linkedin_linkedin_activity';
 
     /**
      * @return void
@@ -39,98 +43,29 @@ class mod_contemplate_webapi_resolver_query_content_marketplace_testcase extends
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
         $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
-        
+
         $result = $this->resolve_graphql_query(
-            $this->get_graphql_name(content_marketplace::class),
+            self::QUERY_NAME,
             ['cm_id' => $cm->cmid]
         );
 
-        self::assertInstanceOf(model::class, $result);
-        self::assertEquals($result->course, $cm->course);
-        self::assertEquals($result->id, $cm->id);
-        self::assertEquals($result->name, $cm->name);
+        self::assertNotEmpty($result);
 
-        self::assertEquals(
-            $result->name,
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_content_marketplace',
-                'name',
-                $result
-            )
-        );
+        $result = (array)$result;
+        self::assertArrayHasKey('module', $result);
+        self::assertArrayHasKey('learning_object', $result);
 
-        self::assertEquals(
-            $result->id,
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_content_marketplace',
-                'id',
-                $result
-            )
-        );
+        /** @var model $module */
+        $module = $result['module'];
+        self::assertInstanceOf(model::class, $module);
+        self::assertEquals($module->course, $cm->course);
+        self::assertEquals($module->id, $cm->id);
+        self::assertEquals($module->name, $cm->name);
+        self::assertEquals($module->completion_condition, $cm->completion_condition);
 
-        self::assertEquals(
-            $result->course,
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_content_marketplace',
-                'course',
-                $result
-            )
-        );
+        $learning_object = $result['learning_object'];
+        self::assertInstanceOf(learning_object_model::class, $learning_object);
 
-        self::assertEquals(
-            $result->get_cm_id(),
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_content_marketplace',
-                'cm_id',
-                $result
-            )
-        );
-
-        self::assertEquals(
-            $result->get_learning_object(),
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_content_marketplace',
-                'learning_object',
-                $result
-            )
-        );
-
-        $learning_object = $result->get_learning_object();
-        self::assertEquals(
-            $learning_object->get_id(),
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_learning_obejct',
-                'id',
-                $learning_object
-            )
-        );
-
-        self::assertEquals(
-            $learning_object->get_name(),
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_learning_obejct',
-                'name',
-                $learning_object
-            )
-        );
-
-        self::assertEquals(
-            $learning_object->get_language(),
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_learning_obejct',
-                'language',
-                $learning_object
-            )
-        );
-
-        self::assertEquals(
-            $learning_object->get_image_url(),
-            $this->resolve_graphql_type(
-                'mod_contentmarketplace_learning_obejct',
-                'image_url',
-                $learning_object
-            )
-        );
     }
 
     /**
@@ -148,7 +83,7 @@ class mod_contemplate_webapi_resolver_query_content_marketplace_testcase extends
         $this->expectException(moodle_exception::class);
         $this->expectExceptionMessage('Course or activity not accessible. (Not enrolled)');
         $this->resolve_graphql_query(
-            $this->get_graphql_name(content_marketplace::class),
+            self::QUERY_NAME,
             ['cm_id' => $cm->cmid]
         );
     }
@@ -166,7 +101,7 @@ class mod_contemplate_webapi_resolver_query_content_marketplace_testcase extends
         $this->expectException(moodle_exception::class);
         $this->expectExceptionMessage('Course or activity not accessible. (Not enrolled)');
         $this->resolve_graphql_query(
-            $this->get_graphql_name(content_marketplace::class),
+            self::QUERY_NAME,
             ['cm_id' => $cm->cmid]
         );
     }
@@ -185,12 +120,14 @@ class mod_contemplate_webapi_resolver_query_content_marketplace_testcase extends
         $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
 
         $result = $this->resolve_graphql_query(
-            $this->get_graphql_name(content_marketplace::class),
+            self::QUERY_NAME,
             ['cm_id' => $cm->cmid]
         );
 
-        self::assertNotNull($result);
-        self::assertInstanceOf(model::class, $result);
+        self::assertNotEmpty($result);
+        $result = (array)$result;
+        self::assertArrayHasKey('module', $result);
+        self::assertArrayHasKey('learning_object', $result);
     }
 
     /**
@@ -220,11 +157,13 @@ class mod_contemplate_webapi_resolver_query_content_marketplace_testcase extends
         $plugin->update_instance($enrol, $new_enrol);
 
         $result = $this->resolve_graphql_query(
-            $this->get_graphql_name(content_marketplace::class),
+            self::QUERY_NAME,
             ['cm_id' => $cm->cmid]
         );
 
-        self::assertNotNull($result);
-        self::assertInstanceOf(model::class, $result);
+        self::assertNotEmpty($result);
+        $result = (array)$result;
+        self::assertArrayHasKey('module', $result);
+        self::assertArrayHasKey('learning_object', $result);
     }
 }

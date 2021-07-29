@@ -13,7 +13,7 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @package mod_contentmarketplace
+  @package contentmarketplaceactivity_linkedin
 -->
 <template>
   <Layout
@@ -167,7 +167,7 @@ import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 import { getAllBranchKeys } from 'tui/components/tree/util';
 
 // GraphQL
-import contentMarketplaceQuery from 'mod_contentmarketplace/graphql/content_marketplace';
+import LinkedinActivityQuery from 'contentmarketplaceactivity_linkedin/graphql/linkedin_activity';
 
 export default {
   components: {
@@ -481,7 +481,7 @@ export default {
 
   apollo: {
     activity: {
-      query: contentMarketplaceQuery,
+      query: LinkedinActivityQuery,
       variables() {
         return {
           cm_id: this.cmId,
@@ -548,24 +548,26 @@ export default {
           },
         ];
 
+        const { learning_object, module } = data;
         const learningObject = {
           contentsTree: contentsTree,
           course: {
             name: 'Super cool course',
             url: '#',
           },
-          description: data.learning_object.description,
-          image: data.learning_object.image_url,
-          levelString: 'Beginner',
-          name: data.learning_object.name,
+          description: learning_object.description_include_html,
+          image: learning_object.image_url,
+          levelString: learning_object.level,
+          name: learning_object.name,
           status: this.$str(
             'activity_status_not_started',
             'mod_contentmarketplace'
           ),
-          timeToComplete: '1h 36m',
-          updated: '9/25/2020',
+          timeToComplete: learning_object.time_to_complete,
+          updated: learning_object.last_updated_at,
         };
 
+        this.setCompletion = module.completion_condition || false;
         this.openContents = getAllBranchKeys(contentsTree);
 
         return learningObject;

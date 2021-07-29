@@ -25,6 +25,7 @@ namespace mod_contentmarketplace\model;
 use container_course\module\course_module;
 use context_module;
 use core\orm\entity\model;
+use core_component;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
 use moodle_url;
 use stdClass;
@@ -43,6 +44,7 @@ use totara_contentmarketplace\learning_object\factory;
  * @property-read int             $completion_condition
  * @property-read learning_object $learning_object
  * @property-read moodle_url      $view_url
+ * @property-read string          $activity_module_marketplace_component
  *
  */
 class content_marketplace extends model {
@@ -77,6 +79,7 @@ class content_marketplace extends model {
         'cm_id',
         'learning_object',
         'view_url',
+        'activity_module_marketplace_component',
     ];
 
     /**
@@ -209,5 +212,17 @@ class content_marketplace extends model {
      */
     public function get_entity_record(): stdClass {
         return $this->entity->to_record();
+    }
+
+    /**
+     * @return string
+     */
+    public function get_activity_module_marketplace_component(): string {
+        [$plugin_type, $plugin_name] = core_component::normalize_component($this->learning_object_marketplace_component);
+        if (is_null($plugin_type) || is_null($plugin_name)) {
+            throw new coding_exception("{$this->learning_object_marketplace_component} does not exist");
+        }
+
+        return 'contentmarketplaceactivity_' . $plugin_name;
     }
 }

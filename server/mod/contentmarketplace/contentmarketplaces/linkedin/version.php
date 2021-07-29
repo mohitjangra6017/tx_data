@@ -18,25 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package mod_contentmarketplace
+ * @package contentmarketplaceactivity_linkedin
  */
+defined('MOODLE_INTERNAL') || die();
 
-namespace mod_contentmarketplace\formatter;
+$plugin->version  = 2021072900;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021040700;       // Requires this Totara version.
+$plugin->component = 'contentmarketplaceactivity_linkedin';
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
-
-class content_marketplace extends entity_model_formatter {
-    /**
-     * @inheritDoc
-     */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-        ];
-    }
-}
+$plugin->dependencies = [
+    'contentmarketplace_linkedin' => 2021072000,
+];

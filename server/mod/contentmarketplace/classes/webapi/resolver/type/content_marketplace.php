@@ -45,10 +45,6 @@ class content_marketplace implements type_resolver {
             throw new coding_exception('Expected content marketplace model');
         }
 
-        if ('learning_object' === $field) {
-            return $content_marketplace->get_learning_object();
-        }
-
         $context = $ec->has_relevant_context() ? $ec->get_relevant_context() : $content_marketplace->get_context();
         $formatter = new formatter($content_marketplace, $context);
 

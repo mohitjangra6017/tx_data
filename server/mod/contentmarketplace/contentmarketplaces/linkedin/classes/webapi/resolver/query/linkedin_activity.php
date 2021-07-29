@@ -18,25 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package mod_contentmarketplace
+ * @package contentmarketplaceactivity_linkedin
  */
+namespace contentmarketplaceactivity_linkedin\webapi\resolver\query;
 
-namespace mod_contentmarketplace\formatter;
+use contentmarketplace_linkedin\model\learning_object;
+use mod_contentmarketplace\webapi\resolver\query\content_marketplace;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
+/**
+ * Class linkedin_activity
+ */
+final class linkedin_activity extends content_marketplace {
 
-class content_marketplace extends entity_model_formatter {
     /**
-     * @inheritDoc
+     * @param int $learning_object_id
+     * @return model
      */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-        ];
+    protected static function get_learning_object(int $learning_object_id): model {
+        return learning_object::load_by_id($learning_object_id);
     }
 }

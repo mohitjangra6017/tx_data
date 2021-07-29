@@ -22,24 +22,28 @@
  */
 namespace mod_contentmarketplace\webapi\resolver\query;
 
+
 use core\webapi\middleware\require_login_course_via_coursemodule;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use core\webapi\execution_context;
 use mod_contentmarketplace\interactor\content_marketplace_interactor;
-use mod_contentmarketplace\model\content_marketplace as model;
+use mod_contentmarketplace\model\content_marketplace as content_marketplace_model;
+use stdClass;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
+
 
 /**
  * Resolver for content_marketplace
  */
-final class content_marketplace implements query_resolver, has_middleware {
+abstract class content_marketplace implements query_resolver, has_middleware {
     /**
      * @param array             $args
      * @param execution_context $ec
-     * @return model
+     * @return object
      */
-    public static function resolve(array $args, execution_context $ec): model {
-        $cm = model::from_course_module_id($args['cm_id']);
+    final public static function resolve(array $args, execution_context $ec): object {
+        $cm = content_marketplace_model::from_course_module_id($args['cm_id']);
 
         (new content_marketplace_interactor($cm))->require_view();
 
@@ -47,8 +51,18 @@ final class content_marketplace implements query_resolver, has_middleware {
             $ec->set_relevant_context($cm->get_context());
         }
 
-        return $cm;
+        $payload = new stdClass();
+        $payload->module = $cm;
+        $payload->learning_object = static::get_learning_object($cm->get_learning_object()->get_id());
+
+        return $payload;
     }
+
+    /**
+     * @param int $learning_object_id
+     * @return model
+     */
+    abstract protected static function get_learning_object(int $learning_object_id): model;
 
     /**
      * @inheritDoc

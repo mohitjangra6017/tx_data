@@ -1261,6 +1261,10 @@ class core_plugin_manager {
                 // Deprecated!
             ),
 
+            'contentmarketplaceactivity' => array(
+                'linkedin'
+            ),
+
             'criteria' => array(
                 'childcompetency', 'coursecompletion', 'onactivate',
                 'linkedcourses', 'othercompetency',

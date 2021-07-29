@@ -82,8 +82,10 @@ class view extends controller {
         $interactor = new content_marketplace_interactor($this->model, $USER->id);
         $interactor->require_view();
 
+        $subplugin = $this->model->activity_module_marketplace_component;
+
         $view = new tui_view(
-            'mod_contentmarketplace/pages/LinkedInActivity',
+            "{$subplugin}/pages/ActivityView",
             ['cm-id' => $this->model->get_cm_id(),]
         );
 
