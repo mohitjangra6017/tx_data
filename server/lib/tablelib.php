@@ -1333,6 +1333,11 @@ class flexible_table {
                 'class' => 'header c' . $index . $this->column_class[$column],
                 'scope' => 'col',
             );
+
+            if ($this->is_sortable($column) && $primarysortorder && $primarysortcolumn === $column) {
+                $attributes['aria-sort'] = ($primarysortorder == SORT_DESC) ? 'descending' : 'ascending';
+            }
+
             if ($this->headers[$index] === NULL) {
                 $content = '&nbsp;';
             } else if (!empty($this->prefs['collapse'][$column])) {
