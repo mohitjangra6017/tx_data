@@ -356,8 +356,9 @@ h2.tcm-explorer-heading {
 .tcm-explorer .tcm-details-close {
   font-size: 40px;
   line-height: 40px;
-  color: var(--color-neutral-5);
+  color: $close-color;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .tcm-explorer .tcm-details-description,
