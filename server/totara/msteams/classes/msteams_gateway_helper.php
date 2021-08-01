@@ -26,6 +26,7 @@ namespace totara_msteams;
 use stdClass;
 use totara_core\http\formdata;
 use totara_core\http\response;
+use coding_exception;
 
 /**
  * Class msteams_cloud_helper
@@ -142,15 +143,34 @@ final class msteams_gateway_helper {
     public static function call_gateway(api $api, string $tenant_id): bool {
         global $CFG;
 
-        $response = $api->post($api->get_gateway_url(),
-            new formdata(['TenantId' => $tenant_id, 'SiteUrl' => $CFG->wwwroot])
-        );
-
-        if (!$response->is_ok()) {
-            return false;
+        if (!isset($CFG->msteams_gateway_private_key)) {
+            throw new coding_exception("The gateway private key is not set");
         }
 
-        return true;
+        if (!extension_loaded("openssl")) {
+            throw new coding_exception("PHP OpenSSL extension is not enabled");
+        }
+
+        $form_data = [
+            "TenantId" => $tenant_id,
+            "SiteUrl" => $CFG->wwwroot
+        ];
+
+        $private_key = openssl_pkey_get_private($CFG->msteams_gateway_private_key);
+        try {
+            $json_data = json_encode($form_data);
+            $signature = null;
+
+            openssl_sign($json_data, $signature, $private_key, OPENSSL_ALGO_SHA512);
+            $form_data["Signature"] = base64_encode($signature);
+        } finally {
+            // Free the memory.
+            // Note: this block of code will need to be removed when upgrade to PHP 8.0
+            openssl_free_key($private_key);
+        }
+
+        $response = $api->post($api->get_gateway_url(), new formdata($form_data));
+        return $response->is_ok();
     }
 
     /**

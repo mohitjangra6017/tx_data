@@ -24,23 +24,37 @@ namespace totara_msteams;
 
 use admin_setting_configtext;
 use core\ip_utils;
+use totara_msteams\quickaccessmenu\msteams;
 
 final class admin_setting_msteams_gateway_configtext extends admin_setting_configtext {
     /**
      * @inheritDoc
      */
     public function validate($data) {
+        global $CFG;
         $result = parent::validate($data);
 
-        if ($result === true) {
-            if (!ip_utils::is_domain_name($data) || !msteams_gateway_helper::is_internal_host_allowed($data) ||
-                !msteams_gateway_helper::remote_procedure_call_success($data)
-            ) {
-                return get_string('error:domain_name', 'totara_msteams');
-            }
+        if (true !== $result) {
+            return $result;
         }
 
-        return $result;
-    }
+        if (!ip_utils::is_domain_name($data) || !msteams_gateway_helper::is_internal_host_allowed($data)) {
+            return get_string('error:domain_name', 'totara_msteams');
+        }
 
+        // These checks here are in place in order to allow us construct an error message.
+        if (!isset($CFG->msteams_gateway_private_key)) {
+            return get_string("error:no_private_key", "totara_msteams");
+        }
+
+        if (!extension_loaded("openssl")) {
+            return get_string("error:no_openssl_extension", "totara_msteams");
+        }
+
+        if (!msteams_gateway_helper::remote_procedure_call_success($data)) {
+            return get_string("error:gateway_register", "totara_msteams");
+        }
+
+        return true;
+    }
 }
