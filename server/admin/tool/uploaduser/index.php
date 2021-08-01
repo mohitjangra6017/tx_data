@@ -639,9 +639,11 @@ if ($formdata = $mform2->is_cancelled()) {
             $isinternalauth = $auth->is_internal();
 
             // deal with suspending and activating of accounts
+            $trigger_user_suspended_event = false;
             if ($allowsuspends and isset($user->suspended) and $user->suspended !== '') {
                 $user->suspended = $user->suspended ? 1 : 0;
                 if ($existinguser->suspended != $user->suspended) {
+                    $trigger_user_suspended_event = true;
                     $upt->track('suspended', '', 'normal', false);
                     $upt->track('suspended', $stryesnooptions[$existinguser->suspended].'-->'.$stryesnooptions[$user->suspended], 'info', false);
                     $existinguser->suspended = $user->suspended;
@@ -713,6 +715,10 @@ if ($formdata = $mform2->is_cancelled()) {
                 // Trigger event.
                 \core\event\user_updated::create_from_userid($existinguser->id)->trigger();
 
+                // If user suspended then trigger suspended event.
+                if ($trigger_user_suspended_event) {
+                    \totara_core\event\user_suspended::create_from_user($user)->trigger();
+                }
             } else {
                 // no user information changed
                 $upt->track('status', $struseruptodate);
