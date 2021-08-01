@@ -66,7 +66,6 @@
         "message_([a-zA-Z0-9_]+)": "server/message/output/{$1}/webapi/ajax/",
         "ml": "server/ml/webapi/ajax/",
         "ml_([a-zA-Z0-9_]+)": "server/ml/{$1}/webapi/ajax/",
-        "mobile_([a-zA-Z0-9_]+)": "server/totara/mobile/plugins/{$1}/webapi/ajax/",
         "mod_([a-zA-Z0-9_]+)": "server/mod/{$1}/webapi/ajax/",
         "my": "server/my/webapi/ajax/",
         "notes": "server/notes/webapi/ajax/",
