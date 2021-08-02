@@ -50,14 +50,21 @@ Feature: Manage performance activity review content element.
     When I click on the Edit element button for question "Review what you did in the past"
     And I set the following fields to these values:
       | rawTitle     | Review what you did in last year |
+    And I click on the "Manager" tui radio
     And I save the activity content element
-    And I wait for pending js
     Then I should see "Review what you did in last year"
+
+    # check if it got changed
+    When I click on the Edit element button for question "Review what you did in last year"
+    Then the following fields match these values:
+      | rawTitle                | Review what you did in last year |
+    And the "Manager" radio button is selected
+    Given I click on "Cancel" "button"
 
     # can't delete section relationship if it is used in review element
     When I navigate to the edit perform activities page for activity "First Activity"
     And I click on "button[aria-label='Edit section']" "css_element" in the "1" activity section
-    And I remove "Subject" as a perform activity participant
+    And I remove "Manager" as a perform activity participant
     And I click on "Done" "button" in the ".tui-formBtnGroup" "css_element" of the "1" activity section
     Then I should see "Cannot remove participant(s)" in the tui modal
     And I should see "One or more participant(s) cannot be removed from this section because they are referenced in the following question(s):" in the tui modal

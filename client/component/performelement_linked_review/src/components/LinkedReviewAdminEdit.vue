@@ -211,9 +211,11 @@ export default {
      */
     handleSubmit(values) {
       // In order to make it extendable, convert the value to array
-      values.data.selection_relationships = [
-        values.data.selection_relationships[0],
-      ];
+      if (!Array.isArray(values.data.selection_relationships)) {
+        values.data.selection_relationships = [
+          values.data.selection_relationships,
+        ];
+      }
 
       let data = Object.assign({}, values);
       this.$emit('update', data);
