@@ -37,64 +37,7 @@ class totara_message_dismiss_message_testcase extends advanced_testcase {
      * @return void
      */
     public function test_dismiss_message_should_mark_the_notification_read(): void {
-        global $DB;
-        $generator = self::getDataGenerator();
-
-        $user_one = $generator->create_user();
-        $user_two = $generator->create_user();
-
-        $totara_task_id = $DB->get_field('message_processors', 'id', ['name' => 'totara_task']);
-
-        self::assertEquals(0, $DB->count_records(notification::TABLE));
-        self::assertEquals(0, $DB->count_records(message_metadata::TABLE));
-
-        $notification = new notification();
-        $notification->useridfrom = $user_one->id;
-        $notification->useridto = $user_two->id;
-        $notification->fullmessage = 'full me';
-        $notification->fullmessagehtml = /** @lang text */'<p>full me</p>';
-        $notification->fullmessageformat = FORMAT_MOODLE;
-        $notification->smallmessage = 'full me';
-        $notification->save();
-
-        // Reload the notification, to have other fields appear.
-        $notification->refresh();
-
-        self::assertEquals(1, $DB->count_records(notification::TABLE));
-        self::assertTrue(
-            $DB->record_exists(
-                notification::TABLE, [
-                    'id' => $notification->id,
-                    'timeread' => null
-                ]
-            )
-        );
-
-        self::assertNull($notification->timeread);
-
-        $metadata = new message_metadata();
-        $metadata->notificationid = $notification->id;
-        $metadata->msgtype = TOTARA_MSG_TYPE_UNKNOWN;
-        $metadata->msgstatus = TOTARA_MSG_STATUS_OK;
-        $metadata->urgency = TOTARA_MSG_URGENCY_LOW;
-        $metadata->processorid = $totara_task_id;
-        $metadata->save();
-
-        // Reload the metadata, to have other fields appear
-        $metadata->refresh();
-
-        self::assertEquals(1, $DB->count_records(message_metadata::TABLE));
-        self::assertTrue(
-            $DB->record_exists(
-                message_metadata::TABLE,
-                [
-                    'id' => $metadata->id,
-                    'timeread' => null
-                ]
-            )
-        );
-
-        self::assertNull($notification->timeread);
+        [$notification, $metadata, $totara_task_id] = $this->setup_notification_data();
 
         // Marking the message metadata as read should mark the notification as read too.
         $time_read = 100;
@@ -107,29 +50,45 @@ class totara_message_dismiss_message_testcase extends advanced_testcase {
         $notification->refresh();
         $metadata->refresh();
 
-        self::assertNotNull($metadata->timeread);
+        $this->assert_notification_dismissed($notification, $metadata);
         self::assertEquals($time_read, $metadata->timeread);
-        self::assertFalse(
-            $DB->record_exists(
-                message_metadata::TABLE,
-                [
-                    'id' => $metadata->id,
-                    'timeread' => null
-                ]
-            )
-        );
-
-        self::assertNotNull($notification->timeread);
         self::assertEquals($time_read, $notification->timeread);
-        self::assertFalse(
-            $DB->record_exists(
-                notification::TABLE,
-                [
-                    'id' => $notification->id,
-                    'timeread' => null
-                ]
-            )
-        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_accepting_a_task_should_dismiss_the_notification(): void {
+        [$notification, $metadata] = $this->setup_notification_data();
+
+        $time_read = time();
+
+        tm_message_task_accept($notification->id, 'Reason for accepting');
+
+        $notification->refresh();
+        $metadata->refresh();
+
+        $this->assert_notification_dismissed($notification, $metadata);
+        self::assertGreaterThanOrEqual($time_read, $metadata->timeread);
+        self::assertGreaterThanOrEqual($time_read, $notification->timeread);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_rejecting_a_task_should_dismiss_the_notification(): void {
+        [$notification, $metadata] = $this->setup_notification_data();
+
+        $time_read = time();
+
+        tm_message_task_reject($notification->id, 'Reason for accepting');
+
+        $notification->refresh();
+        $metadata->refresh();
+
+        $this->assert_notification_dismissed($notification, $metadata);
+        self::assertGreaterThanOrEqual($time_read, $metadata->timeread);
+        self::assertGreaterThanOrEqual($time_read, $notification->timeread);
     }
 
     /**
@@ -206,5 +165,99 @@ class totara_message_dismiss_message_testcase extends advanced_testcase {
         self::assertEquals($time_read, $alert_metadata->timeread);
 
         self::assertEquals(0, $DB->count_records(message_metadata::TABLE, ['timeread' => null]));
+    }
+
+    private function setup_notification_data(): array {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+
+        $user_one = $generator->create_user();
+        $user_two = $generator->create_user();
+
+        $totara_task_id = $DB->get_field('message_processors', 'id', ['name' => 'totara_task']);
+
+        self::assertEquals(0, $DB->count_records(notification::TABLE));
+        self::assertEquals(0, $DB->count_records(message_metadata::TABLE));
+
+        $notification = new notification();
+        $notification->useridfrom = $user_one->id;
+        $notification->useridto = $user_two->id;
+        $notification->fullmessage = 'full me';
+        $notification->fullmessagehtml = /** @lang text */'<p>full me</p>';
+        $notification->fullmessageformat = FORMAT_MOODLE;
+        $notification->smallmessage = 'full me';
+        $notification->save();
+
+        // Reload the notification, to have other fields appear.
+        $notification->refresh();
+
+        self::assertEquals(1, $DB->count_records(notification::TABLE));
+        self::assertTrue(
+            $DB->record_exists(
+                notification::TABLE, [
+                    'id' => $notification->id,
+                    'timeread' => null
+                ]
+            )
+        );
+
+        self::assertNull($notification->timeread);
+
+        $metadata = new message_metadata();
+        $metadata->notificationid = $notification->id;
+        $metadata->msgtype = TOTARA_MSG_TYPE_UNKNOWN;
+        $metadata->msgstatus = TOTARA_MSG_STATUS_OK;
+        $metadata->urgency = TOTARA_MSG_URGENCY_LOW;
+        $metadata->processorid = $totara_task_id;
+        $metadata->save();
+
+        // Reload the metadata, to have other fields appear
+        $metadata->refresh();
+
+        self::assertEquals(1, $DB->count_records(message_metadata::TABLE));
+        self::assertTrue(
+            $DB->record_exists(
+                message_metadata::TABLE,
+                [
+                    'id' => $metadata->id,
+                    'timeread' => null
+                ]
+            )
+        );
+
+        self::assertNull($notification->timeread);
+
+        return [$notification, $metadata, $totara_task_id];
+    }
+
+    /**
+     * @param notification $notification
+     * @param message_metadata $metadata
+     */
+    private function assert_notification_dismissed(notification $notification, message_metadata $metadata): void {
+        global $DB;
+
+        self::assertNotNull($metadata->timeread);
+        self::assertFalse(
+            $DB->record_exists(
+                message_metadata::TABLE,
+                [
+                    'id' => $metadata->id,
+                    'timeread' => null
+                ]
+            )
+        );
+
+        self::assertNotNull($notification->timeread);
+        self::assertFalse(
+            $DB->record_exists(
+                notification::TABLE,
+                [
+                    'id' => $notification->id,
+                    'timeread' => null
+                ]
+            )
+        );
     }
 }

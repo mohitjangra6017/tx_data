@@ -309,3 +309,33 @@ Feature: Seminar Signup Manager Approval
     Then I should see "(Requested)" in the "Upcoming" "table_row"
     And I click on "Go to event" "link" in the "Upcoming" "table_row"
     And I should see "Cancel booking" "link_or_button" in the seminar event sidebar "Requested"
+
+  Scenario Outline: Manager approves or declines via task notification
+    When I log out
+    And I log in as "jimmy"
+    And I am on "Classroom Connect" seminar homepage
+    And I click on "Go to event" "link" in the "Upcoming" "table_row"
+    And I should see "Manager Approval"
+    And I should see "Cassy Cas"
+    And I press "Request approval"
+    Then I should see "Your request was sent to your manager for approval."
+    And I run all adhoc tasks
+    And I log out
+
+    And I log in as "manager"
+    And I am on "Dashboard" page
+    # Click the info-icon that opens the task form with the options to accept and reject.
+    And I click on "#detailtask2-dialog" "css_element" in the ".block_totara_tasks" "css_element"
+    And I press "<Action>"
+    Then I should see "Attendance requests updated"
+    And I run all adhoc tasks
+
+    When I log out
+    And I log in as "jimmy"
+    And I am on "Dashboard" page
+    Then I should see "<Expected alert subject>" in the ".block_totara_alerts" "css_element"
+
+    Examples:
+      | Action | Expected alert subject                             |
+      | Accept | Seminar booking confirmation: Classroom Connect    |
+      | Reject | Request to attend event Classroom Connect Declined |

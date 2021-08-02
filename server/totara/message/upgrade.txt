@@ -1,6 +1,10 @@
 This files describes API changes in Totara Messages,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* tm_message_task_link() has been deprecated. Please use tm_message_task_accept() instead.
+
 === 14.0 ===
 
 * Changed the structure of table 'message_metadata':

@@ -45,7 +45,7 @@ $reasonfordecision = optional_param('reasonfordecision', '', PARAM_TEXT);
 $returnto = optional_param('returnto', null, PARAM_LOCALURL);
 
 // check message ownership
-$message = $DB->get_record('message', ['id' => $msgid]);
+$message = $DB->get_record('notifications', ['id' => $msgid]);
 if (!$message || $message->useridto != $USER->id || !confirm_sesskey()) {
     print_error('notyours', 'totara_message', null, $msgid);
 }

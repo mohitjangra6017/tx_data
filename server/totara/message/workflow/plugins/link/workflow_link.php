@@ -26,12 +26,13 @@ class totara_message_workflow_link extends totara_message_workflow_plugin_base {
      * @param object $msg
      */
     function onaccept($eventdata, $msg) {
-        global $USER, $CFG;
         $url = $eventdata['redirect'];
 
         // dismiss myself as will not reach the end
         // because of the redirect
-        $result = tm_message_mark_message_read($msg, time());
+        // This can only be a notification, so mark it as such.
+        $msg->notification = 1;
+        tm_message_mark_message_read($msg, time());
 
         redirect($url);
         die(); // should not get here

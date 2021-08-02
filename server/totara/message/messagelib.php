@@ -657,6 +657,7 @@ function tm_message_task_accept(int $id, string $reasonfordecision, ?string $pro
     }
 
     // Finally - dismiss this message as it has now been processed
+    $notification_record->notification = 1;
     tm_message_mark_message_read($notification_record, time(), null, $processor_id);
     return $result;
 }
@@ -666,8 +667,11 @@ function tm_message_task_accept(int $id, string $reasonfordecision, ?string $pro
  *
  * @param int $id message id
  * @return boolean success
+ * @deprecated since Totara 15.0
  */
 function tm_message_task_link(int $id): bool {
+    debugging('tm_message_task_link() has been deprecated since Totara 15.0. Please use tm_message_task_accept() instead.', DEBUG_DEVELOPER);
+
     global $DB;
 
     // Note from TL-29085 - this function seems to not be used elsewhere, so i had left
@@ -686,15 +690,17 @@ function tm_message_task_link(int $id): bool {
             }
 
             // run the onaccept phase
-            $result = $plugin->onaccept($eventdata->data, $message);
+            $plugin->onaccept($eventdata->data, $message);
         }
 
         // finally - dismiss this message as it has now been processed
-        $result = tm_message_mark_message_read($message, time());
-        return $result;
-    } else {
-        return false;
+        // This can only be a notification, so mark it as such.
+        $message->notification = 1;
+        tm_message_mark_message_read($message, time());
+        return true;
     }
+
+    return false;
 }
 
 
@@ -728,16 +734,16 @@ function tm_message_task_reject(int $id, string $reasonfordecision,
     }
 
     $event_data = totara_message_eventdata($id, 'onreject', $metadata->get_record());
-    if (!empty($reasonfordecision)) {
+    if ($event_data && !empty($reasonfordecision)) {
         $event_data->data['reasonfordecision'] = $reasonfordecision;
     }
 
     $result = false;
 
     // Grab the onreject handler
-    if (isset($eventdata->action)) {
+    if (isset($event_data->action)) {
         /** @var totara_message_workflow_plugin_base|bool $plugin */
-        $plugin = tm_message_workflow_object($eventdata->action);
+        $plugin = tm_message_workflow_object($event_data->action);
         if (!$plugin) {
             return false;
         }
@@ -747,6 +753,7 @@ function tm_message_task_reject(int $id, string $reasonfordecision,
     }
 
     // Finally - dismiss this message as it has now been processed
+    $notification_record->notification = 1;
     tm_message_mark_message_read($notification_record, time(), null, $processor_id);
     return $result;
 }
