@@ -73,7 +73,6 @@ $string['add_participants_page_title'] = 'Add participants';
 $string['add_section'] = 'Add section';
 $string['add_section_error_section_mode'] = 'Activity is not in multi-section mode';
 $string['anonymous_group_relationship_name'] = 'Anonymous';
-$string['all_job_assignments'] = 'All';
 $string['all_performance_data_records'] = 'All performance data records';
 $string['all_responses_anonymised'] = 'All responses anonymised';
 $string['all_relationships_select_option_label'] = 'All';
@@ -1233,6 +1232,7 @@ $string['user_activities_close_on_completion_submit_confirmation_message'] = 'Yo
 $string['user_activities_closed'] = 'Closed';
 $string['user_activities_complete_before'] = 'Due date: {$a}.';
 $string['user_activities_created_at'] = 'Created {$a}.';
+$string['user_activities_due_date_header'] = 'Due date';
 $string['user_activities_filter'] = 'Filter activities';
 $string['user_activities_filter_own_progress'] = 'Your progress';
 $string['user_activities_filter_overdue_only'] = 'Overdue activities only';
@@ -1271,10 +1271,10 @@ $string['user_activities_status_not_started'] = 'Not started';
 $string['user_activities_status_not_submitted'] = 'Not submitted';
 $string['user_activities_total_completed'] = 'Total completed: {$a}';
 $string['user_activities_total_respondents'] = 'Total respondents: {$a}';
-$string['user_activities_subject_header'] = 'User';
+$string['user_activities_subject_header'] = 'Name';
 $string['user_activities_submit_confirmation_message'] = 'Once submitted, your responses will be visible to other users who have permission to view them.';
 $string['user_activities_submit_confirmation_title'] = 'Confirm submission';
-$string['user_activities_title_header'] = 'Activity title';
+$string['user_activities_title_header'] = 'Activity';
 $string['user_activities_type_header'] = 'Type';
 $string['user_activities_you'] = 'You';
 $string['user_activities_your_activities_title'] = 'Your activities';
@@ -1349,6 +1349,10 @@ $string['x_records_selected'] = '<strong>{$a}</strong> records selected';
 $string['you_can_add_this_later'] = 'You can add this later.';
 $string['your_response'] = 'Your response';
 
+
+
+// Deprecated since 15
+$string['all_job_assignments'] = 'All';
 
 // Deprecated since 13.2
 

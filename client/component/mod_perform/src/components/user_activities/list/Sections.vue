@@ -110,13 +110,8 @@
             <Lock
               v-if="row.availabilityStatus === 'CLOSED'"
               :alt="$str('user_activities_closed', 'mod_perform')"
-              :title="$str('user_activities_closed', 'mod_perform')"
             />
-            <Lozenge
-              v-if="row.isOverdue"
-              type="alert"
-              :text="$str('is_overdue', 'mod_perform')"
-            />
+            <OverdueLozenge v-if="row.isOverdue" />
           </Cell>
         </template>
       </Table>
@@ -167,8 +162,8 @@
 import Button from 'tui/components/buttons/Button';
 import Cell from 'tui/components/datatable/Cell';
 import Lock from 'tui/components/icons/Lock';
-import Lozenge from 'tui/components/lozenge/Lozenge';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
+import OverdueLozenge from 'mod_perform/components/user_activities/list/ActivityOverdue';
 import ParticipantUserHeader from 'mod_perform/components/user_activities/participant/ParticipantUserHeader';
 import RelationshipSelector from 'mod_perform/components/user_activities/list/RelationshipSelector';
 import Table from 'tui/components/datatable/Table';
@@ -178,8 +173,8 @@ export default {
     Button,
     Cell,
     Lock,
-    Lozenge,
     ModalPresenter,
+    OverdueLozenge,
     ParticipantUserHeader,
     RelationshipSelector,
     Table,
@@ -423,7 +418,6 @@ export default {
 <lang-strings>
   {
     "mod_perform": [
-      "is_overdue",
       "user_activities_closed",
       "user_activities_section_view_only",
       "user_activities_status_complete",

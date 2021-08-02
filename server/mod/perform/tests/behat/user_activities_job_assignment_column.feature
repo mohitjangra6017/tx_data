@@ -74,15 +74,15 @@ Feature: Job assignment column on user activities list.
 
     # Tests job assignment column isn't shown when all the subject instances are not created per job assignment
     Then I should see the tui datatable contains:
-      | Activity title                                | Type      | Overall progress | Your progress   |
-      | Another Subject assignment (##today##j F Y##) | Appraisal | Not started      | Not started     |
-      | Subject assignment (##today##j F Y##)         | Appraisal | Not started      | Not started     |
+      | Activity                                      | Type      | Your progress  | Overall progress  |
+      | Another Subject assignment (##today##j F Y##) | Appraisal | Not started    | Not started       |
+      | Subject assignment (##today##j F Y##)         | Appraisal | Not started    | Not started       |
 
     When I click on "Activities about others" "link"
 
     # Tests job assignment column is shown when any of the subject instances are created per job assignment
     Then I should see the tui datatable contains:
-      | Activity title                                | Type      | User         | Job assignment                   | Relationship to user | Overall progress | Your progress            |
-      | Another Subject assignment (##today##j F Y##) | Appraisal | Edward Eiger | Mark man                         | Manager              | Not started      | Not started              |
-      | Specific job assignments (##today##j F Y##)   | Appraisal | Edward Eiger | Unnamed job assignment (ID: Y2k) | Appraiser            | Not started      | Not started              |
-      | All job assignments (##today##j F Y##)        | Appraisal | Edward Eiger | All                              | Manager, Appraiser   | Not started      | Not started, Not started |
+      | Activity                                      | Name         | Type      | Job assignment                   | Your progress             | Overall progress |
+      | Another Subject assignment (##today##j F Y##) | Edward Eiger | Appraisal | Mark man                         | Not started               | Not started      |
+      | Specific job assignments (##today##j F Y##)   | Edward Eiger | Appraisal | Unnamed job assignment (ID: Y2k) | Not started               | Not started      |
+      | All job assignments (##today##j F Y##)        | Edward Eiger | Appraisal |                                  | Not started, Not started  | Not started      |

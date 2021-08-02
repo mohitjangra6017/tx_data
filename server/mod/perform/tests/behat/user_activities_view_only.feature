@@ -84,13 +84,13 @@ Feature: Viewing user activities list with view-only access
     Given I log in as "john"
     When I navigate to the outstanding perform activities list page
     Then I should see the tui datatable contains:
-      | Activity title                             | Type      | Overall progress | Your progress   |
-      | Multi section activity (##today##j F Y##)  | Feedback  | Not started      | Not started     |
-      | Single section activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                   | Type      | Your progress    | Overall progress   |
+      | Multi section activity (##today##j F Y##)  | Feedback  | Not started      | Not started        |
+      | Single section activity (##today##j F Y##) | Appraisal | Not started      | Not started        |
     When I toggle expanding row "2" of the tui datatable
     Then I should not see "Appraiser" under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | Not started      |
       | Manager              | combined Three | Not started      |
     When I toggle expanding row "1" of the tui datatable
@@ -98,14 +98,14 @@ Feature: Viewing user activities list with view-only access
     And I should not see "(view only)" in the ".tui-performUserActivityListSection:nth-child(2)" "css_element"
     And I should not see "(view only)" in the ".tui-performUserActivityListSection:nth-child(3)" "css_element"
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Manager              | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | Not started      |
       | Manager              | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Manager              | combined Three | Not started      |
     # Make sure we can follow the section link even if it's a view-only section.
     When I click on "Section 1" "link_or_button" in the ".tui-performUserActivityListSection:nth-child(1) .tui-performUserActivityListSection__header" "css_element"
@@ -116,15 +116,15 @@ Feature: Viewing user activities list with view-only access
     When I navigate to the outstanding perform activities list page
     And I click on "Activities about others" "link"
     Then I should see the tui datatable contains:
-      | Activity title                             | Type      | Overall progress | Your progress   |
-      | Multi section activity (##today##j F Y##)  | Feedback  | Not started      | n/a (view only) |
-      | Single section activity (##today##j F Y##) | Appraisal | Not started      | n/a (view only) |
+      | Activity                                   | Type      | Your progress   | Overall progress |
+      | Multi section activity (##today##j F Y##)  | Feedback  | n/a (view only) | Not started      |
+      | Single section activity (##today##j F Y##) | Appraisal | n/a (view only) | Not started      |
     When I toggle expanding row "2" of the tui datatable
     Then I should not see "Appraiser" under the expanded row of the tui datatable
     # For single section activity the activity meta data has a text indicating view-only.
     And I should see "You have view-only access to this activity." under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User      | Section progress |
+      | Relationship to user | Name      | Section progress |
       | Subject              | David Two | Not started      |
       | Manager              | John One  | Not started      |
     When I toggle expanding row "1" of the tui datatable
@@ -138,14 +138,14 @@ Feature: Viewing user activities list with view-only access
     When I navigate to the outstanding perform activities list page
     And I click on "Activities about others" "link"
     Then I should see the tui datatable contains:
-      | Activity title                             | Type      | Relationship to user | Overall progress | Your progress                |
-      | Multi section activity (##today##j F Y##)  | Feedback  | Manager, Appraiser   | Not started      | Not started, n/a (view only) |
-      | Single section activity (##today##j F Y##) | Appraisal | Manager, Appraiser   | Not started      | Not started, n/a (view only) |
+      | Activity                                   | Type      | Your progress                | Overall progress  |
+      | Multi section activity (##today##j F Y##)  | Feedback  | Not started, n/a (view only) | Not started       |
+      | Single section activity (##today##j F Y##) | Appraisal | Not started, n/a (view only) | Not started       |
     When I toggle expanding row "2" of the tui datatable
     Then I should not see "Appraiser" under the expanded row of the tui datatable
     And I should not see "You have view-only access to this activity." under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User     | Section progress |
+      | Relationship to user | Name     | Section progress |
       | Subject              | John One | Not started      |
       | Manager              | You      | Not started      |
 

@@ -94,15 +94,15 @@ Feature: Viewing the section list in the user activities view and navigating to 
     Given I log in as "john"
     When I navigate to the outstanding perform activities list page
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started      | Not started     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type       | Your progress  | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback   | Not started    | Not started      |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal  | Not started    | Not started      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal  | Not started    | Not started      |
     When I toggle expanding row "1" of the tui datatable
     Then I should not see "Section 4" under the expanded row of the tui datatable
     And I should not see "Untitled section" under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | Not started      |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
@@ -112,13 +112,13 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should see perform activity relationship to user "yourself"
     When I click on "Cancel" "button"
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | In progress      | In progress     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started      | Not started     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type      | Your progress   | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | In progress     | In progress     |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started     | Not started     |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started     | Not started     |
     When I toggle expanding row "1" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | In progress      |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
@@ -130,13 +130,13 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I confirm the tui confirmation modal
     And I close the tui notification toast
     Then I should see the tui datatable contains:
-      | Activity title                                                    | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                        | Feedback  | In progress      | Complete        |
-      | Multiple section Activity (##today##j F Y##)                      | Appraisal | Not started      | Not started     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##)| Appraisal | Not started      | Not started     |
+      | Activity                                                          | Type      | Your progress   | Overall progress |
+      | Single section Activity (##today##j F Y##)                        | Feedback  | Complete        | In progress      |
+      | Multiple section Activity (##today##j F Y##)                      | Appraisal | Not started     | Not started      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##)| Appraisal | Not started     | Not started      |
     When I toggle expanding row "1" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | Complete         |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
@@ -145,27 +145,27 @@ Feature: Viewing the section list in the user activities view and navigating to 
     Given I log in as "john"
     When I navigate to the outstanding perform activities list page
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started      | Not started     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type       | Your progress   | Overall progress  |
+      | Single section Activity (##today##j F Y##)                         | Feedback   | Not started     | Not started       |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal  | Not started     | Not started       |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal  | Not started     | Not started       |
     When I toggle expanding row "2" of the tui datatable
     Then I should see "Section 1" under the expanded row of the tui datatable
     And I should see "Section 2" under the expanded row of the tui datatable
     And I should see "Section 3" under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | Not started      |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
       | Appraiser            | Harry Three    | Not started      |
       | Appraiser            | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Subject              | You  | Not started      |
     And "Section 1" "link_or_button" should exist in the ".tui-performUserActivityListSection:nth-child(1) .tui-performUserActivityListSection__header" "css_element"
     And "Section 2" "link_or_button" should not exist in the ".tui-performUserActivityListSection:nth-child(2) .tui-performUserActivityListSection__header" "css_element"
@@ -178,24 +178,24 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should see perform activity relationship to user "yourself"
     When I click on "Cancel" "button"
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | In progress      | In progress     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type      | Your progress  | Overall progress   |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started    | Not started        |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | In progress    | In progress        |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started    | Not started        |
     When I toggle expanding row "2" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | In progress      |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
       | Appraiser            | Harry Three    | Not started      |
       | Appraiser            | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Subject              | You  | Not started      |
     When I click on "Section 3" "link_or_button" in the ".tui-performUserActivityListSection:nth-child(3) .tui-performUserActivityListSection__header" "css_element"
     Then I should see "Multiple section Activity" in the ".tui-pageHeading__title" "css_element"
@@ -206,24 +206,24 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I confirm the tui confirmation modal
     And I close the tui notification toast
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | In progress      | In progress     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type      | Your progress    | Overall progress   |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started        |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | In progress      | In progress        |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started        |
     When I toggle expanding row "2" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Subject              | You            | In progress      |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
       | Appraiser            | Harry Three    | Not started      |
       | Appraiser            | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User           | Section progress |
+      | Relationship to user | Name           | Section progress |
       | Manager              | David Two      | Not started      |
       | Manager              | combined Three | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Subject              | You  | Complete Closed  |
 
   Scenario: List and complete sections as the subject with multiple sections with anonymous answers
@@ -231,10 +231,10 @@ Feature: Viewing the section list in the user activities view and navigating to 
 
     When I navigate to the outstanding perform activities list page
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started      | Not started     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type      | Your progress    | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started      |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started      | Not started      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started      |
 
     When I toggle expanding row "3" of the tui datatable
     Then I should see "Section anon 1" under the expanded row of the tui datatable
@@ -244,7 +244,7 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should not see "No items to display"
     And I should see "1" rows in the tui datatable in the ".tui-performUserActivityListSection" "css_element"
     And I should see the tui datatable in the ".tui-performUserActivityListSection" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Subject              | You  | Not started      |
     And "Section anon 1" "link_or_button" should not exist in the ".tui-performUserActivityListSections" "css_element"
     And "Section anon 2" "link_or_button" should not exist in the ".tui-performUserActivityListSections" "css_element"
@@ -264,10 +264,10 @@ Feature: Viewing the section list in the user activities view and navigating to 
     When I navigate to the outstanding perform activities list page
     And I click on "Activities about others" "link"
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | User     | Relationship to user | Overall progress | Your progress            |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Manager              | Not started      | Not started              |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
+      | Activity                                                           | Type      | Name     | Your progress            | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started              | Not started      |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started, Not started | Not started      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Not started, Not started | Not started      |
 
     When I toggle expanding row "3" of the tui datatable
     Then I should see "Section anon 1" under the expanded row of the tui datatable
@@ -276,11 +276,11 @@ Feature: Viewing the section list in the user activities view and navigating to 
     # In anon mode we should not get "No items to display" empty table messages in sections were the logged in user is not participating.
     And I should not see "No items to display"
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Manager              | You  | Not started      |
       | Appraiser            | You  | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Manager              | You  | Not started      |
     And ".tui-performUserActivityListSection:nth-child(3) .tui-performUserActivityListSection__data" "css_element" should not exist
 
@@ -301,37 +301,37 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should see perform activity relationship to user "Appraiser"
     When I click on "Cancel" "button"
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | User     | Relationship to user | Overall progress | Your progress            |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Manager              | Not started      | Not started              |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Manager, Appraiser   | In progress      | Not started, In progress |
+      | Activity                                                           | Type      | Name     | Your progress            | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started              | Not started      |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started, Not started | Not started      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Not started, In progress | In progress      |
 
   Scenario: List and complete sections as the manager
     Given I log in as "manager-appraiser"
     When I navigate to the outstanding perform activities list page
     And I click on "Activities about others" "link"
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | User     | Relationship to user | Overall progress | Your progress            |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Manager              | Not started      | Not started              |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
+      | Activity                                                           | Type      | Name     | Your progress            | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started              | Not started      |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started, Not started | Not started      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Not started, Not started | Not started      |
     When I toggle expanding row "2" of the tui datatable
     Then I should see "Section 1" under the expanded row of the tui datatable
     And I should see "Section 2" under the expanded row of the tui datatable
     And I should see "Section 3" under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User        | Section progress |
+      | Relationship to user | Name        | Section progress |
       | Subject              | John One    | Not started      |
       | Manager              | David Two   | Not started      |
       | Manager              | You         | Not started      |
       | Appraiser            | Harry Three | Not started      |
       | Appraiser            | You         | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User      | Section progress |
+      | Relationship to user | Name      | Section progress |
       | Manager              | David Two | Not started      |
       | Manager              | You       | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User     | Section progress |
+      | Relationship to user | Name     | Section progress |
       | Subject              | John One | Not started      |
     And "Section 1" "link_or_button" should exist in the ".tui-performUserActivityListSection:nth-child(1) .tui-performUserActivityListSection__header" "css_element"
     And "Section 2" "link_or_button" should exist in the ".tui-performUserActivityListSection:nth-child(2) .tui-performUserActivityListSection__header" "css_element"
@@ -349,24 +349,24 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should see perform activity relationship to user "Appraiser"
     When I click on "Cancel" "button"
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | User     | Relationship to user | Overall progress | Your progress            |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Manager              | Not started      | Not started              |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Manager, Appraiser   | In progress      | Not started, In progress |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
+      | Activity                                                           | Type      | Name     | Your progress             | Overall progress |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started               | Not started      |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started, In progress  | In progress      |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Not started, Not started  | Not started      |
     When I toggle expanding row "2" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User        | Section progress |
+      | Relationship to user | Name        | Section progress |
       | Subject              | John One    | Not started      |
       | Manager              | David Two   | Not started      |
       | Manager              | You         | Not started      |
       | Appraiser            | Harry Three | Not started      |
       | Appraiser            | You         | In progress      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User      | Section progress |
+      | Relationship to user | Name      | Section progress |
       | Manager              | David Two | Not started      |
       | Manager              | You       | Not started      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User     | Section progress |
+      | Relationship to user | Name     | Section progress |
       | Subject              | John One | Not started      |
     When I click on "Section 2" "link_or_button" in the ".tui-performUserActivityListSection:nth-child(2) .tui-performUserActivityListSection__header" "css_element"
     Then I should see "Multiple section Activity" in the ".tui-pageHeading__title" "css_element"
@@ -377,34 +377,34 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I confirm the tui confirmation modal
     And I close the tui notification toast
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | User     | Relationship to user | Overall progress | Your progress            |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Manager              | Not started      | Not started              |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Manager, Appraiser   | In progress      | In progress, In progress |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Manager, Appraiser   | Not started      | Not started, Not started |
+      | Activity                                                           | Type      | Name     | Your progress             | Overall progress  |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started               | Not started       |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | In progress, In progress  | In progress       |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | John One | Not started, Not started  | Not started       |
     When I toggle expanding row "2" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User        | Section progress |
+      | Relationship to user | Name        | Section progress |
       | Subject              | John One    | Not started      |
       | Manager              | David Two   | Not started      |
       | Manager              | You         | Not started      |
       | Appraiser            | Harry Three | Not started      |
       | Appraiser            | You         | In progress      |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User      | Section progress |
+      | Relationship to user | Name      | Section progress |
       | Manager              | David Two | Not started      |
       | Manager              | You       | Complete Closed  |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User     | Section progress |
+      | Relationship to user | Name     | Section progress |
       | Subject              | John One | Not started      |
 
   Scenario: Show subject instance created date, overdue and closed icon on user activity list
     Given I log in as "john"
     When I navigate to the outstanding perform activities list page
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress | Your progress   |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started      | Not started     |
-      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started      | Not started     |
-      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started      | Not started     |
+      | Activity                                                           | Type      | Your progress   | Overall progress    |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | Not started     | Not started         |
+      | Multiple section Activity (##today##j F Y##)                       | Appraisal | Not started     | Not started         |
+      | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started     | Not started         |
 
     When I toggle expanding row "1" of the tui datatable
     # Display subject instance created date only.
@@ -441,15 +441,15 @@ Feature: Viewing the section list in the user activities view and navigating to 
 
     # Closed participant instance shows the closed icon
     Then I should see the tui datatable contains:
-      | Activity title                                                     | Type      | Overall progress    | Your progress       |
-      | Single section Activity (##today##j F Y##)                         | Feedback  | In progress Overdue | Complete            |
+      | Activity                                                           | Type      | Your progress       | Overall progress    |
+      | Single section Activity (##today##j F Y##)                         | Feedback  | Complete            | In progress Overdue |
       | Multiple section Activity (##today##j F Y##)                       | Appraisal | In progress Overdue | In progress Overdue |
       | Anonymous responses - Multiple section Activity (##today##j F Y##) | Appraisal | Not started         | Not started         |
 
     # Overdue lozenge shows on non-completed participant sections
     When I toggle expanding row "1" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress        |
+      | Relationship to user | Name           | Section progress        |
       | Subject              | You            | Complete                |
       | Manager              | David Two      | Not started Overdue     |
       | Manager              | combined Three | Not started Overdue     |
@@ -458,18 +458,18 @@ Feature: Viewing the section list in the user activities view and navigating to 
     When I toggle expanding row "1" of the tui datatable
     When I toggle expanding row "2" of the tui datatable
     Then I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
-      | Relationship to user | User           | Section progress        |
+      | Relationship to user | Name           | Section progress        |
       | Subject              | You            | In progress Overdue     |
       | Manager              | David Two      | Not started Overdue     |
       | Manager              | combined Three | Not started Overdue     |
       | Appraiser            | Harry Three    | Not started Overdue     |
       | Appraiser            | combined Three | Not started Overdue     |
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(2)" "css_element" contains:
-      | Relationship to user | User           | Section progress        |
+      | Relationship to user | Name           | Section progress        |
       | Manager              | David Two      | Not started Overdue     |
       | Manager              | combined Three | Not started Overdue     |
 
     # Closed participant section shows the closed icon
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(3)" "css_element" contains:
-      | Relationship to user | User | Section progress |
+      | Relationship to user | Name | Section progress |
       | Subject              | You  | Complete Closed  |
