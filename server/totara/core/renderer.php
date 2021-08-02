@@ -63,6 +63,13 @@ class totara_core_renderer extends plugin_renderer_base {
         $attributes = array('href' => $url, 'target' => '_blank');
         $output .= html_writer::tag('a', $text, $attributes);
 
+        // KINEO CCM START - GLOTOT-1911
+        if (class_exists('\local_core\ComposerPluginInfo')) {
+            $output .= html_writer::empty_tag('br');
+            $output .= get_string('tke_version', 'local_core', \local_core\ComposerPluginInfo::getInstance()->getInstalledPluginVersion('tke'));
+        }
+        // KINEO CCM END - GLOTOT-1911
+
         // Inform the admin of the flavour they are using. If one has been set.
         $flavour = \totara_flavour\helper::get_active_flavour_definition();
         if ($flavour) {
