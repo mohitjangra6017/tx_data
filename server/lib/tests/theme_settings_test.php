@@ -45,6 +45,17 @@ class core_theme_settings_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
+     * @return void
+     */
+    protected function tearDown(): void {
+        parent::tearDown();
+
+        // Clear the adhoc categories after each test. The adhoc_categories field is static
+        // and therefore persists across unit tests.
+        settings::set_adhoc_categories([]);
+    }
+
+    /**
      * Confirm that categories are valid.
      *
      * @param $categories
