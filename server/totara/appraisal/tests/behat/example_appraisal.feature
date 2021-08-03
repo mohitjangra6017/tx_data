@@ -100,7 +100,7 @@ Feature: Complete the example appraisal
     And I click on "Company Goal One" "link" in the "Choose goals to review" "totaradialogue"
     And I click on "Company Goal Two" "link" in the "Choose goals to review" "totaradialogue"
     And I click on "Company Goal Three" "link" in the "Choose goals to review" "totaradialogue"
-    And I select "Personal Goals" from the "goaltypeselector" singleselect
+    And I select "Personal goals" from the "goaltypeselector" singleselect
     And I click on "Personal Goal One" "link" in the "Choose goals to review" "totaradialogue"
     And I click on "Personal Goal Two" "link" in the "Choose goals to review" "totaradialogue"
     And I click on "Save" "button" in the "Choose goals to review" "totaradialogue"
@@ -205,7 +205,7 @@ Feature: Complete the example appraisal
     When I press "Start"
     And I press "Choose goals to review"
     And I click on "Company Goal One" "link" in the "Choose goals to review" "totaradialogue"
-    And I select "Personal Goals" from the "goaltypeselector" singleselect
+    And I select "Personal goals" from the "goaltypeselector" singleselect
     And I click on "Personal Goal Two" "link" in the "Choose goals to review" "totaradialogue"
     And I click on "Save" "button" in the "Choose goals to review" "totaradialogue"
     And I wait "1" seconds

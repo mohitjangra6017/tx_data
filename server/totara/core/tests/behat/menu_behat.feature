@@ -24,7 +24,7 @@ Feature: Main menu behat step testing
     When I am on "Dashboard" page
     Then I should see "You do not have any current learning."
     When I am on "Goals" page
-    Then I should see "Company Goals"
+    Then I should see "Company goals"
 
 
 # NOTE: uncomment following one by one and make sure it fails:
@@ -53,7 +53,7 @@ Feature: Main menu behat step testing
     When I am on "Dashboard" page
     Then I should see "You do not have any current learning."
     When I am on "Goals" page
-    Then I should see "Company Goals"
+    Then I should see "Company goals"
 
 # NOTE: uncomment following one by one and make sure it fails:
 
