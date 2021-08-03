@@ -102,8 +102,8 @@ class card implements base_card {
         global $CFG;
         require_once($CFG->dirroot . '/totara/program/program.class.php');
 
-        $show_progress = false;
-        $percent = 0;
+        $show_progress = true;
+        $percent = round($this->program->get_progress($this->get_user_id()));
 
         return [
             'is_certification' => $this->program->is_certif(),
