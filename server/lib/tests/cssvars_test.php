@@ -47,14 +47,21 @@ class core_cssvars_testcase extends basic_testcase {
 
     public function test_var_compat() {
         $cssvars = new \core\cssvars();
+
+        // test single var transform and ignoring of commented var
         $css = ':root{--bg:#06c;/*--bg:red;*/}';
         $transformed = $cssvars->transform($css);
-        $this->assertEquals(':root{--bg:#06c;-var--bg:#06c;}', $transformed);
+        $this->assertEquals('#cssVarCompatRoot{-var--bg:#06c;--bg:#06c;}', $transformed);
 
         // test multiline
         $css = ":root\n{\n--bg:\n#06c\n;\n}";
         $transformed = $cssvars->transform($css);
-        $this->assertEquals(":root{--bg:\n#06c;-var--bg:\n#06c;}", $transformed);
+        $this->assertEquals("#cssVarCompatRoot{-var--bg:\n#06c;--bg:\n#06c;}", $transformed);
+
+        // test repeat transform
+        $css = ':root{--bg:#06c;-var--bg:red;}';
+        $transformed = $cssvars->transform($css);
+        $this->assertEquals('#cssVarCompatRoot{-var--bg:#06c;--bg:#06c;}:root{-var--bg:red;}', $transformed);
     }
 
     public function test_value_fallback() {

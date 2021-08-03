@@ -16,11 +16,21 @@
  * @module tui
  */
 const isIE = document.body.classList.contains('ie');
+const isLegacyEdge = document.body.classList.contains('msedge');
 
 let rootStyle = null;
 
 if (typeof window !== 'undefined') {
-  rootStyle = window.getComputedStyle(document.documentElement);
+  let rootNode = document.documentElement;
+  if (isIE || isLegacyEdge) {
+    rootNode = document.querySelector('#cssVarCompatRoot');
+    if (!rootNode) {
+      rootNode = document.createElement('div');
+      rootNode.setAttribute('id', 'cssVarCompatRoot');
+      document.body.appendChild(rootNode);
+    }
+  }
+  rootStyle = window.getComputedStyle(rootNode);
 }
 
 const varCache = new Map();
@@ -46,7 +56,7 @@ export default {
     // before executing
     let value = rootStyle.getPropertyValue('--' + name);
     value = value == null || value === '' ? null : value.trim();
-    if (value === null && isIE) {
+    if (value === null && (isIE || isLegacyEdge)) {
       // can't read custom properties in IE, so they are transformed to have a
       // different name, which we can read by indexing into style
       value = rootStyle['-var--' + name];
@@ -63,7 +73,7 @@ export default {
    * @return {string}
    */
   getVarUsage(name) {
-    return isIE ? this.getVar(name) : `var(--${name})`;
+    return isIE || isLegacyEdge ? this.getVar(name) : `var(--${name})`;
   },
 
   /**

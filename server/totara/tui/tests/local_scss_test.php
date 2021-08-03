@@ -234,15 +234,16 @@ class totara_tui_local_scss_testcase extends basic_testcase {
             }
         ]);
 
+        // test non-legacy
         $this->assertEquals(
             ":root { --var: 'theme'; } a::before { content: var(--var); }",
             $tui_scss->get_compiled_css('theme')
         );
 
+        // test legacy
         $tui_scss->get_options()->set_legacy(true);
-
         $this->assertEquals(
-            ":root{--var: 'theme';-var--var: 'theme';} a::before { content: 'theme'; }",
+            "#cssVarCompatRoot{-var--var: 'theme';--var: 'theme';} a::before { content: 'theme'; }",
             $tui_scss->get_compiled_css('theme')
         );
     }

@@ -24,7 +24,7 @@
 namespace core;
 
 /**
- * Transform CSS variables to their static definitions 
+ * Transform CSS variables to their static definitions
  */
 class cssvars {
     /**
@@ -68,7 +68,8 @@ class cssvars {
     }
 
     /**
-     * Rewrite custom property declarations from `--abc: xyz;` to `-var--abc: xyz;` to allow parsing by IE.
+     * Rewrite custom property declarations from `--abc: xyz;` to `-var--abc: xyz;` to allow parsing by IE
+     * and attach to :root or non-inherited Node context
      *
      * @param string $css
      * @return string
@@ -79,18 +80,31 @@ class cssvars {
 
     private function replace_custom_css_declarations(array $match): string {
         $content = preg_replace(self::COMMENT_REGEX, '', $match[1]);
-        $new_content = '';
+        $new_root_content = '';
+        $new_nonroot_content = '';
         foreach (explode(';', $content) as $line) {
             $line = trim($line);
             if (strlen($line) === 0) {
                 continue;
             }
-            $new_content .= $line . ';';
             if (substr($line, 0, 2) === '--') {
-                $new_content .= '-var' . $line . ';';
+                // we need prefixed for IE11
+                $new_nonroot_content .= '-var' . $line . ';';
+                // and unprefixed for Legacy Edge
+                $new_nonroot_content .= $line . ';';
+            } else {
+                $new_root_content .= $line . ';';
             }
         }
-        return ':root{' . $new_content . '}';
+
+        $output = '';
+        if ($new_nonroot_content) {
+            $output .= '#cssVarCompatRoot{' . $new_nonroot_content . '}';
+        }
+        if ($new_root_content) {
+            $output .= ':root{' . $new_root_content . '}';
+        }
+        return $output;
     }
 
     /**
