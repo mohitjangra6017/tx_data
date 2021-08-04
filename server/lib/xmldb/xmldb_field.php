@@ -769,7 +769,10 @@ class xmldb_field extends xmldb_object {
             }
         }
         if ($allowedvalues = $this->getAllowedValues()) {
-            $result .= ", '" . implode(',', $allowedvalues) . "'";
+            if (!$includeprevious) {
+                $result .= ', null';
+            }
+            $result .= ", ['" . implode("', '", $allowedvalues) . "']";
         }
         // Return result
         return $result;
