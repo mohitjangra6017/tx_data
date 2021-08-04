@@ -23,7 +23,6 @@
 namespace core\entity;
 
 use core\orm\entity\entity;
-use stdClass;
 
 /**
  * Entity class for table "enrol"

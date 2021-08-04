@@ -73,7 +73,7 @@ class mod_contentmarketplace_mod_form extends moodleform_mod {
             'radio',
             'completion_condition',
             null,
-            condition::get_content_marketplace_conditions_string('contentnmarketplace_linkedin'),
+            condition::get_content_marketplace_conditions_string('contentmarketplace_linkedin'),
             condition::CONTENT_MARKETPLACE
         );
 

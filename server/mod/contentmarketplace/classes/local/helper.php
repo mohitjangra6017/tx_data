@@ -25,7 +25,7 @@ namespace mod_contentmarketplace\local;
 use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\entity\content_marketplace as content_marketplace_entity;
 use mod_contentmarketplace\model\content_marketplace;
-use mod_contentmarketplace\exception\non_exist_learning_object;
+use mod_contentmarketplace\exception\learning_object_not_found;
 use totara_contentmarketplace\learning_object\factory;
 
 /**
@@ -59,7 +59,7 @@ class helper {
         $learning_object = $resolver->find($learning_object_id);
 
         if (null === $learning_object) {
-            throw new non_exist_learning_object($marketplace_component);
+            throw new learning_object_not_found($marketplace_component);
         }
 
         return content_marketplace::create($course_id, $learning_object);

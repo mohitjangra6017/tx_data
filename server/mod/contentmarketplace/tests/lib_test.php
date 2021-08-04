@@ -29,7 +29,7 @@ use core_phpunit\testcase;
 use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\entity\content_marketplace;
 use mod_contentmarketplace\model\content_marketplace as model;
-use mod_contentmarketplace\exception\non_exist_learning_object;
+use mod_contentmarketplace\exception\learning_object_not_found;
 use mod_contentmarketplace\output\content_marketplace_logo;
 use totara_contentmarketplace\testing\generator as totara_content_marketplace_generator;
 
@@ -180,7 +180,7 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         try {
             contentmarketplace_add_instance($module_info);
             self::fail("Expect the add instance would yield errors");
-        } catch (non_exist_learning_object $e) {
+        } catch (learning_object_not_found $e) {
             self::assertEquals(
                 get_string('error:cannot_find_learning_object', 'mod_contentmarketplace', 'contentmarketplace_linkedin'),
                 $e->getMessage()

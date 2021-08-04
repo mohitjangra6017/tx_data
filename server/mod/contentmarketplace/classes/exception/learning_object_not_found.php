@@ -24,9 +24,9 @@ namespace mod_contentmarketplace\exception;
 
 use moodle_exception;
 
-class non_exist_learning_object extends moodle_exception {
+class learning_object_not_found extends moodle_exception {
     /**
-     * non_exist_learning_object constructor.
+     * learning_object_not_found constructor.
      * @param string $marketplace_component
      * @param null|mixed $debuginfo
      */

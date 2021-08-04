@@ -23,7 +23,7 @@
 
 use core\orm\query\builder;
 use core_phpunit\testcase;
-use mod_contentmarketplace\exception\non_exist_learning_object;
+use mod_contentmarketplace\exception\learning_object_not_found;
 use totara_contentmarketplace\testing\generator as marketplace_generator;
 use mod_contentmarketplace\local\helper;
 use mod_contentmarketplace\entity\content_marketplace;
@@ -72,7 +72,7 @@ class mod_contentmarketplace_local_helper_testcase extends testcase {
                 'contentmarketplace_linkedin'
             );
             self::fail("Expect the process of adding content marketplace instance should yield error");
-        } catch (non_exist_learning_object $e) {
+        } catch (learning_object_not_found $e) {
             self::assertEquals(
                 get_string('error:cannot_find_learning_object', 'mod_contentmarketplace', 'contentmarketplace_linkedin'),
                 $e->getMessage()

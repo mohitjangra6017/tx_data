@@ -64,6 +64,10 @@ class condition {
      */
     public static function get_content_marketplace_conditions_string(string $marketplace_component): string {
         [$unused_plugin_type, $plugin_name] = core_component::normalize_component($marketplace_component);
+        if ($unused_plugin_type !== 'contentmarketplace') {
+            throw new coding_exception("{$marketplace_component} is not found");
+        }
+
         $plugin_info = contentmarketplace::plugin($plugin_name);
 
         return get_string(

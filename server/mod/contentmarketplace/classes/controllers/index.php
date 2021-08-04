@@ -101,10 +101,11 @@ class index extends controller {
         $course_record = $this->course->to_record();
         $records = get_all_instances_in_course('contentmarketplace', $course_record);
         $string_manager = get_string_manager();
+        $component_name = get_string('unknownname', 'moodle');
 
         return array_map(
-            function (stdClass $record) use ($string_manager): array {
-                $component_name = get_string('unknownname', 'moodle');
+            function (stdClass $record) use ($string_manager, $component_name): array {
+                // Reassign variable will not affected the original $component_name.
                 $marketplace_component = $record->learning_object_marketplace_component;
 
                 if ($string_manager->string_exists('pluginname', $marketplace_component)) {

@@ -64,7 +64,11 @@ class catalog_import extends controller {
     public function __construct() {
         parent::__construct();
 
-        $this->plugin = contentmarketplace::plugin($this->get_marketplace());
+        // If plugin is set, we just skip assignment.
+        if (!isset($this->plugin)) {
+            $this->plugin = contentmarketplace::plugin($this->get_marketplace());
+        }
+
         $this->explorer = new explorer_model($this->get_marketplace(), $this->get_layout(), $this->get_category_id());
         $this->url = new moodle_url('/totara/contentmarketplace/explorer.php', ['marketplace' => $this->get_marketplace()]);
     }
@@ -183,6 +187,8 @@ class catalog_import extends controller {
     }
 
     /**
+     * This will be called before the constructor
+     *
      * @return void
      */
     private function check_plugin_enabled(): void {

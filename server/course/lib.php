@@ -1965,7 +1965,7 @@ function save_local_role_names($courseid, $data) {
         if (strpos($fieldname, 'role_') !== 0) {
             continue;
         }
-        [$ignored, $roleid] = explode('_', $fieldname);
+        list($ignored, $roleid) = explode('_', $fieldname);
 
         // make up our mind whether we want to delete, update or insert
         if (!$value) {
@@ -2428,7 +2428,7 @@ class course_request {
         $data->numsections        = $courseconfig->numsections;
         $data->startdate          = usergetmidnight(time());
 
-        [$data->fullname, $data->shortname] = restore_dbops::calculate_course_names(0, $data->fullname, $data->shortname);
+        list($data->fullname, $data->shortname) = restore_dbops::calculate_course_names(0, $data->fullname, $data->shortname);
 
         $course = create_course($data);
         $context = context_course::instance($course->id, MUST_EXIST);
@@ -2784,7 +2784,7 @@ function create_module($moduleinfo) {
 
     // Some additional checks (capability / existing instances).
     $course = $DB->get_record('course', array('id'=>$moduleinfo->course), '*', MUST_EXIST);
-    [$module, $context, $cw] = can_add_moduleinfo($course, $moduleinfo->modulename, $moduleinfo->section);
+    list($module, $context, $cw) = can_add_moduleinfo($course, $moduleinfo->modulename, $moduleinfo->section);
 
     // Add the module.
     $moduleinfo->module = $module->id;
@@ -2816,7 +2816,7 @@ function update_module($moduleinfo) {
     $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
     // Some checks (capaibility / existing instances).
-    [$cm, $context, $module, $data, $cw] = can_update_moduleinfo($cm);
+    list($cm, $context, $module, $data, $cw) = can_update_moduleinfo($cm);
 
     // Retrieve few information needed by update_moduleinfo.
     $moduleinfo->modulename = $cm->modname;
@@ -2826,7 +2826,7 @@ function update_module($moduleinfo) {
     $moduleinfo->type = 'mod';
 
     // Update the module.
-    [$cm, $moduleinfo] = update_moduleinfo($cm, $moduleinfo, $course, null);
+    list($cm, $moduleinfo) = update_moduleinfo($cm, $moduleinfo, $course, null);
 
     return $moduleinfo;
 }
@@ -3143,7 +3143,7 @@ function archive_course_purge_gradebook(int $userid, int $courseid) {
 
     $gradeitems = $DB->get_records('grade_items', ['courseid' => $courseid], "itemtype DESC, id DESC"); // Any reproducible order should be fine here.
     if ($gradeitems) {
-        [$select, $params] = $DB->get_in_or_equal(array_keys($gradeitems), SQL_PARAMS_NAMED);
+        list($select, $params) = $DB->get_in_or_equal(array_keys($gradeitems), SQL_PARAMS_NAMED);
         $params['userid'] = $userid;
         $DB->delete_records_select('grade_grades', "userid = :userid AND itemid $select", $params);
 
@@ -3201,7 +3201,7 @@ function archive_course_completion($userid, $courseid, $inprogress = false) {
     if ($inprogress) {
         $status[] = COMPLETION_STATUS_INPROGRESS;
     }
-    [$statussql, $statusparams] = $DB->get_in_or_equal($status, SQL_PARAMS_NAMED, 'status');
+    list($statussql, $statusparams) = $DB->get_in_or_equal($status, SQL_PARAMS_NAMED, 'status');
     $params = array_merge($statusparams, array('course' => $courseid, 'userid' => $userid));
     $where = "course = :course AND userid = :userid AND status {$statussql}";
     if (!$course_completion = $DB->get_record_select('course_completions', $where, $params)) {
