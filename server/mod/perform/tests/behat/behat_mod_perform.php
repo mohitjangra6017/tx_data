@@ -1799,6 +1799,8 @@ class behat_mod_perform extends behat_base {
         $answer_0->focus();
         $answer_0->setValue('Choice 0');
 
+        $settings_container->find('css', '[title=Add]')->click();
+
         $answer_1 = $settings_container->find('css', 'input[name="options[1][value]"]');
         $answer_1->focus();
         $answer_1->setValue('Choice 1');

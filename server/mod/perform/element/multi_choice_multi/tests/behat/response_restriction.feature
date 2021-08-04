@@ -28,6 +28,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
 
     # No restrictions
     When I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | No restrictions |
       | options[0][value] | Option one      |
@@ -35,8 +36,18 @@ Feature: Manage performance activity multiple choice-answers elements with admin
     And I save the activity content element
     Then I should see "Element saved" in the tui success notification toast
 
+    # No restrictions - Single required checkbox
+    When I add a "Multiple choice: multi-select" activity content element
+    And I set the following fields to these values:
+      | rawTitle          | Single required checkbox |
+      | options[0][value] | I agree                  |
+    And I click on the "responseRequired" tui checkbox
+    And I save the activity content element
+    Then I should see "Element saved" in the tui success notification toast
+
     # Single restriction value - optional
     When I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Single restriction value - optional |
       | options[0][value] | Option one                          |
@@ -48,6 +59,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
 
     # Minimum restrictions single value - required
     When I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Minimum restrictions single value - required |
       | options[0][value] | Option one                                   |
@@ -79,6 +91,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
     # Mixed restrictions - optional
     When I add a "Multiple choice: multi-select" activity content element
     And I click multiple answers question add new option
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Mixed restrictions - optional |
       | options[0][value] | Option one                    |
@@ -91,6 +104,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
 
     # Maximum restrictions mixed values - required
     When I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Maximum restrictions mixed values - required |
@@ -121,7 +135,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
     And I should see perform "checkbox" question "Maximum restrictions mixed values - required" is saved with options "Option one, Option two, Option three"
 
     When I click on "Content (Multi-multi min-max)" "link"
-    Then I should see "2" in the "required" element summary of the activity section
+    Then I should see "3" in the "required" element summary of the activity section
     And I should see "3" in the "optional" element summary of the activity section
     And I should see "0" in the "other" element summary of the activity section
 
@@ -143,6 +157,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
     # Assert correct restrictions help text
     Then I should not see "Select at least" in the perform activity question "No restrictions"
     And I should not see "Select no more than" in the perform activity question "No restrictions"
+    And I should not see "Select" in the perform activity question "Single required checkbox"
     And I should see "Select 1 options" in the perform activity question "Minimum restrictions single value - required"
     And I should see "Select at least 1 options" in the perform activity question "Mixed restrictions - optional"
     And I should see "Select no more than 2 options" in the perform activity question "Mixed restrictions - optional"
@@ -152,6 +167,7 @@ Feature: Manage performance activity multiple choice-answers elements with admin
     # Assert correct validation errors
     When I click on "Submit" "button"
     Then I should see validation error "Required" in the perform activity question "Minimum restrictions single value - required"
+    And I should see validation error "Required" in the perform activity question "Single required checkbox"
     And I should see validation error "Required" in the perform activity question "Maximum restrictions mixed values - required"
 
     # Note "Single restriction value - optional" and "Mixed restrictions - optional", should not be touched and therefore not show any validation messages.
@@ -159,10 +175,12 @@ Feature: Manage performance activity multiple choice-answers elements with admin
     And I should not see validation error "Select at least 1 options" in the perform activity question "Mixed restrictions - optional"
 
     When I answer "multi choice multi" question "Maximum restrictions mixed values - required" with "Option one"
+    And I answer "multi choice multi" question "Single required checkbox" with "I agree"
     And I answer "multi choice multi" question "Maximum restrictions mixed values - required" with "Option two"
     And I answer "multi choice multi" question "Maximum restrictions mixed values - required" with "Option three"
     And I should not see validation error "Select at least 1 options" in the perform activity question "Maximum restrictions mixed values - required"
     Then I should see validation error "Select no more than 2 options" in the perform activity question "Maximum restrictions mixed values - required"
+    Then I should see validation error "Required" in the perform activity question "Single required checkbox"
 
     When I answer "multi choice multi" question "Minimum restrictions single value - required" with "Option one"
     And I answer "multi choice multi" question "Minimum restrictions single value - required" with "Option two"

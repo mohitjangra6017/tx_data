@@ -14,6 +14,7 @@ Feature: Manage performance activity multiple choice-answers elements
     And I click on "Activity one" "link"
     And I navigate to manage perform activity content page
     And I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Question 1   |
       | options[0][value] | Option one   |
@@ -21,6 +22,7 @@ Feature: Manage performance activity multiple choice-answers elements
       | identifier        | Identifier 1 |
     And I save the activity content element
     And I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Question 2   |
       | options[0][value] | Option three |
@@ -29,6 +31,7 @@ Feature: Manage performance activity multiple choice-answers elements
     And I wait "5" seconds
     And I add a "Multiple choice: multi-select" activity content element
     And I wait "5" seconds
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Question 3  |
       | options[0][value] | Option five |
@@ -49,6 +52,7 @@ Feature: Manage performance activity multiple choice-answers elements
     And I click on "Activity one" "link"
     And I navigate to manage perform activity content page
     And I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Question 1 |
       | options[0][value] | Option one |
@@ -69,6 +73,7 @@ Feature: Manage performance activity multiple choice-answers elements
     And I click on "Activity one" "link"
     And I navigate to manage perform activity content page
     And I add a "Multiple choice: multi-select" activity content element
+    And I click multiple answers question add new option
     And I set the following fields to these values:
       | rawTitle          | Question 1 |
       | options[0][value] | Option one |
@@ -81,7 +86,7 @@ Feature: Manage performance activity multiple choice-answers elements
     And I close the tui notification toast
     And I follow "Content (Activity one)"
     And I navigate to manage perform activity content page
-    Then I should see perform multiple answers question "Question 1" is saved with options "Option one,Option two"
+    Then I should see perform multiple answers question "Question 1" is saved with options "Option one,Option three"
 
   Scenario: Save multiple answers elements shows validation
     Given I log in as "admin"

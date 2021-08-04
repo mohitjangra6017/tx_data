@@ -18,6 +18,7 @@ Feature: Multiple answers element supports multi-lang filters in titles and opti
     And I navigate to manage perform activity content page
     And I add a "Multiple choice: multi-select" activity content element
     Then "rawTitle" "field" should be visible
+    And I click multiple answers question add new option
     When I set the following fields to these values:
       | rawTitle   | <span lang="en" class="multilang">it's an English question</span><span lang="de" class="multilang">deutsche Frage</span> |
       | options[0][value] | <span lang="en" class="multilang">it's the first option</span><span lang="de" class="multilang">erste Option</span>      |

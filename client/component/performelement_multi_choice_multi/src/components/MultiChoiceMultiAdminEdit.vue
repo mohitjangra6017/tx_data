@@ -195,7 +195,7 @@ export default {
       },
       numberOfOptions: null,
       maxOptions: null,
-      minRows: 2,
+      minRows: 1,
       minRequired: this.isRequired,
       ready: false,
     };
@@ -204,7 +204,7 @@ export default {
   mounted() {
     // If no existing data
     if (!this.rawData.options) {
-      this.initialValues.options.push(this.createField(), this.createField());
+      this.initialValues.options.push(this.createField());
     } else {
       this.numberOfOptions = this.rawData.options.length;
       this.maxOptions = this.rawData.max
@@ -233,7 +233,14 @@ export default {
      * @param values {Object}
      */
     updateValidationValues(values) {
-      this.minRequired = values.responseRequired;
+      // Don't require an explicit min selection when there is only one checkbox.
+      // This way we can prevent displaying the somewhat nonsensical hint text in the participant form.
+      if (values.options.length === 1) {
+        this.minRequired = false;
+      } else {
+        this.minRequired = values.responseRequired;
+      }
+
       this.numberOfOptions = values.options.length;
       this.maxOptions = values.max ? values.max : values.options.length;
     },
