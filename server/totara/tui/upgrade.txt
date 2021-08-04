@@ -1,6 +1,10 @@
 This file describes API changes in /tui/ information provided here is intended
 especially for developers.
 
+
+=== 15.0 ===
+* Changed type of theme parameter from param_alphaext! to param_component! for query totara_tui_themes_with_variables.
+
 === 14.0 ===
 
 * tenantid renamed to tenant_id in totara_tui\controllers\theme_settings
