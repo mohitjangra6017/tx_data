@@ -170,7 +170,7 @@ class core_message_testcase extends advanced_testcase {
         $this->assertSame($message->subject, $email->subject);
         $this->assertNotEmpty($email->header);
         $this->assertNotEmpty($email->body);
-        $this->assertMatchesRegularExpression('/test message body test/', $email->body);
+        $this->assertMatchesRegularExpression('/test.*message body.*test/s', $email->body);
         $sink->clear();
 
         // Test that event fired includes the courseid.
@@ -210,7 +210,7 @@ class core_message_testcase extends advanced_testcase {
         $this->assertSame($message->subject, $email->subject);
         $this->assertNotEmpty($email->header);
         $this->assertNotEmpty($email->body);
-        $this->assertDoesNotMatchRegularExpression('/test message body test/', $email->body);
+        $this->assertDoesNotMatchRegularExpression('/test.*message body.*test/s', $email->body);
 
         // Test that event fired includes the courseid.
         $eventsink = $this->redirectEvents();

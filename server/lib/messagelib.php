@@ -324,6 +324,11 @@ function message_send($eventdata) {
     $tabledata->id = $DB->insert_record($table, $tabledata);
     $eventdata->savedmessageid = $tabledata->id;
 
+    if (!$eventdata->notification) {
+        // Sending conversation message instead of notification message.
+        return core\message\manager::send_message_to_conversation($eventdata, $tabledata, $processorlist);
+    }
+
     // Let the manager do the sending or buffering when db transaction in progress.
     return \core\message\manager::send_message($eventdata, $tabledata, $processorlist);
 }
