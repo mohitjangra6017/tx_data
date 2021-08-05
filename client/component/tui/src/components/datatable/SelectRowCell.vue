@@ -26,7 +26,17 @@
     ]"
     role="cell"
   >
+    <div
+      v-if="loadingPreview"
+      class="tui-dataTableSelectRowCell__loader"
+      :class="{
+        'tui-dataTableSelectRowCell__loader--large': largeCheckBox,
+      }"
+    >
+      <SkeletonContent :has-overlay="loadingOverlayActive" />
+    </div>
     <Checkbox
+      v-else
       :large="largeCheckBox"
       :no-label-offset="noLabelOffset"
       :aria-label="$str('selectrow', 'totara_core') + ': ' + rowLabel"
@@ -39,10 +49,12 @@
 
 <script>
 import Checkbox from 'tui/components/form/Checkbox';
+import SkeletonContent from 'tui/components/loading/SkeletonContent';
 
 export default {
   components: {
     Checkbox,
+    SkeletonContent,
   },
 
   props: {
@@ -50,6 +62,8 @@ export default {
     disabled: Boolean,
     hidden: Boolean,
     largeCheckBox: Boolean,
+    loadingOverlayActive: Boolean,
+    loadingPreview: Boolean,
     noLabelOffset: Boolean,
     valign: String,
     rowLabel: {
@@ -76,6 +90,16 @@ export default {
 
   &--hidden {
     visibility: hidden;
+  }
+
+  &__loader {
+    width: var(--form-checkbox-size);
+    height: var(--form-checkbox-size);
+
+    &--large {
+      width: var(--form-checkbox-size-large);
+      height: var(--form-checkbox-size-large);
+    }
   }
 
   &--stacked&--hidden {

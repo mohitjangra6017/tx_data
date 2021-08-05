@@ -22,31 +22,44 @@
     :class="{ 'tui-dataTableSelectVisibleRowsCell--hidden': hidden }"
     role="cell"
   >
-    <Checkbox
-      :large="largeCheckBox"
-      :no-label-offset="noLabelOffset"
-      :checked="checked"
-      :aria-label="$str('selectallrows', 'totara_core')"
-      :disabled="disabled || hidden"
-      @change="$emit('change', $event)"
-    />
-    <span
-      class="tui-dataTableCell__label"
+    <div
+      v-if="loadingPreview"
+      class="tui-dataTableSelectVisibleRowsCell__loader"
       :class="{
-        'tui-dataTableCell__label--stacked': isStacked,
+        'tui-dataTableSelectVisibleRowsCell__loader--large': largeCheckBox,
       }"
     >
-      {{ $str('selectallrows', 'totara_core') }}
-    </span>
+      <SkeletonContent :has-overlay="loadingOverlayActive" />
+    </div>
+    <template v-else>
+      <Checkbox
+        :large="largeCheckBox"
+        :no-label-offset="noLabelOffset"
+        :checked="checked"
+        :aria-label="$str('selectallrows', 'totara_core')"
+        :disabled="disabled || hidden"
+        @change="$emit('change', $event)"
+      />
+      <span
+        class="tui-dataTableCell__label"
+        :class="{
+          'tui-dataTableCell__label--stacked': isStacked,
+        }"
+      >
+        {{ $str('selectallrows', 'totara_core') }}
+      </span>
+    </template>
   </div>
 </template>
 
 <script>
 import Checkbox from 'tui/components/form/Checkbox';
+import SkeletonContent from 'tui/components/loading/SkeletonContent';
 
 export default {
   components: {
     Checkbox,
+    SkeletonContent,
   },
 
   props: {
@@ -54,6 +67,8 @@ export default {
     disabled: Boolean,
     hidden: Boolean,
     largeCheckBox: Boolean,
+    loadingOverlayActive: Boolean,
+    loadingPreview: Boolean,
     noLabelOffset: Boolean,
     isStacked: Boolean,
   },
@@ -74,6 +89,16 @@ export default {
 
   &--hidden {
     visibility: hidden;
+  }
+
+  &__loader {
+    width: var(--form-checkbox-size);
+    height: var(--form-checkbox-size);
+
+    &--large {
+      width: var(--form-checkbox-size-large);
+      height: var(--form-checkbox-size-large);
+    }
   }
 
   .tui-dataTableCell__label {

@@ -13,6 +13,7 @@ information provided here is intended especially for developers.
 * Changed table and select table to stack based on its own width (using the new stackAt prop) rather than media queries.
   The following components have had their media queries removed and replaced with a isStacked prop:
   Cell.vue, ExpandCell.vue, ExpandedRow.vue, ExpandedRow.vue, HeaderCell.vue, HeaderRow.vue, Row.vue, RowGroup.vue, SelectRowCell.vue
+* Extended data table component templates to conditionally display a skeleton content loader
 * Removed text align rules from HasChildrenCell.vue
   * SCSS changes
 * Exposed more of the table properties to the select table component datatable/SelectTable.vue

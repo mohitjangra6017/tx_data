@@ -27,17 +27,32 @@
     ]"
     role="columnheader"
   >
-    <slot />
+    <SkeletonContent
+      v-if="loadingPreview"
+      :has-overlay="loadingOverlayActive"
+    />
+
+    <template v-else>
+      <slot />
+    </template>
   </div>
 </template>
 
 <script>
+import SkeletonContent from 'tui/components/loading/SkeletonContent';
+
 export default {
+  components: {
+    SkeletonContent,
+  },
+
   props: {
     align: {
       type: String,
       validator: val => ['start', 'center', 'end'].indexOf(val) !== -1,
     },
+    loadingOverlayActive: Boolean,
+    loadingPreview: Boolean,
     size: String,
     valign: {
       type: String,

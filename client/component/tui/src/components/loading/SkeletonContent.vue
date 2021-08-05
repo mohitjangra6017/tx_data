@@ -24,7 +24,12 @@
       hasOverlay && 'tui-skeletonContent--hasOverlay',
     ]"
   >
-    <div v-for="line in lines" :key="line" class="tui-skeletonContent__line">
+    <div
+      v-for="line in lines"
+      :key="line"
+      aria-hidden="true"
+      class="tui-skeletonContent__line"
+    >
       &nbsp;
     </div>
   </div>
@@ -50,13 +55,18 @@ export default {
 <style lang="scss">
 :root {
   // Background colour of skeleton area
-  --skeleton-content-background: var(--color-neutral-3);
+  // Should have at least 3:1 contrast ratio
+  // https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html
+  // Future option https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast
+  --skeleton-content-background: #949494;
   // Background colour of skeleton area when under a loading overlay
   --skeleton-content-overlay-background: var(--color-neutral-5);
   // Colour of shimmer
-  --skeleton-content-shimmer-color: #fbfbfb;
+  --skeleton-content-shimmer-color: #aaa;
   // Colour of shimmer when under a loading overlay
   --skeleton-content-shimmer-overlay-color: #e6e5e5;
+  // Border radius for skeleton content
+  --skeleton-content-border-radius: var(--border-radius-small);
 }
 
 .tui-skeletonContent {
@@ -67,6 +77,7 @@ export default {
   height: 100%;
   overflow: hidden;
   background: var(--skeleton-content-background);
+  border-radius: var(--skeleton-content-border-radius);
 
   @include tui-char-length-classes();
 
@@ -86,6 +97,10 @@ export default {
     background-size: 1000px 100%;
     background-attachment: fixed;
     animation: tui-skeletonShimmer 3s linear infinite;
+
+    @media (prefers-reduced-motion) {
+      animation: none;
+    }
   }
 
   @keyframes tui-skeletonShimmer {

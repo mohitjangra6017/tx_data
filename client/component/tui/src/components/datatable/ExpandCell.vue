@@ -26,7 +26,13 @@
     role="cell"
   >
     <template v-if="!header && !empty">
+      <SkeletonContent
+        v-if="loadingPreview"
+        :has-overlay="loadingOverlayActive"
+      />
+
       <ButtonIcon
+        v-else
         :aria-expanded="expandState.toString()"
         :aria-label="$str('a11y_row_details', 'totara_core', ariaLabel)"
         :styleclass="{
@@ -46,12 +52,14 @@
 import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import CollapseIcon from 'tui/components/icons/Collapse';
 import ExpandIcon from 'tui/components/icons/Expand';
+import SkeletonContent from 'tui/components/loading/SkeletonContent';
 
 export default {
   components: {
     ButtonIcon,
     CollapseIcon,
     ExpandIcon,
+    SkeletonContent,
   },
 
   props: {
@@ -67,11 +75,14 @@ export default {
     expandState: Boolean,
     header: Boolean,
     isStacked: Boolean,
+    loadingOverlayActive: Boolean,
+    loadingPreview: Boolean,
   },
 
   mounted() {
     if (
       !this.header &&
+      !this.loadingPreview &&
       (this.ariaLabel == null || this.ariaLabel.length === 0)
     ) {
       console.error(

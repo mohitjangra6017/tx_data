@@ -19,32 +19,41 @@
 <template>
   <div>
     <SamplesExample>
-      <SelectTable
-        v-model="selection"
-        :data="dummyData"
-        :color-odd-rows="colorOddRows"
-        :checkbox-v-align="checkboxVAlign"
-        :select-all-enabled="selectAllEnabled"
-        :select-entire-enabled="selectEntireEnabled"
-        :entire-selected="entireSelected"
-        row-label-key="display_name"
-        :stack-at="Number(stackAt)"
-      >
-        <template v-slot:header-row>
-          <HeaderCell size="12" valign="center">Col 1</HeaderCell>
-          <HeaderCell size="4" valign="center">Col 2</HeaderCell>
-        </template>
+      <Loader :loading="loadingPreview">
+        <SelectTable
+          v-model="selection"
+          :data="dummyData"
+          :color-odd-rows="colorOddRows"
+          :checkbox-v-align="checkboxVAlign"
+          :entire-selected="entireSelected"
+          :large-check-box="largeCheckBox"
+          :loading-overlay-active="true"
+          :loading-preview="loadingPreview"
+          row-label-key="display_name"
+          :select-all-enabled="selectAllEnabled"
+          :select-entire-enabled="selectEntireEnabled"
+          :stack-at="Number(stackAt)"
+        >
+          <template v-slot:header-row>
+            <HeaderCell size="12" valign="center">Col 1</HeaderCell>
+            <HeaderCell size="4" valign="center">Col 2</HeaderCell>
+          </template>
 
-        <template v-slot:row="{ row }">
-          <Cell size="12" :column-header="'Col 1'" valign="center">
-            {{ row.display_name }}
-          </Cell>
+          <template v-slot:row="{ row }">
+            <Cell size="12" :column-header="'Col 1'" valign="center">
+              <template v-slot:default>
+                {{ row.display_name }}
+              </template>
+            </Cell>
 
-          <Cell size="4" :column-header="'Col 2'" valign="center">
-            {{ row.ready }}
-          </Cell>
-        </template>
-      </SelectTable>
+            <Cell size="4" :column-header="'Col 2'" valign="center">
+              <template v-slot:default>
+                {{ row.ready }}
+              </template>
+            </Cell>
+          </template>
+        </SelectTable>
+      </Loader>
     </SamplesExample>
 
     <SamplesPropCtl>
@@ -68,6 +77,13 @@
       </FormRow>
 
       <h4 class="tui-samplesCtl__optional">Selection (Optional)</h4>
+
+      <FormRow label="large-check-box">
+        <RadioGroup v-model="largeCheckBox" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
 
       <FormRow label="checkbox-v-align">
         <RadioGroup v-model="checkboxVAlign" :horizontal="true">
@@ -97,6 +113,13 @@
           <Radio :value="false">False</Radio>
         </RadioGroup>
       </FormRow>
+
+      <FormRow label="loading-preview">
+        <RadioGroup v-model="loadingPreview" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
     </SamplesPropCtl>
 
     <SamplesCode>
@@ -109,6 +132,7 @@
 <script>
 import Cell from 'tui/components/datatable/Cell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
+import Loader from 'tui/components/loading/Loader';
 import SelectTable from 'tui/components/datatable/SelectTable';
 import InputNumber from 'tui/components/form/InputNumber';
 import SamplesCode from 'samples/components/sample_parts/misc/SamplesCode';
@@ -122,6 +146,7 @@ export default {
   components: {
     Cell,
     HeaderCell,
+    Loader,
     SelectTable,
     InputNumber,
     SamplesCode,
@@ -156,6 +181,8 @@ export default {
 
       checkboxVAlign: 'center',
       colorOddRows: false,
+      largeCheckBox: false,
+      loadingPreview: false,
       stackAt: 570,
       selectAllEnabled: false,
       selectEntireEnabled: false,

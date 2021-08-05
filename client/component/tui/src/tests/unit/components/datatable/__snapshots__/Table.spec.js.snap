@@ -11,7 +11,7 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
     <!---->
      
     <propsprovider-stub
-      provide="[object Object]"
+      provide="function () { [native code] }"
     />
   </headerrow-stub>
    
@@ -24,7 +24,7 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
       <!---->
        
       <propsprovider-stub
-        provide="[object Object]"
+        provide="function () { [native code] }"
       />
     </row-stub>
      
@@ -33,7 +33,7 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
       <!---->
        
       <propsprovider-stub
-        provide="[object Object]"
+        provide="function () { [native code] }"
       />
     </row-stub>
      
@@ -42,7 +42,7 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
       <!---->
        
       <propsprovider-stub
-        provide="[object Object]"
+        provide="function () { [native code] }"
       />
     </row-stub>
      
@@ -51,7 +51,7 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
       <!---->
        
       <propsprovider-stub
-        provide="[object Object]"
+        provide="function () { [native code] }"
       />
     </row-stub>
      

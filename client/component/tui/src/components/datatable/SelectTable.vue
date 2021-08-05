@@ -30,6 +30,9 @@
       :get-group-id="getGroupId"
       :group-mode="groupMode"
       :hover-off="hoverOff"
+      :loading-overlay-active="loadingOverlayActive"
+      :loading-preview="loadingPreview"
+      :loading-preview-rows="loadingPreviewRows"
       :no-items-text="noItemsText"
       :selection="value"
       :selected-highlight-off="selectedHighlightOff"
@@ -49,7 +52,9 @@
 
       <template v-slot:pre-rows>
         <slot
-          v-if="showSelectEntirePrompt || showClearEntirePrompt"
+          v-if="
+            (showSelectEntirePrompt || showClearEntirePrompt) && !loadingPreview
+          "
           name="select-all-prompt"
           :clear-func="clearEntire"
           :count="data.length"
@@ -160,6 +165,15 @@ export default {
     // No hover background for rows
     hoverOff: Boolean,
     largeCheckBox: Boolean,
+    // Loading preview is behind an overlay
+    loadingOverlayActive: Boolean,
+    // Show placeholder skeleton content while loading
+    loadingPreview: Boolean,
+    // Number of placeholder rows to display while loading
+    loadingPreviewRows: {
+      type: Number,
+      default: 5,
+    },
     noLabelOffset: Boolean,
     // Enables the ability to select all visible items
     selectAllEnabled: { type: Boolean },

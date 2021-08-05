@@ -29,21 +29,34 @@
     ]"
     role="cell"
   >
-    <span
-      v-if="columnHeader"
-      class="tui-dataTableCell__label"
-      aria-hidden="true"
-    >
-      {{ columnHeader }}
-    </span>
-    <div class="tui-dataTableCell__content">
-      <slot />
-    </div>
+    <SkeletonContent
+      v-if="loadingPreview"
+      :has-overlay="loadingOverlayActive"
+    />
+
+    <template v-else>
+      <span
+        v-if="columnHeader"
+        class="tui-dataTableCell__label"
+        aria-hidden="true"
+      >
+        {{ columnHeader }}
+      </span>
+      <div class="tui-dataTableCell__content">
+        <slot />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import SkeletonContent from 'tui/components/loading/SkeletonContent';
+
 export default {
+  components: {
+    SkeletonContent,
+  },
+
   props: {
     align: {
       type: String,
@@ -51,6 +64,8 @@ export default {
     },
     columnHeader: String,
     heavy: Boolean,
+    loadingOverlayActive: Boolean,
+    loadingPreview: Boolean,
     repeatedHeader: Boolean,
     size: String,
     valign: {

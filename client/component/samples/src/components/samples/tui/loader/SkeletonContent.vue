@@ -18,7 +18,9 @@
 
 <template>
   <div class="tui-sampleSkeletonContent">
-    Placeholder skeleton content, used for loading displays
+    Placeholder skeleton content, used for loading displays. If using the
+    skeleton content without a loading overlay an aria-live region must be used
+    to announce loading state to screen readers
 
     <SamplesExample>
       <h4>With loading overlay</h4>

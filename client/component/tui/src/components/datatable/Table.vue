@@ -17,11 +17,12 @@
 -->
 
 <template>
-  <div v-if="!data.length">
+  <div v-if="!data.length && !loadingPreview">
     {{ noItemsText }}
   </div>
   <div
     v-else
+    :aria-hidden="loadingPreview"
     class="tui-dataTable"
     :class="{
       'tui-dataTable--archived': archived,
@@ -93,14 +94,14 @@
               :border-separator-hidden="borderSeparatorHidden"
               :border-top-hidden="borderTopHidden"
               :disabled="isDisabled(id)"
-              :hover-off="hoverOff"
+              :hover-off="loadingPreview || hoverOff"
               :in-group="groupMode"
               :selected="isSelected(id)"
               :selected-highlight-off="selectedHighlightOff"
               :color-odd="colorOddRows && !draggableRows"
               :draggable="draggableRows"
               :dragging="dragging"
-              :expanded="id == expanded"
+              :expanded="id == expanded && !loadingPreview"
               :indented="indentContents"
               :stealth="indentExpandedContents"
               :stealth-expanded="stealthExpanded"
@@ -136,7 +137,7 @@
         </component>
 
         <ExpandedRow
-          v-if="isExpanded(id)"
+          v-if="!loadingPreview && isExpanded(id)"
           :key="id + ' expand'"
           :stealth="stealthExpanded"
           :indent-contents="indentExpandedContents"
@@ -239,6 +240,15 @@ export default {
     },
     // Enables group mode
     groupMode: Boolean,
+    // Loading preview is behind an overlay
+    loadingOverlayActive: Boolean,
+    // Show placeholder skeleton content while loading
+    loadingPreview: Boolean,
+    // Number of placeholder rows to display while loading
+    loadingPreviewRows: {
+      type: Number,
+      default: 5,
+    },
     // ID's of selected rows
     selection: Array,
     // Don't add styles for selected items
@@ -286,7 +296,12 @@ export default {
       if (!Array.isArray(this.data)) {
         return [];
       }
-      return this.data.map((row, index) => {
+
+      let data = this.loadingPreview
+        ? this.getPlaceholderLoadingRows()
+        : this.data;
+
+      return data.map((row, index) => {
         const id = this.getId(row, index);
         return {
           row,
@@ -326,17 +341,9 @@ export default {
         };
       });
     },
-    /**
-     * Common props provided to all slots.
-     *
-     * @return {Object}
-     */
-    provide() {
-      return {
-        props: {
-          isStacked: this.isStacked,
-        },
-      };
+
+    enableResizeObserver() {
+      return this.loadingPreview || this.data.length > 0;
     },
   },
 
@@ -344,29 +351,33 @@ export default {
     stackAt() {
       this.isStacked = this.width <= this.stackAt;
     },
-    /**
-     * Only apply the resize observer while the provided data is not empty
-     */
-    data(newData, oldData) {
-      if (oldData.length === 0 && newData.length > 0) {
-        this.$nextTick(this.registerResizeObserver);
-      } else if (oldData.length > 0 && newData.length === 0) {
-        this.$nextTick(this.unregisterResizeObserver);
-      }
+
+    enableResizeObserver: {
+      handler(enable) {
+        if (enable) {
+          this.$nextTick(this.registerResizeObserver);
+        } else {
+          this.$nextTick(this.unregisterResizeObserver);
+        }
+      },
+      immediate: true,
     },
   },
 
-  mounted() {
-    if (this.data.length > 0) {
-      this.registerResizeObserver();
-    }
-  },
-
-  unmounted() {
+  beforeDestroy() {
     this.unregisterResizeObserver();
   },
 
   methods: {
+    /**
+     * Number of placeholder rows for loading display
+     *
+     * @return {Array}
+     */
+    getPlaceholderLoadingRows() {
+      return Array.from({ length: this.loadingPreviewRows }, () => ({}));
+    },
+
     /**
      * Check if row has been disabled
      *
@@ -396,6 +407,21 @@ export default {
       return this.expandMultipleRows
         ? this.expandedRows.indexOf(id) !== -1
         : this.expandableRows && id == this.expanded;
+    },
+
+    /**
+     * Provider for passing props down multiple levels of slots
+     *
+     * @return {Object}
+     */
+    provide() {
+      return {
+        props: {
+          isStacked: this.isStacked,
+          loadingOverlayActive: this.loadingOverlayActive,
+          loadingPreview: this.loadingPreview,
+        },
+      };
     },
 
     /**
