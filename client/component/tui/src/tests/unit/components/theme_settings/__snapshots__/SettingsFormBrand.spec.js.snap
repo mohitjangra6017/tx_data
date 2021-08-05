@@ -31,11 +31,11 @@ exports[`SettingsFormBrand matches snapshot 1`] = `
     </formrow-stub>
      
     <formrow-stub
+      ariadescribedby="id-formbrand-logoalttext-details"
       isstacked="true"
       label="[[formbrand_label_logoalttext, totara_tui]]"
     >
       <formtext-stub
-        aria-describedby="id-formbrand-logoalttext-details"
         name="formbrand_field_logoalttext,value"
         required=""
       />
@@ -89,11 +89,12 @@ exports[`SettingsFormBrand matches snapshot 1`] = `
         />
          
         <formrow-stub
+          aria-label="[[formbrand_label_notificationstextfooter, totara_tui]]"
+          ariadescribedby="id-formbrand-notifications-textfooter-details"
           isstacked="true"
           label="[[formbrand_label_notificationstextfooter, totara_tui]]"
         >
           <formtextarea-stub
-            aria-describedby="id-formbrand-notificationstextfooter-details"
             charlength="full"
             name="formbrand_field_notificationstextfooter,value"
             rows="8"

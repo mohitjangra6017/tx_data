@@ -29,12 +29,12 @@
         v-if="customFooterEditable"
         :label="$str('formcustom_label_customfooter', 'totara_tui')"
         :is-stacked="true"
+        :aria-describedby="$id('formcustom-customfooter-details')"
       >
         <FormTextarea
           :name="['formcustom_field_customfooter', 'value']"
           :rows="rows('formcustom_field_customfooter', 6, 20)"
           char-length="full"
-          :aria-describedby="$id('formcustom-customfooter-details')"
         />
         <FormRowDetails :id="$id('formcustom-customfooter-details')">
           {{ $str('formcustom_details_customfooter', 'totara_tui') }}
@@ -45,13 +45,13 @@
         v-if="customCssEditable"
         :label="$str('formcustom_label_customcss', 'totara_tui')"
         :is-stacked="true"
+        :aria-describedby="$id('formcustom-customcss-details')"
       >
         <FormTextarea
           :name="['formcustom_field_customcss', 'value']"
           spellcheck="false"
           :rows="rows('formcustom_field_customcss', 6, 30)"
           char-length="full"
-          :aria-describedby="$id('formcustom-customcss-details')"
         />
         <FormRowDetails :id="$id('formcustom-customcss-details')">
           {{ $str('formcustom_details_customcss', 'totara_tui') }}

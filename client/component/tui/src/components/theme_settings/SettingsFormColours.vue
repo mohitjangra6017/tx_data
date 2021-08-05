@@ -30,15 +30,15 @@
         v-if="colorStatedEditable"
         :label="$str('formcolours_label_primary', 'totara_tui')"
         :is-stacked="true"
+        :aria-describedby="
+          $id('formcolours-primary-details') +
+            ' ' +
+            $id('formcolours-primary-defaults')
+        "
       >
         <FormColor
           :name="['color-state', 'value']"
           :validations="v => [v.required(), v.colorValueHex()]"
-          :aria-describedby="
-            $id('formcolours-primary-details') +
-              ' ' +
-              $id('formcolours-primary-defaults')
-          "
         />
         <FormRowDefaults :id="$id('formcolours-primary-defaults')">
           {{
@@ -57,12 +57,12 @@
         v-if="useOverridesEditable"
         :label="$str('formcolours_label_useoverrides', 'totara_tui')"
         :is-stacked="true"
+        :aria-describedby="$id('formcolours-useoverrides-details')"
       >
         <FormToggleSwitch
           :aria-label="$str('formcolours_label_useoverrides', 'totara_tui')"
           :name="['formcolours_field_useoverrides', 'value']"
           :toggle-first="true"
-          :aria-describedby="$id('formcolours-useoverrides-details')"
         />
         <FormRowDetails :id="$id('formcolours-useoverrides-details')">
           {{ $str('formcolours_details_useoverrides', 'totara_tui') }}
@@ -75,15 +75,15 @@
             v-if="primaryAccentColorEditable"
             :label="$str('formcolours_label_primarybuttons', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-primarybuttons-details') +
+                ' ' +
+                $id('formcolours-primarybuttons-defaults')
+            "
           >
             <FormColor
               :name="['btn-prim-accent-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-primarybuttons-details') +
-                  ' ' +
-                  $id('formcolours-primarybuttons-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-primarybuttons-defaults')">
               {{
@@ -102,15 +102,15 @@
             v-if="accentColorEditable"
             :label="$str('formcolours_label_secondarybuttons', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-secondarybuttons-details') +
+                ' ' +
+                $id('formcolours-secondarybuttons-defaults')
+            "
           >
             <FormColor
               :name="['btn-accent-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-secondarybuttons-details') +
-                  ' ' +
-                  $id('formcolours-secondarybuttons-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-secondarybuttons-defaults')">
               {{
@@ -129,15 +129,15 @@
             v-if="linkColorEditable"
             :label="$str('formcolours_label_links', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-links-details') +
+                ' ' +
+                $id('formcolours-links-defaults')
+            "
           >
             <FormColor
               :name="['link-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-links-details') +
-                  ' ' +
-                  $id('formcolours-links-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-links-defaults')">
               {{
@@ -161,15 +161,15 @@
           v-if="primaryColorEditable"
           :label="$str('formcolours_label_accent', 'totara_tui')"
           :is-stacked="true"
+          :aria-describedby="
+            $id('formcolours-accent-details') +
+              ' ' +
+              $id('formcolours-accent-defaults')
+          "
         >
           <FormColor
             :name="['color-primary', 'value']"
             :validations="v => [v.required(), v.colorValueHex()]"
-            :aria-describedby="
-              $id('formcolours-accent-details') +
-                ' ' +
-                $id('formcolours-accent-defaults')
-            "
           />
           <FormRowDefaults :id="$id('formcolours-accent-defaults')">
             {{
@@ -191,15 +191,15 @@
             v-if="navBgColorEditable"
             :label="$str('formcolours_label_headerbg', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-headerbg-details') +
+                ' ' +
+                $id('formcolours-headerbg-defaults')
+            "
           >
             <FormColor
               :name="['nav-bg-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-headerbg-details') +
-                  ' ' +
-                  $id('formcolours-headerbg-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-headerbg-defaults')">
               {{
@@ -218,15 +218,15 @@
             v-if="navTextColorEditable"
             :label="$str('formcolours_label_headertext', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-headertext-details') +
+                ' ' +
+                $id('formcolours-headertext-defaults')
+            "
           >
             <FormColor
               :name="['nav-text-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-headertext-details') +
-                  ' ' +
-                  $id('formcolours-headertext-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-headertext-defaults')">
               {{
@@ -245,15 +245,15 @@
             v-if="textColorEditable"
             :label="$str('formcolours_label_pagetext', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-pagetext-details') +
+                ' ' +
+                $id('formcolours-pagetext-defaults')
+            "
           >
             <FormColor
               :name="['color-text', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-pagetext-details') +
-                  ' ' +
-                  $id('formcolours-pagetext-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-pagetext-defaults')">
               {{
@@ -272,15 +272,15 @@
             v-if="footerBgColorEditable"
             :label="$str('formcolours_label_footerbg', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-footerbg-details') +
+                ' ' +
+                $id('formcolours-footerbg-defaults')
+            "
           >
             <FormColor
               :name="['footer-bg-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-footerbg-details') +
-                  ' ' +
-                  $id('formcolours-footerbg-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-footerbg-defaults')">
               {{
@@ -299,15 +299,15 @@
             v-if="footerTextColorEditable"
             :label="$str('formcolours_label_footertext', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="
+              $id('formcolours-footertext-details') +
+                ' ' +
+                $id('formcolours-footertext-defaults')
+            "
           >
             <FormColor
               :name="['footer-text-color', 'value']"
               :validations="v => [v.required(), v.colorValueHex()]"
-              :aria-describedby="
-                $id('formcolours-footertext-details') +
-                  ' ' +
-                  $id('formcolours-footertext-defaults')
-              "
             />
             <FormRowDefaults :id="$id('formcolours-footertext-defaults')">
               {{

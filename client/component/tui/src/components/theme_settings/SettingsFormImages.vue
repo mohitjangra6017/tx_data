@@ -72,11 +72,9 @@
             v-if="loginEditable"
             :label="$str('formimages_label_loginalttext', 'totara_tui')"
             :is-stacked="true"
+            :aria-describedby="$id('formimages-loginalttext-details')"
           >
-            <FormText
-              :name="['formimages_field_loginalttext', 'value']"
-              :aria-describedby="$id('formimages-loginalttext-details')"
-            />
+            <FormText :name="['formimages_field_loginalttext', 'value']" />
             <FormRowDetails :id="$id('formimages-loginalttext-details')">
               {{ $str('formimages_details_loginalttext', 'totara_tui') }}
             </FormRowDetails>

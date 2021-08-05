@@ -51,12 +51,9 @@
         v-if="logoEditable"
         :label="$str('formbrand_label_logoalttext', 'totara_tui')"
         :is-stacked="true"
+        :aria-describedby="$id('formbrand-logoalttext-details')"
       >
-        <FormText
-          :name="['formbrand_field_logoalttext', 'value']"
-          :aria-describedby="$id('formbrand-logoalttext-details')"
-          required
-        />
+        <FormText :name="['formbrand_field_logoalttext', 'value']" required />
         <FormRowDetails :id="$id('formbrand-logoalttext-details')">
           {{ $str('formbrand_details_logoalttext', 'totara_tui') }}
         </FormRowDetails>
@@ -96,7 +93,7 @@
             :is-stacked="true"
           >
             <FormField
-              v-slot="{ value, update }"
+              v-slot="{ value, update, labelId }"
               :name="['formbrand_field_notificationshtmlheader', 'value']"
               char-length="full"
             >
@@ -109,6 +106,10 @@
                   component: 'totara_tui',
                   area: 'formbrand_notifications_htmlheader',
                 }"
+                :aria-describedby="
+                  $id('formbrand-notifications-htmlheader-details')
+                "
+                :aria-labelledby="labelId"
                 variant="standard"
                 @input="update"
               />
@@ -129,7 +130,7 @@
             "
           >
             <FormField
-              v-slot="{ value, update }"
+              v-slot="{ value, update, labelId }"
               :name="['formbrand_field_notificationshtmlfooter', 'value']"
               char-length="full"
             >
@@ -142,6 +143,10 @@
                   component: 'totara_tui',
                   area: 'formbrand_notifications_htmlfooter',
                 }"
+                :aria-describedby="
+                  $id('formbrand-notifications-htmlfooter-details')
+                "
+                :aria-labelledby="labelId"
                 variant="standard"
                 @input="update"
               />
@@ -160,15 +165,18 @@
               $str('formbrand_label_notificationstextfooter', 'totara_tui')
             "
             :is-stacked="true"
+            :aria-describedby="
+              $id('formbrand-notifications-textfooter-details')
+            "
+            :aria-label="
+              $str('formbrand_label_notificationstextfooter', 'totara_tui')
+            "
           >
             <FormTextarea
               :name="['formbrand_field_notificationstextfooter', 'value']"
               spellcheck="false"
               :rows="rows('formbrand_field_notificationstextfooter', 8, 30)"
               char-length="full"
-              :aria-describedby="
-                $id('formbrand-notificationstextfooter-details')
-              "
             />
             <FormRowDetails
               :id="$id('formbrand-notifications-textfooter-details')"
