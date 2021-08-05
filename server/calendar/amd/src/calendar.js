@@ -37,15 +37,13 @@ define([], function() {
      */
     function closePopover(e) {
         var triggerElement = e.target.closest('[data-calendar-popover-shown="true"]');
-        var nodes;
-        var node = 0;
 
-        nodes = document.querySelectorAll('[data-calendar-popover-shown="true"]');
-        var event = new CustomEvent('core/popover:hide');
-        for (node = 0; node < nodes.length; node++) {
-            if (nodes[node] !== triggerElement) {
-                nodes[node].removeAttribute('data-calendar-popover-shown');
-                nodes[node].querySelector('[data-component="/core/output/popover"]').parentElement.dispatchEvent(event);
+        if (triggerElement) {
+            var isLeavingCell = !triggerElement.contains(e.relatedTarget);
+            if (isLeavingCell) {
+                var event = new CustomEvent('core/popover:hide');
+                triggerElement.removeAttribute('data-calendar-popover-shown');
+                triggerElement.querySelector('[data-component="/core/output/popover"]').parentElement.dispatchEvent(event);
             }
         }
     }
@@ -59,6 +57,7 @@ define([], function() {
         var triggerElement = e.target.closest('.hasevent, .today');
 
         if (triggerElement && triggerElement.getAttribute('data-calendar-popover-shown') !== 'true') {
+            closePopovers();
             var event = new CustomEvent('core/popover:show');
             e.preventDefault();
             triggerElement.setAttribute('data-calendar-popover-shown', true);
@@ -66,7 +65,19 @@ define([], function() {
         }
     }
 
-    document.addEventListener('focusin', closePopover);
+    /**
+     * Close all calendar popovers
+     */
+    function closePopovers() {
+        var nodes;
+
+        nodes = document.querySelectorAll('[data-calendar-popover-shown="true"]');
+        var event = new CustomEvent('core/popover:hide');
+        nodes.forEach(function(node) {
+            node.removeAttribute('data-calendar-popover-shown');
+            node.querySelector('[data-component="/core/output/popover"]').parentElement.dispatchEvent(event);
+        });
+    }
 
     return {
         init: function() {
@@ -77,6 +88,7 @@ define([], function() {
                 calendars[calendar].addEventListener('mouseover', displayPopover);
                 calendars[calendar].addEventListener('focusin', displayPopover);
                 calendars[calendar].addEventListener('mouseout', closePopover);
+                calendars[calendar].addEventListener('focusout', closePopover);
             }
         }
     };
