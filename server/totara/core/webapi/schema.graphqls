@@ -111,6 +111,13 @@ extend type Query {
   Return all learning items assigned to the current user
   """
   totara_core_my_current_learning: [totara_core_learning_item]!
+
+  """
+  Return a tree with links to settings pages
+  """
+  totara_core_settings_navigation_tree(
+    context_id: core_id!
+  ): [totara_core_tui_tree_node!]!
 }
 
 extend type Mutation {

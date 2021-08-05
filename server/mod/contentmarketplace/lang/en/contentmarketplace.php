@@ -31,7 +31,7 @@ $string['marketplace_component'] = "Marketplace component";
 $string['marketplace_logo'] = "Content marketplace logo";
 $string['modulename'] = 'External content marketplace';
 $string['modulenameplural'] = 'External content marketplace';
-$string['pluginadministration'] = 'Manage external content marketplace';
+$string['pluginadministration'] = 'Content marketplace activity administration';
 $string['pluginname'] = 'External content marketplace';
 
 // Strings that are used for capabilities

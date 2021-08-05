@@ -62,7 +62,7 @@
     <ModalPresenter :open="modalOpen" @request-close="closeModal">
       <Modal size="sheet" :aria-labelledby="$id('admin-modal')">
         <ModalContent
-          :title="'Administration'"
+          :title="$str('administration', 'mod_contentmarketplace')"
           :title-id="$id('admin-modal')"
           @dismiss="closeModal"
         >
@@ -87,6 +87,9 @@ import Modal from 'tui/components/modal/Modal';
 import ModalContent from 'tui/components/modal/ModalContent';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import Tree from 'tui/components/tree/Tree';
+import { config } from 'tui/config';
+
+import settingsTreeQuery from 'totara_core/graphql/settings_navigation_tree';
 
 export default {
   components: {
@@ -104,20 +107,27 @@ export default {
      * Tree data for admin options
      */
     stackedLayout: Boolean,
-    /**
-     * Tree data for admin options
-     */
-    treeData: {
-      type: Array,
-      required: true,
-    },
   },
 
   data() {
     return {
       modalOpen: false,
-      openTreeBranches: [],
+      openTreeBranches: ['modulesettings'],
     };
+  },
+
+  apollo: {
+    treeData: {
+      query: settingsTreeQuery,
+      variables() {
+        return {
+          context_id: config.context.id,
+        };
+      },
+      update({ tree: data }) {
+        return data;
+      },
+    },
   },
 
   methods: {

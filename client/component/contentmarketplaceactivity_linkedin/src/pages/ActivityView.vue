@@ -53,7 +53,7 @@
     <!-- Banner image content area -->
     <template v-slot:banner-content="{ stacked }">
       <div class="tui-linkedinActivity__admin">
-        <AdminMenu :stacked-layout="stacked" :tree-data="adminTree" />
+        <AdminMenu :stacked-layout="stacked" />
       </div>
     </template>
 
@@ -478,7 +478,7 @@ export default {
       // Viewing activity as guest (not enrolled in activity)
       guest: true,
       setCompletion: false,
-      // Open branches of contents tree
+      // Open nodes of contents tree
       openContents: [],
     };
   },
