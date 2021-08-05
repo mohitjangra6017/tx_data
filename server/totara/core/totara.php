@@ -1117,6 +1117,17 @@ function totara_icon_picker_preview($type, $currenticon, $ind = '', $alt = '') {
 function totara_icon_url_and_alt($type, $icon, $alt = '') {
     global $OUTPUT, $DB, $PAGE;
 
+    static $cache = [];
+
+    $argicon = $icon;
+
+    $replace = array('.png' => '', '_' => ' ', '-' => ' ');
+    $alt = ($alt != '') ? $alt : ucwords(strtr($icon, $replace));
+
+    if (isset($cache[$type][$argicon]) && !PHPUNIT_TEST) {
+        return [$cache[$type][$argicon], $alt];
+    }
+
     $component = 'totara_core';
     $src = '';
 
@@ -1140,10 +1151,9 @@ function totara_icon_url_and_alt($type, $icon, $alt = '') {
         $src = $OUTPUT->image_url('/' . $iconpath . $icon, $component);
     }
 
-    $replace = array('.png' => '', '_' => ' ', '-' => ' ');
-    $alt = ($alt != '') ? $alt : ucwords(strtr($icon, $replace));
+    $cache[$type][$argicon] = $src;
 
-    return array($src, $alt);
+    return [$src, $alt];
 }
 
 /**
