@@ -23,6 +23,7 @@
  */
 
 $string['editcompletion'] = 'Edit completion records';
+$string['exceptionstatus'] = 'Exception Status';
 $string['isassigned'] = 'Is currently assigned';
 $string['sourcelabel'] = 'Program';
 $string['sourcesummary'] = 'All program assignment details.';
@@ -30,3 +31,4 @@ $string['sourcetitle'] = 'Program Membership';
 $string['status'] = 'Status';
 $string['type_prog'] = 'Program';
 $string['type_progmembership'] = 'Program Membership';
+$string['type_proguserassignment'] = 'Program User Assignment';

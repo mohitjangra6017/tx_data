@@ -23,6 +23,7 @@
  */
 
 $string['editcompletion'] = 'Edit completion records';
+$string['exceptionstatus'] = 'Exception Status';
 $string['isassigned'] = 'Is currently assigned';
 $string['iscertified'] = 'Is currently certified';
 $string['sourcelabel'] = 'Certification';
@@ -31,3 +32,4 @@ $string['sourcetitle'] = 'Certification Membership';
 $string['status'] = 'Status';
 $string['type_certif'] = 'Certification';
 $string['type_certmembership'] = 'Certification Membership';
+$string['type_certuserassignment'] = 'Certification User Assignment';

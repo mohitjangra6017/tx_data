@@ -223,7 +223,7 @@ Feature: Generation of program assignment exceptions
     And I should see "Completion time unknown" in the "fn_001 ln_001" "table_row"
 
     When I set the field "selectiontype" to "Completion time unknown"
-    And I set the field "selectionaction" to "Do not assign"
+    And I set the field "selectionaction" to "Dismiss the exception"
     And I click on "Proceed with this action" "button"
     And I click on "OK" "button"
     Then I should see "No exceptions"
@@ -313,7 +313,7 @@ Feature: Generation of program assignment exceptions
 
     Then I click on "exceptionid" "checkbox"
     And I wait until the page is ready
-    And I set the field "selectionaction" to "Do not assign"
+    And I set the field "selectionaction" to "Dismiss the exception"
     And I click on "Proceed with this action" "button"
     And I click on "OK" "button"
     Then I should see "4 learner(s) assigned: 3 active, 0 exception(s)"
@@ -353,7 +353,7 @@ Feature: Generation of program assignment exceptions
     When I click on "Exception Report (1)" "link"
     Then I click on "exceptionid" "checkbox"
     And I wait until the page is ready
-    And I set the field "selectionaction" to "Do not assign"
+    And I set the field "selectionaction" to "Dismiss the exception"
     And I click on "Proceed with this action" "button"
     And I click on "OK" "button"
     Then I should see "4 learner(s) assigned: 3 active, 0 exception(s)"

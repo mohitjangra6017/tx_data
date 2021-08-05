@@ -113,6 +113,14 @@ class rb_source_certification_membership extends rb_base_source {
             'certif'
         );
 
+        $joinlist[] = new rb_join(
+            'prog_user_assignment',
+            'LEFT',
+            '{prog_user_assignment}',
+            'prog_user_assignment.programid = base.programid AND prog_user_assignment.userid = base.userid',
+            REPORT_BUILDER_RELATION_ONE_TO_ONE
+        );
+
         $this->add_core_user_tables($joinlist, 'base', 'userid');
 
         return $joinlist;
@@ -175,6 +183,16 @@ class rb_source_certification_membership extends rb_base_source {
                 ),
             )
         );
+        $columnoptions[] = new rb_column_option(
+            'certuserassignment',
+            'exceptionstatus',
+            get_string('exceptionstatus','rb_source_certification_membership'),
+            'prog_user_assignment.exceptionstatus',
+            [
+                'joins' => 'prog_user_assignment',
+                'displayfunc' => 'program_exception_status'
+            ]
+        );
 
         return $columnoptions;
     }
@@ -214,6 +232,18 @@ class rb_source_certification_membership extends rb_base_source {
                 'selectfunc' => 'yesno_list',
                 'simplemode' => true,
             )
+        );
+
+        $filteroptions[] = new rb_filter_option(
+            'certuserassignment',
+            'exceptionstatus',
+            get_string('exceptionstatus','rb_source_certification_membership'),
+            'select',
+            [
+                'selectchoices' => self::get_exception_status(),
+                'attributes' => rb_filter_option::select_width_limiter(),
+                'simplemode' => true,
+            ]
         );
 
         return $filteroptions;
@@ -289,5 +319,19 @@ class rb_source_certification_membership extends rb_base_source {
         $url = new moodle_url('/totara/certification/edit_completion.php',
             array('id' => $row->progid, 'userid' => $row->userid));
         return html_writer::link($url, get_string('editcompletion', 'rb_source_certification_membership'));
+    }
+
+    /**
+     * Returns the mapping of exception status values to display texts.
+     *
+     * @return array mapping of exception status values to display texts.
+     */
+    public static function get_exception_status() {
+        return [
+            PROGRAM_EXCEPTION_NONE => get_string('exception_status_none', 'totara_program'),
+            PROGRAM_EXCEPTION_RAISED => get_string('exception_status_raised', 'totara_program'),
+            PROGRAM_EXCEPTION_DISMISSED => get_string('exception_status_dismissed', 'totara_program'),
+            PROGRAM_EXCEPTION_RESOLVED => get_string('exception_status_resolved', 'totara_program')
+        ];
     }
 }

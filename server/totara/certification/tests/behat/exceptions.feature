@@ -103,7 +103,7 @@ Feature: Generation of certification assignment exceptions
     And I should see "Duplicate course in different certifications" in the "fn_001 ln_001" "table_row"
 
     When I set the field "selectiontype" to "Duplicate course in different certifications"
-    And I set the field "selectionaction" to "Do not assign"
+    And I set the field "selectionaction" to "Dismiss the exception"
     And I click on "Proceed with this action" "button"
     And I click on "OK" "button"
     Then I should see "No exceptions"

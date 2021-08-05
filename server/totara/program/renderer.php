@@ -456,7 +456,7 @@ class totara_program_renderer extends plugin_renderer_base {
         $options[exception_manager::SELECTIONACTION_NONE] = get_string('action', 'totara_program');
         $options[exception_manager::SELECTIONACTION_AUTO_TIME_ALLOWANCE] = get_string('exceptionactionsetduedate', 'totara_program');
         $options[exception_manager::SELECTIONACTION_OVERRIDE_EXCEPTION] = get_string('exceptionactionassign', 'totara_program');
-        $options[exception_manager::SELECTIONACTION_DISMISS_EXCEPTION] = get_string('exceptionactiondonotassign', 'totara_program');
+        $options[exception_manager::SELECTIONACTION_DISMISS_EXCEPTION] = get_string('exceptionactiondismiss', 'totara_program');
         $out .= html_writer::start_tag('div');
         $out .= html_writer::select($options, 'selectionaction', null, null, array('id' => 'selectionaction'));
         $out .= html_writer::end_tag('div');

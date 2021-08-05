@@ -103,8 +103,18 @@ class rb_source_program_membership extends rb_base_source {
             'LEFT',
             '{prog_completion}',
             "prog_completion.userid = base.userid AND
-             prog_completion.programid = base.programid AND
-             prog_completion.coursesetid = 0",
+            prog_completion.programid = base.programid AND
+            prog_completion.coursesetid = 0",
+            REPORT_BUILDER_RELATION_ONE_TO_ONE
+        );
+
+        $joinlist[] = new rb_join(
+            'prog_user_assignment',
+            'INNER',
+            '(SELECT pua.programid, pua.userid, pua.exceptionstatus, p.certifid
+               FROM {prog_user_assignment} pua
+               JOIN {prog} p on p.id = pua.programid)',
+            'prog_user_assignment.programid = base.programid AND prog_user_assignment.userid = base.userid AND prog_user_assignment.certifid IS NULL',
             REPORT_BUILDER_RELATION_ONE_TO_ONE
         );
 
@@ -151,6 +161,16 @@ class rb_source_program_membership extends rb_base_source {
                 ),
             )
         );
+        $columnoptions[] = new rb_column_option(
+            'proguserassignment',
+            'exceptionstatus',
+            get_string('exceptionstatus','rb_source_program_membership'),
+            'prog_user_assignment.exceptionstatus',
+            [
+                'joins' => 'prog_user_assignment',
+                'displayfunc' => 'program_exception_status'
+            ]
+        );
 
         return $columnoptions;
     }
@@ -170,6 +190,18 @@ class rb_source_program_membership extends rb_base_source {
                 'selectfunc' => 'status',
                 'attributes' => rb_filter_option::select_width_limiter(),
             )
+        );
+
+        $filteroptions[] = new rb_filter_option(
+            'proguserassignment',
+            'exceptionstatus',
+            get_string('exceptionstatus','rb_source_program_membership'),
+            'select',
+            [
+                'selectchoices' => self::get_exception_status(),
+                'attributes' => rb_filter_option::select_width_limiter(),
+                'simplemode' => true,
+            ]
         );
 
         return $filteroptions;
@@ -267,6 +299,20 @@ class rb_source_program_membership extends rb_base_source {
     }
 
     /**
+     * Returns the mapping of exception status values to display texts.
+     *
+     * @return array mapping of exception status values to display texts.
+     */
+    public static function get_exception_status() {
+        return [
+            PROGRAM_EXCEPTION_NONE => get_string('exception_status_none', 'totara_program'),
+            PROGRAM_EXCEPTION_RAISED => get_string('exception_status_raised', 'totara_program'),
+            PROGRAM_EXCEPTION_DISMISSED => get_string('exception_status_dismissed', 'totara_program'),
+            PROGRAM_EXCEPTION_RESOLVED => get_string('exception_status_resolved', 'totara_program')
+        ];
+    }
+
+    /**
      * Returns expected result for column_test.
      * @param rb_column_option $columnoption
      * @return int
@@ -275,6 +321,18 @@ class rb_source_program_membership extends rb_base_source {
         if (!PHPUNIT_TEST) {
             throw new coding_exception('phpunit_column_test_expected_count() cannot be used outside of unit tests');
         }
-        return 2;
+
+        // This is a quick hack for TL-31412; the actual fix will be in TL-32166.
+        // The reportbuilder column test creates both a cert and program as test data. Although certs
+        // are implemented on top of programs, from the UI point of view, they are NOT the same:
+        // certs should not be picked up in a *program* related report source.
+        return $columnoption->value === 'exceptionstatus' ? 1 : 2;
+    }
+
+    protected function define_source_args() {
+        $joins = ['program'];
+        $sql = "(base.certifid IS NULL)";
+
+        return [$sql, [], $joins];
     }
 }
