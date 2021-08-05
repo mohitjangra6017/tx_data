@@ -39,6 +39,7 @@ $PAGE->set_context(\context_user::instance($USER->id));
 $PAGE->set_title($title);
 $PAGE->set_pagelayout('legacynolayout');
 $PAGE->set_url(new moodle_url('/totara/engage/search_results.php'));
+$PAGE->set_totara_menu_selected('\totara_engage\totara\menu\library');
 
 $tui = new \totara_tui\output\component(
     'totara_engage/pages/LibraryView',

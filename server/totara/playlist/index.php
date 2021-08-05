@@ -44,6 +44,7 @@ $playlist = playlist::from_id($id);
 
 $PAGE->set_url("/totara/playlist/index.php", ['id' => $playlist->get_id()]);
 $PAGE->set_pagelayout('legacynolayout');
+$PAGE->set_totara_menu_selected('\totara_engage\totara\menu\library');
 
 $tui = null;
 
