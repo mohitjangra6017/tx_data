@@ -16,4 +16,4 @@
  * @module tui
  */
 
-export { produce } from './internal/shimmer';
+export { produce, original, isDraft } from './internal/shimmer';

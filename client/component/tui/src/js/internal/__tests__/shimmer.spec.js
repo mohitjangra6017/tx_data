@@ -16,7 +16,7 @@
  * @module tui
  */
 
-import { produce } from '../shimmer';
+import { isDraft, original, produce } from '../shimmer';
 
 class DummyClass {
   constructor(x) {
@@ -322,12 +322,14 @@ describe('produce', () => {
     expect(fn({ a: 1 })).toEqual({ a: 1, b: 9 });
   });
 
-  it('throws on recipe return', () => {
-    expect(() =>
-      produce({}, () => {
-        return {};
-      })
-    ).toThrow('recipe returned value');
+  it('allows returning from recipe', () => {
+    const obj = { a: { foo: 3 } };
+    const ret = produce(obj, draft => {
+      draft.a.foo = 5;
+      return { q: draft.a };
+    });
+    expect(ret).not.toEqual(obj);
+    expect(ret).toEqual({ q: { foo: 5 } });
   });
 
   it('throws on draft usage outside of produce', () => {
@@ -546,5 +548,44 @@ describe('produce', () => {
       expect(obj.field).toBe(from);
       expect(updated.field).toBe(to);
     });
+  });
+});
+
+describe('original', () => {
+  it('returns the original value from a draft', () => {
+    const obj = { a: 99, b: {}, c: [] };
+    produce(obj, draft => {
+      expect(original(draft.b)).toBe(obj.b);
+      expect(original(draft.c)).toBe(obj.c);
+
+      expect(() => original(draft.a)).toThrow('expected a draft, got 99');
+      expect(() => original({})).toThrow(
+        'expected a draft, got [object Object]'
+      );
+    });
+  });
+});
+
+describe('isDraft', () => {
+  it('checks whether an object is a draft or not', () => {
+    const obj = { a: 99, b: {}, c: [] };
+    let ref;
+    produce(obj, draft => {
+      ref = draft.b;
+      expect(isDraft(draft.a)).toBe(false);
+      expect(isDraft(draft.b)).toBe(true);
+      expect(isDraft(draft.c)).toBe(true);
+
+      expect(isDraft(obj.b)).toBe(false);
+      expect(isDraft(obj.c)).toBe(false);
+
+      expect(isDraft(null)).toBe(false);
+      expect(isDraft(false)).toBe(false);
+      expect(isDraft(0)).toBe(false);
+      expect(isDraft({})).toBe(false);
+      expect(isDraft('')).toBe(false);
+    });
+
+    expect(isDraft(ref)).toBe(true);
   });
 });

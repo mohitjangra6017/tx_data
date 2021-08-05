@@ -66,9 +66,11 @@ const excludedKeys = { [STATE]: true, __ob__: true };
  *
  * Unchanged parts of value are preserved.
  *
+ * Return a new value from recipe to replace the whole object.
+ *
  * @template {object|array} T
  * @param {T} value
- * @param {(draft: T) => void} recipe
+ * @param {(draft: T) => any} recipe
  * @returns {T}
  */
 export function produce(value, recipe) {
@@ -85,12 +87,11 @@ export function produce(value, recipe) {
   let result;
   try {
     // create a draft from the value we were provided
-    const draft = createProxy(value);
+    let draft = createProxy(value);
 
     const returnVal = recipe(draft);
     if (returnVal != null) {
-      // preserve ability to use recipe return value in the future
-      throw new Error('recipe returned value');
+      draft = returnVal;
     }
 
     // finalise - convert drafts to plain objects
@@ -104,6 +105,32 @@ export function produce(value, recipe) {
   }
 
   return result;
+}
+
+/**
+ * Get original object from a draft inside of produce.
+ *
+ * This is useful to compare non-draft versions of objects, or if you want to
+ * save a value from inside produce for use outside.
+ *
+ * @param {*} value
+ * @returns {*}
+ */
+export function original(value) {
+  if (!isDraft(value)) {
+    throw new Error('expected a draft, got ' + value);
+  }
+  return value[STATE].orig;
+}
+
+/**
+ * Check if object is a draft.
+ *
+ * @param {*} value
+ * @returns {boolean}
+ */
+export function isDraft(value) {
+  return !!value && !!value[STATE];
 }
 
 /**
