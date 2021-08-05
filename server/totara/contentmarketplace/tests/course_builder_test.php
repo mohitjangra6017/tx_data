@@ -34,42 +34,29 @@ use totara_contentmarketplace\testing\generator;
 use totara_contentmarketplace\testing\helper;
 
 class totara_contentmarketplace_course_builder_testcase extends testcase {
-    /**
-     * @return void
-     */
-    public function test_get_shortname_with_threshold_reach(): void {
-        $generator = self::getDataGenerator();
-
-        // Create a course with the shortname that we are going to ask the function to give.
-        $generator->create_course(['shortname' => 'short_name_42_0']);
-
-        $ref_class = new ReflectionClass(course_builder::class);
-        $method = $ref_class->getMethod('get_short_name');
-
-        $method->setAccessible(true);
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The course short name look up had reached threshold");
-
-        $method->invokeArgs(null, ['short_name', 42, 0, '0']);
-    }
 
     /**
      * @return void
      */
     public function test_get_shortname(): void {
         $generator = self::getDataGenerator();
-        $generator->create_course(['shortname' => 'short_name_42_0']);
+        $course_a = $generator->create_course(['shortname' => 'Content Marketplace Course A']);
 
         $ref_class = new ReflectionClass(course_builder::class);
         $method = $ref_class->getMethod('get_short_name');
         $method->setAccessible(true);
 
-        $short_name = $method->invokeArgs(null, ['Short NAME', 42, course_builder::COURSE_SHORT_NAME_THRESHOLD, '0']);
-        self::assertNotEquals('short_name_42_0', $short_name);
-        self::assertStringNotContainsString('Short NAME', $short_name);
+        $short_name = $method->invokeArgs(null, ['Content Marketplace Course A']);
+        self::assertNotEquals($course_a->shortname, $short_name);
+        self::assertEquals('Content Marketplace Course A (1)', $short_name);
 
-        // Different name now, with uniqid
-        self::assertStringContainsString('short_name_42_', $short_name);
+        $course_a_1 = $generator->create_course(['shortname' => 'Content Marketplace Course A (1)']);
+        $short_name = $method->invokeArgs(null, ['Content Marketplace Course A']);
+        self::assertNotEquals($course_a_1->shortname, $short_name);
+        self::assertEquals('Content Marketplace Course A (2)', $short_name);
+
+        $short_name = $method->invokeArgs(null, ['Content Marketplace Course B']);
+        self::assertEquals('Content Marketplace Course B', $short_name);
     }
 
     /**
@@ -101,8 +88,8 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         // As admin user, the enrolment should not be needed for the admin.
         self::assertFalse(
             $db->record_exists_sql(
-                ' 
-                    SELECT 1 FROM "ttr_enrol" e 
+                '
+                    SELECT 1 FROM "ttr_enrol" e
                     INNER JOIN "ttr_user_enrolments" ue ON e.id = ue.enrolid
                     WHERE e.courseid = :course_id AND ue.userid = :user_id
                 ',

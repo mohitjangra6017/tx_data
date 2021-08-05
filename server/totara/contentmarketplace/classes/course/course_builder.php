@@ -44,12 +44,6 @@ use totara_contentmarketplace\learning_object\factory;
  */
 class course_builder {
     /**
-     * The threshold trial that we allow system to look up.
-     * @var int
-     */
-    public const COURSE_SHORT_NAME_THRESHOLD = 10;
-
-    /**
      * @var model
      */
     private $learning_object;
@@ -201,7 +195,7 @@ class course_builder {
     private function do_create_course(): course {
         $name = $this->learning_object->get_name();
         $record = new stdClass();
-        $record->shortname = self::get_short_name($name, $this->learning_object->get_id());
+        $record->shortname = self::get_short_name($name);
         $record->fullname = $name;
         $record->category = $this->category_id;
         $record->visible = 1;
@@ -339,49 +333,23 @@ class course_builder {
     }
 
     /**
-     * @param string      $name               Learning object full name, which will be used to converted into short
-     *                                        name.
-     * @param int         $learning_object_id Learning object's id, used for producing the short name.
-     * @param int         $threshold          Number of times that we allow how many times to look up on database.
-     *                                        By default it is 10.
-     * @param string|null $suffix             Given the $suffix as value if we would want to start with.
-     *                                        Otherwise leave it null, to generate a random uniqu suffix.
+     * Get a unique course shortname by appending a numerical suffix to the name if a course with the shortname already exists.
+     *
+     * @param string $name Learning object full name, which will be used to converted into shortname.
      * @return string
      */
-    private static function get_short_name(
-        string $name,
-        int $learning_object_id,
-        int $threshold = self::COURSE_SHORT_NAME_THRESHOLD,
-        ?string $suffix = null
-    ): string {
-        $short_name = core_text::strtolower($name);
-        $short_name = preg_replace('/\s+/', '_', $short_name) . '_' . $learning_object_id;
-
+    private static function get_short_name(string $name): string {
         $db = builder::get_db();
-
-        if (null === $suffix) {
-            $suffix = uniqid();
+        if (!$db->record_exists('course', ['shortname' => $name])) {
+            // The course name hasn't been used yet, so we don't need to change anything.
+            return $name;
         }
 
-        $search_shortname = $short_name . '_' . $suffix;
-        $record_exist = $db->record_exists('course', ['shortname' => $search_shortname]);
-
-        $trial = 0;
-        while ($record_exist) {
-            // We give the iteration 10 times look up only.
-            if ($threshold <= $trial) {
-                throw new coding_exception(
-                    "The course short name look up had reached threshold"
-                );
-            }
-
-            // The given suffix might have been tatken. Therefore, we are going to
-            // randomly generated a new one.
-            $suffix = uniqid();
-            $search_shortname = $short_name . '_' . $suffix;
-
-            $record_exist = $db->record_exists('course', ['shortname' => $search_shortname]);
-            $trial++;
+        $suffix = 1;
+        $search_shortname = "$name ($suffix)";
+        while ($db->record_exists('course', ['shortname' => $search_shortname])) {
+            $suffix++;
+            $search_shortname = "$name ($suffix)";
         }
 
         return $search_shortname;
