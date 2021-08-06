@@ -111,6 +111,7 @@ $string['completederror'] = 'Complete the lesson';
 $string['completethefollowingconditions'] = 'You must complete the following condition(s) in <b>{$a}</b> lesson before you can proceed.';
 $string['completionendreached'] = 'Require end reached';
 $string['completionendreached_desc'] = 'Learner must reach the end of lesson page to complete this activity';
+$string['completionmustrecievegrade'] = 'Learner must receive a grade to complete this activity (grade settings must be enabled)';
 $string['completiontimespent'] = 'Learner must do this activity at least for';
 $string['completiontimespentgroup'] = 'Require time spent';
 $string['conditionsfordependency'] = 'Condition(s) for the dependency';

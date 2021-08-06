@@ -343,10 +343,16 @@ class mod_lesson_mod_form extends moodleform_mod {
         $mform->setDefault('minquestions', $lessonconfig->minimumnumberofquestions);
         $mform->setAdvanced('minquestions', $lessonconfig->minimumnumberofquestions_adv);
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         $this->standard_coursemodule_elements();
-//-------------------------------------------------------------------------------
-// buttons
+        //-------------------------------------------------------------------------------
+
+        // Update text for completion recieve grade and add extra disabled condition
+        $completionusegrade_element = $mform->getElement('completionusegrade');
+        $completionusegrade_element->setText(get_string('completionmustrecievegrade', 'lesson'));
+        $mform->disabledIf('completionusegrade', 'grade[modgrade_type]', 'eq', 'none');
+
+        // buttons
         $this->add_action_buttons();
     }
 
