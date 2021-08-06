@@ -304,7 +304,7 @@ $icons = array(
         array(
             'data' =>
                 array(
-                    'classes' => 'tfont-var-caret-down-fill ft-flip-rtl',
+                    'classes' => 'tfont-var-caret-right-fill ft-flip-rtl',
                 ),
         ),
     'caret-right-disabled' =>
