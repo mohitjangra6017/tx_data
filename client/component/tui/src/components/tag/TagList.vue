@@ -22,6 +22,7 @@
     :separator="separator"
     match-width
     :fixed-height="!!virtualScrollOptions"
+    @open="$emit('open')"
   >
     <template v-slot:trigger="{ toggle, isOpen }">
       <div class="tui-tagList" @click="handleClick(toggle, isOpen)">

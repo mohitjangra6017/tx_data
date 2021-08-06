@@ -336,6 +336,7 @@ export default {
       if (this.disabled) return;
 
       if (!this.toggleOpen) {
+        this.$emit('open');
         // if not active, toggle after the clickOutside event
         this.$nextTick(() => {
           const value = !this.toggleOpen;
