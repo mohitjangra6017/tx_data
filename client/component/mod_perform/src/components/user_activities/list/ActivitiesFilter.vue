@@ -18,42 +18,60 @@
 <template>
   <div class="tui-performUserActivitiesFilter">
     <FilterBar
-      v-model="selectedFilters"
-      :title="$str('user_activities_filter', 'mod_perform')"
+      v-model="value"
       :has-top-bar="false"
+      :title="$str('user_activities_filter', 'mod_perform')"
+      @active-count-changed="filtersUpdated"
     >
       <template v-slot:filters-left="{ stacked }">
+        <!-- Activity type select -->
         <SelectFilter
           v-if="filterOptions.activityTypes"
-          v-model="selectedFilters.activityType"
+          v-model="value.activityType"
           :label="$str('user_activities_filter_type', 'mod_perform')"
-          :show-label="true"
           :options="activityTypeFilterOptions"
+          :show-label="true"
           :stacked="stacked"
         />
+
+        <!-- Your progress select -->
         <SelectFilter
           v-if="filterOptions.progressOptions"
-          v-model="selectedFilters.ownProgress"
+          v-model="value.ownProgress"
           :label="$str('user_activities_filter_own_progress', 'mod_perform')"
-          :show-label="true"
           :options="progressFilterOptions"
+          :show-label="true"
           :stacked="stacked"
         />
+
+        <!-- Toggle overdue only -->
         <ToggleSwitch
-          v-model="selectedFilters.overdueOnly"
+          v-model="value.overdueOnly"
           :text="$str('user_activities_filter_overdue_only', 'mod_perform')"
           :toggle-first="true"
         />
       </template>
     </FilterBar>
 
-    <div class="tui-performUserActivitiesFilter__after">
-      <div v-if="total" class="tui-performUserActivitiesFilter__after-total">
-        {{ $str('showing_activities', 'mod_perform', { shown, total }) }}
+    <div class="tui-performUserActivitiesFilter__toggles">
+      <!-- Toggle exclude completed activities only -->
+      <ToggleSwitch
+        v-model="value.excludeCompleted"
+        :text="$str('user_activities_filter_exclude_completed', 'mod_perform')"
+        :toggle-first="true"
+      />
+    </div>
+
+    <div class="tui-performUserActivitiesFilter__results">
+      <div class="tui-performUserActivitiesFilter__results-total">
+        <slot name="displayed-count" />
       </div>
+
+      <div class="tui-performUserActivitiesFilter__results-sort" />
     </div>
   </div>
 </template>
+
 <script>
 import FilterBar from 'tui/components/filters/FilterBar';
 import SelectFilter from 'tui/components/filters/SelectFilter';
@@ -68,50 +86,38 @@ export default {
 
   props: {
     filterOptions: Object,
-    shown: {
-      type: Number,
-      required: true,
-    },
-    total: {
-      type: Number,
-      required: true,
-    },
-  },
-
-  data() {
-    return {
-      selectedFilters: {
-        activityType: null,
-        ownProgress: null,
-        overdueOnly: false,
-      },
-    };
+    value: Object,
   },
 
   computed: {
+    /**
+     * Get the available options for activity type filter
+     *
+     * @return {Array}
+     */
     activityTypeFilterOptions() {
       return this.mapFilterOptions(this.filterOptions.activityTypes);
     },
 
+    /**
+     * Get the available options for progress filter
+     *
+     * @return {Array}
+     */
     progressFilterOptions() {
       return this.mapFilterOptions(this.filterOptions.progressOptions);
     },
   },
 
-  watch: {
-    selectedFilters: {
-      /**
-       * Emit event on filter value change
-       *
-       */
-      deep: true,
-      handler() {
-        this.$emit('update-filters', this.selectedFilters);
-      },
-    },
-  },
-
   methods: {
+    /**
+     * Emit updated filter flag
+     *
+     */
+    filtersUpdated(activeFilters) {
+      this.$emit('filter-change', activeFilters);
+    },
+
     /**
      * Map filter options to required format
      *
@@ -138,14 +144,15 @@ export default {
   },
 };
 </script>
+
 <lang-strings>
   {
     "core": [
       "all"
     ],
     "mod_perform": [
-      "showing_activities",
       "user_activities_filter",
+      "user_activities_filter_exclude_completed",
       "user_activities_filter_own_progress",
       "user_activities_filter_overdue_only",
       "user_activities_filter_type"
@@ -156,19 +163,19 @@ export default {
 <style lang="scss">
 .tui-performUserActivitiesFilter {
   & > * + * {
-    margin-top: var(--gap-8);
+    margin-top: var(--gap-4);
   }
 
-  &__after {
-    &-total {
-      @include tui-font-heading-x-small;
+  &__results {
+    &-sort {
+      margin-left: auto;
     }
   }
 }
 
 @media (min-width: $tui-screen-sm) {
   .tui-performUserActivitiesFilter {
-    &__after {
+    &__results {
       display: flex;
     }
   }

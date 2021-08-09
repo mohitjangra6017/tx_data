@@ -2,8 +2,11 @@ This file describes API changes in /client/component/mod_perform,
 information provided here is intended especially for developers.
 
 === 15.0 ===
-* Reworked the template structure of Activities.vue page & modified lang string changes
-    * The table structure and content has been changed.
+* Heavily reworked the template structure of Activities.vue page 
+    * Table heading language strings have been modified
+    * The datatable structure and content has been changed.
+    * Existing filters have been modified and additional ones have been added
+    * SCSS changes to existing classes
 
 === 14.0 ===
 * Updated the template structure of ActivityContentPrint.vue to add new icons, add new pieces of information, and improve element spacing and font sizes

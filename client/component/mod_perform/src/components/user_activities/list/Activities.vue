@@ -18,12 +18,26 @@
 <template>
   <div class="tui-performUserActivityList">
     <ActivitiesFilter
-      v-if="showFilter"
+      v-model="userFilters"
       :filter-options="filterOptions"
-      :shown="subjectInstances.length"
-      :total="pagination.total"
-      @update-filters="applyFilters"
-    />
+      @filter-change="filterChange"
+    >
+      <template v-if="pagination.total" v-slot:displayed-count>
+        <div
+          class="tui-performUserActivityList__count"
+          :class="{
+            'tui-performUserActivityList__count--hidden': $apollo.loading,
+          }"
+        >
+          {{
+            $str('showing_activities', 'mod_perform', {
+              shown: subjectInstances.length,
+              total: pagination.total,
+            })
+          }}
+        </div>
+      </template>
+    </ActivitiesFilter>
 
     <Loader :loading="$apollo.loading">
       <Table
@@ -321,6 +335,7 @@ export default {
 
   data() {
     return {
+      activeFilterCount: 0,
       isRelationshipSelectorShown: false,
       pagination: {
         nextCursor: '',
@@ -332,56 +347,46 @@ export default {
       singleSectionViewOnlyActivities: [],
       subjectInstances: [],
       userFilters: {
-        activityType: '',
-        ownProgress: '',
+        activityType: null,
+        excludeCompleted: false,
+        ownProgress: null,
         overdueOnly: false,
       },
     };
   },
 
   computed: {
-    aboutFilter() {
-      return [this.about.toUpperCase()];
-    },
     isAboutOthers() {
       return this.about === 'others';
     },
 
-    hasFilter() {
-      return (
-        this.userFilters.activityType != '' ||
-        this.userFilters.ownProgress != '' ||
-        this.userFilters.overdueOnly
-      );
-    },
-    showFilter() {
-      return this.hasFilter || this.subjectInstances.length > 0;
-    },
     showLoadMore() {
       return (
         this.subjectInstances.length > 0 && this.pagination.nextCursor !== ''
       );
     },
+
     emptyListText() {
-      return this.hasFilter
+      return this.activeFilterCount
         ? this.$str('user_activities_list_none_filtered', 'mod_perform')
         : this.isAboutOthers
         ? this.$str('user_activities_list_none_about_others', 'mod_perform')
         : this.$str('user_activities_list_none_about_self', 'mod_perform');
     },
-    currentFilterOptions() {
-      let options = {
-        about: this.aboutFilter,
-        activity_type: this.userFilters.activityType || null,
-        participant_progress: this.userFilters.ownProgress || null,
-      };
 
-      // Not sending overdue filter option if not set.
-      // If we send 'false' it will only return not overdue activities, but in this case we want ALL activities
-      if (this.userFilters.overdueOnly) {
-        options.overdue = true;
-      }
-      return options;
+    /**
+     * Active filter options (reactive value for the query)
+     *
+     * @return {Object}
+     */
+    currentFilterOptions() {
+      return {
+        about: [this.about.toUpperCase()],
+        activity_type: this.userFilters.activityType,
+        exclude_complete: this.userFilters.excludeCompleted,
+        overdue: this.userFilters.overdueOnly,
+        participant_progress: this.userFilters.ownProgress,
+      };
     },
   },
 
@@ -716,12 +721,12 @@ export default {
     },
 
     /**
-     * Apply the filters that have been selected.
-     * This will reset pagination to the first page
-     * @param {Object} filters
+     * Update active filter count and reset paging
+     *
+     * @param {Number} activeFilterCount
      */
-    applyFilters(filters) {
-      this.userFilters = filters;
+    filterChange(activeFilterCount) {
+      this.activeFilterCount = activeFilterCount;
       this.nextCursor = '';
     },
 
@@ -768,6 +773,7 @@ export default {
       "participant_instance_status_not_submitted",
       "participant_instance_status_progress_not_applicable",
       "print_activity",
+      "showing_activities",
       "unnamed_job_assignment",
       "user_activities_closed",
       "user_activities_complete_before",
@@ -798,8 +804,18 @@ export default {
 
 <style lang="scss">
 .tui-performUserActivityList {
+  min-height: 500px;
+
   & > * + * {
-    margin-top: var(--gap-2);
+    margin-top: var(--gap-4);
+  }
+
+  &__count {
+    @include tui-font-heading-x-small;
+
+    &--hidden {
+      visibility: hidden;
+    }
   }
 
   &__selectRelationshipLink {

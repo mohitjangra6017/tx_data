@@ -1234,6 +1234,7 @@ $string['user_activities_complete_before'] = 'Due date: {$a}.';
 $string['user_activities_created_at'] = 'Created {$a}.';
 $string['user_activities_due_date_header'] = 'Due date';
 $string['user_activities_filter'] = 'Filter activities';
+$string['user_activities_filter_exclude_completed'] = 'Exclude completed activities';
 $string['user_activities_filter_own_progress'] = 'Your progress';
 $string['user_activities_filter_overdue_only'] = 'Overdue activities only';
 $string['user_activities_filter_type'] = 'Type';
