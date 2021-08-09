@@ -162,7 +162,7 @@ export default {
           if (val.length !== 0) {
             count += val.length;
           }
-        } else if (val !== '') {
+        } else if (val !== '' && val !== null && val !== false) {
           count++;
         }
       });
