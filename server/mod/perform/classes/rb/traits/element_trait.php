@@ -262,6 +262,7 @@ trait element_trait {
             [
                 'joins' => [$join],
                 'displayfunc' => 'element_type',
+                'extrafields' => ['data' => "$join.data"]
             ]
         );
     }

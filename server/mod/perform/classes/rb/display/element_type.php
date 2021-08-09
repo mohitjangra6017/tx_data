@@ -23,7 +23,9 @@
 
 namespace mod_perform\rb\display;
 
+use coding_exception;
 use mod_perform\models\activity\element_plugin;
+use performelement_linked_review\content_type_factory;
 use totara_reportbuilder\rb\display\base;
 
 class element_type extends base {
@@ -42,9 +44,23 @@ class element_type extends base {
         if (empty($plugin_name)) {
             return '';
         }
-        
-        $plugin = element_plugin::load_by_plugin($plugin_name);
-        return $plugin->get_name();
+
+        $type = element_plugin::load_by_plugin($plugin_name)->get_name();
+        if ($plugin_name !== 'linked_review') {
+            return $type;
+        }
+
+        // Linked review elements have a slightly different way of naming types.
+        $extra_fields = self::get_extrafields_row($row, $column);
+        $data = json_decode($extra_fields->data, true);
+        $content_type = $data['content_type'] ?? null;
+
+        if (is_null($content_type)) {
+            throw new coding_exception('Cannot find content type for perform linked review type question');
+        }
+
+        $content_class = content_type_factory::get_class_name_from_identifier($content_type);
+        return $type . ': ' . $content_class::get_display_name();
     }
 
     /**
