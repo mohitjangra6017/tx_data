@@ -90,7 +90,6 @@ export default {
   min-width: 0;
   max-width: 100%;
   max-height: 100%;
-  margin: 0;
   padding: var(--gap-1) var(--gap-2);
   overflow: auto;
   color: var(--form-input-text-color);

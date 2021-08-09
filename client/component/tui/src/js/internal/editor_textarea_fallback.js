@@ -38,9 +38,19 @@ export default {
    * @param {?number} opts.fileItemId Draft ID
    * @returns {object} Props
    */
-  getProps(opts) {
+  getProps({
+    disabled,
+    ariaLabel,
+    ariaLabelledby,
+    ariaDescribedby,
+    ariaInvalid,
+  }) {
     return {
-      disabled: opts.disabled,
+      disabled,
+      ariaLabel,
+      ariaLabelledby,
+      ariaDescribedby,
+      ariaInvalid,
     };
   },
 

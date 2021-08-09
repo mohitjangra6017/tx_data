@@ -209,21 +209,34 @@ export default class Editor {
    * @return {EditorView}
    */
   createView(el) {
-    let attributes = {
+    const opts = this._options;
+    let attrs = {
       class: 'tui-weka-editor',
-      role: 'region',
-      'aria-label': langString('pluginname', 'editor_weka'),
+      role: 'textbox',
+      'aria-multiline': 'true',
+      'aria-labelledby': opts.ariaLabelledby,
+      'aria-label': opts.ariaLabel,
+      'aria-describedby': opts.ariaDescribedby,
+      'aria-invalid': opts.ariaInvalid,
     };
 
-    this._options.placeholder
-      ? (attributes['aria-label'] = this._options.placeholder)
-      : attributes;
+    // if no accessible name was provided, try and find a fallback
+    if (!attrs['aria-label'] && !attrs['aria-labelledby']) {
+      attrs['aria-label'] =
+        opts.placeholder || langString('pluginname', 'editor_weka');
+    }
 
     this.view = new EditorView(el, {
       state: this.state,
       dispatchTransaction: this.dispatch,
       nodeViews: this._nodeViews,
-      attributes,
+      // filter out null/undefined attrs
+      attributes: Object.entries(attrs).reduce((acc, [key, value]) => {
+        if (value != null) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {}),
       editable: () => result(this._editable),
     });
 

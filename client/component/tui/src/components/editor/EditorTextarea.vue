@@ -17,10 +17,23 @@
 -->
 
 <template>
-  <div class="tui-editorTextarea">
-    <Select :value="format" :options="formatOptions" @input="handleSelect" />
+  <div
+    class="tui-editorTextarea"
+    role="group"
+    :aria-label="ariaLabel"
+    :aria-labelledby="ariaLabelledby"
+    :aria-describedby="ariaDescribedby"
+    :aria-invalid="ariaInvalid"
+  >
+    <Select
+      :aria-label="$str('format', 'core')"
+      :value="format"
+      :options="formatOptions"
+      @input="handleSelect"
+    />
     <Textarea
       ref="textarea"
+      :aria-label="$str('content', 'core')"
       :value="value && value.content"
       :disabled="disabled"
       class="tui-editorTextarea__textarea"
@@ -52,6 +65,10 @@ export default {
       },
     },
     disabled: Boolean,
+    ariaLabel: String,
+    ariaLabelledby: String,
+    ariaDescribedby: String,
+    ariaInvalid: String,
   },
 
   data() {
@@ -88,6 +105,8 @@ export default {
 <lang-strings>
   {
     "core": [
+      "content",
+      "format",
       "formatplain",
       "formatmarkdown",
       "formathtml"
@@ -109,6 +128,7 @@ export default {
   &__textarea {
     // stretch child input to be full height if the editor is given a specific height
     flex-grow: 1;
+    margin-top: var(--gap-1);
   }
 }
 </style>

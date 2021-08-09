@@ -99,6 +99,11 @@ export default {
         });
       },
     },
+
+    ariaLabel: String,
+    ariaLabelledby: String,
+    ariaDescribedby: String,
+    ariaInvalid: String,
   },
 
   data() {
@@ -163,6 +168,10 @@ export default {
         compact: this.compact,
         extraExtensions: this.extraExtensions,
         disabled: this.disabled,
+        ariaLabel: this.ariaLabel,
+        ariaLabelledby: this.ariaLabelledby,
+        ariaDescribedby: this.ariaDescribedby,
+        ariaInvalid: this.ariaInvalid,
       };
     },
 
@@ -264,6 +273,10 @@ export default {
           usageIdentifier: fixedConfig.usageIdentifier,
           extraExtensions: fixedConfig.extraExtensions,
           disabled: fixedConfig.disabled,
+          ariaLabel: fixedConfig.ariaLabel,
+          ariaLabelledby: fixedConfig.ariaLabelledby,
+          ariaDescribedby: fixedConfig.ariaDescribedby,
+          ariaInvalid: fixedConfig.ariaInvalid,
         }),
       ]);
 

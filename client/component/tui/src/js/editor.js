@@ -24,6 +24,15 @@
  *  config: object,
  *  format: number,
  *  fileItemId: ?number,
+ *  placeholder: ?string,
+ *  compact: boolean,
+ *  usageIdentifier: ?{component: string, area: string}
+ *  extraExtensions: ?Array<{name: string, options?: object}>
+ *  disabled: boolean,
+ *  ariaLabel: ?string,
+ *  ariaLabelledby: ?string,
+ *  ariaDescribedby: ?string,
+ *  ariaInvalid: ?string,
  * }) => object} getProps Get props to pass to editor component.
  * @property {(content: string, format: number) => any} rawToValue
  *   Convert raw (serialzed) value to something the component can understand

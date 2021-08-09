@@ -2,7 +2,6 @@
 
 exports[`editor_weka/components/Weka.vue toolbar is showing and render correctly 1`] = `
 <div
-  arialabel="Weka label"
   class="tui-weka no-yui-ids"
   id="uid-weka"
 >
@@ -15,10 +14,11 @@ exports[`editor_weka/components/Weka.vue toolbar is showing and render correctly
     data-placeholder=""
   >
     <div
-      aria-label="[[pluginname, editor_weka]]"
+      aria-label="Weka label"
+      aria-multiline="true"
       class="ProseMirror tui-weka-editor"
       contenteditable="true"
-      role="region"
+      role="textbox"
     >
       <p>
         <br />

@@ -34,6 +34,10 @@ export default {
     usageIdentifer,
     extraExtensions,
     disabled,
+    ariaLabel,
+    ariaLabelledby,
+    ariaDescribedby,
+    ariaInvalid,
   }) {
     return {
       fileItemId,
@@ -49,6 +53,10 @@ export default {
       placeholder,
       compact,
       disabled,
+      ariaLabel,
+      ariaLabelledby,
+      ariaDescribedby,
+      ariaInvalid,
     };
   },
 

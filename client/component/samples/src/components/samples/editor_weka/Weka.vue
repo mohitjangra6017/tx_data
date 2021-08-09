@@ -40,6 +40,7 @@
           },
         },
       ]"
+      aria-label="Sample Weka editor"
     />
     <hr />
     <Button text="Reset" @click="reset" />

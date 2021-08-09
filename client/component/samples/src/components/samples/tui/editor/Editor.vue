@@ -29,6 +29,7 @@
         :context-id="values.contextId"
         :usage-identifier="values.identifier"
         :loading="values.loading"
+        aria-label="Sample editor"
       />
     </div>
     <hr />

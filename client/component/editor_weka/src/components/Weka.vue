@@ -148,6 +148,10 @@ export default {
       },
     },
     disabled: Boolean,
+    ariaLabel: String,
+    ariaLabelledby: String,
+    ariaDescribedby: String,
+    ariaInvalid: String,
   },
 
   data() {
@@ -367,6 +371,10 @@ export default {
         component: this.usageIdentifier.component || null,
         area: this.usageIdentifier.area || null,
         instanceId: this.usageIdentifier.instanceId || null,
+        ariaLabel: this.ariaLabel,
+        ariaLabelledby: this.ariaLabelledby,
+        ariaDescribedby: this.ariaDescribedby,
+        ariaInvalid: this.ariaInvalid,
         editable: () => !this.disabled,
         onTransaction: () => {
           this.updateToolbarThrottled();
