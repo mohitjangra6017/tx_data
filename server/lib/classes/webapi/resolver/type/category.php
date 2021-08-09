@@ -30,6 +30,7 @@ use coursecat;
 use context_coursecat;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
+use coding_exception;
 
 class category implements type_resolver {
     public static function resolve(string $field, $category, array $args, execution_context $ec) {
@@ -38,7 +39,7 @@ class category implements type_resolver {
 
         $format = $args['format'] ?? null;
         if (!self::do_authorize($field, $format, $category->id)) {
-            return null;
+            throw new coding_exception('You are not allowed to view category name');
         }
 
         $datefields = ['timemodified'];
