@@ -773,6 +773,54 @@ class totara_job_job_assignment_testcase extends advanced_testcase {
     }
 
     /**
+     * Test temp manager account is expired before update_temporary_managers_task has not been executed
+     * but a user of temp manager account is deleted.
+     *
+     * @return void
+     */
+    public function test_delete_temp_manager_account_after_expiration(): void {
+        global $DB;
+
+        $manager_user = $this->users[1];
+        $staff_user = $this->users[2];
+        $time = time() - HOURSECS;
+        $manager_ja = \totara_job\job_assignment::create_default($manager_user->id);
+        \totara_job\job_assignment::create_default(
+            $staff_user->id, [
+                'tempmanagerjaid' => $manager_ja->id,
+                'tempmanagerexpirydate' => $time,
+                'idnumber' => 2,
+                ]
+        );
+
+        self::assertCount(2, $DB->get_records('job_assignment'));
+        self::assertTrue(
+            $DB->record_exists(
+                'job_assignment',
+                ['tempmanagerjaid' => $manager_ja->id, 'tempmanagerexpirydate' => $time]
+            )
+        );
+
+        $result = delete_user($manager_user);
+        self::assertTrue($result);
+
+        self::assertCount(1, $DB->get_records('job_assignment'));
+        self::assertTrue(
+            $DB->record_exists(
+                'job_assignment',
+                [
+                    'tempmanagerjaid' => null,
+                    'tempmanagerexpirydate' => null
+                ]
+            )
+        );
+
+        self::expectOutputString("Removing expired temporary managers...\nDone removing expired temporary managers.\n");
+        $task = new \totara_job\task\update_temporary_managers_task();
+        $task->execute();
+    }
+
+    /**
      * Tests get_with_idnumber().
      */
     public function test_get_with_idnumber() {

@@ -1391,10 +1391,8 @@ class job_assignment {
                      SELECT staffja.*
                        FROM {job_assignment} tempmanagerja
                        JOIN {job_assignment} staffja ON staffja.tempmanagerjaid = tempmanagerja.id
-                      WHERE tempmanagerja.userid = :tempmanagerid
-                        AND staffja.tempmanagerexpirydate > :now";
+                      WHERE tempmanagerja.userid = :tempmanagerid";
             $params['tempmanagerid'] = $managerid;
-            $params['now'] = time();
 
             if ($managerjaid) {
                 $sql .= " AND tempmanagerja.id = :tempmanagerjaid";
