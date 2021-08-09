@@ -22,6 +22,7 @@
     :class="{
       'tui-treeNode--top': topLevel,
       'tui-treeNode--separator': separator && topLevel,
+      'tui-treeNode--noPadding': noPadding,
     }"
   >
     <div
@@ -103,6 +104,7 @@
             v-for="(child, index) in children"
             :key="child.id"
             class="tui-treeNode__child"
+            :class="{ 'tui-treeNode__child--noPadding': noPadding }"
           >
             <TreeNode
               :node-id="child.id"
@@ -114,6 +116,7 @@
               :label="child.label"
               :label-type="labelType"
               :link-url="child.linkUrl"
+              :no-padding="noPadding"
               :open-list="openList"
               :position="index + 1"
               :siblings="children.length"
@@ -194,6 +197,7 @@ export default {
     siblings: Number,
     sideContent: Object,
     topLevel: Boolean,
+    noPadding: Boolean,
   },
 
   data() {
@@ -362,8 +366,13 @@ export default {
 <style lang="scss">
 .tui-treeNode {
   display: flex;
+  align-items: baseline;
   width: 100%;
   padding: 1px 0;
+
+  &--noPadding {
+    padding: 0;
+  }
 
   &--top {
     position: relative;
@@ -440,6 +449,10 @@ export default {
     margin: 0;
     padding-top: var(--gap-3);
     list-style: none;
+
+    &--noPadding {
+      padding-top: 0;
+    }
   }
 }
 </style>

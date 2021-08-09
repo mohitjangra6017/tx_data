@@ -35,6 +35,7 @@
       :separator="separator"
       :siblings="treeData.length"
       :top-level="true"
+      :no-padding="noPadding"
       @expanded="updateExpanded"
       @label-click="$emit('label-click', $event)"
     >
@@ -104,6 +105,7 @@ export default {
       required: true,
       type: Array,
     },
+    noPadding: Boolean,
   },
 
   computed: {

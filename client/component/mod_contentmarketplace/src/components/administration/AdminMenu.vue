@@ -38,6 +38,7 @@
         v-model="openTreeBranches"
         class="tui-linkedinActivityAdminMenu__tree tui-linkedinActivityAdminMenu__tree--dropDown"
         :tree-data="treeData"
+        no-padding
         @input="$emit('input', $event)"
       >
         <!-- Branch label -->
@@ -46,9 +47,10 @@
             class="tui-linkedinActivityAdminMenu__tree-contentsLabel"
             :class="{
               'tui-linkedinActivityAdminMenu__tree-topBranch': topLevel,
+              'tui-linkedinActivityAdminMenu__spacing': !topLevel,
             }"
           >
-            <DropdownItem v-if="linkUrl" :href="linkUrl" :no-padding="true">
+            <DropdownItem v-if="linkUrl" :href="linkUrl" no-padding>
               {{ label }}
             </DropdownItem>
             <template v-else>
@@ -71,6 +73,7 @@
             class="tui-linkedinActivityAdminMenu__tree"
             label-type="link"
             :tree-data="treeData"
+            no-padding
             @input="$emit('input', $event)"
           />
         </ModalContent>
@@ -155,10 +158,15 @@ export default {
 
 <style lang="scss">
 .tui-linkedinActivityAdminMenu {
+  &__spacing {
+    padding: var(--gap-2) 0;
+  }
+
   &__tree {
     @include tui-wordbreak--hard();
 
     &-topBranch {
+      padding-bottom: var(--gap-2);
       font-weight: bold;
     }
 
