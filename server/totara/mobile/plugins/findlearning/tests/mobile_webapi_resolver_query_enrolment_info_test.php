@@ -28,7 +28,7 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 /**
  * Note: This only tests the mobile embedded query, the rest of the tests are in lib
  */
-class mobile_findlearning_webapi_resolver_query_enrolment_info_testcase extends advanced_testcase {
+class mobile_findlearning_webapi_resolver_query_enrolment_info_testcase extends \core_phpunit\testcase {
 
     use webapi_phpunit_helper;
 

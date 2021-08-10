@@ -32,7 +32,7 @@ use mobile_findlearning\catalog as mobile_catalog;
 /**
  * Note: This also tests the catalog_item resolver since that's contained within the page.
  */
-class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends advanced_testcase {
+class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \core_phpunit\testcase {
 
     use webapi_phpunit_helper;
 
