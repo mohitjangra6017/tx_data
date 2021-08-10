@@ -161,7 +161,7 @@ export default {
      * @return {Boolean}
      */
     goalContentExists() {
-      if (!this.content) {
+      if (!this.content || !this.content.goal) {
         return false;
       }
 
