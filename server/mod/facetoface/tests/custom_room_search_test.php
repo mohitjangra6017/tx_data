@@ -250,8 +250,6 @@ class mod_facetoface_custom_room_search_testcase extends advanced_testcase {
             // Note: We'll turn the room class into a stdClass container here until customfields and dialogs play nicely with the room class.
             $roomdata = $room->to_record();
 
-            customfield_load_data($roomdata, "facetofaceroom", "facetoface_room");
-
             $roomdata->fullname = (string)$room . " (" . get_string("capacity", "facetoface") . ": {$roomdata->capacity})";
             if (!$availablerooms->contains($room->get_id()) && $seminarevent->get_cancelledstatus() == 0) {
                 $unavailablerooms[$room->get_id()] = $room->get_id();

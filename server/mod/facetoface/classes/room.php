@@ -163,9 +163,12 @@ final class room implements seminar_iterator_item, seminar_attachment_item {
      */
     public function get_detailed_name(bool $all_fields = false): string {
         $customfields = $this->get_customfield_array();
-        $displayfields = static::get_display_customfields($all_fields);
+        $displayfields = room::get_display_customfields($all_fields);
         $items = [];
-        $items[] = isset($this->name) ? $this->name : null;
+        if (!empty($this->name)) {
+            $items[] = $this->name;
+        }
+
         foreach ($displayfields as $field) {
             if (!empty($customfields[$field])) {
                 if ($field == CUSTOMFIELD_LOCATION) {
@@ -176,7 +179,7 @@ final class room implements seminar_iterator_item, seminar_attachment_item {
             }
         }
 
-        return implode(", ", array_filter($items));
+        return implode(", ", $items);
     }
 
     /**

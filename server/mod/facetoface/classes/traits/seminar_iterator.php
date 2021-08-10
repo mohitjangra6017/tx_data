@@ -123,7 +123,7 @@ trait seminar_iterator {
      * @return bool
      */
     public function contains(int $itemid) : bool {
-        return array_key_exists($itemid, $this->items);
+        return isset($this->items[$itemid]);
     }
 
     /**

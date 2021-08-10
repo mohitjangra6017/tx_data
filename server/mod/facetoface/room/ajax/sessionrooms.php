@@ -83,6 +83,7 @@ send_headers('text/html; charset=utf-8', false);
 // Setup / loading data
 $roomlist = room_list::get_available_rooms(0, 0 , $seminarevent);
 $availablerooms = room_list::get_available_rooms($timestart, $timefinish, $seminarevent);
+$seminarname = format_string($seminar->get_name(), true, ['context' => $context]);
 $selectedids = explode(',', $selected);
 $allrooms = [];
 $selectedrooms = [];
@@ -93,9 +94,9 @@ foreach ($roomlist as $room) {
 
     // Note: We'll turn the room class into a stdClass container here until customfields and dialogs play nicely with the room class.
     $roomdata = $room->to_record();
-
-    customfield_load_data($roomdata, "facetofaceroom", "facetoface_room");
-
+    // Note: Casting $room to string for display loads all its custom fields which can be slow if a lot of rooms
+    // are available or a lot of custom fields are being used. We might want to consider displaying only room name
+    // or specific pre-defined fields in the future to speed up dialog load time.
     $roomdata->fullname = (string)$room . " (" . get_string("capacity", "mod_facetoface") . ": {$roomdata->capacity})";
     if (!$availablerooms->contains($room->get_id()) && $seminarevent->get_cancelledstatus() == 0) {
         $unavailablerooms[$room->get_id()] = $room->get_id();
@@ -105,7 +106,7 @@ foreach ($roomlist as $room) {
         $possible_virtual_meetings[$room->get_id()] = $room->get_id();
     }
     if ($roomdata->custom && $seminarevent->get_cancelledstatus() == 0) {
-        $roomdata->fullname .= ' (' . get_string('facetoface', 'mod_facetoface') . ': ' . format_string($seminar->get_name()) . ')';
+        $roomdata->fullname .= ' (' . get_string('facetoface', 'mod_facetoface') . ': ' . $seminarname . ')';
     }
 
     if (in_array($room->get_id(), $selectedids)) {
