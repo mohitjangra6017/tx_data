@@ -15,6 +15,8 @@ information provided here is intended especially for developers.
 * \core\webapi\resolver\type\course now supports the \core\entity\course entity as input.
 * Increased character limit for the name column in the course_categories table to 1333 characters.
 * \core\webapi\resolver\type\category::authorize had been deprecated and should not be used publicly outside of the class, please use \core\webapi\resolver\type\category::do_authorize instead
+* For security reasons, filelib has been updated so all requests now use emulated redirects.
+  For this reason, manually disabling emulateredirects will no longer have any effect (and will generate a debugging message).
 
 === 14.0 ===
 
