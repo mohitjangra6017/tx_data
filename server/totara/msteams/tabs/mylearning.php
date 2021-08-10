@@ -48,8 +48,6 @@ $PAGE->set_pagelayout('noblocks');
 $PAGE->set_title(get_string('tab:mylearning', 'totara_msteams'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(s(get_string('tab:mylearning', 'totara_msteams')));
-
 $renderer = $PAGE->get_renderer('totara_msteams');
 
 if (page_helper::is_tab_available('/totara/msteams/tabs/mylearning.php')) {

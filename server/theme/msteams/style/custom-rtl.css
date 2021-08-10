@@ -550,6 +550,15 @@ body.theme_msteams__theme--contrast .totara_msteams__spinner {
     display: block;
 }
 
+body.theme_msteams__theme--default .tw-catalog__title,
+body.theme_msteams__theme--dark .tw-catalog__title,
+body.theme_msteams__theme--contrast .tw-catalog__title,
+body.theme_msteams__theme--default .tw-catalogManageBtns,
+body.theme_msteams__theme--dark .tw-catalogManageBtns,
+body.theme_msteams__theme--contrast .tw-catalogManageBtns {
+    display: none;
+}
+
 @-webkit-keyframes totara_msteams__rotation {
     from {
         -webkit-transform: rotateZ(0deg);

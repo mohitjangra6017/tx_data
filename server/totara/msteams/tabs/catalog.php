@@ -50,7 +50,6 @@ if ($CFG->catalogtype !== 'totara') {
     $PAGE->set_context(context_system::instance());
     $PAGE->set_pagelayout('noblocks');
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(s(get_string('tab:catalog', 'totara_msteams')));
     echo $OUTPUT->notification(get_string('error:catalognotavailable', 'totara_msteams'), core\output\notification::NOTIFY_INFO);
     echo $OUTPUT->footer();
     die;

@@ -100,7 +100,10 @@ Feature: Navigate a learning item in a static tab
 
   Scenario: msteams201: Navigate the find learning tab
     Given I am on Microsoft Teams "catalog" page
-    Then I should see "Find learning" in the page title
+    Then I should not see "Find learning"
+    And I should not see "Customise this page"
+    And I should not see "Configure catalogue"
+    And I should not see "Create"
     And ".totara_msteams__navigation" "css_element" should exist
 
     When I click on "Culinary arts 101" "text"
@@ -165,7 +168,7 @@ Feature: Navigate a learning item in a static tab
 
   Scenario: msteams203: Navigate the current learning tab
     Given I am on Microsoft Teams "mylearning" page
-    Then I should see "Current learning" in the page title
+    Then I should not see "Current learning"
     And ".totara_msteams__navigation" "css_element" should exist
 
     When I click on "Mastering arts" "link"
