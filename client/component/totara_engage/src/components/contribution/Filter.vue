@@ -17,7 +17,12 @@
 -->
 
 <template>
-  <section class="tui-contributionFilter">
+  <section
+    class="tui-contributionFilter"
+    :class="{
+      'tui-contributionFilter--hasSortBy': showSort,
+    }"
+  >
     <template v-if="!$apollo.loading">
       <FilterBar
         v-model="selection"

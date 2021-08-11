@@ -34,21 +34,20 @@
       <slot name="bookmark" />
     </section>
 
+    <!-- .tui-contributionFilter -->
     <slot name="filters" />
 
-    <section v-show="!loading || loadingMore">
-      <div
-        v-if="!showEmptyContribution"
-        class="tui-contributionBaseContent__counterContainer"
-      >
-        <div class="tui-contributionBaseContent__counter">
-          <template v-if="customTitle">
-            {{ customTitle }}
-          </template>
-          <template v-else>
-            {{ countResource }}
-          </template>
-        </div>
+    <section
+      v-show="(!loading || loadingMore) && !showEmptyContribution"
+      class="tui-contributionBaseContent__counterContainer"
+    >
+      <div class="tui-contributionBaseContent__counter">
+        <template v-if="customTitle">
+          {{ customTitle }}
+        </template>
+        <template v-else>
+          {{ countResource }}
+        </template>
       </div>
     </section>
 
@@ -208,6 +207,10 @@ export default {
 
 <style lang="scss">
 .tui-contributionBaseContent {
+  &__counterContainer {
+    padding: 0 var(--gap-4) var(--gap-4) var(--gap-2);
+  }
+
   &__horizontal {
     padding: var(--gap-8);
   }
@@ -217,10 +220,6 @@ export default {
     .tui-contributionBaseContent__cards {
       padding: var(--gap-4);
     }
-
-    .tui-contributionBaseContent__counterContainer {
-      padding: 0 var(--gap-2);
-    }
     .tui-contributionFilter__sort {
       padding-right: var(--gap-4);
     }
@@ -229,7 +228,7 @@ export default {
   &__header {
     display: flex;
     justify-content: space-between;
-    margin: var(--gap-4) 0 var(--gap-12);
+    margin: var(--gap-4) 0 var(--gap-4);
 
     > :not(:first-child) {
       margin-left: var(--gap-8);
@@ -278,21 +277,44 @@ export default {
     align-self: center;
   }
 
-  &__counterContainer {
-    position: relative;
-  }
-
   &__counter {
     @include tui-font-heading-x-small;
-    position: absolute;
-    top: calc(var(--gap-6) * -2);
-    padding: var(--gap-2);
-    padding-bottom: 0;
   }
 
   &__emptyText {
     @include tui-font-body;
     margin-top: var(--gap-2);
+  }
+
+  /**
+   * Styling of the data counter varies depending on what comes before it,
+   * with differences between mobile and desktop viewport sizes, so we'll
+   * target these variations based on adjacent sibling selectors for accuracy.
+   **/
+  &__vertical {
+    .tui-contributionBaseContent__counterContainer {
+      width: 100vw;
+      margin-top: -1px;
+      padding: var(--gap-4);
+      background-color: var(--color-neutral-3);
+    }
+    .tui-contributionFilter + .tui-contributionBaseContent__counterContainer {
+      background-color: transparent;
+    }
+  }
+  &__header + &__counterContainer {
+    margin-top: var(--gap-10);
+    padding-bottom: 0;
+  }
+  &__header + .tui-contributionFilter {
+    margin-top: var(--gap-12);
+  }
+  .tui-contributionFilter + &__counterContainer {
+    padding-top: var(--gap-4);
+  }
+  .tui-contributionFilter--hasSortBy + &__counterContainer {
+    margin-top: calc(var(--gap-7) * -1);
+    padding-top: 0;
   }
 }
 </style>

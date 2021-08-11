@@ -2,7 +2,7 @@
 
 exports[`totara_engage/components/contribution/Filter.vue Checks snapshot 1`] = `
 <section
-  class="tui-contributionFilter"
+  class="tui-contributionFilter tui-contributionFilter--hasSortBy"
 >
   <filterbar-stub
     title="filterbartitle, totara_engage"
