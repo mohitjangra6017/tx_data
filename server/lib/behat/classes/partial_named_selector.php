@@ -164,9 +164,9 @@ XPATH
 .//div[contains(concat(' ', normalize-space(@class), ' '), ' moodle-dialogue ') and
     normalize-space(descendant::div[
         contains(concat(' ', normalize-space(@class), ' '), ' moodle-dialogue-hd ')
-        ]) = %locator%] |
+        ]//text()) = %locator%] |
 .//div[contains(concat(' ', normalize-space(@class), ' '), ' yui-dialog ') and
-    normalize-space(descendant::div[@class='hd']) = %locator%]
+    normalize-space(descendant::div[@class='hd']//text()) = %locator%]
         |
 .//div[@data-region='modal' and descendant::*[@data-region='title'] = %locator%]
         |
