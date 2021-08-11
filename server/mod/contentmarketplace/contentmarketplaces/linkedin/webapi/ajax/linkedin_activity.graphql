@@ -5,19 +5,20 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
     module {
       id
       cm_id
-      course
+      course {
+        fullname
+        summary(format: HTML)
+        image
+      }
       name
       completion_condition
     }
     learning_object {
       id
-      name
-      image_url
       asset_type
       level
       time_to_complete
       last_updated_at
-      description_include_html
     }
   }
 }

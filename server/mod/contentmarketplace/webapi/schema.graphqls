@@ -4,7 +4,7 @@ type mod_contentmarketplace_content_marketplace {
   course_module id
   """
   cm_id: core_id!
-  course: core_id!
+  course: core_course!
   name(format: core_format = PLAIN): String!
   completion_condition: Boolean
 }

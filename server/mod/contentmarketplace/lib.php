@@ -92,7 +92,7 @@ function contentmarketplace_delete_instance(int $id): bool {
 
     // Delete the course source when the learning activity is deleted.
     course_source::repository()->delete_by_course_id(
-        $content_marketplace->course,
+        $content_marketplace->course_id,
         $content_marketplace->learning_object_id,
         $content_marketplace->learning_object_marketplace_component
     );

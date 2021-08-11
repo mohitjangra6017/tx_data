@@ -49,7 +49,7 @@ class content_marketplace_interactor extends base {
      * @return bool
      */
     public function can_view(): bool {
-        $course_interactor = course_interactor::from_course_id($this->model->course, $this->actor_id);
+        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
 
         if (!$course_interactor->can_access()) {
             // User must have to have the access to the course in order to view the marketplace.
@@ -68,7 +68,7 @@ class content_marketplace_interactor extends base {
      * @return void
      */
     public function require_view(): void {
-        $course_interactor = course_interactor::from_course_id($this->model->course, $this->actor_id);
+        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
         $course_interactor->require_access();
 
         $context_module = $this->model->get_context();

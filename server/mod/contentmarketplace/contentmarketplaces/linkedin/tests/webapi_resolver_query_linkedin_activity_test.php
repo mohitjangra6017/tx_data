@@ -58,7 +58,7 @@ class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activit
         /** @var model $module */
         $module = $result['module'];
         self::assertInstanceOf(model::class, $module);
-        self::assertEquals($module->course, $cm->course);
+        self::assertEquals($module->course->id, $cm->course);
         self::assertEquals($module->id, $cm->id);
         self::assertEquals($module->name, $cm->name);
         self::assertEquals($module->completion_condition, $cm->completion_condition);

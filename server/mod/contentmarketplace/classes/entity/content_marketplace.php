@@ -22,7 +22,9 @@
  */
 namespace mod_contentmarketplace\entity;
 
+use core\entity\course;
 use core\orm\entity\entity;
+use core\orm\entity\relations\belongs_to;
 use mod_contentmarketplace\repository\content_marketplace_repository;
 
 /**
@@ -35,6 +37,8 @@ use mod_contentmarketplace\repository\content_marketplace_repository;
  * @property int    $learning_object_id
  * @property int    $time_modified
  * @property int    $completion_condition
+ *
+ * @property-read course $course_entity
  */
 class content_marketplace extends entity {
     /**
@@ -58,4 +62,12 @@ class content_marketplace extends entity {
     public static function repository_class_name(): string {
         return content_marketplace_repository::class;
     }
+
+    /**
+     * @return belongs_to
+     */
+    public function course_entity(): belongs_to {
+        return $this->belongs_to(course::class, 'course');
+    }
+
 }

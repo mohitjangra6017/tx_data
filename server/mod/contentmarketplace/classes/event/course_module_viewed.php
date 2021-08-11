@@ -49,7 +49,7 @@ class course_module_viewed extends base {
         return static::create([
             'objectid' => $content_marketplace->cm_id,
             'userid' => $user_id,
-            'courseid' => $content_marketplace->course,
+            'courseid' => $content_marketplace->course_id,
             'context' => $content_marketplace->get_context()
         ]);
     }

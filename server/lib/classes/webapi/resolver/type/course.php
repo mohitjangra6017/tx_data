@@ -101,6 +101,10 @@ class course implements type_resolver {
         }
 
         if ($field == 'image') {
+            if (!isset($course->image)) {
+                $course->image = course_get_image($course);
+            }
+
             if ($course->image instanceof \moodle_url) {
                 $course->image = $course->image->out();
             }

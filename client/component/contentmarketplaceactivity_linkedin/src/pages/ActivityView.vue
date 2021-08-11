@@ -143,9 +143,10 @@
               </div>
             </div>
 
-            <div class="tui-linkedinActivity__details-desc">
-              {{ activity.description }}
-            </div>
+            <div
+              class="tui-linkedinActivity__details-desc"
+              v-html="activity.description"
+            />
           </div>
         </div>
       </div>
@@ -165,7 +166,7 @@ import NotificationBanner from 'tui/components/notifications/NotificationBanner'
 import PageBackLink from 'tui/components/layouts/PageBackLink';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 // Utils
-import { getAllBranchKeys } from 'tui/components/tree/util';
+import { getAllNodeKeys } from 'tui/components/tree/util';
 import { notify } from 'tui/notifications';
 
 // GraphQL
@@ -558,10 +559,10 @@ export default {
             name: 'Super cool course',
             url: '#',
           },
-          description: learning_object.description_include_html,
-          image: learning_object.image_url,
+          description: module.course.summary,
+          image: module.course.image,
           levelString: learning_object.level,
-          name: learning_object.name,
+          name: module.course.fullname,
           status: this.$str(
             'activity_status_not_started',
             'mod_contentmarketplace'
@@ -571,7 +572,7 @@ export default {
         };
 
         this.setCompletion = module.completion_condition || false;
-        this.openContents = getAllBranchKeys(contentsTree);
+        this.openContents = getAllNodeKeys(contentsTree);
 
         return learningObject;
       },

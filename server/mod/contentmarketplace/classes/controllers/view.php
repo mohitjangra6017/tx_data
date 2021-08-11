@@ -93,7 +93,7 @@ class view extends controller {
 
         // Triggering a course module viewed event before the view is returned.
         $event = course_module_viewed::from_model($this->model, $USER->id);
-        $event->add_record_snapshot('course', factory::from_id($this->model->course)->to_record());
+        $event->add_record_snapshot('course', factory::from_id($this->model->course_id)->to_record());
         $event->add_record_snapshot(content_marketplace_entity::TABLE, $this->model->get_entity_record());
         $event->trigger();
 

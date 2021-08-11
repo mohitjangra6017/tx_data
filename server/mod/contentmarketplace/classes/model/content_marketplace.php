@@ -24,6 +24,7 @@ namespace mod_contentmarketplace\model;
 
 use container_course\module\course_module;
 use context_module;
+use core\entity\course;
 use core\orm\entity\model;
 use core_component;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
@@ -35,7 +36,8 @@ use totara_contentmarketplace\learning_object\factory;
 /**
  * Model for content marketplace entity.
  *
- * @property-read int             $course
+ * @property-read int             $course_id
+ * @property-read course          $course
  * @property-read string          $name
  * @property-read string          $learning_object_marketplace_component
  * @property-read int             $learning_object_id
@@ -48,6 +50,12 @@ use totara_contentmarketplace\learning_object\factory;
  *
  */
 class content_marketplace extends model {
+
+    /**
+     * @var model_entity
+     */
+    protected $entity;
+
     /**
      * @var context_module|null
      */
@@ -64,7 +72,6 @@ class content_marketplace extends model {
      */
     protected $entity_attribute_whitelist = [
         'id',
-        'course',
         'name',
         'learning_object_marketplace_component',
         'learning_object_id',
@@ -80,6 +87,8 @@ class content_marketplace extends model {
         'learning_object',
         'view_url',
         'activity_module_marketplace_component',
+        'course',
+        'course_id',
     ];
 
     /**
@@ -144,7 +153,7 @@ class content_marketplace extends model {
             $cm_record = get_coursemodule_from_instance(
                 'contentmarketplace',
                 $instance_id,
-                $this->course,
+                $this->course_id,
             );
 
             $this->context = context_module::instance($cm_record->id);
@@ -159,6 +168,20 @@ class content_marketplace extends model {
     public function get_cm_id(): int {
         $context = $this->get_context();
         return $context->instanceid;
+    }
+
+    /**
+     * @return course
+     */
+    public function get_course(): course {
+        return $this->entity->course_entity;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_course_id(): int {
+        return $this->entity->course;
     }
 
     /**

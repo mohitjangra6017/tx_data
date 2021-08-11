@@ -60,16 +60,19 @@ class mod_contentmarketplace_webapi_type_content_marketplace_testcase extends te
         $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
         $content_marketplace = content_marketplace::from_course_module_id($cm->cmid);
 
+        $course_resolved = $this->resolve_graphql_type(
+            $this->get_graphql_name(type_content_marketplace::class),
+            'course',
+            $content_marketplace,
+            [],
+            $content_marketplace->get_context()
+        );
+
         self::assertEquals(
             $course->id,
-            $this->resolve_graphql_type(
-                $this->get_graphql_name(type_content_marketplace::class),
-                'course',
-                $content_marketplace,
-                [],
-                $content_marketplace->get_context()
-            )
+            $course_resolved->id
         );
+        self::assertEquals($course->fullname, $course_resolved->fullname);
     }
 
     /**
