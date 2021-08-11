@@ -30,85 +30,207 @@ defined('MOODLE_INTERNAL') || die();
  */
 class block_totara_recommendations_courses_testcase extends advanced_testcase {
     /**
-     * Test that the correct type of records are returned for micro_learning
+     * Assert that only visible, self-enrollment enabled & not-enrolled courses are seen through courses
+     * recommendations.
      */
-    public function test_courses_block() {
-        global $DB, $CFG;
-        require_once($CFG->dirroot . '/enrol/locallib.php');
-
-        $generator = $this->getDataGenerator();
-
-        // Create our users
-        $user1 = $generator->create_user(['username' => 'user1']);
-        $user2 = $generator->create_user(['username' => 'user2']);
-
-        // Create the test courses
-        $course1 = $generator->create_course(['fullname' => 'Course 1 with self-enrol & recommended']);
-        $course2 = $generator->create_course(['fullname' => 'Course 2 with self-enrol & not recommended']);
-        $course3 = $generator->create_course(['fullname' => 'Course 3 without self-enrol & recommended']);
-        $course4 = $generator->create_course(['fullname' => 'Course 4 without self-enrol & not recommended']);
-
-        // Enable self-enrollments for Course 1 & 2
-        $enrol = $DB->get_record('enrol', array('courseid' => $course1->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $enrol->status = ENROL_INSTANCE_ENABLED;
-        $DB->update_record('enrol', $enrol);
-
-        $enrol = $DB->get_record('enrol', array('courseid' => $course2->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $enrol->status = ENROL_INSTANCE_ENABLED;
-        $DB->update_record('enrol', $enrol);
-
-        // Recommend course 1 & 3
-        $users = [$user1, $user2];
-        foreach ($users as $user) {
-            $DB->insert_record('ml_recommender_users', [
-                'user_id' => $user->id,
-                'unique_id' => 'container_course' . $course1->id . '_user' . $user->id,
-                'item_id' => $course1->id,
-                'component' => 'container_course',
-                'time_created' => time(),
-                'score' => 1,
-                'seen' => 0
-            ]);
-            $DB->insert_record('ml_recommender_users', [
-                'user_id' => $user->id,
-                'unique_id' => 'container_course' . $course3->id . '_user' . $user->id,
-                'item_id' => $course3->id,
-                'component' => 'container_course',
-                'time_created' => time(),
-                'score' => 1,
-                'seen' => 0
-            ]);
-        }
-
-        // User 1 is enrolled, user 2 is not
-        $generator->enrol_user($user1->id, $course1->id);
-        $generator->enrol_user($user1->id, $course2->id);
-        $generator->enrol_user($user1->id, $course3->id);
-        $generator->enrol_user($user1->id, $course4->id);
+    public function test_courses_block(): void {
+        global $DB;
+        list($courses, $users) = $this->generate_data();
 
         // User 1 should not see any recommendations
-        $records = recommendations_repository::get_recommended_courses(5, $user1->id);
-        $this->assertEmpty($records);
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertEmpty($records);
 
         // User 2 should see Course 1 recommended
-        $records = recommendations_repository::get_recommended_courses(5, $user2->id);
-        $this->assertNotEmpty($records);
-        $this->assertCount(1, $records);
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertNotEmpty($records);
+        self::assertCount(1, $records);
 
         $record = current($records);
-        $this->assertEquals($course1->id, $record->item_id);
+        self::assertEquals($courses[1]->id, $record->item_id);
 
         // Now unenrol user 1 from course 1, then see if it's recommended
         $plugin = enrol_get_plugin('manual');
-        $instance = $DB->get_record('enrol', ['courseid' => $course1->id, 'enrol' => 'manual']);
-        $plugin->unenrol_user($instance, $user1->id);
+        $instance = $DB->get_record('enrol', ['courseid' => $courses[1]->id, 'enrol' => 'manual']);
+        $plugin->unenrol_user($instance, $users[1]->id);
 
         // User 1 should see Course 1 recommended
-        $records = recommendations_repository::get_recommended_courses(5, $user1->id);
-        $this->assertNotEmpty($records);
-        $this->assertCount(1, $records);
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertNotEmpty($records);
+        self::assertCount(1, $records);
 
         $record = current($records);
-        $this->assertEquals($course1->id, $record->item_id);
+        self::assertEquals($courses[1]->id, $record->item_id);
+
+        // Now make visible course 2 and see if it's recommended to user 2
+        $courses[2]->visible = 1;
+        $courses[2]->visibleold = 1;
+        $DB->update_record('course', $courses[2]);
+
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertNotEmpty($records);
+        self::assertCount(2, $records);
+    }
+
+    /**
+     * Assert that courses are filtered based on audience visibility rules
+     */
+    public function test_courses_with_audience_visibility(): void {
+        global $CFG, $DB;
+
+        // Enable audience visibility rules
+        $CFG->audiencevisibility = 1;
+
+        // Courses will default to audience visibility of COHORT_VISIBLE_ALL
+        list($courses, $users) = $this->generate_data();
+
+        // User 1 should not see any recommendations
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertEmpty($records);
+
+        // User 2 should see course 1 & course 2 recommended (audience visibility took over)
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertNotEmpty($records);
+        self::assertCount(2, $records);
+
+        self::assertEqualsCanonicalizing([$courses[1]->id, $courses[2]->id], array_column($records, 'item_id'));
+
+        // Set courses to be audience visibility = Nobody
+        $DB->execute("UPDATE {course} SET audiencevisible = ?", [COHORT_VISIBLE_NOUSERS]);
+
+        // User 1 should not see any recommendations
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertEmpty($records);
+
+        // User 2 should not see any recommendations
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertEmpty($records);
+
+        // Set courses to be audience visibility = Enrolled
+        $DB->execute("UPDATE {course} SET audiencevisible = ?", [COHORT_VISIBLE_ENROLLED]);
+
+        // This is a trick - only enrolled users should see the course, but the act of enrolling should hide it
+        // therefore we should not see anything for either user
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertEmpty($records);
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertEmpty($records);
+
+        // Set courses to be audience visibility = Audience
+        $DB->execute("UPDATE {course} SET audiencevisible = ?", [COHORT_VISIBLE_AUDIENCE]);
+
+        // Create a new audience
+        $audience = $this->getDataGenerator()->create_cohort();
+
+        // Attach the audience to each course
+        foreach ($courses as $course) {
+            totara_cohort_add_association(
+                $audience->id,
+                $course->id,
+                COHORT_ASSN_ITEMTYPE_COURSE,
+                COHORT_ASSN_VALUE_PERMITTED
+            );
+        }
+
+        // Confirm the courses are not visible
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertEmpty($records);
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertEmpty($records);
+
+        // Enrol user 2 in the audience
+        cohort_add_member($audience->id, $users[2]->id);
+
+        // User 1 should not see any recommendations
+        $records = recommendations_repository::get_recommended_courses(8, $users[1]->id);
+        self::assertEmpty($records);
+
+        // User 2 should see course 1 & course 2 recommended (audience visibility took over)
+        $records = recommendations_repository::get_recommended_courses(8, $users[2]->id);
+        self::assertNotEmpty($records);
+        self::assertCount(2, $records);
+
+        self::assertEqualsCanonicalizing([$courses[1]->id, $courses[2]->id], array_column($records, 'item_id'));
+    }
+
+    /**
+     * Pre-test step to include the local library for enrollment
+     */
+    protected function setUp(): void {
+        global $CFG;
+        require_once($CFG->dirroot . '/enrol/locallib.php');
+    }
+
+    /**
+     * Generate the courses & users & test data
+     *
+     * @return array
+     */
+    private function generate_data(): array {
+        $gen = $this->getDataGenerator();
+
+        $courses = [];
+        $courses[1] = $gen->create_course(['fullname' => 'self-enrol + recommended + visible']);
+        $courses[2] = $gen->create_course(['fullname' => 'self-enrol + recommended + not visible', 'visible' => 0]);
+        $courses[3] = $gen->create_course(['fullname' => 'self-enrol + not recommended + visible']);
+        $courses[4] = $gen->create_course(['fullname' => 'self-enrol + not recommended + not visible', 'visible' => 0]);
+        $courses[5] = $gen->create_course(['fullname' => 'no self-enrol + recommended + visible']);
+        $courses[6] = $gen->create_course(['fullname' => 'no self-enrol + recommended + not visible']);
+        $courses[7] = $gen->create_course(['fullname' => 'no self-enrol + not recommended + visible']);
+        $courses[8] = $gen->create_course(['fullname' => 'no self-enrol + not recommended + not visible']);
+
+        $users = [];
+        $users[1] = $gen->create_user(['username' => 'user1']);
+        $users[2] = $gen->create_user(['username' => 'user2']);
+
+        // Enable self-enrollments for Course 1 - 4
+        foreach ([1, 2, 3, 4] as $course_key) {
+            $this->enable_self_enrollment($courses[$course_key]->id);
+        }
+
+        // Recommend course 1, 2, 5 & 6
+        foreach ($users as $user) {
+            foreach ([1, 2, 5, 6] as $course_key) {
+                $this->recommend($courses[$course_key]->id, $user->id);
+            }
+        }
+
+        // User 1 is enrolled, user 2 is not
+        foreach ($courses as $course) {
+            $gen->enrol_user($users[1]->id, $course->id);
+        }
+
+        return [$courses, $users];
+    }
+
+    /**
+     * Enable the self-enrollment plugin for the specified course
+     *
+     * @param int $course_id
+     */
+    private function enable_self_enrollment(int $course_id): void {
+        global $DB;
+        $enrol = $DB->get_record('enrol', array('courseid' => $course_id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $enrol->status = ENROL_INSTANCE_ENABLED;
+        $DB->update_record('enrol', $enrol);
+    }
+
+    /**
+     * Add a mock recommendation entry for the specified course
+     *
+     * @param int $course_id
+     * @param int $user_id
+     */
+    private function recommend(int $course_id, int $user_id): void {
+        global $DB;
+        $DB->insert_record('ml_recommender_users', [
+            'user_id' => $user_id,
+            'unique_id' => "container_course{$course_id}_user{$user_id}",
+            'item_id' => $course_id,
+            'component' => 'container_course',
+            'time_created' => time(),
+            'score' => 1,
+            'seen' => 0
+        ]);
     }
 }

@@ -77,7 +77,7 @@ final class recommendations_repository {
             $user_id = $USER->id;
         }
 
-        return static::get_recommended_container($max_count, $user_id, 'container_course');
+        return self::get_recommended_container($max_count, $user_id, 'container_course');
     }
 
     /**
@@ -92,7 +92,7 @@ final class recommendations_repository {
             $user_id = $USER->id;
         }
 
-        return static::get_recommended_container($max_count, $user_id, 'container_workspace');
+        return self::get_recommended_container($max_count, $user_id, 'container_workspace');
     }
 
     /**
@@ -103,13 +103,23 @@ final class recommendations_repository {
      */
     private static function get_recommended_container(int $max_count, int $user_id, string $container_type): array {
         global $CFG;
-        require_once("{$CFG->dirroot}/lib/enrollib.php");
+        require_once($CFG->dirroot . "/lib/enrollib.php");
+        require_once($CFG->dirroot . "/totara/coursecatalog/lib.php");
 
-        $builder = static::get_base_builder();
-        $builder->join(['course', 'c'], function (builder $joining) use ($container_type) {
+        $builder = self::get_base_builder();
+        $builder->join(['course', 'c'], function (builder $joining) use ($container_type, $user_id) {
+            [$totara_visibility_sql, $totara_visibility_params] = totara_visibility_where(
+                $user_id,
+                'c.id',
+                'c.visible',
+                'c.audiencevisible',
+                'c'
+            );
+
             $joining->where_raw('c.id = ru.item_id')
                 ->where('ru.component', $container_type)
-                ->where_raw('(c.containertype = ru.component OR c.containertype IS NULL)');
+                ->where_raw('(c.containertype = ru.component OR c.containertype IS NULL)')
+                ->where_raw($totara_visibility_sql, $totara_visibility_params);
         });
 
         $builder->where('ru.user_id', $user_id);
