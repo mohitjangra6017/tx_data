@@ -39,6 +39,7 @@ use mod_perform\models\activity\participant_instance as participant_instance_mod
 use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\models\response\participant_section as participant_section_model;
+use mod_perform\models\response\subject_sections;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
 use mod_perform\state\participant_instance\in_progress as participant_instance_in_progress;
@@ -53,6 +54,8 @@ use mod_perform\state\subject_instance\in_progress as subject_instance_in_progre
 use mod_perform\state\subject_instance\not_submitted as subject_instance_not_submitted;
 use mod_perform\state\subject_instance\open as subject_instance_open;
 use mod_perform\task\service\subject_instance_creation;
+use mod_perform\testing\activity_generator_configuration;
+use mod_perform\testing\generator as perform_generator;
 use totara_core\advanced_feature;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -68,8 +71,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
     public function test_query_successful_with_single_section(): void {
         self::setAdminUser();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
         $activity = $perform_generator->create_full_activities()->first();
         /** @var participant_instance_entity $participant_instance */
         $participant_instance = participant_instance_entity::repository()
@@ -178,10 +181,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
     public function test_query_with_deleted_participant(): void {
         self::setAdminUser();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
 
-        $configuration = \mod_perform\testing\activity_generator_configuration::new()
+        $configuration = activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -239,10 +242,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
     public function test_query_with_deleted_subject(): void {
         self::setAdminUser();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
 
-        $configuration = \mod_perform\testing\activity_generator_configuration::new()
+        $configuration = activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -301,10 +304,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
     public function test_query_successful_with_single_section_and_external_participant(): void {
         self::setAdminUser();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
 
-        $configuration = \mod_perform\testing\activity_generator_configuration::new()
+        $configuration = activity_generator_configuration::new()
             ->enable_creation_of_manual_participants()
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_EXTERNAL]);
 
@@ -463,10 +466,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
     public function test_query_successful_with_single_section_anonymous_responses(): void {
         self::setAdminUser();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
 
-        $configuration = \mod_perform\testing\activity_generator_configuration::new()
+        $configuration = activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -621,8 +624,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     public function test_get_subject_instances_with_multiple_sections(): void {
         $this->setAdminUser();
 
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
 
         $activity1 = $perform_generator->create_activity_in_container([
             'activity_status' => draft::get_code(),
@@ -1082,15 +1085,15 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->setAdminUser();
 
         // Set up an activity with a single participant, the subject.
-        $configuration = \mod_perform\testing\activity_generator_configuration::new()
+        $configuration = activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity(1)
             ->set_relationships_per_section(['subject'])
             ->set_number_of_users_per_user_group_type(1)
             ->set_number_of_elements_per_section(0);
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
         $generator->create_full_activities($configuration);
 
         // Mark the subject instance manually close.
@@ -1148,6 +1151,77 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
             'Field value.about of required type [mod_perform_subject_instance_about_filter!]! was not provided.';
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_failed($result, $expected_error_message);
+    }
+
+    // Basic check that the resolver processes the sort_by parameter. Sorting itself is tested in the data provider test.
+    public function test_query_valid_sort_by(): void {
+        self::setAdminUser();
+
+        $subject_user = self::getDataGenerator()->create_user();
+
+        perform_generator::instance()->create_subject_instance([
+            'activity_name' => 'AAA activity',
+            'subject_user_id' => $subject_user->id,
+            'subject_is_participating' => true,
+        ]);
+        perform_generator::instance()->create_subject_instance([
+            'activity_name' => 'ZZZ activity',
+            'subject_user_id' => $subject_user->id,
+            'subject_is_participating' => true,
+        ]);
+
+        self::setUser($subject_user);
+
+        // Without sort_by should default to "most recent first".
+        $args = [
+            'filters' => [
+                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+            ],
+            'options' => [
+                'sort_by' => null,
+            ],
+        ];
+        $result = $this->resolve_graphql_query(self::QUERY, $args)->items->all();
+        /** @var subject_sections $subject_section_1 */
+        $subject_section_1 = $result[0];
+        self::assertEquals('ZZZ activity', $subject_section_1->get_subject_instance()->get_activity()->name);
+        /** @var subject_sections $subject_section_2 */
+        $subject_section_2 = $result[1];
+        self::assertEquals('AAA activity', $subject_section_2->get_subject_instance()->get_activity()->name);
+
+        // Sort by activity_name should reverse the order.
+        $args = [
+            'filters' => [
+                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+            ],
+            'options' => [
+                'sort_by' => 'activity_name',
+            ],
+        ];
+        $result = $this->resolve_graphql_query(self::QUERY, $args)->items->all();
+        /** @var subject_sections $subject_section_1 */
+        $subject_section_1 = $result[0];
+        self::assertEquals('AAA activity', $subject_section_1->get_subject_instance()->get_activity()->name);
+        /** @var subject_sections $subject_section_2 */
+        $subject_section_2 = $result[1];
+        self::assertEquals('ZZZ activity', $subject_section_2->get_subject_instance()->get_activity()->name);
+    }
+
+    public function test_query_invalid_sort_by(): void {
+        self::setAdminUser();
+
+        $args = [
+            'filters' => [
+                'about' => [subject_instances_about::VALUE_ABOUT_OTHERS]
+            ],
+            'options' => [
+                'sort_by' => 'invalid',
+            ],
+        ];
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Sorting by 'invalid' is not supported");
+        $this->resolve_graphql_query(self::QUERY, $args);
     }
 
     public function test_failed_ajax_query(): void {

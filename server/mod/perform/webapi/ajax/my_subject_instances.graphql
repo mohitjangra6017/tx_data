@@ -1,8 +1,13 @@
 query mod_perform_my_subject_instances(
   $filters: mod_perform_subject_instance_filters!
+  $options: mod_perform_subject_instance_options
   $pagination: core_pagination_input
 ) {
-  mod_perform_my_subject_instances(filters: $filters, pagination: $pagination) {
+  mod_perform_my_subject_instances(
+    filters: $filters
+    pagination: $pagination
+    options: $options
+  ) {
     items {
       subject {
         id

@@ -42,9 +42,13 @@ class my_subject_instances implements query_resolver, has_middleware {
 
         $pagination = $args['pagination'] ?? [];
         $cursor = $pagination['cursor'] ?? '';
-        $results = (new subject_instance_data_provider($participant_id, participant_source::INTERNAL))
-            ->add_filters($args['filters'] ?? [])
-            ->get_subject_sections_page($cursor);
+        $data_provider = (new subject_instance_data_provider($participant_id, participant_source::INTERNAL))
+            ->add_filters($args['filters'] ?? []);
+
+        if (!empty($args['options']['sort_by'])) {
+            $data_provider->sort_by($args['options']['sort_by']);
+        }
+        $results = $data_provider->get_subject_sections_page($cursor);
 
         // This is a workaround for making sure the correct access control checks
         // for users are triggered. It needs a course context to determine this.

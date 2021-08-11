@@ -21,6 +21,7 @@
  * @package mod_perform
  */
 
+use core\collection;
 use core\orm\query\builder;
 use core\pagination\cursor;
 use mod_perform\data_providers\activity\subject_instance_for_participant;
@@ -36,6 +37,7 @@ use mod_perform\state\participant_instance\not_started as participant_instance_n
 use mod_perform\state\subject_instance\complete as subject_instance_complete;
 use mod_perform\state\subject_instance\in_progress as subject_instance_in_progress;
 use mod_perform\state\subject_instance\not_started as subject_instance_not_started;
+use totara_job\job_assignment;
 
 require_once(__DIR__ . '/subject_instance_testcase.php');
 
@@ -206,7 +208,7 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
 
         $cursor = cursor::create()->set_limit($page_size);
 
-        for ($i = 0; $i < count($item_counts); $i++) {
+        for ($i = 0, $item_count = count($item_counts); $i < $item_count; $i++) {
             $paginator = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
                 ->add_filters(['about' => [subject_instances_about::VALUE_ABOUT_SELF]])
                 ->get_next($cursor);
@@ -306,6 +308,78 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
                 self::assert_same_subject_instance($expected_si, $returned_subject_instances->shift());
             }
         }
+    }
+
+    public function test_get_by_exclude_complete(): void {
+        // Create a set for each activity type
+        $activity_types = activity_type_entity::repository()
+            ->order_by('name')
+            ->get();
+        $activity_types = array_combine($activity_types->pluck('name'), $activity_types->pluck('id'));
+        $instances = self::create_activities_for_all_types($activity_types);
+
+        // Progress some instances
+        self::set_participant_instance_progress($instances['appraisal']['about_user_and_participating'], participant_instance_not_started::get_code());
+        self::set_participant_instance_progress($instances['appraisal']['about_someone_else_and_participating'], participant_instance_in_progress::get_code());
+        self::set_participant_instance_progress($instances['check-in']['about_user_and_participating'], participant_instance_in_progress::get_code());
+        self::set_participant_instance_progress($instances['check-in']['about_someone_else_and_participating'], participant_instance_complete::get_code());
+        self::set_participant_instance_progress($instances['feedback']['about_user_and_participating'], participant_instance_complete::get_code());
+        self::set_participant_instance_progress($instances['feedback']['about_someone_else_and_participating'], participant_instance_complete::get_code());
+
+        $to_test = [
+            false => [
+                $instances['feedback']['about_someone_else_and_participating'],
+                $instances['feedback']['about_user_and_participating'],
+                $instances['check-in']['about_someone_else_and_participating'],
+                $instances['check-in']['about_user_and_participating'],
+                $instances['appraisal']['about_someone_else_and_participating'],
+                $instances['appraisal']['about_user_and_participating'],
+            ],
+            true => [
+                $instances['check-in']['about_user_and_participating'],
+                $instances['appraisal']['about_someone_else_and_participating'],
+                $instances['appraisal']['about_user_and_participating'],
+            ],
+        ];
+
+        foreach ($to_test as $exclude_complete => $expected_results) {
+            $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+                ->add_filters(['exclude_complete' => $exclude_complete])
+                ->fetch()
+                ->get();
+
+            self::assertCount(count($expected_results), $returned_subject_instances);
+            foreach ($expected_results as $expected_si) {
+                self::assert_same_subject_instance($expected_si, $returned_subject_instances->shift());
+            }
+        }
+
+        // Check combination with other progress filter.
+        $expected_results = [
+            $instances['check-in']['about_user_and_participating'],
+            $instances['appraisal']['about_someone_else_and_participating'],
+        ];
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->add_filters([
+                'exclude_complete' => true,
+                'participant_progress' => participant_instance_in_progress::get_name(),
+            ])
+            ->fetch()
+            ->get();
+        self::assertCount(2, $returned_subject_instances);
+        foreach ($expected_results as $expected_si) {
+            self::assert_same_subject_instance($expected_si, $returned_subject_instances->shift());
+        }
+
+        // progress = complete and exclude progress should have no results.
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->add_filters([
+                'exclude_complete' => true,
+                'participant_progress' => participant_instance_complete::get_name(),
+            ])
+            ->fetch()
+            ->get();
+        self::assertCount(0, $returned_subject_instances);
     }
 
     public function test_get_by_overdue(): void {
@@ -428,6 +502,7 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
                 $instances['feedback']['about_someone_else_and_participating'],
                 $instances['feedback']['about_user_and_participating'],
                 $instances['check-in']['about_someone_else_and_participating'],
+                $instances['check-in']['about_user_and_participating'],
                 $instances['appraisal']['about_someone_else_and_participating'],
                 $instances['appraisal']['about_user_and_participating'],
             ],
@@ -443,6 +518,218 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
                 self::assert_same_subject_instance($expected_si, $returned_subject_instances->shift());
             }
         }
+    }
+
+    public function search_data_provider(): array {
+        // Activity names are:
+        // "appraisal activity about someone else and participating"
+        // "appraisal activity about target user"
+        // Target user first/middle/last name is: "Actinguser Manfred Ziller"
+        // Other user first/middle/last name is: "Otheruser Testfred Nontarget"
+        return [
+            // Empty search.
+            ['', ['other', 'self']],
+            // Matches beginning of both activity names.
+            ['appraisal activity about', ['other', 'self']],
+            // Matches substring of both activity names.
+            ['activity about', ['other', 'self']],
+            // Matches substring of one activity.
+            ['about s', ['other']],
+            // Matches substring of other activity.
+            ['about t', ['self']],
+            // Not supporting multiple substrings.
+            ['appraisal about', []],
+            // Matches just the target user name.
+            ['Ziller', ['self']],
+            // Matches just the other user name.
+            ['Nontarget', ['other']],
+            // Matches nothing.
+            ['notamatchatall', []],
+            // Matches one user name and one activity name
+            ['target', ['other', 'self']],
+            // Search is case-insensitive.
+            ['tArGeT', ['other', 'self']],
+            // Matches both middle names, but middle names are not configured for fullname by default
+            ['fred', []],
+            // Matches both middle names when config has middlename
+            ['fred', ['other', 'self'], 'firstname middlename lastname'],
+            // Matches complete fullname including middlename
+            ['Actinguser Manfred Ziller', ['self'], 'firstname middlename lastname'],
+        ];
+    }
+
+    /**
+     * @dataProvider search_data_provider
+     * @param string $search_term
+     * @param array $expected_results
+     * @param string|null $fullname_config
+     */
+    public function test_get_by_search_term(string $search_term, array $expected_results, ?string $fullname_config = null): void {
+        global $CFG;
+
+        $original_fullnamedisplay = $CFG->fullnamedisplay;
+        if ($fullname_config) {
+            $CFG->fullnamedisplay = $fullname_config;
+        }
+
+        $expected_subject_instances = array_map(static function ($expected_result) {
+            return 'other' === $expected_result
+                ? self::$about_someone_else_and_participating
+                : self::$about_user_and_participating;
+        }, $expected_results);
+
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->add_filters([
+                'search_term' => $search_term
+            ])
+            ->fetch()
+            ->get();
+        self::assertCount(count($expected_subject_instances), $returned_subject_instances);
+        foreach ($expected_subject_instances as $expected_si) {
+            self::assert_same_subject_instance($expected_si, $returned_subject_instances->shift());
+        }
+
+        $CFG->fullnamedisplay = $original_fullnamedisplay;
+    }
+
+    public function test_sort_by(): void {
+        global $CFG;
+
+        $activity_types = activity_type_entity::repository()
+            ->order_by('name')
+            ->get();
+        $activity_types = array_combine($activity_types->pluck('name'), $activity_types->pluck('id'));
+        $instances = self::create_activities_for_all_types($activity_types);
+
+        // Sort by activity name.
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('activity_name')
+            ->fetch()
+            ->get();
+        $this->assert_order([
+            'appraisal activity about someone else and participating',
+            'appraisal activity about target user',
+            'check-in activity about someone else and participating',
+            'check-in activity about target user',
+            'feedback activity about someone else and participating',
+            'feedback activity about target user',
+        ], $returned_subject_instances);
+
+        // Sort by creation date.
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('created_at')
+            ->fetch()
+            ->get();
+        // This is the reverse order in which they were inserted.
+        $sorted_by_creation_date = [
+            'feedback activity about someone else and participating',
+            'feedback activity about target user',
+            'check-in activity about someone else and participating',
+            'check-in activity about target user',
+            'appraisal activity about someone else and participating',
+            'appraisal activity about target user',
+        ];
+        $this->assert_order($sorted_by_creation_date, $returned_subject_instances);
+        // Default is also sort by creation date, so must be the same.
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->fetch()
+            ->get();
+        $this->assert_order($sorted_by_creation_date, $returned_subject_instances);
+
+        // Sort by subject name.
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('subject_name')
+            ->fetch()
+            ->get();
+        $this->assert_order([
+            'feedback activity about target user', // Actinguser Manfred Ziller
+            'check-in activity about target user', // Actinguser Manfred Ziller
+            'appraisal activity about target user', // Actinguser Manfred Ziller
+            'feedback activity about someone else and participating', // Otheruser Testfred Nontarget
+            'check-in activity about someone else and participating', // Otheruser Testfred Nontarget
+            'appraisal activity about someone else and participating', // Otheruser Testfred Nontarget
+        ], $returned_subject_instances);
+
+        // Sorting is sensitive to fullname config.
+        $original_fullnamedisplay = $CFG->fullnamedisplay;
+        $CFG->fullnamedisplay = 'lastname, firstname';
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('subject_name')
+            ->fetch()
+            ->get();
+        $this->assert_order([
+            'feedback activity about someone else and participating', // Otheruser Testfred Nontarget
+            'check-in activity about someone else and participating', // Otheruser Testfred Nontarget
+            'appraisal activity about someone else and participating', // Otheruser Testfred Nontarget
+            'feedback activity about target user', // Actinguser Manfred Ziller
+            'check-in activity about target user', // Actinguser Manfred Ziller
+            'appraisal activity about target user', // Actinguser Manfred Ziller
+        ], $returned_subject_instances);
+        $CFG->fullnamedisplay = $original_fullnamedisplay;
+
+        // Sort by due date.
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('due_date')
+            ->fetch()
+            ->get();
+        // Due date is not set for any instance, so it will be sorted by creation time.
+        $this->assert_order($sorted_by_creation_date, $returned_subject_instances);
+        // Adjust some due dates to have a different expected order.
+        self::set_subject_instance_due_date($instances['check-in']['about_user_and_participating'], strtotime("-1 day"));
+        self::set_subject_instance_due_date($instances['appraisal']['about_someone_else_and_participating'], strtotime("-1 week"));
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('due_date')
+            ->fetch()
+            ->get();
+        $this->assert_order([
+            'appraisal activity about someone else and participating',
+            'check-in activity about target user',
+            'feedback activity about someone else and participating',
+            'feedback activity about target user',
+            'check-in activity about someone else and participating',
+            'appraisal activity about target user',
+        ], $returned_subject_instances);
+
+        // Sort by job assignment
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('job_assignment')
+            ->fetch()
+            ->get();
+        // Job assignment is not set for any instance, so it will be sorted by creation time.
+        $this->assert_order($sorted_by_creation_date, $returned_subject_instances);
+
+        // Create job assignments and assign them to subject instances.
+        /** @var job_assignment $a_ja */
+        $a_ja = job_assignment::create_default(self::$user->id, ['fullname' => 'AAA job assignment']);
+        /** @var job_assignment $z_ja */
+        $z_ja = job_assignment::create_default(self::$user->id, ['fullname' => 'ZZZ job assignment']);
+
+        $si = new subject_instance_entity($instances['check-in']['about_user_and_participating']->get_id());
+        $si->job_assignment_id = $a_ja->id;
+        $si->save();
+        $si = new subject_instance_entity($instances['feedback']['about_user_and_participating']->get_id());
+        $si->job_assignment_id = $z_ja->id;
+        $si->save();
+
+        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
+            ->sort_by('job_assignment')
+            ->fetch()
+            ->get();
+        $this->assert_order([
+            'check-in activity about target user',
+            'feedback activity about target user',
+            'feedback activity about someone else and participating',
+            'check-in activity about someone else and participating',
+            'appraisal activity about someone else and participating',
+            'appraisal activity about target user',
+        ], $returned_subject_instances);
+    }
+
+    private function assert_order(array $expected_activity_order, collection $actual_subject_instances) {
+        $activity_names = array_map(static function (subject_instance_model $subject_instance) {
+            return $subject_instance->activity->name;
+        }, $actual_subject_instances->all());
+        self::assertSame($expected_activity_order, $activity_names);
     }
 
     /**

@@ -33,20 +33,34 @@ class subject_instances_participant_progress extends filter {
      */
     protected $participant_instance_alias;
 
+    /**
+     * @var bool Whether to exclude the given progress values from the result.
+     */
+    protected $exclude_progress_values = false;
+
     public function __construct(int $participant_id, string $participant_instance_alias = 'pi') {
         parent::__construct([$participant_id]);
         $this->participant_instance_alias = $participant_instance_alias;
     }
 
     public function apply(): void {
-        $builder = participant_instance_entity::repository()
+        $repository = participant_instance_entity::repository()
             ->as('target_participant_progress')
             ->where_raw('target_participant_progress.subject_instance_id = si.id')
-            ->where('participant_id', $this->get_participant_id())
-            ->where('progress', $this->value)
-            ->get_builder();
+            ->where('participant_id', $this->get_participant_id());
 
-        $this->builder->where_exists($builder);
+        if ($this->exclude_progress_values) {
+            $repository->where_not_in('progress', $this->value);
+        } else {
+            $repository->where('progress', $this->value);
+        }
+
+        $this->builder->where_exists($repository->get_builder());
+    }
+
+    public function exclude_progress_values(): self {
+        $this->exclude_progress_values = true;
+        return $this;
     }
 
     protected function get_participant_id() {

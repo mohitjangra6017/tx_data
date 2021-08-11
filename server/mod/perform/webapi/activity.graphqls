@@ -604,8 +604,14 @@ Activity subject instance filters
 input mod_perform_subject_instance_filters {
   about: [mod_perform_subject_instance_about_filter!]!
   activity_type: [core_id!]
-  participant_progress: [mod_perform_participant_instance_progress_status!]
+  exclude_complete: param_boolean
   overdue: param_boolean
+  participant_progress: [mod_perform_participant_instance_progress_status!]
+  search_term: param_text
+}
+
+input mod_perform_subject_instance_options {
+  sort_by: String
 }
 
 """
@@ -739,6 +745,7 @@ extend type Query {
   """
   mod_perform_my_subject_instances(
     filters: mod_perform_subject_instance_filters
+    options: mod_perform_subject_instance_options
     pagination: core_pagination_input
   ): mod_perform_subject_sections_page!
 

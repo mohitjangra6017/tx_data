@@ -33,6 +33,7 @@ use mod_perform\data_providers\provider;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\filters\subject_instance_id;
 use mod_perform\entity\activity\filters\subject_instances_about;
+use mod_perform\entity\activity\filters\subject_instances_search_term;
 use mod_perform\entity\activity\filters\subject_instances_activity_type;
 use mod_perform\entity\activity\filters\subject_instances_overdue;
 use mod_perform\entity\activity\filters\subject_instances_participant_progress;
@@ -44,9 +45,11 @@ use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_user_assignment as track_user_assignment_entity;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\models\response\subject_sections;
+use mod_perform\state\participant_instance\complete;
 use mod_perform\state\participant_instance\participant_instance_progress;
 use mod_perform\state\state_helper;
 use mod_perform\state\subject_instance\active;
+use totara_job\entity\job_assignment;
 
 /**
  * Class subject_instance
@@ -73,6 +76,9 @@ class subject_instance_for_participant extends provider {
     public function __construct(int $participant_id, int $participant_source) {
         $this->participant_id = $participant_id;
         $this->participant_source = $participant_source;
+
+        // Set default sorting.
+        $this->sort_by('created_at');
     }
 
     /**
@@ -119,6 +125,16 @@ class subject_instance_for_participant extends provider {
 
     /**
      * @param subject_instance_repository|repository $repository
+     * @param string $search_term Activity name search string
+     */
+    protected function filter_query_by_search_term(repository $repository, string $search_term): void {
+        $repository->set_filter(
+            (new subject_instances_search_term('a', 'su'))->set_value($search_term)
+        );
+    }
+
+    /**
+     * @param subject_instance_repository|repository $repository
      * @param string|string[] $progress_values Progress state names(s)
      */
     protected function filter_query_by_participant_progress(repository $repository, $progress_values): void {
@@ -128,18 +144,33 @@ class subject_instance_for_participant extends provider {
 
         $all_progress_names = state_helper::get_all_names('participant_instance', participant_instance_progress::get_type());
         $all_progress_names = array_flip($all_progress_names);
-        
+
         $progress_values = array_map(function ($progress) use ($all_progress_names) {
             if (!isset($all_progress_names[$progress])) {
                 throw new \coding_exception("{progress} is not a valid participant progress type");
             }
             return $all_progress_names[$progress];
         }, $progress_values);
-        
+
         $repository->set_filter(
             (new subject_instances_participant_progress($this->participant_id, 'target_participant'))
                 ->set_value($progress_values)
         );
+    }
+
+    /**
+     * @param repository $repository
+     * @param bool $exclude_complete
+     */
+    protected function filter_query_by_exclude_complete(repository $repository, bool $exclude_complete): void {
+        // Nothing to filter if it's set to false.
+        if ($exclude_complete) {
+            $repository->set_filter(
+                (new subject_instances_participant_progress($this->participant_id, 'target_participant'))
+                    ->exclude_progress_values()
+                    ->set_value([complete::get_code()])
+            );
+        }
     }
 
     /**
@@ -203,15 +234,11 @@ class subject_instance_for_participant extends provider {
             ->join([activity_entity::TABLE, 'a'], 't.activity_id', 'id')
             ->join('course', 'a.course', 'id')
             ->join(['user', 'su'], 'subject_user_id', 'id')
+            ->left_join([job_assignment::TABLE, 'ja'], 'si.job_assignment_id', 'id')
             ->where('su.deleted', 0)
             ->where_raw($totara_visibility_sql, $totara_visibility_params)
             ->where_exists($this->get_target_participant_exists())
-            ->where('status', active::get_code())
-            // Cursors don't work when aliases are included in the order by
-            // Newest subject instances at the top of the list
-            ->order_by('created_at', 'desc')
-            // Order by id as well is so that tests wont fail if two rows are inserted within the same second
-            ->order_by('id', 'desc');
+            ->where('status', active::get_code());
     }
 
     /**
@@ -275,6 +302,46 @@ class subject_instance_for_participant extends provider {
             ->add_filters(['subject_instance_id' => $subject_instance_id])
             ->get()
             ->first();
+    }
+
+    /**
+     * @param repository $repository
+     */
+    protected function sort_query_by_created_at(repository $repository): void {
+        // Newest subject instances at the top of the list
+        $repository->order_by('created_at', 'DESC')->order_by('id', 'DESC');
+    }
+
+    /**
+     * @param repository $repository
+     */
+    protected function sort_query_by_activity_name(repository $repository): void {
+        $repository->order_by('a.name')->order_by('id', 'DESC');
+    }
+
+    /**
+     * @param repository $repository
+     */
+    protected function sort_query_by_subject_name(repository $repository): void {
+        $used_name_fields = totara_get_all_user_name_fields(false, 'su', null, null, true);
+        foreach ($used_name_fields as $name_field) {
+            $repository->order_by($name_field);
+        }
+        $repository->order_by('id', 'DESC');
+    }
+
+    /**
+     * @param repository $repository
+     */
+    protected function sort_query_by_due_date(repository $repository): void {
+        $repository->order_by('si.due_date')->order_by('id', 'DESC');
+    }
+
+    /**
+     * @param repository $repository
+     */
+    protected function sort_query_by_job_assignment(repository $repository): void {
+        $repository->order_by('ja.fullname')->order_by('id', 'DESC');
     }
 
 }

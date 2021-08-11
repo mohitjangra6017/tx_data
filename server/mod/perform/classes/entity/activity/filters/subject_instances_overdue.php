@@ -24,7 +24,6 @@
 namespace mod_perform\entity\activity\filters;
 
 use core\orm\entity\filter\filter;
-use core\orm\query\builder;
 use mod_perform\state\subject_instance\complete as subject_instance_complete;
 
 class subject_instances_overdue extends filter {
@@ -40,19 +39,12 @@ class subject_instances_overdue extends filter {
     }
 
     public function apply(): void {
+        // Don't apply any extra filter when set to false.
+        // We want to see overdue as well as not overdue when this filter isn't active.
         if ($this->value) {
             $this->builder->where_not_null("{$this->subject_instance_alias}.due_date");
             $this->builder->where("{$this->subject_instance_alias}.progress", '!=', subject_instance_complete::get_code());
             $this->builder->where("{$this->subject_instance_alias}.due_date", '<', time());
-        } else {
-            $this->builder->where(function (builder $builder) {
-                $builder->or_where_null("{$this->subject_instance_alias}.due_date");
-                $builder->or_where("{$this->subject_instance_alias}.progress", '=', subject_instance_complete::get_code());
-                $builder->or_where(function (builder $due_builder) {
-                    $due_builder->where("{$this->subject_instance_alias}.progress", '!=', subject_instance_complete::get_code());
-                    $due_builder->where("{$this->subject_instance_alias}.due_date", '>=', time());
-                });
-            });
         }
     }
 }
