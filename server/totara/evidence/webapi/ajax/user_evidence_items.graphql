@@ -10,6 +10,11 @@ query totara_evidence_user_evidence_items(
         name
       }
       created_at(format: DATELONG)
+      fields {
+        label
+        type
+        content
+      }
     }
     total
     next_cursor

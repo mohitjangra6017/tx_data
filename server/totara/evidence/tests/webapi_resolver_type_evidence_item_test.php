@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Marco Song <marco.song@totaralearning.com>
- * @package mod_perform
+ * @package totara_evidence
  */
 
 use core\format;

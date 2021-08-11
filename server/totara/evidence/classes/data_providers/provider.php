@@ -25,6 +25,8 @@ namespace totara_evidence\data_providers;
 
 use coding_exception;
 use core\collection;
+use core\orm\entity\entity;
+use core\orm\entity\filter\filter;
 use core\orm\entity\repository;
 use core\orm\pagination\cursor_paginator;
 use core\pagination\cursor;
@@ -32,154 +34,221 @@ use core\pagination\cursor;
 /**
  * Common logic for filtering, fetching and getting data for use in queries etc.
  *
- * @package mod_perform\data_providers
+ * @package totara_evidence\data_providers
  */
 abstract class provider {
 
+    public const DEFAULT_PAGE_SIZE = 20;
+    private const VALID_ORDER_DIRECTION = ['asc', 'desc'];
+
+    /** @var callable ()->repository method to create a ORM repository. */
+    private $repo_factory = null;
+
+    /** @var string[] entity fields on which sorting is allowed. */
+    private $allowed_order_by_fields = [];
+
+    /** @var string current sorting field. */
+    private $order_by = null;
+
+    /** @var string sort direction. */
+    private $order_direction = self::VALID_ORDER_DIRECTION[0];
+
+    /** @var string current pagination size. */
+    private $page_size = self::DEFAULT_PAGE_SIZE;
+
+    /** @var filter[] filters currently in effect. */
+    private $filters = [];
+
+    /** @var callable function to return an initialized filter. */
+    private $filter_factory = null;
+
     /**
-     * Array of filters to apply when fetching the data
+     * provider constructor.
      *
-     * @var array
+     * @param string entity class. Used to create a repository if $repo_factory is not provided.
+     * @param string[] allowed_order_by_fields entity fields on which sorting is allowed.
+     * @param callable|null a (string, mixed)->?filter method that takes a filter name and the
+     *        filter value and returns the initialized filter if it can be created.
+     * @param callable|null $repo_factory ()->repository function to create a single use ORM
+     *        repository. For cases where you need a repository that has joins, etc.
      */
-    protected $filters = [];
+    public function __construct(
+        string $entity_class,
+        array $allowed_order_by_fields = [],
+        ?callable $filter_factory = null,
+        ?callable $repo_factory = null
+    ) {
+        $this->repo_factory = $repo_factory
+            ?: function () use ($entity_class): repository {
+                return $entity_class::repository();
+            };
+
+        $this->filter_factory = $filter_factory;
+
+        if ($allowed_order_by_fields) {
+            $this->allowed_order_by_fields = $allowed_order_by_fields;
+            $this->order_by = reset($allowed_order_by_fields);
+        }
+    }
 
     /**
-     * Return whether data has been fetched
+     * Indicates the number of entries retrieved per page.
      *
-     * @var bool
-     */
-    protected $fetched = false;
-
-    /**
-     * @var collection
-     */
-    protected $items;
-
-    /**
-     * Page number
+     * @param int|null $page_size page size.
      *
-     * @var int
+     * @return provider this object.
      */
-    protected $page = 0;
+    public function set_page_size(?int $page_size = null): provider {
+        if (!empty($page_size)) {
+            $this->page_size = $page_size;
+        }
+        return $this;
+    }
 
     /**
-     * Build the base ORM query using the relevant repository.
+     * Indicates the sorting parameters to use when retrieving entities.
+     *
+     * @param string|null $order_by entity field on which to sort.
+     * @param string|null $order_direction sorting order either 'asc' or 'desc'.
+     *
+     * @return provider this object.
+     */
+    public function set_order(
+        ?string $order_by = null,
+        ?string $order_direction = null
+    ): provider {
+        if ($order_by) {
+            if (!$this->allowed_order_by_fields) {
+                throw new coding_exception("no sorting fields registered");
+            }
+
+            $order_by = strtolower($order_by);
+            if (!in_array($order_by, $this->allowed_order_by_fields)) {
+                $allowed = implode(', ', $this->allowed_order_by_fields);
+                throw new coding_exception("sort field must be one of these: $allowed");
+            }
+
+            $this->order_by = $order_by;
+        }
+
+        if ($order_direction) {
+            $order_direction = strtolower($order_direction);
+            if (!in_array($order_direction, self::VALID_ORDER_DIRECTION)) {
+                $allowed = implode(', ', self::VALID_ORDER_DIRECTION);
+                throw new coding_exception("sort direction must be one of these: $allowed");
+            }
+
+            $this->order_direction = $order_direction;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Indicates the filters to use when retrieving entities.
+     *
+     * @param array $filters mapping of entity field names to search values.
+     *
+     * @return provider this object.
+     */
+    public function set_filters(array $filters): provider {
+        if (!$this->filter_factory) {
+            throw new coding_exception("no filter factory registered");
+        }
+        $create_filter = $this->filter_factory;
+
+        $new_filters = [];
+        foreach ($filters as $key => $value) {
+            $filter_value = $this->validate_filter_value($value);
+            if (is_null($filter_value)) {
+                continue;
+            }
+
+            $filter = $create_filter($key, $filter_value);
+            if (!$filter) {
+                throw new coding_exception("unknown filter: '$key'");
+            }
+
+            $new_filters[$key] = $filter;
+        }
+
+        $this->filters = $new_filters;
+        return $this;
+    }
+
+    /**
+     * Checks whether the filter value is "valid". "Valid" means:
+     * - a non empty string _after it has been trimmed_
+     * - an array _even if it is empty_. An empty array results in a filter that
+     *   matches nothing.
+     * - int values
+     * - non nulls
+     *
+     * @param mixed $value the value to check.
+     *
+     * @return mixed the filter value if it is "valid" or null otherwise.
+     */
+    private function validate_filter_value($value) {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (is_string($value)) {
+            $str_value = trim($value);
+            return strlen($str_value) > 0 ? $str_value : null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Initializes an instance of the repository to be used for querying.
      *
      * @return repository
      */
-    abstract protected function build_query(): repository;
+    private function prepare_repository(): repository {
+        $factory = $this->repo_factory;
+        $repository = $factory();
 
-    /**
-     * Add filters for this provider.
-     *
-     * @param array $filters
-     * @return $this
-     */
-    final public function add_filters(array $filters): self {
-        $this->filters = array_merge(
-            $this->filters,
-            array_filter($filters, static function ($filter_value) {
-                return isset($filter_value);
-            })
-        );
-
-        return $this;
-    }
-
-    /**
-     * Apply filters to a given repository before it is fetched from the database.
-     *
-     * @param repository $repository
-     * @return $this
-     * @throws coding_exception
-     */
-    protected function apply_filters(repository $repository): self {
-        foreach ($this->filters as $key => $value) {
-            if ($this->fetched) {
-                throw new \coding_exception('Must call apply_filters() before fetching.');
-            }
-
-            if (!method_exists($this, 'filter_by_' . $key)) {
-                throw new \coding_exception("Filtering by '{$key}' is not supported");
-            }
-
-            $this->{'filter_by_' . $key}($repository, $value);
+        if ($this->filters) {
+            $repository = $repository->set_filters($this->filters);
         }
 
-        return $this;
-    }
-
-    /**
-     * (Optionally) augment the fetched items before returning them with get().
-     *
-     * @return collection
-     */
-    protected function process_fetched_items(): collection {
-        // Do nothing here, override in subclasses if needed.
-        return $this->items;
-    }
-
-    /**
-     * Run the ORM query and mark the data provider as already fetched.
-     */
-    public function fetch(): self {
-        $this->fetched = false;
-
-        $query = $this->build_query();
-        $this->apply_filters($query);
-
-        $this->items = $query->get();
-        $this->fetched = true;
-        $this->items = $this->process_fetched_items();
-
-        return $this;
-    }
-
-    /**
-     * Get the queried items.
-     *
-     * @return collection
-     */
-    public function get(): collection {
-        if (!$this->fetched) {
-            $this->fetch();
+        if ($this->order_by) {
+            $repository = $repository->order_by($this->order_by, $this->order_direction);
         }
 
-        return $this->items;
+        return $repository;
     }
 
     /**
-     * Set page number
+     * Returns the entities meeting the previously set search criteria.
      *
-     * @param int $page
-     * @return $this
+     * @return \core\orm\collection|entity[] the retrieved entities.
      */
-    public function set_page(int $page): self {
-        $this->page = $page;
-
-        return $this;
+    public function fetch(): collection {
+        return $this->prepare_repository()->get();
     }
 
     /**
-     * Fetch a paginated list of evidence.
+     * Returns a list of entities meeting the previously set search criteria.
      *
-     * @param string|null $cursor
-     * @param int|null $limit
-     * @return cursor_paginator
-     * @throws coding_exception
+     * @param cursor|null $cursor $cursor indicates which "page" of entities to retrieve.
+     * @param callable|null $transform function to transform the result
+     *
+     * @return entity[] the retrieved entities.
      */
-    public function fetch_paginated(?string $cursor, ?int $limit): cursor_paginator {
-        $page_cursor = cursor::create()->set_limit($limit ?? cursor_paginator::DEFAULT_ITEMS_PER_PAGE);
-        if ($cursor) {
-            $page_cursor = cursor::decode($cursor);
+    public function fetch_paginated(?cursor $cursor = null, ?callable $transform = null): array {
+        $repository = $this->prepare_repository();
+
+        $pages = $cursor ?: cursor::create()->set_limit($this->page_size);
+        $paginator = new cursor_paginator($repository, $pages, true);
+
+        if (is_callable($transform)) {
+            $paginator->transform($transform);
         }
 
-        $query = $this->build_query();
-        $this->apply_filters($query);
-
-        $paginator = new cursor_paginator($query, $page_cursor, true);
-        $paginator->get();
-
-        return $paginator;
+        return $paginator->get();
     }
+
 }

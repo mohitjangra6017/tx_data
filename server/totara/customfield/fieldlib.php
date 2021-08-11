@@ -323,6 +323,26 @@ class customfield_base {
         return true;
     }
 
+    /**
+     * Get raw field data.
+     *
+     * @param $data
+     * @param array $extra_data
+     *
+     * @return \totara_customfield\field\field_data
+     */
+    public function get_raw_field_data($data, array $extra_data = []): \totara_customfield\field\field_data {
+        global $CFG;
+        require_once($CFG->dirroot . '/totara/customfield/field/field_data.php');
+        return new \totara_customfield\field\field_data(
+            $this->field->fullname,
+            $this->field->datatype,
+            [
+                'html' => $this->display_item_data($data, $extra_data),
+            ]
+        );
+    }
+
 /***** The following methods generally should not be overwritten by child classes *****/
     /**
      * Accessor method: set the itemid for this instance

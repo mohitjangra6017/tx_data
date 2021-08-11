@@ -156,7 +156,7 @@ final class content_items implements query_resolver, has_middleware {
     }
 
     /**
-     * Check it the partipant can view the other responses on the given section
+     * Check it the participant can view the other responses on the given section
      *
      * @param participant_section_entity $participant_section
      * @return bool

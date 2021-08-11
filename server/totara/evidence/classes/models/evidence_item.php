@@ -27,6 +27,7 @@ use coding_exception;
 use core\entity\user;
 use core\orm\collection;
 use core\orm\query\builder;
+use totara_evidence\hook\evidence_item_usage;
 use totara_evidence\customfield_area;
 use totara_evidence\entity;
 use totara_evidence\event;
@@ -71,6 +72,7 @@ class evidence_item extends evidence {
         'creator',
         'modifier',
         'type',
+        'data',
     ];
 
     protected static function get_entity_class(): string {
@@ -83,7 +85,13 @@ class evidence_item extends evidence {
      * @return bool
      */
     public function in_use(): bool {
-        return $this->entity->plan_relations()->exists();
+        $used = $this->entity->plan_relations()->exists();
+        if (!$used) {
+            $hook = new evidence_item_usage('totara_evidence', $this->entity->id);
+            $hook->execute();
+            $used = $hook->count() > 0;
+        }
+        return $used;
     }
 
     /**

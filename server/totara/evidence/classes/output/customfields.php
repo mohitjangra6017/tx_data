@@ -43,11 +43,14 @@ class customfields extends template {
 
         return [
             'label' => multilang_helper::parse_field_name_string($field->fullname),
-            'value' => field_helper::get_field_class($field->datatype)::display_item_data($data->data, [
-                'prefix'   => evidence::get_prefix(),
-                'itemid'   => $data->id,
-                'extended' => true
-            ])
+            'value' => field_helper::get_field_class($field->datatype)::display_item_data(
+                $data->data,
+                [
+                    'prefix'   => evidence::get_prefix(),
+                    'itemid'   => $data->id,
+                    'extended' => true
+                ]
+            ),
         ];
     }
 

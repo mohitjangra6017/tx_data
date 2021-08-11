@@ -26,8 +26,15 @@ namespace totara_evidence\formatter;
 use core\orm\formatter\entity_model_formatter;
 use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
+use totara_evidence\customfield_area\evidence;
+use totara_evidence\customfield_area\field_helper;
+use totara_evidence\models\evidence_item as evidence_item_model;
 
 class evidence_item extends entity_model_formatter {
+
+    /** @var evidence_item_model */
+    protected $object;
+
     /**
      * @inheritDoc
      */
@@ -37,6 +44,50 @@ class evidence_item extends entity_model_formatter {
             'name' => string_field_formatter::class,
             'type' => null,
             'created_at' => date_field_formatter::class,
+            'fields' => null,
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function has_field(string $field): bool {
+        if ($field === 'fields') {
+            return true;
+        }
+        return parent::has_field($field);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function get_field(string $field) {
+        if ($field === 'fields') {
+            $fields = [];
+            foreach ($this->object->get_customfield_data() as $field_data) {
+                $field = $field_data->field;
+
+                // Create a customfield instance.
+                $field_class = field_helper::get_field_class($field->datatype);
+                $field_instance = new $field_class(
+                    $field->id,
+                    $this->object,
+                    evidence::get_prefix(),
+                    'totara_evidence_type'
+                );
+
+                $fields[] = $field_instance->get_raw_field_data(
+                    $field_data->data,
+                    [
+                        'prefix'   => evidence::get_prefix(),
+                        'itemid'   => $field_data->id,
+                        'extended' => true
+                    ]
+                );
+            }
+            return $fields;
+        }
+        return parent::get_field($field);
+    }
+
 }

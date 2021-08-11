@@ -22,12 +22,13 @@
  */
 
 use core\orm\query\builder;
+use core_phpunit\testcase;
 use totara_core\advanced_feature;
 use totara_core\feature_not_available_exception;
 use totara_evidence\models\evidence_item;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-class webapi_resolver_query_user_evidence_items_testcase extends advanced_testcase {
+class webapi_resolver_query_user_evidence_items_testcase extends testcase {
 
     private const QUERY = "totara_evidence_user_evidence_items";
 
@@ -37,11 +38,17 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
         $data = $this->create_test_data();
 
         // Test without filters applied, page size 2
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id));
+        $result = $this->resolve_graphql_query(
+            self::QUERY,
+            $this->get_query_options($data->user->id, null, null, 2)
+        );
         $this->assertCount(2, $result['items']);
 
         // Change page size to 10
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id, null, null, 10));
+        $result = $this->resolve_graphql_query(
+            self::QUERY,
+            $this->get_query_options($data->user->id, null, null, 10)
+        );
         $this->assertCount(4, $result['items']);
     }
 

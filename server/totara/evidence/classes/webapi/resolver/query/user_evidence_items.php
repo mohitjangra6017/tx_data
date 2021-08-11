@@ -44,18 +44,24 @@ class user_evidence_items implements query_resolver, has_middleware {
 
         // Check capability
         if (!evidence_item_capability_helper::for_user($user_id)->can_view_list()) {
-            return ['items' => []];
+            return [
+                'items' => [],
+                'total' => 0,
+                'next_cursor' => '',
+            ];
         }
 
         $args['input']['filters']['user_id'] = $user_id;
 
-        return (new evidence_provider())
-            ->add_filters($args['input']['filters'])
-            ->fetch_paginated($args['input']['cursor'] ?? null, $args['input']['limit'] ?? null)
-            ->transform(static function (evidence_entity $evidence) {
-                return evidence_model::load_by_entity($evidence);
-            })
-            ->get();
+        return evidence_provider::create()
+            ->set_filters($args['input']['filters'])
+            ->set_page_size($args['input']['limit'] ?? null)
+            ->fetch_paginated(
+                $args['input']['cursor'] ?? null,
+                static function (evidence_entity $evidence) {
+                    return evidence_model::load_by_entity($evidence);
+                }
+            );
     }
 
     /**

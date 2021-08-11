@@ -23,61 +23,27 @@
 
 namespace totara_evidence\data_providers;
 
-use core\orm\entity\repository;
 use totara_evidence\entity\evidence_item as evidence_entity;
 
 class evidence extends provider {
 
-    /**
-     * Filter by evidence item name
-     *
-     * @param $repository
-     * @param $value
-     */
-    protected function filter_by_search($repository, $value): void {
-        $repository->where('name', 'ilike', $value);
-    }
+    // Mapping of sort field display names to physical entity _columns_.
+    public const SORT_FIELDS = [
+        'evidence_id' => 'id',
+        'evidence_name' => 'name'
+    ];
 
     /**
-     * Filter by a set of evidence IDs
+     * Creates an instance of the data provider.
      *
-     * @param $repository
-     * @param array $evidence_ids
+     * @return provider the dataprovider.
      */
-    protected function filter_by_ids($repository, array $evidence_ids): void {
-        $repository->where_in('id', $evidence_ids);
+    public static function create(): provider {
+        return new self(
+            evidence_entity::class,
+            self::SORT_FIELDS,
+            'totara_evidence\entity\filters\evidence_item_filters::for'
+        );
     }
 
-    /**
-     * Filter by evidence type id
-     *
-     * @param $repository
-     * @param int $type_id
-     */
-    protected function filter_by_type_id($repository, int $type_id): void {
-        if ($type_id <= 0) {
-            return;
-        }
-        $repository->where('typeid', $type_id);
-    }
-
-    /**
-     * Filter by user id
-     *
-     * @param $repository
-     * @param int $user_id
-     */
-    protected function filter_by_user_id($repository, int $user_id): void {
-        $repository->where('user_id', $user_id);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function build_query(): repository {
-        return evidence_entity::repository()
-            ->with('type')
-            ->order_by('name')
-            ->order_by('id');
-    }
 }

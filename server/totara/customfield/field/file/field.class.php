@@ -22,6 +22,8 @@
  * @subpackage totara_customfield
  */
 
+use totara_customfield\field\field_data;
+
 class customfield_file extends customfield_base {
 
 
@@ -147,4 +149,54 @@ class customfield_file extends customfield_base {
         }
 
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_raw_field_data($data, array $extra_data = []): field_data {
+        // Get files.
+        $context = context_system::instance();
+        $fs = get_file_storage();
+        $files = $fs->get_area_files(
+            $context->id,
+            'totara_customfield',
+            $extra_data['prefix'] . '_filemgr',
+            $data,
+            null,
+            false
+        );
+
+        // Get file details for each file.
+        $field_data = parent::get_raw_field_data($data, $extra_data);
+        foreach ($files as $file) {
+            $url = new moodle_url(
+                "/pluginfile.php/{$file->get_contextid()}/{$file->get_component()}/{$file->get_filearea()}"
+                . $file->get_filepath() . $file->get_itemid() . '/' . $file->get_filename()
+                . $this->additional_params($extra_data['url_params'] ?? null)
+            );
+            $field_data->add_extra([
+                'file_name' => $file->get_filename(),
+                'file_size' => $file->get_filesize(),
+                'url' => $url->out(),
+            ]);
+        }
+
+        return $field_data;
+    }
+
+    /**
+     * @param array|null $params
+     *
+     * @return string
+     */
+    private function additional_params(?array $params = null): string {
+        $p = '';
+        if (!empty($params)) {
+            foreach ($params as $param) {
+                $p .= '/' . $param;
+            }
+        }
+        return $p;
+    }
+
 }

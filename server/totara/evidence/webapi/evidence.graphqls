@@ -40,6 +40,12 @@ type totara_evidence_user_evidence_types_result {
   items: [totara_evidence_evidence_type!]!
 }
 
+type totara_evidence_evidence_item_field {
+  label(format: core_format = PLAIN): String!
+  type: String!
+  content: String!
+}
+
 """
 Represents the evidence item
 """
@@ -60,6 +66,10 @@ type totara_evidence_evidence_item {
   The date the evidence item was created
   """
   created_at(format: core_date_format = DATELONG): core_date!
+  """
+  The custom field data of the evidence item
+  """
+  fields: [totara_evidence_evidence_item_field!]!
 }
 
 """

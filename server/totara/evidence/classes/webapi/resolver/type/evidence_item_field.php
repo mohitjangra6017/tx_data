@@ -17,33 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Marco Song <marco.song@totaralearning.com>
+ * @author Johannes Cilliers <johannes.cilliers@totaralearning.com>
  * @package totara_evidence
  */
 
 namespace totara_evidence\webapi\resolver\type;
 
-use coding_exception;
 use context_system;
 use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
-use totara_evidence\formatter\evidence_item as evidence_item_formatter;
-use totara_evidence\models\evidence_item as evidence_item_model;
+use totara_customfield\field\field_data;
+use coding_exception;
+use totara_evidence\formatter\evidence_item_field as evidence_item_field_formatter;
 
-class evidence_item implements type_resolver {
+class evidence_item_field implements type_resolver {
+
     /**
      * @inheritDoc
      */
-    public static function resolve(string $field, $evidence_item, array $args, execution_context $ec) {
-        if (!$evidence_item instanceof evidence_item_model) {
-            throw new coding_exception('Expected evidence item model');
+    public static function resolve(string $field, $source, array $args, execution_context $ec) {
+        if (!$source instanceof field_data) {
+            throw new coding_exception('Expected field data');
         }
 
         $format = $args['format'] ?? format::FORMAT_HTML;
 
-        $formatter = new evidence_item_formatter($evidence_item, context_system::instance());
+        $formatter = new evidence_item_field_formatter($source, context_system::instance());
 
         return $formatter->format($field, $format);
     }
+
 }

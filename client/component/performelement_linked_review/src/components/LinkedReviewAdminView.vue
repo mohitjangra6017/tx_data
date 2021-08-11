@@ -99,7 +99,7 @@ export default {
      * @return {function}
      */
     getFooterComponent() {
-      if (!this.data.components) {
+      if (!this.data.components || !this.data.components.admin_content_footer) {
         return null;
       }
       return tui.asyncComponent(this.data.components.admin_content_footer);

@@ -237,6 +237,7 @@ class behat_totara_tui extends behat_base {
 
     /**
      * @When /^I click on "([^"]*)" "([^"]*)" in the tui datatable row with "([^"]*)" "([^"]*)"$/
+     * @When /^I click on "([^"]*)" "([^"]*)" in the tui datatable row with "([^"]*)" "([^"]*)" in the "([^"]*)" "([^"]*)"$/
      * @param string $element
      * @param string $selector_type
      * @param string $cell_text

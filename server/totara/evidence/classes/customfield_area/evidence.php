@@ -27,6 +27,7 @@ use context;
 use moodle_exception;
 use moodle_url;
 use totara_core\advanced_feature;
+use totara_evidence\hook\pluginfile_access;
 use totara_customfield\area;
 use totara_evidence\entity;
 use totara_evidence\models\evidence_item;
@@ -135,13 +136,34 @@ class evidence implements area {
             $file = $file_storage->get_file_by_hash(sha1($file_path));
             if ($file && !$file->is_directory()) {
                 $evidence = (new entity\evidence_field_data($file->get_itemid()))->item;
-                if (self::can_view($evidence->id)) {
+                if (self::can_view($evidence->id) || self::hook_pluginfile_can_view($evidence->id, $filearea, $context, $args)) {
                     send_stored_file($file, 86400, 0, true, $options);
+                    return;
                 }
             }
         }
 
         send_file_not_found();
+    }
+
+    /**
+     * Check if user is allowed to view the file via another area.
+     *
+     * @param int $instance_id
+     * @param context $context
+     * @param string $file_area
+     * @param array $args
+     *
+     * @return bool
+     */
+    private static function hook_pluginfile_can_view(
+        int $instance_id,
+        string $file_area,
+        context $context,
+        array $args
+    ): bool {
+        $hook = new pluginfile_access('totara_evidence', $instance_id, $file_area, $context, $args);
+        return $hook->execute()->can_view();
     }
 
 }
