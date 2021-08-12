@@ -25,6 +25,7 @@ namespace mobile_findlearning\formatter;
 
 use core\webapi\formatter\formatter;
 use core\webapi\formatter\field\string_field_formatter;
+use core_course\formatter\course_formatter;
 
 /**
  * Formatter for catalog items
@@ -39,14 +40,54 @@ class catalog_item_formatter extends formatter {
             'itemid' => null, // Core_id.
             'title' => string_field_formatter::class,
             'item_type' => string_field_formatter::class,
-            'summary' => null, // Note: pre-formatted as html via catalog dataholder.
+            'summary' => 'item_summary_formatter',
+            'summary_format' => null, // Enum string.
             'image_enabled' => null, // Boolean.
             'image_alt' => string_field_formatter::class,
             'image_url' => null, // URL string.
+            'view_url' => null, // URL string.
             'description_enabled' => null, // Boolean.
             'description' => string_field_formatter::class,
         ];
 
         return $map;
     }
+
+    public function item_summary_formatter($value, $format) {
+        return self::item_inherited_field_formatter('summary', $value, $format);
+    }
+
+    /**
+     * Calls the formatter for the specific itemtype on the given field
+     *
+     * @param $field
+     * @param $value
+     * @param $format
+     * @return
+     */
+    private function item_inherited_field_formatter($field, $value, $format) {
+        $item = (object)[
+            'id' => $this->object->objectid,
+            $field => $value
+        ];
+
+        // For summary we need extra information
+        if ($field == 'summary') {
+            $item->summaryformat = $this->object->summaryformat ?? FORMAT_PLAIN;
+        }
+
+        switch ($this->object->objecttype) {
+            case 'engage_article':
+            case 'playlist':
+                return null;
+            case 'course':
+                $itemformatter = new course_formatter($item, $this->context);
+                break;
+            default:
+                throw new \coding_exception('Unrecognised catalog item type, please add to the catalog item formatter.');
+        }
+
+        return $itemformatter->format($field, $format);
+    }
+
 }

@@ -9,6 +9,7 @@ query mobile_findlearning_view_catalog($pointer: Int) {
       itemType: item_type
       title
       mobileImage: image_url
+      viewUrl: view_url
       summary(format: MOBILE)
       summaryFormat: summary_format
       __typename

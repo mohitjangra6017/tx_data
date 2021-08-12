@@ -36,6 +36,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
 
     use webapi_phpunit_helper;
 
+    /**
+     * Run the catalog resolver on an object and return the results.
+     * @return mixed
+     */
     private function resolve($field, $item, array $args = []) {
         return $this->resolve_graphql_type('mobile_findlearning_catalog_item', $field, $item, $args);
     }
@@ -44,7 +48,7 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
      * Create some users and various learning items to be fetched in the catalog.
      * @return []
      */
-    private function create_faux_catalog_items($format = 'html') {
+    private function create_faux_catalog_items($format = 'html'): array {
         $prog_gen = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -52,8 +56,8 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
 
         // Create some courses.
         $this->getDataGenerator()->create_course(['shortname' => 'alpha', 'fullname' => 'Alpha course', 'summary' => 'Alphabetical courses 1']);
-        $this->getDataGenerator()->create_course(['shortname' => 'beta', 'fullname' => 'Beta course', 'summary' => 'Alphabetical courses 1']);
-        $this->getDataGenerator()->create_course(['shortname' => 'charlie', 'fullname' => 'Charlie course', 'summary' => 'Alphabetical courses 1']);
+        $this->getDataGenerator()->create_course(['shortname' => 'beta', 'fullname' => 'Beta course', 'summary' => 'Alphabetical courses 2']);
+        $this->getDataGenerator()->create_course(['shortname' => 'charlie', 'fullname' => 'Charlie course', 'summary' => 'Alphabetical courses 3']);
 
         // Add some extra courses as prog/cert content.
         $c1 = $this->getDataGenerator()->create_course(['fullname' => 'Prog content 1']);
@@ -94,14 +98,18 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         return ['u1' => $user1, 'u2' => $user2];
     }
 
-    // Test mobile_item::create failure
-    public function test_resolve_invalid_object() {
+    /**
+     * Test mobile_item::create failure
+     */
+    public function test_resolve_invalid_object(): void {
         $user1 = $this->getDataGenerator()->create_user();
         $this->setUser($user1->id);
     }
 
-    // Test resolving prog/cert failure
-    public function test_resolve_invalid_items() {
+    /**
+     * Test resolving prog/cert failure
+     */
+    public function test_resolve_invalid_items(): void {
         $users = $this->create_faux_catalog_items();
         $this->setUser($users['u1']->id);
         $page = mobile_catalog::load_catalog_page_objects();
@@ -129,7 +137,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         $this->resolve('id', $item);
     }
 
-    public function test_resolve_id() {
+    /**
+     * Test that the catalog items id is resolved as expected.
+     */
+    public function test_resolve_id(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -142,7 +153,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_itemid() {
+    /**
+     * Test that the catalog items itemid is resolved as expected.
+     */
+    public function test_resolve_itemid(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -155,7 +169,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_item_type() {
+    /**
+     * Test that the catalog items type is resolved as expected.
+     */
+    public function test_resolve_item_type(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -168,7 +185,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_title() {
+    /**
+     * Test that the catalog items title is resolved as expected.
+     */
+    public function test_resolve_title(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -199,7 +219,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_image_enabled() {
+    /**
+     * Test that the catalog items image enabled is resolved as expected.
+     */
+    public function test_resolve_image_enabled(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -212,7 +235,12 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_image_url() {
+    /**
+     * Test that the catalog items image url is resolved as expected.
+     */
+    public function test_resolve_image_url(): void {
+        global $CFG;
+
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -224,19 +252,49 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
             $expected = null;
             foreach ($object->data as $data) {
                 if (is_array($data) && array_key_exists('image', $data)) {
-                    $expected = $data['image']->url;
+                    $imageurl = str_replace($CFG->wwwroot . '/pluginfile.php', $CFG->wwwroot . '/totara/mobile/pluginfile.php', $data['image']->url);
                 }
             }
 
-            if (empty($expected)) {
-                $this->fail('Data object missing required field: name');
+            if (empty($imageurl)) {
+                $this->fail('Data object missing required field: image');
             } else {
+                // Final clean up for image URLs, remove the arguments.
+                $key = "~\?.*=.*~";
+                $expected = preg_replace($key, '', $imageurl);
+
                 $this->assertSame($expected, $this->resolve('image_url', $object));
             }
         }
     }
 
-    public function test_resolve_image_alt() {
+    public function test_resolve_view_url(): void {
+        global $CFG;
+
+        $users = $this->create_faux_catalog_items();
+
+        // get the catalog objects for user 1 since it will have a range of objects.
+        $this->setUser($users['u1']->id);
+        $page = mobile_catalog::load_catalog_page_objects();
+        $objects = $page->objects;
+
+        $expected = [
+            'course' => "{$CFG->wwwroot}/course/view.php?id=",
+            'playlist' => "{$CFG->wwwroot}/totara/playlist/index.php?id=",
+            'engage_article' => "{$CFG->wwwroot}/totara/engage/resources/article/index.php?id="
+        ];
+
+        foreach ($objects as $object) {
+            $size = strlen($expected[$object->objecttype]);
+            $viewurl = substr($this->resolve('view_url', $object), 0, $size);
+            $this->assertSame($expected[$object->objecttype], $viewurl);
+        }
+    }
+
+    /**
+     * Test that the catalog items image alt is resolved as expected.
+     */
+    public function test_resolve_image_alt(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -260,7 +318,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_description_enabled() {
+    /**
+     * Test that the catalog items description enabled is resolved as expected.
+     */
+    public function test_resolve_description_enabled(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.
@@ -273,7 +334,10 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         }
     }
 
-    public function test_resolve_description() {
+    /**
+     * Test that the catalog items description is resolved as expected.
+     */
+    public function test_resolve_description(): void {
         $users = $this->create_faux_catalog_items();
 
         // get the catalog objects for user 1 since it will have a range of objects.

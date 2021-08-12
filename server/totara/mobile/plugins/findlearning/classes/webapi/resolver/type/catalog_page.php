@@ -40,6 +40,8 @@ class catalog_page implements type_resolver {
      * @return mixed
      */
     public static function resolve(string $field, $page, array $args, execution_context $ec) {
+        global $DB;
+
         $format = $args['format'] ?? null;
         $context = \context_system::instance();
 
@@ -56,7 +58,33 @@ class catalog_page implements type_resolver {
                 $data->final_records = $page->endofrecords;
                 break;
             case 'items':
-                return $page->objects; // Skip the formatter and go straight to item resolver.
+                // So we need some extra steps to get raw summary info for courses.
+                $courseids = [];
+                foreach ($page->objects as $object) {
+                    if ($object->objecttype == 'course') {
+                        $courseids[] = $object->objectid;
+                    }
+
+                    // Make sure the fields are set for all objects.
+                    $object->raw_summary = null;
+                    $object->raw_summaryformat = null;
+                }
+
+                // On the off chance these are all resources etc, just carry on.
+                if (!empty($courseids)) {
+                    // Otherwise get the raw data and insert the data into course objects.
+                    list($insql, $params) = $DB->get_in_or_equal($courseids);
+                    if ($courses = $DB->get_records_select('course', "id {$insql}", $params, '', 'id, summary, summaryformat')) {
+                        foreach ($page->objects as $object) {
+                            if ($object->objecttype == 'course' && !empty($courses[$object->objectid])) {
+                                $object->raw_summary = $courses[$object->objectid]->summary;
+                                $object->raw_summaryformat = $courses[$object->objectid]->summaryformat;
+                            }
+                        }
+                    }
+                }
+
+                return $page->objects;
         }
 
         $formatter = new page_formatter($data, $context);

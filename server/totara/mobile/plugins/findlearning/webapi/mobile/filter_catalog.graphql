@@ -15,6 +15,7 @@ query mobile_findlearning_filter_catalog(
       itemType: item_type
       title
       mobileImage: image_url
+      viewUrl: view_url
       summary(format: MOBILE)
       summaryFormat: summary_format
       __typename

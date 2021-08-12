@@ -101,11 +101,15 @@ type mobile_findlearning_catalog_item {
   """
   image_url: String
   """
+  The URL to view the item, i.e. course/view.php
+  """
+  view_url: String
+  """
   The rich text summary for the catalog items description - note that this is not the summary, it is a field designated in the catalog settings.
   """
   summary(format: core_format = MOBILE): String
   """
-  The format of the catalog items summary
+  The format of the catalog items summary as a string
   """
   summary_format: core_format
   """

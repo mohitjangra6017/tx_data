@@ -309,7 +309,11 @@ class mobile_findlearning_webapi_resolver_query_view_catalog_testcase extends \c
                 $expect = array_shift($expected);
                 $this->assertSame($expect['type'], $item['itemType']);
                 $this->assertSame($expect['name'], $item['title']);
+                $this->assertNotEmpty($item['id']);
+                $this->assertNotEmpty($item['itemid']);
+                $this->assertNotEmpty($item['mobileImage']);
                 $this->assertMatchesRegularExpression('|^https://www\.example\.com/.*|', $item['mobileImage']);
+                $this->assertMatchesRegularExpression('|^https://www\.example\.com/.*|', $item['viewUrl']);
             }
 
             $this->assertEquals('16', $page['maxCount']); // The total number of unchecked records.

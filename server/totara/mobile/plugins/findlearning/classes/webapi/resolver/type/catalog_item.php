@@ -27,6 +27,7 @@ use \core\webapi\type_resolver;
 use \core\webapi\execution_context;
 use \mobile_findlearning\formatter\catalog_item_formatter as item_formatter;
 use \mobile_findlearning\item_mobile as mobile_item;
+use \totara_catalog\provider_handler;
 
 class catalog_item implements type_resolver {
 
@@ -64,12 +65,30 @@ class catalog_item implements type_resolver {
                 return isset($data->image_enabled) ?? false;
             case 'summary':
                 // This one needs a bit of special handling.
-                $data->summary = self::find_dataholder_contents($object->data, 'summary_rich');
+                $data->objectid = $object->objectid;
+                $data->summary = null;
+                if ($data->objecttype == 'course') {
+                    // If we have the raw data use it, otherwise stick with null.
+                    $data->summary = $object->raw_summary ?? null;
+                    $data->summaryformat = $object->raw_summaryformat ?? null;
+                }
                 break;
             case 'summary_format':
-                // Note: The catalog dataholder has pre-formatted this, even if it was saved as json
-                // it has been formatted into HTML by this point.
-                return 'HTML';
+                $data->summary_format = null;
+                if ($data->objecttype == 'course' && !empty($object->raw_summaryformat)) {
+                    $data->summary_format = self::format_summary_format($object->raw_summaryformat);
+                }
+                return $data->summary_format;
+            case 'view_url':
+                if ($data->objecttype == 'course') {
+                    // Skip the details url used by everything else, the course one has a LOT of conditions in it.
+                    return course_get_url($object->objectid)->out();
+                } else {
+                    $provider = provider_handler::instance()->get_provider($data->objecttype);
+
+                    $details = $provider->get_details_link($object->objectid);
+                    return $details->button->url ?? null;
+                }
             case 'image_url':
             case 'image_alt':
                 $enabled = isset($data->image_enabled) ?? false;
@@ -93,8 +112,14 @@ class catalog_item implements type_resolver {
 
         $formatter = new item_formatter($data, $context);
         $formatted = $formatter->format($field, $format);
-        if (in_array($field, ['image'])) {
+        if (in_array($field, ['image_url'])) {
             $formatted = str_replace($CFG->wwwroot . '/pluginfile.php', $CFG->wwwroot . '/totara/mobile/pluginfile.php', $formatted);
+
+            if ($field == 'image_url') {
+                // Remove all URL arguments.
+                $key = "~\?.*=.*~";
+                $formatted = preg_replace($key, '', $formatted);
+            }
         }
 
         return $formatted;
@@ -113,6 +138,29 @@ class catalog_item implements type_resolver {
         }
 
         return $data;
+    }
+
+    /**
+     * Transform the summary format field into a string for mobile use.
+     *
+     * @param int $format - The raw data from course.summaryformat
+     * @return string     - The formatted string relating to $format
+     */
+    private static function format_summary_format($format) {
+        switch ($format) {
+            case FORMAT_MOODLE:
+            case FORMAT_HTML:
+                return 'HTML';
+            case FORMAT_PLAIN:
+                return 'PLAIN';
+            case FORMAT_MARKDOWN:
+                return 'MARKDOWN';
+            case FORMAT_JSON_EDITOR:
+                return 'JSON_EDITOR';
+            default:
+                // Note: There is also FORMAT_WIKI but it has been deprecated since 2005.
+                throw new \coding_exception("Unrecognised description format '{$item->description_format}'" );
+        }
     }
 
     /**
