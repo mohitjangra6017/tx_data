@@ -98,6 +98,15 @@ final class page_helper {
             ],
         ];
 
+        // If SSO login is not enabled, we add sign out link to the config tab.
+        if (empty(get_config('totara_msteams', 'oauth2_issuer'))) {
+            $jsconfig['context']['nav'] = [
+                'logouttitle' => get_string('loggedinasuser', 'theme_msteams', fullname($USER)),
+                'logouttext' => get_string('botfw:msg_signout_button', 'totara_msteams'),
+                'logouthref' => (new moodle_url('/login/logout.php', ['sesskey' => sesskey(), 'redirecturl' => (new moodle_url($configurl))->out(false)]))->out(false)
+            ];
+        }
+
         $PAGE->requires->js_call_amd('totara_msteams/config_tab', 'init', array($jsconfig));
         $spinner = $OUTPUT->render(spinner::create_loading());
         echo html_writer::div($spinner, '', ['id' => $id]);

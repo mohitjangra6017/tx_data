@@ -207,7 +207,7 @@ final class watchers {
             $desired_action = self::look_up_local_url($localurl, self::REWIND, self::LANDING_PAGE_URL_LIST);
         }
 
-        if (!in_array($localurl,self::SIGN_OUT_BLACKLIST) && !$hook->is_custom_tab()) {
+        if (!in_array($localurl,self::SIGN_OUT_BLACKLIST)) {
             $hook->has_sign_out = true;
         }
 

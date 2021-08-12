@@ -214,6 +214,33 @@ class core_renderer extends \core_renderer {
                 'logouttext' => get_string('botfw:msg_signout_button', 'totara_msteams'),
                 'logouthref' => (new moodle_url('/login/logout.php', ['sesskey' => sesskey(), 'redirecturl' => (new moodle_url($data['url']))->out(false)]))->out(false)
             ];
+
+            // Add 'open in new window' link, if it's custom tab.
+            if ($hook->is_custom_tab()) {
+                if ($hook->get_tab_url()->compare($hook->get_page_url(), URL_MATCH_BASE)) {
+                    $icon = new \core\output\flex_icon('theme_msteams|open-externally');
+                    $links = [
+                        'href' => $this->page->url->out(false),
+                        'text' => get_string('openexternally', 'theme_msteams'),
+                        'icon' => [
+                            'template' => $icon->get_template(),
+                            'context' => $icon->export_for_template($this),
+                        ],
+                        'attributes' => [
+                            [
+                                'name' => 'rel',
+                                'value' => 'noopener noreferrer'
+                            ],
+                            [
+                                'name' => 'target',
+                                'value' => '_blank'
+                            ]
+                        ],
+                        'marginauto' => true
+                    ];
+                    $template_data['links'] = $links;
+                }
+            }
         }
 
         // Render navigation if template data is not empty.

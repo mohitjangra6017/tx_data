@@ -172,6 +172,7 @@ body#page-totara-msteams-tabs-config {
     height: 0;
     overflow: hidden;
     position: fixed;
+    padding: 8px 0;
     -webkit-transition: height var(--theme_msteams__transition);
     transition: height var(--theme_msteams__transition);
     width: 100%;
@@ -180,14 +181,14 @@ body#page-totara-msteams-tabs-config {
 
 .totara_msteams__navigation__link:first-of-type {
     -webkit-box-flex: 1;
-    flex-grow: 1;
 }
 
 html.theme_msteams__iframe .totara_msteams__navigation {
     display: -webkit-box;
     display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
     flex-wrap: wrap;
-    height: auto;
     min-height: calc(var(--theme_msteams__nav_link-size) + var(--theme_msteams__nav_link-gap));
 }
 
@@ -226,6 +227,9 @@ html.theme_msteams__iframe .totara_msteams__navigation {
     font-size: var(--theme_msteams__nav_link-size);
     line-height: 1;
     padding-bottom: var(--theme_msteams__nav_link-gap);
+}
+
+.totara_msteams__navigation__logout_margin {
     margin-right: auto;
 }
 
@@ -366,7 +370,7 @@ html.theme_msteams__iframe .totara_msteams__alert {
 
 .totara_msteams_form__list__items {
     border: 1px solid transparent;
-    height: 68.5%;
+    height: 61.5%;
     margin: 0;
     outline: none;
     overflow-y: scroll;
@@ -486,6 +490,25 @@ html.theme_msteams__iframe .totara_msteams__alert {
 
 .totara_msteams__config .totara_msteams_form__list__items {
     margin: 1rem 0 .5rem;
+}
+
+.totara_msteams__config_logout {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+}
+
+.totara_msteams__config_logout__title {
+    color: var(--theme_msteams__accent);
+}
+
+.totara_msteams__config_logout__link {
+    color: var(--theme_msteams__accent);
+    text-decoration: underline;
+    padding-left: var(--gap-3);
+    margin-right: var(--gap-1);
 }
 
 /* Spinner (loading indicator) */

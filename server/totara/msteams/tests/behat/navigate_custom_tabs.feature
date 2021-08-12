@@ -101,7 +101,10 @@ Feature: Navigate a learning item in a custom tab
   Scenario: msteams301: Navigate a course in a custom tab
     Given I am on "Culinary arts 101" "course" custom tab in Microsoft Teams
     Then I should see "Course: Culinary arts 101" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Open in browser" in the ".totara_msteams__navigation__link__label" "css_element"
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
 
     When I follow "Cooking seminar"
     Then "Culinary arts 101" "link" should exist in the ".totara_msteams__navigation" "css_element"
@@ -112,12 +115,14 @@ Feature: Navigate a learning item in a custom tab
 
     When I click on "Back" "link" in the ".totara_msteams__navigation" "css_element"
     Then I should see "Course: Culinary arts 101" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
 
   Scenario: msteams302: Navigate an unenrollable course in a custom tab
     Given I am on "Machine learning 101" "course" custom tab in Microsoft Teams
     Then I should see "MLN101" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
     And I should see "You can not enrol yourself in this course"
     But "Continue" "button" should not be visible
 
@@ -142,12 +147,18 @@ Feature: Navigate a learning item in a custom tab
 
     When I click on "Back" "link" in the ".totara_msteams__navigation" "css_element"
     Then I should see "Course: Culinary arts 101" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Open in browser" in the ".totara_msteams__navigation__link__label" "css_element"
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
 
   Scenario: msteams304: Navigate a program in a custom tab
     Given I am on "Mastering arts" "program" custom tab in Microsoft Teams
     Then I should see "Program: Mastering arts" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Open in browser" in the ".totara_msteams__navigation__link__label" "css_element"
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
 
     When I follow "Culinary arts 101"
     And I click on "Back" "link" in the ".totara_msteams__navigation" "css_element"
@@ -162,17 +173,26 @@ Feature: Navigate a learning item in a custom tab
   Scenario: msteams305: Navigate a certification in a custom tab
     Given I am on "Junior chef" "certification" custom tab in Microsoft Teams
     Then I should see "Program: Junior chef" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Open in browser" in the ".totara_msteams__navigation__link__label" "css_element"
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
 
   Scenario: msteams306: Navigate an article in a custom tab
     Given I am on "10 apps to boost your productivity" "article" custom tab in Microsoft Teams
     Then I should see "10 apps to boost your productivity" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Open in browser" in the ".totara_msteams__navigation__link__label" "css_element"
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
 
   Scenario: msteams307: Navigate a playlist in a custom tab
     Given I am on "Cool playlist" "playlist" custom tab in Microsoft Teams
     Then I should see "Cool playlist" in the page title
-    And ".totara_msteams__navigation" "css_element" should not exist
+    And ".totara_msteams__navigation" "css_element" should exist
+    And I should see "Open in browser" in the ".totara_msteams__navigation__link__label" "css_element"
+    And I should see "Logged in as User One." in the ".totara_msteams__navigation__logout__title" "css_element"
+    And I should see "Sign out" in the ".totara_msteams__navigation__logout__link" "css_element"
 
   Scenario: msteams308: Navigate activities in a custom tab
     Given I am on "Activity test course" "course" custom tab in Microsoft Teams
