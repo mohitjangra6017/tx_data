@@ -22,6 +22,7 @@
     :class="{
       'tui-dataTableExpandableRow--stealth': stealth,
       'tui-dataTableExpandableRow--indented': indentContents,
+      'tui-dataTableExpandableRow--stacked': isStacked,
     }"
     @keydown.esc="$emit('close')"
   >
@@ -40,6 +41,7 @@ export default {
   props: {
     stealth: Boolean,
     indentContents: Boolean,
+    isStacked: Boolean,
   },
 };
 </script>
@@ -49,6 +51,7 @@ export default {
   position: relative;
   margin: 0 0 var(--gap-2) calc(0px - var(--border-width-thin));
   color: var(--datatable-expanded-text-color);
+  background: var(--datatable-expanded-bg-color);
   border: var(--border-width-thin) solid var(--datatable-expanded-border-color);
   border-top: none;
   box-shadow: var(--shadow-2);
@@ -66,14 +69,20 @@ export default {
     background: var(--datatable-expanded-bg-color);
   }
 
-  @media (min-width: $tui-screen-xs) {
-    &--indented {
-      padding-left: var(--gap-11);
-    }
+  &--indented {
+    padding-left: var(--gap-11);
+  }
 
-    &--indented &__content {
-      padding: var(--gap-3) 0 var(--gap-3) var(--gap-3);
-    }
+  &--stacked {
+    border-top: none;
+  }
+
+  &--stacked&--indented {
+    padding-left: 0;
+  }
+
+  &--indented &__content {
+    padding: var(--gap-3) 0 var(--gap-3) var(--gap-3);
   }
 }
 </style>

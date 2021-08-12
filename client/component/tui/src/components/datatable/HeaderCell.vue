@@ -23,6 +23,7 @@
       align && 'tui-dataTableCell--align-' + align,
       size && 'tui-dataTableCell--size_' + size,
       valign && 'tui-dataTableCell--valign-' + valign,
+      isStacked && 'tui-dataTableHeaderCell--stacked',
     ]"
     role="columnheader"
   >
@@ -42,23 +43,22 @@ export default {
       type: String,
       validator: val => ['start', 'center', 'end'].indexOf(val) !== -1,
     },
+    isStacked: Boolean,
   },
 };
 </script>
 
 <style lang="scss">
 .tui-dataTableHeaderCell {
+  // stylelint-disable-next-line tui/at-extend-only-placeholders
+  @extend .tui-dataTableCell;
   @include tui-font-heading-label();
-  display: none;
-}
+  display: flex;
+  color: var(--datatable-cell-header-text-color);
+  font-weight: bold;
 
-@media (min-width: $tui-screen-xs) {
-  .tui-dataTableHeaderCell {
-    // stylelint-disable-next-line tui/at-extend-only-placeholders
-    @extend .tui-dataTableCell;
-    display: flex;
-    color: var(--datatable-cell-header-text-color);
-    font-weight: bold;
+  &--stacked {
+    display: none;
   }
 }
 </style>

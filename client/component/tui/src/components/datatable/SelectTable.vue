@@ -33,6 +33,7 @@
       :no-items-text="noItemsText"
       :selection="value"
       :selected-highlight-off="selectedHighlightOff"
+      :stack-at="stackAt"
     >
       <template v-if="$scopedSlots['header-row']" v-slot:header-row>
         <SelectVisibleRowsCell
@@ -171,6 +172,10 @@ export default {
     rowLabelKey: String,
     // The text to display if the data array is empty
     noItemsText: String,
+    /*
+     * When the width of the table is this size (in px) or smaller the table will be stacked/collapsed to a vertical view.
+     */
+    stackAt: Number,
   },
 
   computed: {

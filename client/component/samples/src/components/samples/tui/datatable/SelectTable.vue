@@ -28,6 +28,7 @@
         :select-entire-enabled="selectEntireEnabled"
         :entire-selected="entireSelected"
         row-label-key="display_name"
+        :stack-at="Number(stackAt)"
       >
         <template v-slot:header-row>
           <HeaderCell size="12" valign="center">Col 1</HeaderCell>
@@ -60,6 +61,10 @@
           <Radio :value="true">True</Radio>
           <Radio :value="false">False</Radio>
         </RadioGroup>
+      </FormRow>
+
+      <FormRow label="stack-at">
+        <InputNumber v-model="stackAt" />
       </FormRow>
 
       <h4 class="tui-samplesCtl__optional">Selection (Optional)</h4>
@@ -105,7 +110,7 @@
 import Cell from 'tui/components/datatable/Cell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import SelectTable from 'tui/components/datatable/SelectTable';
-
+import InputNumber from 'tui/components/form/InputNumber';
 import SamplesCode from 'samples/components/sample_parts/misc/SamplesCode';
 import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample';
 import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
@@ -118,7 +123,7 @@ export default {
     Cell,
     HeaderCell,
     SelectTable,
-
+    InputNumber,
     SamplesCode,
     SamplesExample,
     SamplesPropCtl,
@@ -151,6 +156,7 @@ export default {
 
       checkboxVAlign: 'center',
       colorOddRows: false,
+      stackAt: 570,
       selectAllEnabled: false,
       selectEntireEnabled: false,
       entireSelected: false,

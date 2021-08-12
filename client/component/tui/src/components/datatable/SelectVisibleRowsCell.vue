@@ -30,7 +30,12 @@
       :disabled="disabled || hidden"
       @change="$emit('change', $event)"
     />
-    <span class="tui-dataTableCell__label">
+    <span
+      class="tui-dataTableCell__label"
+      :class="{
+        'tui-dataTableCell__label--stacked': isStacked,
+      }"
+    >
       {{ $str('selectallrows', 'totara_core') }}
     </span>
   </div>
@@ -50,6 +55,7 @@ export default {
     hidden: Boolean,
     largeCheckBox: Boolean,
     noLabelOffset: Boolean,
+    isStacked: Boolean,
   },
 };
 </script>

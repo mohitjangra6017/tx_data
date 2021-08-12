@@ -22,6 +22,7 @@
     :class="[
       hidden && 'tui-dataTableSelectRowCell--hidden',
       valign && 'tui-dataTableSelectRowCell--valign-' + valign,
+      isStacked && 'tui-dataTableSelectRowCell--stacked',
     ]"
     role="cell"
   >
@@ -55,6 +56,7 @@ export default {
       type: String,
       required: true,
     },
+    isStacked: Boolean,
   },
 };
 </script>
@@ -73,8 +75,11 @@ export default {
   flex-direction: column;
 
   &--hidden {
-    height: 0;
     visibility: hidden;
+  }
+
+  &--stacked&--hidden {
+    height: 0;
   }
 
   &--valign {
@@ -88,14 +93,6 @@ export default {
 
     &-end {
       justify-content: flex-end;
-    }
-  }
-}
-
-@media (min-width: $tui-screen-xs) {
-  .tui-dataTableSelectRowCell {
-    &--hidden {
-      height: auto;
     }
   }
 }

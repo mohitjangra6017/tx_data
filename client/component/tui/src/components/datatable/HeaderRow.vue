@@ -22,6 +22,7 @@
     :class="{
       'tui-dataTableRowHeader--empty': empty,
       'tui-dataTableRowHeader--indented': indented,
+      'tui-dataTableRowHeader--stacked': isStacked,
     }"
     role="row"
   >
@@ -34,30 +35,34 @@ export default {
   props: {
     empty: Boolean,
     indented: Boolean,
+    isStacked: Boolean,
   },
 };
 </script>
 
 <style lang="scss">
-@media (min-width: $tui-screen-xs) {
-  .tui-dataTableRowHeader {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: var(--gap-3) var(--gap-1);
+.tui-dataTableRowHeader {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: var(--gap-3) var(--gap-1);
 
-    &--empty {
-      display: none;
-    }
+  &--stacked {
+    display: block;
+    padding: 0;
+  }
 
-    & > * + * {
-      margin-left: var(--gap-4);
-    }
+  &--empty {
+    display: none;
+  }
 
-    &--indented {
-      padding-left: var(--gap-11);
-    }
+  & > * + * {
+    margin-left: var(--gap-4);
+  }
+
+  &--indented {
+    padding-left: var(--gap-11);
   }
 }
 </style>

@@ -10,6 +10,11 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Updated styles of filter side panel component filters/FilterSidePanel.vue
   * Template and SCSS changes
+* Changed table and select table to stack based on its own width (using the new stackAt prop) rather than media queries.
+  The following components have had their media queries removed and replaced with a isStacked prop:
+  Cell.vue, ExpandCell.vue, ExpandedRow.vue, ExpandedRow.vue, HeaderCell.vue, HeaderRow.vue, Row.vue, RowGroup.vue, SelectRowCell.vue
+* Removed text align rules from HasChildrenCell.vue
+  * SCSS changes
 * Exposed more of the table properties to the select table component datatable/SelectTable.vue
   * Template changes
 * Updated MultiSelectFilter.vue to optionally support hiding/showing filter options after a certain number

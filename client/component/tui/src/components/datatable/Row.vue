@@ -35,6 +35,7 @@
       'tui-dataTableRow--stealth': stealth,
       'tui-dataTableRow--stealthExpanded': stealthExpanded,
       'tui-dataTableRow--indented': indented,
+      'tui-dataTableRow--stacked': isStacked,
     }"
     role="row"
   >
@@ -60,6 +61,7 @@ export default {
     expanded: Boolean,
     stealth: Boolean,
     stealthExpanded: Boolean,
+    isStacked: Boolean,
   },
 };
 </script>
@@ -68,11 +70,14 @@ export default {
 .tui-dataTableRow {
   position: relative;
   display: flex;
-  flex-direction: column;
-  padding-top: var(--gap-3);
-  padding-bottom: var(--gap-3);
+  flex-direction: row;
+  padding: var(--gap-3) var(--gap-1);
   background: var(--datatable-row-bg-color);
   border-top: 1px solid var(--datatable-row-border-color);
+
+  & > * + * {
+    padding-left: var(--gap-4);
+  }
 
   &:first-child {
     border-top: var(--border-width-normal) solid
@@ -87,6 +92,14 @@ export default {
   &:active,
   &:hover {
     background: var(--datatable-row-bg-color-focus);
+  }
+
+  &--indented {
+    padding-left: var(--gap-11);
+  }
+
+  &--stealth {
+    box-shadow: none;
   }
 
   &--borderTopFirstOff {
@@ -142,17 +155,13 @@ export default {
   }
 
   &--inGroup {
+    border-top: none;
     &:first-child {
       border-top: none;
     }
+
     &:last-child {
       border-bottom: none;
-    }
-    &:nth-child(odd) {
-      background: none;
-    }
-    &:hover {
-      background: none;
     }
   }
 
@@ -201,29 +210,39 @@ export default {
   }
 }
 
-@media (min-width: $tui-screen-xs) {
-  .tui-dataTableRow {
-    flex-direction: row;
-    padding-right: var(--gap-1);
-    padding-left: var(--gap-1);
+.tui-dataTableRow--stacked {
+  flex-direction: column;
+  padding: var(--gap-3) 0;
 
-    & > * + * {
-      padding-left: var(--gap-4);
-    }
+  & > * + * {
+    padding-left: 0;
+  }
 
-    &--inGroup {
+  &:first-child {
+    border-top: var(--border-width-normal) solid
+      var(--datatable-row-first-border-color);
+  }
+
+  &:last-child {
+    border-bottom: 1px solid var(--datatable-row-border-color);
+  }
+
+  &.tui-dataTableRow--inGroup {
+    border-top: 1px solid var(--datatable-row-border-color);
+
+    &:first-child {
       border-top: none;
-      &:last-child {
-        border-bottom: none;
-      }
     }
 
-    &--indented {
-      padding-left: var(--gap-11);
+    &:last-child {
+      border-bottom: none;
     }
 
-    &--stealth {
-      box-shadow: none;
+    &:nth-child(odd) {
+      background: none;
+    }
+    &:hover {
+      background: none;
     }
   }
 }

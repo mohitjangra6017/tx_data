@@ -16,7 +16,11 @@
   @module totara_notification
 -->
 <template>
-  <Table :data="defaultDeliveryChannels" class="tui-forceDeliveryChannels">
+  <Table
+    :data="defaultDeliveryChannels"
+    class="tui-forceDeliveryChannels"
+    :stack-at="350"
+  >
     <template v-slot:header-row>
       <HeaderCell>
         {{ $str('delivery_channel', 'totara_notification') }}

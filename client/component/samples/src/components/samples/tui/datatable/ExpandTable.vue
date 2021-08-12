@@ -29,6 +29,7 @@
         :border-top-hidden="hideTopBorder"
         :stealth-expanded="stealthExpanded"
         :indent-expanded-contents="indentExpandedContents"
+        :stack-at="Number(stackAt)"
       >
         <template v-slot:header-row>
           <ExpandCell :header="true" />
@@ -63,6 +64,7 @@
         :border-top-hidden="hideTopBorder"
         :stealth-expanded="stealthExpanded"
         :indent-expanded-contents="indentExpandedContents"
+        :stack-at="Number(stackAt)"
       >
         <template v-slot:header-row>
           <ExpandCell :header="true" />
@@ -116,6 +118,7 @@
         :indent-contents="indentContents"
         :stealth-expanded="stealthExpanded"
         :indent-expanded-contents="indentExpandedContents"
+        :stack-at="Number(stackAt)"
       >
         <template v-slot:header-row>
           <ExpandCell :header="true" />
@@ -217,6 +220,10 @@
           <Radio :value="false">False</Radio>
         </RadioGroup>
       </FormRow>
+
+      <FormRow label="Stack at">
+        <InputNumber v-model="stackAt" />
+      </FormRow>
     </SamplesPropCtl>
 
     <SamplesCode>
@@ -231,7 +238,7 @@ import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
-
+import InputNumber from 'tui/components/form/InputNumber';
 import SamplesCode from 'samples/components/sample_parts/misc/SamplesCode';
 import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample';
 import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
@@ -245,7 +252,7 @@ export default {
     ExpandCell,
     HeaderCell,
     Table,
-
+    InputNumber,
     SamplesCode,
     SamplesExample,
     SamplesPropCtl,
@@ -281,6 +288,7 @@ export default {
       stealthExpanded: false,
       indentExpandedContents: false,
       expandMultipleRows: false,
+      stackAt: 570,
       codeTemplate: `<Table
   :color-odd-rows="true"
   :data="dummyData"

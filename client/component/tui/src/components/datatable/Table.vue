@@ -23,19 +23,29 @@
   <div
     v-else
     class="tui-dataTable"
-    :class="{ 'tui-dataTable--archived': archived }"
+    :class="{
+      'tui-dataTable--archived': archived,
+    }"
     role="table"
   >
-    <HeaderRow :empty="!$slots['header-row']" :indented="indentContents">
+    <HeaderRow
+      :empty="!$slots['header-row']"
+      :indented="indentContents"
+      :is-stacked="isStacked"
+    >
       <HeaderCell
         v-if="$slots['header-row'] && draggableRows"
         class="tui-dataTable__row-move-cell"
       />
-      <slot name="header-row" />
+      <PropsProvider :provide="provide">
+        <slot name="header-row" />
+      </PropsProvider>
     </HeaderRow>
 
     <PreRows v-if="this.$slots['pre-rows']">
-      <slot name="pre-rows" />
+      <PropsProvider :provide="provide">
+        <slot name="pre-rows" />
+      </PropsProvider>
     </PreRows>
 
     <render :vnode="draggableDropTarget" />
@@ -45,6 +55,7 @@
       :key="groupId"
       :selected="isSelected(groupId)"
       :wrap="groupMode"
+      :is-stacked="isStacked"
     >
       <template v-for="({ row, id, expand, index }, groupIndex) in rows">
         <!--
@@ -93,6 +104,7 @@
               :indented="indentContents"
               :stealth="indentExpandedContents"
               :stealth-expanded="stealthExpanded"
+              :is-stacked="isStacked"
               v-bind="attrs"
             >
               <Cell
@@ -105,18 +117,20 @@
                   <render :vnode="moveMenu" />
                 </div>
               </Cell>
-              <slot
-                :id="id"
-                name="row"
-                :expand="expand"
-                :expandState="isExpanded(id)"
-                :expand-group="expandGroup"
-                :first-in-group="groupIndex === 0"
-                :group-id="groupId"
-                :in-group="groupMode"
-                :row="row"
-                :dragging="dragging"
-              />
+              <PropsProvider :provide="provide">
+                <slot
+                  :id="id"
+                  name="row"
+                  :expand="expand"
+                  :expandState="isExpanded(id)"
+                  :expand-group="expandGroup"
+                  :first-in-group="groupIndex === 0"
+                  :group-id="groupId"
+                  :in-group="groupMode"
+                  :row="row"
+                  :dragging="dragging"
+                />
+              </PropsProvider>
             </Row>
           </component>
         </component>
@@ -126,9 +140,12 @@
           :key="id + ' expand'"
           :stealth="stealthExpanded"
           :indent-contents="indentExpandedContents"
+          :is-stacked="isStacked"
           @close="updateExpandedRow()"
         >
-          <slot name="expand-content" :row="row" />
+          <PropsProvider :provide="provide">
+            <slot name="expand-content" :row="row" />
+          </PropsProvider>
         </ExpandedRow>
       </template>
 
@@ -137,9 +154,12 @@
         :key="groupId + ' expand'"
         :stealth="stealthExpanded"
         :indent-contents="indentExpandedContents"
+        :is-stacked="isStacked"
         @close="updateExpandedGroup()"
       >
-        <slot name="group-expand-content" :group="group" />
+        <PropsProvider :provide="provide">
+          <slot name="group-expand-content" :group="group" />
+        </PropsProvider>
       </ExpandedRow>
     </RowGroup>
 
@@ -158,9 +178,11 @@ import PropsProvider from 'tui/components/util/PropsProvider';
 import Cell from 'tui/components/datatable/Cell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import DragHandleIcon from 'tui/components/icons/DragHandle';
+import ResizeObserver from 'tui/polyfills/ResizeObserver';
 
 export default {
   components: {
+    ResizeObserver,
     ExpandedRow,
     HeaderRow,
     PreRows,
@@ -235,6 +257,13 @@ export default {
     draggableType: {
       type: [String, Function],
     },
+    /*
+     * When the width of the table is this size (in px) or smaller the table will be stacked/collapsed to a vertical view.
+     */
+    stackAt: {
+      type: Number,
+      default: 570, // Equivalent to the $tui-screen-xs breakpoint if the table is full width.
+    },
   },
 
   data() {
@@ -242,6 +271,8 @@ export default {
       expanded: null,
       expandedRows: [],
       expandedGroup: null,
+      width: null,
+      isStacked: false,
     };
   },
 
@@ -295,6 +326,44 @@ export default {
         };
       });
     },
+    /**
+     * Common props provided to all slots.
+     *
+     * @return {Object}
+     */
+    provide() {
+      return {
+        props: {
+          isStacked: this.isStacked,
+        },
+      };
+    },
+  },
+
+  watch: {
+    stackAt() {
+      this.isStacked = this.width <= this.stackAt;
+    },
+    /**
+     * Only apply the resize observer while the provided data is not empty
+     */
+    data(newData, oldData) {
+      if (oldData.length === 0 && newData.length > 0) {
+        this.$nextTick(this.registerResizeObserver);
+      } else if (oldData.length > 0 && newData.length === 0) {
+        this.$nextTick(this.unregisterResizeObserver);
+      }
+    },
+  },
+
+  mounted() {
+    if (this.data.length > 0) {
+      this.registerResizeObserver();
+    }
+  },
+
+  unmounted() {
+    this.unregisterResizeObserver();
   },
 
   methods: {
@@ -390,6 +459,36 @@ export default {
       console.error(
         'draggable-type prop must be supplied to Table when draggable-rows is true.'
       );
+    },
+
+    /**
+     * Register the resize observer used to control stacking (stackedAt).
+     */
+    registerResizeObserver() {
+      if (Number.isInteger(this.stackAt) && this.$el instanceof Element) {
+        this.resizeObserverRef = new ResizeObserver(this.handleResize);
+        this.resizeObserverRef.observe(this.$el);
+      }
+    },
+
+    /**
+     * Unregister the resize observer used to control stacking (stackedAt).
+     */
+    unregisterResizeObserver() {
+      if (this.resizeObserverRef && this.$el instanceof Element) {
+        this.resizeObserverRef.unobserve(this.$el);
+      }
+    },
+
+    /**
+     * Resize observer callback to determine if the table should be in stacked mode or not.
+     *
+     * @param entries {Object[]}
+     */
+    handleResize: function(entries) {
+      this.width = entries[0].contentRect.width;
+
+      this.isStacked = this.width <= this.stackAt;
     },
   },
 };

@@ -10,6 +10,9 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
   >
     <!---->
      
+    <propsprovider-stub
+      provide="[object Object]"
+    />
   </headerrow-stub>
    
   <!---->
@@ -20,24 +23,36 @@ exports[`presentation/datatable/Table.vue Checks snapshot 1`] = `
     <row-stub>
       <!---->
        
+      <propsprovider-stub
+        provide="[object Object]"
+      />
     </row-stub>
      
     <!---->
     <row-stub>
       <!---->
        
+      <propsprovider-stub
+        provide="[object Object]"
+      />
     </row-stub>
      
     <!---->
     <row-stub>
       <!---->
        
+      <propsprovider-stub
+        provide="[object Object]"
+      />
     </row-stub>
      
     <!---->
     <row-stub>
       <!---->
        
+      <propsprovider-stub
+        provide="[object Object]"
+      />
     </row-stub>
      
     <!---->

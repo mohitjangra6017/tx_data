@@ -23,6 +23,7 @@
     class="tui-dataTableRowGroup"
     :class="{
       'tui-dataTableRowGroup--selected': selected,
+      'tui-dataTableRowGroup--stacked': isStacked,
     }"
     role="rowgroup"
   >
@@ -38,14 +39,19 @@ export default {
   props: {
     selected: Boolean,
     wrap: Boolean,
+    isStacked: Boolean,
   },
 };
 </script>
 
 <style lang="scss">
 .tui-dataTableRowGroup {
-  padding: 0 var(--gap-2);
+  padding: 0;
   border-top: 2px solid var(--datatable-row-first-border-color);
+
+  &--stacked {
+    padding: 0 var(--gap-2);
+  }
 
   & + & {
     border-top: 1px solid var(--datatable-row-border-color);
@@ -67,12 +73,6 @@ export default {
     &:hover {
       background: var(--datatable-row-bg-color-focus);
     }
-  }
-}
-
-@media (min-width: $tui-screen-xs) {
-  .tui-dataTableRowGroup {
-    padding: 0;
   }
 }
 </style>

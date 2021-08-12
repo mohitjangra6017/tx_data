@@ -19,7 +19,10 @@
 <template>
   <div
     class="tui-dataTableExpandCell"
-    :class="{ 'tui-dataTableExpandCell--header': header }"
+    :class="{
+      'tui-dataTableExpandCell--header': header,
+      'tui-dataTableExpandCell--stacked ': isStacked,
+    }"
     role="cell"
   >
     <template v-if="!header && !empty">
@@ -29,7 +32,7 @@
         :styleclass="{
           transparent: true,
         }"
-        :text="text"
+        :text="isStacked ? text : null"
         @click="$emit('click', $event)"
       >
         <CollapseIcon v-if="expandState" size="100" />
@@ -63,6 +66,7 @@ export default {
     empty: Boolean,
     expandState: Boolean,
     header: Boolean,
+    isStacked: Boolean,
   },
 
   mounted() {
@@ -90,8 +94,9 @@ export default {
 <style lang="scss">
 .tui-dataTableExpandCell {
   display: flex;
-  order: 1;
-  margin: var(--gap-2) 0;
+  order: 0;
+  width: var(--gap-9);
+  margin: 0;
 
   .tui-iconBtn {
     margin: 0 auto;
@@ -100,17 +105,11 @@ export default {
   &.tui-dataTableExpandCell--header {
     margin-left: 0;
   }
-}
 
-@media (min-width: $tui-screen-xs) {
-  .tui-dataTableExpandCell {
-    order: 0;
-    width: var(--gap-9);
-    margin: 0;
-
-    .tui-iconBtn__text {
-      display: none;
-    }
+  &--stacked {
+    order: 1;
+    width: 100%;
+    margin: var(--gap-2) 0;
   }
 }
 </style>

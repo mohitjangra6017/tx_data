@@ -65,6 +65,7 @@
         :border-bottom-hidden="true"
         :border-separator-hidden="true"
         :border-top-hidden="!isMultiSectionActive"
+        :stack-at="512"
       >
         <template v-slot:row="{ row }">
           <Cell
