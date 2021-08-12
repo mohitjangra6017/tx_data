@@ -34,7 +34,7 @@ trait url_report_trait {
      * @param array     $joinlist
      */
     protected function add_totara_customfield_url_tables(\stdClass $cf_info, array &$joinlist) {
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
         $joinlist[] = new \rb_join(
             $joinname,
             'LEFT',
@@ -53,10 +53,10 @@ trait url_report_trait {
      */
     protected function add_totara_customfield_url_columns(\stdClass $cf_info, array &$columnoptions) {
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
 
         $columnoptions[] = new \rb_column_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             "custom_field_{$cf_info->id}{$cf_info->suffix}",
             $name,
             "{$joinname}.data",
@@ -78,7 +78,7 @@ trait url_report_trait {
     protected function add_totara_customfield_url_filters(\stdClass $cf_info, array &$filteroptions) {
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
         $filteroptions[] = new \rb_filter_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             "custom_field_{$cf_info->id}{$cf_info->suffix}",
             $name,
             'url',

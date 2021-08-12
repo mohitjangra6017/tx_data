@@ -34,7 +34,7 @@ trait text_report_trait {
      * @param array     $joinlist
      */
     protected function add_totara_customfield_text_tables(\stdClass $cf_info, array &$joinlist) {
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
 
         if ($cf_info->defaultdata !== '' && $cf_info->defaultdata !== null) {
             // Note: there is no safe way to inject the default value into the query, use extra join instead.
@@ -65,7 +65,7 @@ trait text_report_trait {
      * @param array     $columnoptions
      */
     protected function add_totara_customfield_text_columns(\stdClass $cf_info, array &$columnoptions) {
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
 
         $column_options = [
@@ -84,7 +84,7 @@ trait text_report_trait {
         }
 
         $columnoptions[] = new \rb_column_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             "custom_field_{$cf_info->id}{$cf_info->suffix}",
             $name,
             $columnsql,
@@ -102,7 +102,7 @@ trait text_report_trait {
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
 
         $filteroptions[] = new \rb_filter_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             "custom_field_{$cf_info->id}{$cf_info->suffix}",
             $name,
             'text',

@@ -34,7 +34,7 @@ trait checkbox_report_trait {
      * @param array     $joinlist
      */
     protected function add_totara_customfield_checkbox_tables(\stdClass $cf_info, array &$joinlist) {
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
         $joinlist[] = new \rb_join(
             $joinname,
             'LEFT',
@@ -55,12 +55,12 @@ trait checkbox_report_trait {
         global $DB;
 
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
         $columnsql = "{$joinname}.data";
         $columnsql = "CASE WHEN ({$columnsql} IS NULL OR {$columnsql} = '') THEN {$cf_info->defaultdata} ELSE " . $DB->sql_cast_char2int($columnsql, true) . " END";
 
         $columnoptions[] = new \rb_column_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             "custom_field_{$cf_info->id}{$cf_info->suffix}",
             $name,
             $columnsql,
@@ -83,7 +83,7 @@ trait checkbox_report_trait {
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
 
         $filteroptions[] = new \rb_filter_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             "custom_field_{$cf_info->id}{$cf_info->suffix}",
             $name,
             'select',

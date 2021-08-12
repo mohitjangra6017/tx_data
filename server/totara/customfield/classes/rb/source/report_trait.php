@@ -110,7 +110,8 @@ trait report_trait {
         foreach ($joindata as $extrajoindata) {
             $this->add_totara_customfield_component(
                 $extrajoindata['cf_prefix'], $extrajoindata['jointable'], $extrajoindata['joinfield'],
-                $this->joinlist, $this->columnoptions, $this->filteroptions
+                $this->joinlist, $this->columnoptions, $this->filteroptions,
+                '', false, $extrajoindata['area_prefix'] ?? null
             );
         }
     }
@@ -130,11 +131,12 @@ trait report_trait {
      *                              Use short prefixes to avoid hiting column size limitations
      * @param bool   $nofilter      do not create filter for custom fields. It is useful when customfields are
      *                              dynamically added by column generator
+     * @param string $area_prefix   Customfield area to use if different from cf_prefix
      *
      * @return bool
      */
     protected function add_totara_customfield_component($cf_prefix, $join, $joinfield, array &$joinlist,
-                                                        array &$columnoptions, array &$filteroptions, $suffix = '', $nofilter = false) {
+        array &$columnoptions, array &$filteroptions, $suffix = '', $nofilter = false, ?string $area_prefix = null) {
 
         if (strlen($suffix)) {
             if (!preg_match('/^[a-zA-Z]{1,5}$/', $suffix)) {
@@ -174,6 +176,7 @@ trait report_trait {
             $record->joinfield = $joinfield;
             $record->prefix = $cf_prefix;
             $record->suffix = $suffix;
+            $record->area_prefix = $area_prefix ?? $cf_prefix;
 
             // Custom field methods adding to the joins, columns, and filters list.
             $join_function = "add_totara_customfield_{$record->datatype}_tables";

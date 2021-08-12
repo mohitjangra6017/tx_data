@@ -38,7 +38,7 @@ trait multiselect_report_trait {
     protected function add_totara_customfield_multiselect_tables(\stdClass $cf_info, array &$joinlist) {
         global $DB;
 
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
         $jsondata = $DB->sql_cast_2char('cfid.data');
         $data = $DB->sql_group_concat_unique($DB->sql_cast_2char('cfidp.value'), '|');
 
@@ -65,12 +65,12 @@ trait multiselect_report_trait {
      * @throws \coding_exception
      */
     protected function add_totara_customfield_multiselect_columns(\stdClass $cf_info, array &$columnoptions) {
-        $joinname = "{$cf_info->prefix}_{$cf_info->id}{$cf_info->suffix}";
+        $joinname = "{$cf_info->area_prefix}_{$cf_info->id}{$cf_info->suffix}";
         $value = "custom_field_{$cf_info->id}{$cf_info->suffix}";
         $name = isset($cf_info->fullname) ? $cf_info->fullname : $cf_info->name;
 
         $columnoptions[] = new \rb_column_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             $value . '_icon',
             get_string('multiselectcolumnicon', 'totara_customfield', $name),
             "$joinname.data",
@@ -78,14 +78,14 @@ trait multiselect_report_trait {
                 'joins'          => $joinname,
                 'displayfunc'    => 'customfield_multiselect_icon',
                 'extrafields'    => [
-                    "{$cf_info->prefix}_{$value}_icon_json" => "{$joinname}.jsondata",
+                    "{$cf_info->area_prefix}_{$value}_icon_json" => "{$joinname}.jsondata",
                 ],
                 'defaultheading' => $name,
             ]
         );
 
         $columnoptions[] = new \rb_column_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             $value . '_text',
             get_string('multiselectcolumntext', 'totara_customfield', $name),
             "$joinname.data",
@@ -93,7 +93,7 @@ trait multiselect_report_trait {
                 'joins'          => $joinname,
                 'displayfunc'    => 'customfield_multiselect_text',
                 'extrafields'    => [
-                    "{$cf_info->prefix}_{$value}_text_json" => "{$joinname}.jsondata",
+                    "{$cf_info->area_prefix}_{$value}_text_json" => "{$joinname}.jsondata",
                 ],
                 'defaultheading' => $name,
             ]
@@ -133,24 +133,24 @@ trait multiselect_report_trait {
         $filter_options['showcounts'] = [
             'joins'      => [
                 "LEFT JOIN (SELECT id, {$cf_info->joinfield} FROM {{$cf_info->prefix}_info_data} " .
-                "WHERE fieldid = {$cf_info->id}) {$cf_info->prefix}_idt_{$cf_info->id} " .
-                "ON base_{$cf_info->prefix}_idt_{$cf_info->id} = {$cf_info->prefix}_idt_{$cf_info->id}.{$cf_info->joinfield}",
-                "LEFT JOIN {{$cf_info->prefix}_info_data_param} {$cf_info->prefix}_idpt_{$cf_info->id} " .
-                "ON {$cf_info->prefix}_idt_{$cf_info->id}.id = {$cf_info->prefix}_idpt_{$cf_info->id}.dataid",
+                "WHERE fieldid = {$cf_info->id}) {$cf_info->area_prefix}_idt_{$cf_info->id} " .
+                "ON base_{$cf_info->area_prefix}_idt_{$cf_info->id} = {$cf_info->area_prefix}_idt_{$cf_info->id}.{$cf_info->joinfield}",
+                "LEFT JOIN {{$cf_info->prefix}_info_data_param} {$cf_info->area_prefix}_idpt_{$cf_info->id} " .
+                "ON {$cf_info->area_prefix}_idt_{$cf_info->id}.id = {$cf_info->area_prefix}_idpt_{$cf_info->id}.dataid",
             ],
             'basefields' => [
-                "{$cf_info->join}.id AS base_{$cf_info->prefix}_idt_{$cf_info->id}",
+                "{$cf_info->join}.id AS base_{$cf_info->area_prefix}_idt_{$cf_info->id}",
             ],
             'basegroups' => [
                 "{$cf_info->join}.id",
             ],
             'dependency' => $cf_info->join,
-            'dataalias'  => "{$cf_info->prefix}_idpt_{$cf_info->id}",
+            'dataalias'  => "{$cf_info->area_prefix}_idpt_{$cf_info->id}",
             'datafield'  => "value",
         ];
 
         $filteroptions[] = new \rb_filter_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             'custom_field_' . $cf_info->id . $cf_info->suffix . '_text',
             get_string('multiselectcolumntext', 'totara_customfield', $name),
             'multicheck',
@@ -167,23 +167,23 @@ trait multiselect_report_trait {
             'joins'      => [
                 "LEFT JOIN (SELECT id, {$cf_info->joinfield} FROM {{$cf_info->prefix}_info_data} " .
                 "WHERE fieldid = {$cf_info->id}) {$cf_info->prefix}_idi_{$cf_info->id} " .
-                "ON base_{$cf_info->prefix}_idi_{$cf_info->id} = {$cf_info->prefix}_idi_{$cf_info->id}.{$cf_info->joinfield}",
-                "LEFT JOIN {{$cf_info->prefix}_info_data_param} {$cf_info->prefix}_idpi_{$cf_info->id} " .
-                "ON {$cf_info->prefix}_idi_{$cf_info->id}.id = {$cf_info->prefix}_idpi_{$cf_info->id}.dataid",
+                "ON base_{$cf_info->area_prefix}_idi_{$cf_info->id} = {$cf_info->area_prefix}_idi_{$cf_info->id}.{$cf_info->joinfield}",
+                "LEFT JOIN {{$cf_info->prefix}_info_data_param} {$cf_info->area_prefix}_idpi_{$cf_info->id} " .
+                "ON {$cf_info->area_prefix}_idi_{$cf_info->id}.id = {$cf_info->area_prefix}_idpi_{$cf_info->id}.dataid",
             ],
             'basefields' => [
-                "{$cf_info->join}.id AS base_{$cf_info->prefix}_idi_{$cf_info->id}",
+                "{$cf_info->join}.id AS base_{$cf_info->area_prefix}_idi_{$cf_info->id}",
             ],
             'basegroups' => [
                 "{$cf_info->join}.id",
             ],
             'dependency' => $cf_info->join,
-            'dataalias'  => "{$cf_info->prefix}_idpi_{$cf_info->id}",
+            'dataalias'  => "{$cf_info->area_prefix}_idpi_{$cf_info->id}",
             'datafield'  => "value",
         ];
 
         $filteroptions[] = new \rb_filter_option(
-            $cf_info->prefix,
+            $cf_info->area_prefix,
             'custom_field_' . $cf_info->id . $cf_info->suffix . '_icon',
             get_string('multiselectcolumnicon', 'totara_customfield', $name),
             'multicheck',
