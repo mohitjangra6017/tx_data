@@ -19,6 +19,7 @@
   <div class="tui-performUserActivityList">
     <ActivitiesFilter
       v-model="userFilters"
+      :about="about"
       :filter-options="filterOptions"
       @filter-change="filterChange"
     >
@@ -351,6 +352,7 @@ export default {
         excludeCompleted: false,
         ownProgress: null,
         overdueOnly: false,
+        search: null,
       },
     };
   },
@@ -386,6 +388,7 @@ export default {
         exclude_complete: this.userFilters.excludeCompleted,
         overdue: this.userFilters.overdueOnly,
         participant_progress: this.userFilters.ownProgress,
+        search_term: this.userFilters.search,
       };
     },
   },

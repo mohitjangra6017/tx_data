@@ -51,6 +51,30 @@
           :toggle-first="true"
         />
       </template>
+
+      <template v-slot:filters-right="{ stacked }">
+        <SearchFilter
+          v-model="value.search"
+          :label="
+            $str(
+              about === 'self'
+                ? 'user_activities_filter_search'
+                : 'user_activities_filter_search_others',
+              'mod_perform'
+            )
+          "
+          :placeholder="
+            $str(
+              about === 'self'
+                ? 'user_activities_filter_search_placeholder'
+                : 'user_activities_filter_search_others_placeholder',
+              'mod_perform'
+            )
+          "
+          drop-label
+          :stacked="stacked"
+        />
+      </template>
     </FilterBar>
 
     <div class="tui-performUserActivitiesFilter__toggles">
@@ -74,17 +98,20 @@
 
 <script>
 import FilterBar from 'tui/components/filters/FilterBar';
+import SearchFilter from 'tui/components/filters/SearchFilter';
 import SelectFilter from 'tui/components/filters/SelectFilter';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
 export default {
   components: {
     FilterBar,
+    SearchFilter,
     SelectFilter,
     ToggleSwitch,
   },
 
   props: {
+    about: String,
     filterOptions: Object,
     value: Object,
   },
@@ -153,8 +180,12 @@ export default {
     "mod_perform": [
       "user_activities_filter",
       "user_activities_filter_exclude_completed",
-      "user_activities_filter_own_progress",
       "user_activities_filter_overdue_only",
+      "user_activities_filter_own_progress",
+      "user_activities_filter_search",
+      "user_activities_filter_search_others",
+      "user_activities_filter_search_others_placeholder",
+      "user_activities_filter_search_placeholder",
       "user_activities_filter_type"
     ]
   }
