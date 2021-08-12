@@ -20,16 +20,15 @@
     <!-- Drop down button -->
     <Dropdown>
       <template v-slot:trigger="{ toggle, isOpen }">
-        <ButtonIcon
-          :styleclass="{ small: true, transparentNoPadding: true }"
+        <MoreIcon
           :aria-expanded="isOpen ? 'true' : 'false'"
           :aria-label="
             $str('actions_for_event', 'totara_notification', resolverName)
           "
+          :no-padding="true"
+          :size="300"
           @click="toggle"
-        >
-          <MoreIcon :size="300" />
-        </ButtonIcon>
+        />
       </template>
 
       <DropdownItem
@@ -65,14 +64,12 @@
 <script>
 import Dropdown from 'tui/components/dropdown/Dropdown';
 import DropdownItem from 'tui/components/dropdown/DropdownItem';
-import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import MoreIcon from 'tui/components/buttons/MoreIcon';
 
 export default {
   components: {
     DropdownItem,
     Dropdown,
-    ButtonIcon,
     MoreIcon,
   },
 
