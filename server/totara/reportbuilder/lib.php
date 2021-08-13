@@ -4214,6 +4214,8 @@ class reportbuilder {
      */
     function build_query($countonly = false, $filtered = false, $allowcache = true) {
         global $CFG, $DB;
+        // KINEO CCM - GLOTOT-1967
+        class_exists('\local_core\Hook\ReportBuilder\PostgresWorkMem') && \local_core\Hook\ReportBuilder\PostgresWorkMem::setTempWorkMem();
 
         if ($allowcache && !empty($CFG->enablereportcaching) && $DB->is_create_table_from_select_supported()) {
             $cached = $this->build_cache_query($countonly, $filtered);
