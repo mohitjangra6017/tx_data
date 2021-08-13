@@ -619,6 +619,11 @@ function enrol_get_my_courses($fields = NULL, $sort = 'visible DESC,sortorder AS
                               $limit = 0, $courseids = []) {
     global $DB, $USER, $CFG;
 
+    // Allowed prefixes and field names.
+    $allowedprefixesandfields = array('c' => array_keys($DB->get_columns('course')),
+                                'ul' => array_keys($DB->get_columns('user_lastaccess')),
+                                'ue' => array_keys($DB->get_columns('user_enrolments')));
+
     // Guest account does not have any courses
     if (isguestuser() or !isloggedin()) {
         return(array());
@@ -645,21 +650,7 @@ function enrol_get_my_courses($fields = NULL, $sort = 'visible DESC,sortorder AS
         $fields = array('*');
     }
 
-    $orderby = "";
-    $sort    = trim($sort);
-    if (!empty($sort)) {
-        $rawsorts = explode(',', $sort);
-        $sorts = array();
-        foreach ($rawsorts as $rawsort) {
-            $rawsort = trim($rawsort);
-            if (strpos($rawsort, 'c.') === 0) {
-                $rawsort = substr($rawsort, 2);
-            }
-            $sorts[] = trim($rawsort);
-        }
-        $sort = 'c.'.implode(',c.', $sorts);
-        $orderby = "ORDER BY $sort";
-    }
+    $orderby = enrol_get_cleaned_order_by_sql($sort, $allowedprefixesandfields);
 
     // Totara: Added support for container to fetch only courses related.
     $wheres = array("c.id <> :siteid", "c.containertype = :containertype");
@@ -913,6 +904,11 @@ function enrol_get_all_users_courses($userid, $onlyactive = false, $fields = NUL
         }
     }
 
+    // Allowed prefixes and field names.
+    $allowedprefixesandfields = array('c' => array_keys($DB->get_columns('course')),
+        'ul' => array_keys($DB->get_columns('user_lastaccess')),
+        'ue' => array_keys($DB->get_columns('user_enrolments')));
+
     $basefields = array('id', 'category', 'sortorder',
             'shortname', 'fullname', 'idnumber',
             'startdate', 'visible',
@@ -935,21 +931,7 @@ function enrol_get_all_users_courses($userid, $onlyactive = false, $fields = NUL
         $fields = array('*');
     }
 
-    $orderby = "";
-    $sort    = trim($sort);
-    if (!empty($sort)) {
-        $rawsorts = explode(',', $sort);
-        $sorts = array();
-        foreach ($rawsorts as $rawsort) {
-            $rawsort = trim($rawsort);
-            if (strpos($rawsort, 'c.') === 0) {
-                $rawsort = substr($rawsort, 2);
-            }
-            $sorts[] = trim($rawsort);
-        }
-        $sort = 'c.'.implode(',c.', $sorts);
-        $orderby = "ORDER BY $sort";
-    }
+    $orderby = enrol_get_cleaned_order_by_sql($sort, $allowedprefixesandfields);
 
     $params = array('siteid'=>SITEID);
 
@@ -3366,4 +3348,73 @@ abstract class enrol_plugin {
             throw new coding_exception('Invalid parameter type');
         }
     }
+}
+
+/**
+ * Totara: Validate and clean the sort by SQL provided to the enrollib functions.
+ *         This is important to prevent potential SQL injection risk.
+ *
+ * @author Mihail Geshoski <mihail@moodle.com>
+ * @since Totara 15.0
+ *
+ * @param string $sort The order by SQL value
+ * @param array $allowedprefixesandfields Allowed prefixes and fields to validate against
+ * @return string The cleaned SQL string
+ */
+function enrol_get_cleaned_order_by_sql($sort, $allowedprefixesandfields) {
+    $orderby = "";
+    $sort    = trim($sort);
+    if (!empty($sort)) {
+        $rawsorts = explode(',', $sort);
+        $sorts = array();
+        foreach ($rawsorts as $rawsort) {
+            $rawsort = trim($rawsort);
+            // Make sure that there are no more white spaces in sortparams after explode.
+            $sortparams = array_values(array_filter(explode(' ', $rawsort)));
+            // If more than 2 values present then throw coding_exception.
+            if (isset($sortparams[2])) {
+                throw new coding_exception('Invalid $sort parameter in enrol_cleaned_order_by_sql()');
+            }
+            // Check the sort ordering if present, at the beginning.
+            if (isset($sortparams[1]) && (preg_match("/^(asc|desc)$/i", $sortparams[1]) === 0)) {
+                throw new coding_exception('Invalid sort direction in $sort parameter in enrol_cleaned_order_by_sql()');
+            }
+
+            $sortfield = $sortparams[0];
+            $sortdirection = isset($sortparams[1]) ? $sortparams[1] : 'asc';
+            if (strpos($sortfield, '.') !== false) {
+                $sortfieldparams = explode('.', $sortfield);
+                // Check if more than one dots present in the prefix field.
+                if (isset($sortfieldparams[2])) {
+                    throw new coding_exception('Invalid $sort parameter in enrol_cleaned_order_by_sql()');
+                }
+                list($prefix, $fieldname) = array($sortfieldparams[0], $sortfieldparams[1]);
+                // Check if the field name matches with the allowed prefix.
+                if (array_key_exists($prefix, $allowedprefixesandfields) &&
+                    (in_array($fieldname, $allowedprefixesandfields[$prefix]))) {
+                    // Check if the field name that matches with the prefix and just append to sorts.
+                    $sorts[] = $rawsort;
+                } else {
+                    throw new coding_exception('Invalid $sort parameter in enrol_cleaned_order_by_sql()');
+                }
+            } else {
+                // Check if the field name matches with $allowedprefixesandfields.
+                $found = false;
+                foreach (array_keys($allowedprefixesandfields) as $prefix) {
+                    if (in_array($sortfield, $allowedprefixesandfields[$prefix])) {
+                        $sorts[] = "{$prefix}.{$sortfield} {$sortdirection}";
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    // The param is not found in $allowedprefixesandfields.
+                    throw new coding_exception('Invalid $sort parameter in enrol_cleaned_order_by_sql()');
+                }
+            }
+        }
+        $sort = implode(', ', $sorts);
+        $orderby = "ORDER BY $sort";
+    }
+    return $orderby;
 }

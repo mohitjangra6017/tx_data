@@ -17,6 +17,8 @@ information provided here is intended especially for developers.
 * \core\webapi\resolver\type\category::authorize had been deprecated and should not be used publicly outside of the class, please use \core\webapi\resolver\type\category::do_authorize instead
 * For security reasons, filelib has been updated so all requests now use emulated redirects.
   For this reason, manually disabling emulateredirects will no longer have any effect (and will generate a debugging message).
+* enrol_get_my_courses() and enrol_get_all_users_courses() in enrollib.php now use enrol_get_cleaned_order_by_sql()
+  to ensure the $sort parameter does not contain any potentially dangerous SQL statements.
 
 === 14.0 ===
 

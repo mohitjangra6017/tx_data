@@ -894,4 +894,55 @@ class core_enrollib_testcase extends advanced_testcase {
         $this->assertEquals($course1->id, $courses[$course1->id]->id);
         $this->assertEquals($course2->id, $courses[$course2->id]->id);
     }
+
+    /**
+     * Different scenarios for testing SQL injection vulnerability with the $sort attribute in enrollib functions.
+     *
+     * @return array
+     */
+    public function enrol_get_cleaned_order_by_sql_provider() {
+        return array(
+            array('id DESC', false), // Valid sort value
+            array('c.id ASC', false), // Valid sort value
+            array('c.id ASC, fullname DESC', false), // Valid sort value
+            array('id FOOBAR', 'Invalid sort direction in $sort parameter in enrol_cleaned_order_by_sql()'), // Invalid sort direction
+            array('id DESC foobar', 'Invalid $sort parameter in enrol_cleaned_order_by_sql()'), // Too many params
+            array('password', 'Invalid $sort parameter in enrol_cleaned_order_by_sql()'), // Invalid column
+            array('foo.bar.id', 'Invalid $sort parameter in enrol_cleaned_order_by_sql()'), // Too many periods
+            array('id; SELECT password FROM {user}', 'Invalid $sort parameter in enrol_cleaned_order_by_sql()'), // SQL injection risk
+        );
+    }
+
+    /**
+     * Make sure there isn't any SQL injection vulnerabilities with the sort attribute
+     *
+     * @dataProvider enrol_get_cleaned_order_by_sql_provider
+     * @param string $sort_sql The sort sql string to check
+     * @param string|false $expected_exception The expected exception message, or false if there shouldn't be an exception.
+     */
+    public function test_enrol_get_my_courses_sort_sql_is_sanitized($sort_sql, $expected_exception) {
+        $this->setAdminUser();
+        if ($expected_exception) {
+            $this->expectException(\coding_exception::class);
+            $this->expectExceptionMessage($expected_exception);
+        }
+        enrol_get_my_courses(array('id'), $sort_sql);
+    }
+
+    /**
+     * Make sure there isn't any SQL injection vulnerabilities with the sort attribute
+     *
+     * @dataProvider enrol_get_cleaned_order_by_sql_provider
+     * @param string $sort_sql The sort sql string to check
+     * @param string|false $expected_exception The expected exception message, or false if there shouldn't be an exception.
+     */
+    public function test_enrol_get_all_users_courses_sort_sql_is_sanitized($sort_sql, $expected_exception) {
+        $this->setAdminUser();
+        if ($expected_exception) {
+            $this->expectException(\coding_exception::class);
+            $this->expectExceptionMessage($expected_exception);
+        }
+        enrol_get_all_users_courses($this->getDataGenerator()->create_user()->id, false, array('id'), $sort_sql);
+    }
+
 }
