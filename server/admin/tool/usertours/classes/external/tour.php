@@ -81,6 +81,9 @@ class tour extends external_api {
     public static function fetch_and_start_tour($tourid, $context, $pageurl) {
         global $PAGE;
 
+        // Specific url cleaning here as fetch_and_start_tour_parameters is using PARAM_RAW to allow [ and ] in  the url.
+        $pageurl = clean_param($pageurl, PARAM_URL);
+
         $params = self::validate_parameters(self::fetch_and_start_tour_parameters(), [
                 'tourid'    => $tourid,
                 'context'   => $context,
@@ -126,7 +129,7 @@ class tour extends external_api {
         return new external_function_parameters([
             'tourid'    => new external_value(PARAM_INT, 'Tour ID'),
             'context'   => new external_value(PARAM_INT, 'Context ID'),
-            'pageurl'   => new external_value(PARAM_URL, 'Page URL'),
+            'pageurl'   => new external_value(PARAM_RAW, 'Page URL'),
         ]);
     }
 
@@ -154,6 +157,10 @@ class tour extends external_api {
      * @return  array               As described in reset_tour_returns
      */
     public static function reset_tour($tourid, $context, $pageurl) {
+
+        // Specific url cleaning here as reset_tour_parameters is using PARAM_RAW to allow [ and ] in  the url.
+        $pageurl = clean_param($pageurl, PARAM_URL);
+
         $params = self::validate_parameters(self::reset_tour_parameters(), [
                 'tourid'    => $tourid,
                 'context'   => $context,
@@ -195,7 +202,7 @@ class tour extends external_api {
         return new external_function_parameters([
             'tourid'    => new external_value(PARAM_INT, 'Tour ID'),
             'context'   => new external_value(PARAM_INT, 'Context ID'),
-            'pageurl'   => new external_value(PARAM_URL, 'Current page location'),
+            'pageurl'   => new external_value(PARAM_RAW, 'Current page location'),
         ]);
     }
 
@@ -283,6 +290,9 @@ class tour extends external_api {
      * @return  array               As described in complete_tour_returns
      */
     public static function step_shown($tourid, $context, $pageurl, $stepid, $stepindex) {
+        // Specific url cleaning here as step_shown_parameters is using PARAM_RAW to allow [ and ] in  the url.
+        $pageurl = clean_param($pageurl, PARAM_URL);
+
         $params = self::validate_parameters(self::step_shown_parameters(), [
                 'tourid'    => $tourid,
                 'context'   => $context,
@@ -322,7 +332,7 @@ class tour extends external_api {
         return new external_function_parameters([
             'tourid'    => new external_value(PARAM_INT, 'Tour ID'),
             'context'   => new external_value(PARAM_INT, 'Context ID'),
-            'pageurl'   => new external_value(PARAM_URL, 'Page URL'),
+            'pageurl'   => new external_value(PARAM_RAW, 'Page URL'),
             'stepid'    => new external_value(PARAM_INT, 'Step ID'),
             'stepindex' => new external_value(PARAM_INT, 'Step Number'),
         ]);
