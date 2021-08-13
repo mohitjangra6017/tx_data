@@ -55,6 +55,7 @@ $string['type_creator'] = 'Evidence item creator';
 $string['type_date_created'] = 'Type creation date';
 $string['type_date_modified'] = 'Type last modified date';
 $string['type_description'] = 'Type description';
+$string['type_evidence'] = 'Evidence custom fields';
 $string['type_idnumber'] = 'Type ID number';
 $string['type_modifier'] = 'Evidence item last modified by';
 $string['type_name'] = 'Type';

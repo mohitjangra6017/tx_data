@@ -23,6 +23,10 @@
 
 namespace totara_customfield\rb\source;
 
+use totara_evidence\entity\evidence_type;
+use totara_evidence\models\evidence_type as evidence_type_model;
+use totara_evidence\models\helpers\multilang_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 trait report_trait {
@@ -75,6 +79,9 @@ trait report_trait {
                 case '{goal_personal}':
                     $joindata['custom_personal_goal'] = ['jointable' => 'goal_personal', 'cf_prefix' => 'goal_user', 'joinfield' => 'goal_userid'];
                     break;
+                case '{totara_evidence_item}':
+                    $joindata['custom_evidence'] = ['jointable' => 'totara_evidence_item', 'cf_prefix' => 'totara_evidence_type', 'joinfield' => 'evidenceid', 'area_prefix' => 'evidence'];
+                    break;
             }
         }
 
@@ -104,6 +111,9 @@ trait report_trait {
                 break;
             case '{goal_personal}':
                 $joindata['custom_personal_goal'] = ['jointable' => 'base', 'cf_prefix' => 'goal_user', 'joinfield' => 'goal_userid'];
+                break;
+            case '{totara_evidence_item}':
+                $joindata['custom_evidence'] = ['jointable' => 'base', 'cf_prefix' => 'totara_evidence_type', 'joinfield' => 'evidenceid', 'area_prefix' => 'evidence'];
                 break;
         }
 
@@ -177,6 +187,26 @@ trait report_trait {
             $record->prefix = $cf_prefix;
             $record->suffix = $suffix;
             $record->area_prefix = $area_prefix ?? $cf_prefix;
+
+            // The following code is a bit of a hack to add the evidence type
+            // in brackets after each custom field to make it clear to which
+            // type each custom field belongs to.
+            if ($cf_prefix === 'totara_evidence_type') {
+                if (!isset($type_ids)) {
+                    $type_ids = array_unique(array_column($items, 'typeid'));
+                    $types = evidence_type::repository()
+                        ->where('id', $type_ids)
+                        ->get()
+                        ->key_by('id');
+                }
+
+                $type = $types->item($record->typeid);
+                $type = evidence_type_model::load_by_entity($type);
+                $record->fullname = sprintf('%s (%s)',
+                    format_string(multilang_helper::parse_field_name_string($record->fullname)),
+                    $type->get_display_name()
+                );
+            }
 
             // Custom field methods adding to the joins, columns, and filters list.
             $join_function = "add_totara_customfield_{$record->datatype}_tables";

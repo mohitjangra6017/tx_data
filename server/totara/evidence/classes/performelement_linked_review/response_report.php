@@ -34,10 +34,10 @@ class response_report implements content_type_response_report {
     public function get_content_joins(): array {
         return [
             new rb_join(
-                'totara_evidence',
+                'totara_evidence_item',
                 'LEFT',
                 '{totara_evidence_item}',
-                "linked_review_content.content_id = totara_evidence.id 
+                "linked_review_content.content_id = totara_evidence_item.id 
                     AND linked_review_content.content_type = 'totara_evidence'",
                 REPORT_BUILDER_RELATION_MANY_TO_ONE,
                 'linked_review_content'
@@ -49,7 +49,7 @@ class response_report implements content_type_response_report {
      * @inheritDoc
      */
     public function get_content_name_field(): string {
-        return 'totara_evidence.name';
+        return 'totara_evidence_item.name';
     }
 
 }
