@@ -23,7 +23,6 @@ exports[`totara_playlist/components/form/PlaylistForm.vue Checks snapshot 1`] = 
       hidden="true"
       isstacked="true"
       label="playlistdescription, totara_playlist"
-      required="true"
     />
      
     <div

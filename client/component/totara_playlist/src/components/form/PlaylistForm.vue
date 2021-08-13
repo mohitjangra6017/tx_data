@@ -38,7 +38,6 @@
     <div class="tui-playlistForm__description">
       <FormRow
         v-slot="{ id }"
-        :required="true"
         :hidden="true"
         :label="$str('playlistdescription', 'totara_playlist')"
         class="tui-playlistForm__description-formRow"
