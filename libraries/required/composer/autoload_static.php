@@ -215,6 +215,13 @@ class ComposerStaticInit27c32784c862a73de29fe9871b7223ab
                 0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
             ),
         ),
+        'O' => 
+        array (
+            'OAuth2' => 
+            array (
+                0 => __DIR__ . '/..' . '/bshaffer/oauth2-server-php/src',
+            ),
+        ),
         'H' => 
         array (
             'HTMLPurifier' => 

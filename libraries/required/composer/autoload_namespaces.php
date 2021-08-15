@@ -8,5 +8,6 @@ $baseDir = $vendorDir;
 return array(
     'SimplePie' => array($vendorDir . '/simplepie/simplepie/library'),
     'Sabberworm\\CSS' => array($vendorDir . '/sabberworm/php-css-parser/lib'),
+    'OAuth2' => array($vendorDir . '/bshaffer/oauth2-server-php/src'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
 );

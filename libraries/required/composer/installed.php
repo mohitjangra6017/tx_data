@@ -19,6 +19,15 @@
             'reference' => '7964dadc2128f3a00ffa393395b618ea115c8032',
             'dev_requirement' => false,
         ),
+        'bshaffer/oauth2-server-php' => array(
+            'pretty_version' => 'v1.11.1',
+            'version' => '1.11.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../bshaffer/oauth2-server-php',
+            'aliases' => array(),
+            'reference' => '5a0c8000d4763b276919e2106f54eddda6bc50fa',
+            'dev_requirement' => false,
+        ),
         'dompdf/dompdf' => array(
             'pretty_version' => 'v1.0.1',
             'version' => '1.0.1.0',

@@ -16,7 +16,8 @@
     "sabberworm/php-css-parser" : "8.3.1",
     "phpoffice/phpspreadsheet" : "1.16.0",
     "opis/json-schema": "1.1.0",
-    "michelf/php-markdown": "1.9.0"
+    "michelf/php-markdown": "1.9.0",
+    "bshaffer/oauth2-server-php": "1.11.1"
   },
   "config": {
     "vendor-dir": "./"
