@@ -636,10 +636,6 @@ function tm_message_task_accept(int $id, string $reasonfordecision, ?string $pro
 
     $event_data = totara_message_eventdata($id, 'onaccept', $metadata->get_record());
 
-    if (!empty($reasonfordecision)) {
-        $event_data->data['reasonfordecision'] = $reasonfordecision;
-    }
-
     // Default result.
     $result = false;
 
@@ -652,6 +648,9 @@ function tm_message_task_accept(int $id, string $reasonfordecision, ?string $pro
             return false;
         }
 
+        if (!empty($reasonfordecision)) {
+            $event_data->data['reasonfordecision'] = $reasonfordecision;
+        }
         // Run the onaccept phase
         $result = $plugin->onaccept($event_data->data, $notification_record);
     }
