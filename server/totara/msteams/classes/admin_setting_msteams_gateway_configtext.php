@@ -24,6 +24,7 @@ namespace totara_msteams;
 
 use admin_setting_configtext;
 use core\ip_utils;
+use core_text;
 use totara_msteams\quickaccessmenu\msteams;
 
 final class admin_setting_msteams_gateway_configtext extends admin_setting_configtext {
@@ -36,6 +37,11 @@ final class admin_setting_msteams_gateway_configtext extends admin_setting_confi
 
         if (true !== $result) {
             return $result;
+        }
+
+        // We allow empty data input to save config.
+        if (core_text::strlen(trim($data)) == 0) {
+            return true;
         }
 
         if (!ip_utils::is_domain_name($data) || !msteams_gateway_helper::is_internal_host_allowed($data)) {

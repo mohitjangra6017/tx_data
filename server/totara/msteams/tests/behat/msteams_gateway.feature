@@ -21,10 +21,11 @@ Feature: Customise msteams gateway settings
     Then I should see "The site could not be connected. Please check your domain name again."
     And I set the field "Domain name" to " "
     And I press "Save changes"
-    Then I should see "The site could not be connected. Please check your domain name again."
+    And I should see "Changes saved"
+    Then I should not see "The site could not be connected. Please check your domain name again."
     And I set the field "Domain name" to "example.com"
     And I press "Save changes"
-    Then I should see "Changes saved"
+    Then I should see "Some settings were not changed due to an error."
 
   Scenario: admin only can see gateway settings without gateway configuration
     Given I log in as "admin"
