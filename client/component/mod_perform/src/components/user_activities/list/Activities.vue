@@ -13,6 +13,7 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Jaron Steenson <jaron.steenson@totaralearning.com>
+  @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
   @module mod_perform
 -->
 <template>
@@ -22,23 +23,16 @@
       :about="about"
       :filter-options="filterOptions"
       @filter-change="filterChange"
-    >
-      <template v-if="pagination.total" v-slot:displayed-count>
-        <div
-          class="tui-performUserActivityList__count"
-          :class="{
-            'tui-performUserActivityList__count--hidden': $apollo.loading,
-          }"
-        >
-          {{
-            $str('showing_activities', 'mod_perform', {
-              shown: subjectInstances.length,
-              total: pagination.total,
-            })
-          }}
-        </div>
-      </template>
-    </ActivitiesFilter>
+    />
+
+    <ActivitiesCount
+      v-model="sortByFilter"
+      :about="about"
+      :displayed-count="subjectInstances.length"
+      :loading="$apollo.loading"
+      :sort-by-options="sortByOptions"
+      :total="totalActivities"
+    />
 
     <Loader :loading="$apollo.loading">
       <Table
@@ -278,6 +272,7 @@
   </div>
 </template>
 <script>
+import ActivitiesCount from 'mod_perform/components/user_activities/list/ActivitiesCount';
 import ActivitiesFilter from 'mod_perform/components/user_activities/list/ActivitiesFilter';
 import Button from 'tui/components/buttons/Button';
 import Cell from 'tui/components/datatable/Cell';
@@ -295,6 +290,7 @@ import subjectInstancesQuery from 'mod_perform/graphql/my_subject_instances';
 
 export default {
   components: {
+    ActivitiesCount,
     ActivitiesFilter,
     Button,
     Cell,
@@ -310,28 +306,28 @@ export default {
   },
 
   props: {
-    /**
-     * The id of the logged in user.
-     */
-    currentUserId: {
-      required: true,
-      type: Number,
-    },
     about: {
       type: String,
       validator(val) {
         return ['self', 'others'].includes(val);
       },
     },
-    viewUrl: {
-      type: String,
+    //The id of the logged in user.
+    currentUserId: {
       required: true,
+      type: Number,
     },
+    filterOptions: Object,
     printUrl: {
       type: String,
       required: true,
     },
-    filterOptions: Object,
+    // An Array of sort options
+    sortByOptions: Array,
+    viewUrl: {
+      type: String,
+      required: true,
+    },
   },
 
   data() {
@@ -346,6 +342,7 @@ export default {
       selectedParticipantSections: [],
       selectedSubjectUser: {},
       singleSectionViewOnlyActivities: [],
+      sortByFilter: 'created_at',
       subjectInstances: [],
       userFilters: {
         activityType: null,
@@ -399,6 +396,9 @@ export default {
       variables() {
         return {
           filters: this.currentFilterOptions,
+          options: {
+            sort_by: this.sortByFilter,
+          },
         };
       },
       update: data => data['mod_perform_my_subject_instances'].items,
@@ -740,6 +740,9 @@ export default {
       this.$apollo.queries.subjectInstances.fetchMore({
         variables: {
           filters: this.currentFilterOptions,
+          options: {
+            sort_by: this.sortByFilter,
+          },
           pagination: { cursor: this.pagination.nextCursor },
         },
 
@@ -776,7 +779,6 @@ export default {
       "participant_instance_status_not_submitted",
       "participant_instance_status_progress_not_applicable",
       "print_activity",
-      "showing_activities",
       "unnamed_job_assignment",
       "user_activities_closed",
       "user_activities_complete_before",
@@ -811,14 +813,6 @@ export default {
 
   & > * + * {
     margin-top: var(--gap-4);
-  }
-
-  &__count {
-    @include tui-font-heading-x-small;
-
-    &--hidden {
-      visibility: hidden;
-    }
   }
 
   &__selectRelationshipLink {

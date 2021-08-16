@@ -43,6 +43,7 @@
             :view-url="viewActivityUrl"
             :print-url="printActivityUrl"
             :filter-options="filterOptions"
+            :sort-by-options="sortByOptions"
           />
         </Tab>
         <Tab
@@ -57,6 +58,7 @@
             :view-url="viewActivityUrl"
             :print-url="printActivityUrl"
             :filter-options="filterOptions"
+            :sort-by-options="sortByOptions"
           />
         </Tab>
         <Tab
@@ -143,19 +145,29 @@ export default {
       type: Boolean,
     },
     filterOptions: Object,
+    sortOptions: Object,
   },
   data() {
     return {
       openParticipationModal: false,
     };
   },
+
   computed: {
     initialTab() {
       return this.showAboutOthersTab
         ? this.$id('activities-about-others-tab')
         : this.$id('your-activities-tab');
     },
+
+    sortByOptions() {
+      if (!this.sortOptions) {
+        return null;
+      }
+      return this.sortOptions.options;
+    },
   },
+
   mounted() {
     // Show the save notification if we have been redirected back here after saving.
     if (this.completionSaveSuccess) {

@@ -13,6 +13,7 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Riana Rossouw <riana.rossouw@totaralearning.com>
+  @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
   @module mod_perform
 -->
 <template>
@@ -43,13 +44,6 @@
           :show-label="true"
           :stacked="stacked"
         />
-
-        <!-- Toggle overdue only -->
-        <ToggleSwitch
-          v-model="value.overdueOnly"
-          :text="$str('user_activities_filter_overdue_only', 'mod_perform')"
-          :toggle-first="true"
-        />
       </template>
 
       <template v-slot:filters-right="{ stacked }">
@@ -78,20 +72,19 @@
     </FilterBar>
 
     <div class="tui-performUserActivitiesFilter__toggles">
+      <!-- Toggle overdue only -->
+      <ToggleSwitch
+        v-model="value.overdueOnly"
+        :text="$str('user_activities_filter_overdue_only', 'mod_perform')"
+        :toggle-first="true"
+      />
+
       <!-- Toggle exclude completed activities only -->
       <ToggleSwitch
         v-model="value.excludeCompleted"
         :text="$str('user_activities_filter_exclude_completed', 'mod_perform')"
         :toggle-first="true"
       />
-    </div>
-
-    <div class="tui-performUserActivitiesFilter__results">
-      <div class="tui-performUserActivitiesFilter__results-total">
-        <slot name="displayed-count" />
-      </div>
-
-      <div class="tui-performUserActivitiesFilter__results-sort" />
     </div>
   </div>
 </template>
@@ -197,17 +190,22 @@ export default {
     margin-top: var(--gap-4);
   }
 
-  &__results {
-    &-sort {
-      margin-left: auto;
+  &__toggles {
+    & > * + * {
+      margin-top: var(--gap-2);
     }
   }
 }
 
 @media (min-width: $tui-screen-sm) {
   .tui-performUserActivitiesFilter {
-    &__results {
+    &__toggles {
       display: flex;
+
+      & > * + * {
+        margin-top: 0;
+        margin-left: var(--gap-4);
+      }
     }
   }
 }
