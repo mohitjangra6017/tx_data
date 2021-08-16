@@ -725,6 +725,24 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         ], $returned_subject_instances);
     }
 
+    public function test_sort_options(): void {
+        $sort_options = subject_instance_for_participant::$sort_options;
+        self::assertEqualsCanonicalizing([
+            'created_at',
+            'activity_name',
+            'subject_name',
+            'job_assignment',
+            'due_date',
+        ], $sort_options);
+
+        /** @var core_string_manager $string_manager */
+        $string_manager = get_string_manager();
+        foreach (subject_instance_for_participant::$sort_options as $sort_option) {
+            self::assertTrue($string_manager->string_exists('user_activities_sort_option_' . $sort_option, 'mod_perform'));
+            self::assertTrue(method_exists(subject_instance_for_participant::class, 'sort_query_by_' . $sort_option));
+        }
+    }
+
     private function assert_order(array $expected_activity_order, collection $actual_subject_instances) {
         $activity_names = array_map(static function (subject_instance_model $subject_instance) {
             return $subject_instance->activity->name;

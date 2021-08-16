@@ -69,6 +69,15 @@ class subject_instance_for_participant extends provider {
     /** @var int */
     protected $participant_source;
 
+    /** @var string[] */
+    public static $sort_options = [
+        'created_at',
+        'activity_name',
+        'subject_name',
+        'job_assignment',
+        'due_date',
+    ];
+
     /**
      * @param int $participant_id The id of the user we would like to get activities that they are participating in.
      * @param int $participant_source see participant_source model for constants

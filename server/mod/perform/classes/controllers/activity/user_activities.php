@@ -28,6 +28,7 @@ use context_coursecat;
 use core\entity\user;
 use mod_perform\controllers\perform_controller;
 use mod_perform\data_providers\activity\activity_type;
+use mod_perform\data_providers\activity\subject_instance_for_participant;
 use mod_perform\models\activity\helpers\manual_participant_helper;
 use mod_perform\state\participant_instance\participant_instance_progress;
 use mod_perform\state\state_helper;
@@ -68,6 +69,7 @@ class user_activities extends perform_controller {
             'can-potentially-manage-participants' => util::can_potentially_manage_participants($current_user_id),
             'is-historic-activities-enabled' => util::is_historic_activities_enabled(),
             'filter-options' => $this->get_filter_options(),
+            'sort-options' => $this->get_sort_options(),
         ];
 
         return self::create_tui_view('mod_perform/pages/UserActivities', $props)
@@ -105,4 +107,17 @@ class user_activities extends perform_controller {
         ];
     }
 
+    /**
+     * @return array
+     */
+    private function get_sort_options(): array {
+        $options = array_map(static function (string $sort_option) {
+            return [
+                'id' => $sort_option,
+                'label' => get_string('user_activities_sort_option_' . $sort_option, 'mod_perform')
+            ];
+        }, subject_instance_for_participant::$sort_options);
+
+        return ['options' => $options];
+    }
 }
