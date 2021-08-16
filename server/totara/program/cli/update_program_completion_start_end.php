@@ -42,16 +42,17 @@ Usage:
     php server/totara/program/cli/update_program_completion_start_end.php [options]
 
 Options:
---started=DATETIME                  Update the program start time to this value. (Format: Any valid Enlish date format with or without the time, e.g. YYYY-MM-DD or YYYYMMDD HH:MM)
---completed=DATETIME                Update the program completion time to this value. (Format: Any valid Enlish date format with or without the time, e.g. YYYY-MM-dd or YYYYMMDD HH:MM)
+--started=DATETIME              Update the program start time to this value. (Format: Any valid English date format with or without the time, e.g. YYYY-MM-DD or YYYYMMDD HH:MM)
+--completed=DATETIME            Update the program completion time to this value. (Format: Any valid English date format with or without the time, e.g. YYYY-MM-dd or YYYYMMDD HH:MM)
 
---category=CATEGORY_ID_NUMBER       Optional. Update program start / completion times of programs in the category with the specified id number.
---program=PROGRAM_ID_NUMBER         Optional. Update program start / completion times of the program with the specified id number.
---user=USERNAME                     Optional. Update program start / completion times of the specific user.
+--category=CATEGORY_ID_NUMBER   Optional. Update program start / completion times of programs in the category with the specified id number.
+--program=PROGRAM_ID_NUMBER     Optional. Update program start / completion times of the program with the specified id number.
+--user=USERNAME                 Optional. Update program start / completion times of the specific user.
 
---include-past                      Optional. If specified, the start and completion times will be updated even if they are not currently set to a future time.
+--include-past                  Optional. If specified, the start and completion times will be updated even if they are not currently set to a future time.
 
--h, --help  Print out this help
+--verbose                       Optional. Provide more verbose output.
+-h, --help                      Print out this help
 ";
 
 /**
@@ -82,7 +83,19 @@ function parse_datetime(?string $value = null, string $item_name = 'datetime', i
     return false;
 }
 
-function update_completion_times(string $where, array $params, array $to_update, bool $include_past, int $now): void {
+/**
+ * Update program completion times
+ *
+ * @param string $where
+ * @param array $params
+ * @param array $to_update
+ * @param bool $include_past
+ * @param int $now
+ * @param false $verbose
+ * @throws dml_exception
+ * @throws dml_transaction_exception
+ */
+function update_completion_times(string $where, array $params, array $to_update, bool $include_past, int $now, $verbose = false): void {
     global $DB;
 
     $admin_user = get_admin();
@@ -99,13 +112,22 @@ function update_completion_times(string $where, array $params, array $to_update,
 
     $rows = $DB->get_recordset_sql($sql, $params);
 
-    cli_writeln('Updating program completion records ...');
+    cli_writeln('Updating program completion records');
+    $num_processed = 0;
     $num_updated = 0;
 
     $trans = $DB->start_delegated_transaction();
 
+    if ($verbose) {
+        cli_writeln('  Processing:');
+    }
+
     foreach ($rows as $row) {
-        cli_writeln("  program: {$row->fullname}; user: {$row->username}");
+        $num_processed += 1;
+        if ($verbose) {
+            cli_write("    [program: {$row->fullname}; user: {$row->username}] - ");
+        }
+
         unset ($row->fullname);
         unset ($row->username);
 
@@ -135,11 +157,16 @@ function update_completion_times(string $where, array $params, array $to_update,
                 exit;
             }
         }
+
+        if ($verbose) {
+            cli_writeln($do_update ? 'Updated' : 'Skipped');
+        }
     }
     $trans->allow_commit();
 
     cli_writeln('Completed.');
-    cli_writeln("Number of completion records updated: {$num_updated}");
+    cli_writeln("  Number records processed: {$num_processed}");
+    cli_writeln("  Number records updated: {$num_updated}");
 }
 
 list($options, $unrecognized) = cli_get_params(
@@ -150,6 +177,7 @@ list($options, $unrecognized) = cli_get_params(
         'program' => null,
         'user' => null,
         'include-past' => false,
+        'verbose' => false,
         'help'   => false
     ],
     [
@@ -165,6 +193,13 @@ if ($unrecognized) {
 if ($options['help']) {
     cli_writeln($help);
     die;
+}
+
+// Handle specified empty values
+foreach (['started', 'completed', 'category', 'program', 'user'] as $option) {
+    if (is_bool($options[$option]) || empty($options[$option]) || $options[$option] == "''") {
+        $options[$option] = null;
+    }
 }
 
 if ($options['started'] === null && $options['completed'] === null) {
@@ -185,13 +220,14 @@ $now = time();
 $new_started = parse_datetime($options['started'], 'start time', $now);
 $new_completed = parse_datetime($options['completed'], 'completion time', $now);
 $include_past = (bool) $options['include-past'];
+$verbose = (bool) $options['verbose'];
 
 $params = [];
 $where = '';
 $program_error = '';
 
 if ($options['category'] !== null) {
-    if (is_bool($options['category'])) {
+    if (empty($options['category'])) {
         cli_error('Category idnumber expected when using --category argument.');
     }
 
@@ -208,14 +244,14 @@ if ($options['category'] !== null) {
 }
 
 if ($options['program'] !== null) {
-    if (is_bool($options['program'])) {
+    if (empty($options['program'])) {
         cli_error('Program idnumber expected when using --program argument.');
     }
 
     $params['idnumber'] = $options['program'];
     $program = $DB->get_record('prog', $params);
     if ($program === false) {
-        cli_error('A program with idnumber: "' . $options['program'] . '" not found' . $program_error . '.');
+        cli_error('A program with idnumber "' . $options['program'] . '" doesn\'t exist' . $program_error . '.');
     }
     if (!empty($program->certifid)) {
         cli_error('The specified idnumber ("' . $options['program'] . '") is the idnumber of a certification. This script can only be used to update program start and completion times.');
@@ -233,7 +269,7 @@ if ($options['program'] !== null) {
 }
 
 if ($options['user'] !== null) {
-    if (is_bool($options['user'])) {
+    if (empty($options['user'])) {
         cli_error('User\'s username expected when using --user argument.');
     }
 
@@ -246,7 +282,6 @@ if ($options['user'] !== null) {
     $where .= ' AND pc.userid = :userid';
     $params['userid'] = $user->id;
 }
-
 
 if ($new_started || $new_completed) {
     $completion_where =
@@ -268,11 +303,12 @@ if ($new_started || $new_completed) {
         $params,
         ['timestarted' => $new_started, 'timecompleted' => $new_completed],
         $include_past,
-        $now
+        $now,
+        $verbose
     );
 }
 
 $difftime = microtime_diff($starttime, microtime());
-cli_writeln("Update took $difftime seconds");
+cli_writeln("  Update took $difftime seconds");
 
 exit(0);
