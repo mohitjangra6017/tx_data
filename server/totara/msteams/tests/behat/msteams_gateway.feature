@@ -7,7 +7,8 @@ Feature: Customise msteams gateway settings
   Scenario: admin set up the gateway
     Given I log in as "admin"
     And the following config values are set as admin:
-      | msteams_gateway_url | www.example.com |
+      | msteams_gateway_url         | www.example.com  |
+      | msteams_gateway_private_key | somew_random_key |
     And I am on homepage
     And I navigate to "Microsoft Teams integration" node in "Site administration > Microsoft Teams"
     And I should not see "Set up single sign-on"

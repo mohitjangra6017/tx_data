@@ -124,26 +124,21 @@ class totara_msteams_msteams_gateway_helper_testcase extends testcase {
         $public_key_file = "{$CFG->dirroot}/totara/msteams/tests/fixtures/test_pu.pem";
         self::assertTrue(file_exists($public_key_file));
 
+        // Memory leakable code within lower than PHP 8.0
         $public_key = openssl_pkey_get_public("file://{$public_key_file}");
-        self::assertIsResource($public_key);
+        self::assertIsNotBool($public_key);
 
-        try {
-            $verification =  openssl_verify(
-                json_encode([
-                    "TenantId" => $tenant_id,
-                    "SiteUrl" => $CFG->wwwroot
-                ]),
-                base64_decode($signature),
-                $public_key,
-                OPENSSL_ALGO_SHA512
-            );
+        $verification =  openssl_verify(
+            json_encode([
+                "TenantId" => $tenant_id,
+                "SiteUrl" => $CFG->wwwroot
+            ]),
+            base64_decode($signature),
+            $public_key,
+            OPENSSL_ALGO_SHA512
+        );
 
-            self::assertEquals(1, $verification);
-        } finally {
-            // Free the memory.
-            // Note: this block of code would need to be removed when upgrade to PHP 8.0
-            openssl_free_key($public_key);
-        }
+        self::assertEquals(1, $verification);
     }
 
     /**

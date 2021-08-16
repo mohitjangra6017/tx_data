@@ -156,18 +156,13 @@ final class msteams_gateway_helper {
             "SiteUrl" => $CFG->wwwroot
         ];
 
+        // Memory leakable code in lower than PHP 8.0
         $private_key = openssl_pkey_get_private($CFG->msteams_gateway_private_key);
-        try {
-            $json_data = json_encode($form_data);
-            $signature = null;
+        $json_data = json_encode($form_data);
+        $signature = null;
 
-            openssl_sign($json_data, $signature, $private_key, OPENSSL_ALGO_SHA512);
-            $form_data["Signature"] = base64_encode($signature);
-        } finally {
-            // Free the memory.
-            // Note: this block of code will need to be removed when upgrade to PHP 8.0
-            openssl_free_key($private_key);
-        }
+        openssl_sign($json_data, $signature, $private_key, OPENSSL_ALGO_SHA512);
+        $form_data["Signature"] = base64_encode($signature);
 
         $response = $api->post($api->get_gateway_url(), new formdata($form_data));
         return $response->is_ok();
