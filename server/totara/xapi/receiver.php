@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,16 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_xapi
  */
 
-defined('MOODLE_INTERNAL') || die();
+// This is the page where we are receiving the xAPI statement from different third parties.
+// It is update
+require_once(__DIR__ . "/../../config.php");
+use totara_xapi\controller\receiver_controller;
 
-$plugin->version  = 2021081800;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021052500;       // Requires this Totara version.
-$plugin->component = 'totara_xapi';  // To check on upgrade, that module sits in correct place
-
-$plugin->dependencies = [
-    "totara_mvc" => 2021052500
-];
+$controller = new receiver_controller();
+$controller->process();

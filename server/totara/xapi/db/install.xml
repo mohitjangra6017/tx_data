@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="enrol/paypal/db" VERSION="20210813" COMMENT="XMLDB file for Totara XAPI plugin"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="xapi_statement" COMMENT="The table that stores the xapi statement from xapi request">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="statement" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The xAPI statement, which is stored as json blob."/>
+        <FIELD NAME="request_headers" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The json blob of the request headers."/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="component_idx" UNIQUE="false" FIELDS="component"/>
+        <INDEX NAME="time_created_idx" UNIQUE="false" FIELDS="time_created"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

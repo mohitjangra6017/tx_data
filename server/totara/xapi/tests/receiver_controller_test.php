@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,16 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_xapi
  */
+use core_phpunit\testcase;
+use totara_xapi\controller\receiver_controller;
+use totara_xapi\request\request;
 
-defined('MOODLE_INTERNAL') || die();
+class totara_xapi_receiver_controller_testcase extends testcase {
+    /**
+     * @return void
+     */
+    public function test_progress_with_invalid_component(): void  {
+        $request = request::create_from_global(["component" => "totara_dota2"]);
+        $controller = new receiver_controller($request);
 
-$plugin->version  = 2021081800;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021052500;       // Requires this Totara version.
-$plugin->component = 'totara_xapi';  // To check on upgrade, that module sits in correct place
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage(
+            "The class 'totara_dota2\\totara_xapi\\handler\\handler' does not exist."
+        );
 
-$plugin->dependencies = [
-    "totara_mvc" => 2021052500
-];
+        $controller->process();
+    }
+}
