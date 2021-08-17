@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,17 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_oauth2
  */
-defined('MOODLE_INTERNAL') || die();
+// This file is responsible for issue a bearer token for the client, who requested to issue the token.
+require_once(__DIR__ . "/../../config.php");
+use totara_oauth2\controller\grant_token_controller;
 
-// Totara OAuth2 provider
-
-$plugin->version  = 2021081801;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021052500;       // Requires this Totara version.
-$plugin->component = 'totara_oauth2';  // To check on upgrade, that module sits in correct place
-
-$plugin->dependencies = [
-    "totara_mvc" => 2021052500
-];
+$controller = grant_token_controller::create_from_global();
+$controller->process();
