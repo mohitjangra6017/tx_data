@@ -217,10 +217,20 @@ export default {
   }
 
   &__star {
-    display: inline-block;
-
     &--pointer {
       cursor: pointer;
+    }
+  }
+}
+
+// IE11 is doing a poor job of handling flex here, and a min-height on child
+// Nodes is not correcting things, so resort to simpler styles that achieve the
+// same thing (in a deleteable style block).
+.ie {
+  .tui-engageStarRating {
+    display: block;
+    &__star {
+      display: inline-block;
     }
   }
 }
