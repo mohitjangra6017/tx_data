@@ -22,8 +22,7 @@ Feature: Notifications delivery channels
     When I click on "Certification" "button"
     Then I should see "Learner assigned in certification"
     And I should see "Default delivery channels"
-
-    When I click on "more" "button"
+    When I click on "Actions for Learner assigned in certification event" "button"
     And I click on "Edit delivery channels" "link"
     Then I should see "Edit delivery channels" in the ".tui-modalContent__header-title" "css_element"
     And I should see "Notification trigger: Learner assigned in certification" in the ".tui-modalContent__content" "css_element"
@@ -45,7 +44,7 @@ Feature: Notifications delivery channels
     # Save the changes
     When I click on "Save" "button"
     And I wait for the next second
-    And I click on "more" "button"
+    And I click on "Actions for Learner assigned in certification event" "button"
     And I click on "Edit delivery channels" "link"
     Then the field "Site notifications" matches value "0"
     And "Mobile app notifications" "checkbox" should not exist
@@ -65,7 +64,7 @@ Feature: Notifications delivery channels
 
     Then I should see "Learner assigned in certification"
     And I should see "Default delivery channels"
-    When I click on "more" "button"
+    When I click on "Actions for Learner assigned in certification event" "button"
     Then I should not see "Delivery preferences"
 
   Scenario: Delivery channels are visible and overridable at the user preference level
@@ -80,7 +79,7 @@ Feature: Notifications delivery channels
     And I should see "Default delivery channels"
     And I should see "Site notifications; Email"
 
-    When I click on "more" "button"
+    When I click on "Actions for Learner assigned in certification event" "button"
     And I click on "Edit delivery channels" "link"
     Then I should see "Delivery preferences" in the ".tui-modalContent__header-title" "css_element"
     And I should see "Notification trigger: Learner assigned in certification" in the ".tui-modalContent__content" "css_element"
@@ -116,7 +115,7 @@ Feature: Notifications delivery channels
     Then I should see "Certification"
 
     When I click on "Certification" "button"
-    And I click on "more" "button"
+    And I click on "Actions for Learner assigned in certification event" "button"
     And I click on "Edit delivery channels" "link"
     Then "Mobile app notifications" "checkbox" should not exist
 
@@ -124,6 +123,6 @@ Feature: Notifications delivery channels
     And I follow "Preferences" in the user menu
     And I follow "Notification preferences"
     And I click on "Certification" "button"
-    And I click on "more" "button"
+    And I click on "Actions for Learner assigned in certification event" "button"
     And I click on "Edit delivery channels" "link"
     Then "Mobile app notifications" "checkbox" should not exist

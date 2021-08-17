@@ -18,9 +18,8 @@ Feature: Course notifications node
     Then I should see "Create notification"
     And I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
-
     When I click on "Close" "button"
-    And I click on "more" "button"
+    When I click on "Actions for Course set completed" "button"
     Then I should see "Create notification"
 
     When I click on "Create notification" "link"
