@@ -22,10 +22,12 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\local\helper;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\output\content_marketplace_logo;
 use totara_contentmarketplace\entity\course_source;
+use totara_contentmarketplace\learning_object\factory;
 
 /**
  * A callback function from course's API to create an instance of content
@@ -35,10 +37,21 @@ use totara_contentmarketplace\entity\course_source;
  * @return int
  */
 function contentmarketplace_add_instance(stdClass $record): int {
+    $completion_condition = null;
+
+    if (isset($record->completion) && isset($record->completion_condition)) {
+        // This block of logic is following the logics from seminar, as if the completion is not enabled,
+        // it falls back to the default value which is disabled for any criteria.
+        if (COMPLETION_TRACKING_AUTOMATIC == $record->completion) {
+            $completion_condition = $record->completion_condition;
+        }
+    }
+
     $content_marketplace = helper::create_content_marketplace(
         $record->course,
         $record->learning_object_id,
-        $record->learning_object_marketplace_component
+        $record->learning_object_marketplace_component,
+        $completion_condition
     );
 
     return $content_marketplace->id;
@@ -77,6 +90,9 @@ function contentmarketplace_supports($feature): ?bool {
         case FEATURE_MOD_INTRO:
             return false;
 
+        case FEATURE_COMPLETION_HAS_RULES:
+            return true;
+
         default:
             // Everything is unknown for now.
             return null;
@@ -112,7 +128,7 @@ function contentmarketplace_update_instance(stdClass $content_marketplace, $mood
     $completion_condition = null;
 
     // This block of logic is following the logics from seminar, as if the completion is not enabled,
-    // it fall back to the default value which is disabled for any criteria.
+    // it falls back to the default value which is disabled for any criteria.
     if (COMPLETION_TRACKING_AUTOMATIC == $content_marketplace->completion) {
         $completion_condition = $content_marketplace->completion_condition;
     }
@@ -120,4 +136,38 @@ function contentmarketplace_update_instance(stdClass $content_marketplace, $mood
     // If the record does not exist, entity API will yield error. So no need to check the validity of record.
     helper::update_content_marketplace($content_marketplace->instance, $completion_condition);
     return true;
+}
+
+/**
+ * Obtains the automatic completion state for this content marketplace activity based on any conditions
+ * in content marketplace settings.
+ *
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not. (If no conditions, then return
+ *   value depends on comparison type)
+ */
+function contentmarketplace_get_completion_state($course, $cm, $userid, $type): bool {
+    if (empty($userid)) {
+        return false;
+    }
+
+    $entity = content_marketplace::load_by_id($cm->instance);
+    $resolver = factory::get_resolver($entity->learning_object_marketplace_component);
+
+    if ($entity->completion_condition == condition::LAUNCH) {
+        // On launch - therefore check for the existing record of database whether user had been viewing the
+        // course or not.
+        return $resolver->has_user_completed_on_launch($userid, $entity->learning_object_id);
+    }
+
+    if ($entity->completion_condition == condition::CONTENT_MARKETPLACE) {
+        // On content marketplace condition - therefore check for existing record of database whether user had
+        // completed this in LiL side or not.
+        return $resolver->has_user_completed_on_marketplace_condition($userid, $entity->learning_object_id);
+    }
+
+    return false;
 }

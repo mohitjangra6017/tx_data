@@ -24,6 +24,7 @@
 namespace totara_contentmarketplace\repository;
 
 use core\orm\entity\repository;
+use core\orm\lazy_collection;
 use totara_contentmarketplace\entity\course_source;
 
 class course_source_repository extends repository {
@@ -46,17 +47,16 @@ class course_source_repository extends repository {
     }
 
     /**
-     * @param int $learning_object_id
+     * @param int    $learning_object_id
      * @param string $marketplace_component
-     * @return course_source|null
+     *
+     * @return lazy_collection
      */
-    public function find_by_id_and_component(int $learning_object_id, string $marketplace_component): ?course_source {
-        /** @var course_source $entity */
-        $entity = course_source::repository()
-            ->where('learning_object_id', $learning_object_id)
-            ->where('marketplace_component', $marketplace_component)
-            ->one();
+    public function fetch_by_id_and_component(int $learning_object_id, string $marketplace_component): lazy_collection {
+        $repository = course_source::repository();
+        $repository->where("learning_object_id", $learning_object_id);
+        $repository->where("marketplace_component", $marketplace_component);
 
-        return $entity;
+        return $repository->get_lazy();
     }
 }

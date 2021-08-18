@@ -23,6 +23,7 @@
 namespace contentmarketplace_linkedin\learning_object;
 
 use contentmarketplace_linkedin\entity\learning_object as entity;
+use contentmarketplace_linkedin\entity\user_completion;
 use contentmarketplace_linkedin\model\learning_object;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 use totara_contentmarketplace\learning_object\abstraction\resolver as base;
@@ -47,5 +48,31 @@ class resolver extends base {
         }
 
         return new learning_object($entity);
+    }
+
+    /**
+     * @param int $user_id
+     * @param int $learning_object_id
+     *
+     * @return bool
+     */
+    public function has_user_completed_on_launch(int $user_id, int $learning_object_id): bool {
+        $learning_object = new entity($learning_object_id);
+        $repository = user_completion::repository();
+
+        return $repository->exists_for_user($user_id, $learning_object->urn);
+    }
+
+    /**
+     * @param int $user_id
+     * @param int $learning_object_id
+     *
+     * @return bool
+     */
+    public function has_user_completed_on_marketplace_condition(int $user_id, int $learning_object_id): bool {
+        $learning_object = new entity($learning_object_id);
+        $repository = user_completion::repository();
+
+        return $repository->exists_for_user($user_id, $learning_object->urn, true);
     }
 }

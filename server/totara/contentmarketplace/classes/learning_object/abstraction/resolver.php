@@ -52,9 +52,31 @@ abstract class resolver {
         return reset($parts);
     }
 
+    /**
+     * Checking whether user had been completed or not with launch condition
+     *
+     * @param int $user_id
+     * @param int $learning_object_id
+     *
+     * @return bool
+     */
+    public function has_user_completed_on_launch(int $user_id, int $learning_object_id): bool {
+        return false;
+    }
+
+    /**
+     * Checking whether user had been completed or not with the condition from
+     * content marketplace provider.
+     *
+     * @param int $user_id
+     * @param int $learning_object_id
+     * @return bool
+     */
+    public function has_user_completed_on_marketplace_condition(int $user_id, int $learning_object_id): bool {
+        return false;
+    }
+
     // This is where the rest of getter methods should be:
-    // + get_view
-    // + get_completions
     // + get_backup_plan
     // + get_restore_plan
 }

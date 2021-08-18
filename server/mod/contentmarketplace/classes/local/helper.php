@@ -44,16 +44,18 @@ class helper {
      * create a record in table "ttr_contentmarketplace" that can link to one of
      * the learning object from the content marketplace sub plugin.
      *
-     * @param int    $course_id
-     * @param int    $learning_object_id
-     * @param string $marketplace_component
+     * @param int      $course_id
+     * @param int      $learning_object_id
+     * @param string   $marketplace_component
+     * @param int|null $completion_condition
      *
      * @return content_marketplace
      */
     public static function create_content_marketplace(
         int $course_id,
         int $learning_object_id,
-        string $marketplace_component
+        string $marketplace_component,
+        ?int $completion_condition = null
     ): content_marketplace {
         $resolver = factory::get_resolver($marketplace_component);
         $learning_object = $resolver->find($learning_object_id);
@@ -62,7 +64,7 @@ class helper {
             throw new learning_object_not_found($marketplace_component);
         }
 
-        return content_marketplace::create($course_id, $learning_object);
+        return content_marketplace::create($course_id, $learning_object, $completion_condition);
     }
 
     /**

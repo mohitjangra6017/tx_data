@@ -71,15 +71,6 @@ abstract class base_learning_object_updated extends base {
     }
 
     /**
-     * @return course|null
-     */
-    final public function get_course(): ?course {
-        $other = $this->other;
-        $entity = course_source::repository()->find_by_id_and_component($this->objectid, $other['marketplace_component']);
-        return is_null($entity) ? null : new course(get_course($entity->course_id));
-    }
-
-    /**
      * Let subclass define prefix key for extra related data.
      *
      * @return string

@@ -33,7 +33,7 @@ use totara_contentmarketplace\repository\course_source_repository;
  * @property int    $course_id
  * @property int    $learning_object_id
  *
- * @method static course_source_repository repository
+ * @method static course_source_repository repository()
  */
 class course_source extends entity {
     /**

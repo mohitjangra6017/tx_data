@@ -82,5 +82,24 @@
         <INDEX NAME="classification_map_idx" UNIQUE="true" FIELDS="parent_id, child_id"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="linkedin_user_completion" COMMENT="A table to keep track of user completion on linkedin learning content.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user's id of whom is complete the learning item"/>
+        <FIELD NAME="learning_object_urn" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The learning object urn that can be used to identify the learning object record"/>
+        <FIELD NAME="progress" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="The progress text that allow us to track that if user completed or not. Should be either 'PROGRESSED' or 'COMPLETED'."/>
+        <FIELD NAME="completion" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="The completion status, '0' means not completed, and '1' is completed."/>
+        <FIELD NAME="xapi_statement_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="This field is to keep track of the relationship between the xapi_statement record logs table and this table"/>
+        <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time created of this very record."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="user_id_fk" TYPE="foreign" FIELDS="user_id" REFTABLE="user" REFFIELDS="id" ONDELETE="cascade"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="progress_idx" UNIQUE="false" FIELDS="progress"/>
+        <INDEX NAME="time_created_idx" UNIQUE="false" FIELDS="time_created"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

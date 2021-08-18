@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package totara_xapi
+ * @package totara_contentmarketplace
  */
-namespace totara_xapi\local;
+namespace totara_contentmarketplace;
 
-use totara_xapi\entity\xapi_statement;
-use totara_xapi\request\request;
-
-class helper {
+/**
+ * Just a constant class that contains the constant for completion condition.
+ */
+class completion_constants {
     /**
      * Prevent the instantiation of this class.
      */
@@ -33,19 +33,18 @@ class helper {
     }
 
     /**
-     * Logging the xapi request statement.
+     * A constant to say the completion to mark the activity completed
+     * when the content marketplace is launched from totara's side.
      *
-     * @param request $request
-     * @return xapi_statement
+     * @var int
      */
-    public static function logging_request(request $request): xapi_statement {
-        // Creating a new xapi_statement entity.
-        $entity = new xapi_statement();
-        $entity->statement = $request->get_content();
-        $entity->component = $request->get_required_parameter("component", PARAM_COMPONENT);
-        $entity->request_headers = json_encode($request->get_header_parameters(), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    public const COMPLETION_CONDITION_LAUNCH = 1;
 
-        $entity->save();
-        return $entity;
-    }
+    /**
+     * A constant to say the completion to mark the activity completed
+     * when the content is marked as completed from content provider's side.
+     *
+     * @var int
+     */
+    public const COMPLETION_CONDITION_CONTENT_MARKETPLACE = 2;
 }

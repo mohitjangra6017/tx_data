@@ -18,58 +18,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package mod_contentmarketplace
+ * @package contentmarketplace_linkedin
  */
-namespace mod_contentmarketplace\entity;
+namespace contentmarketplace_linkedin\entity;
 
-use core\entity\course;
+use contentmarketplace_linkedin\repository\user_completion_repository;
 use core\orm\entity\entity;
-use core\orm\entity\relations\belongs_to;
-use mod_contentmarketplace\repository\content_marketplace_repository;
 
 /**
- * Entity class represent for table "ttr_contentmarketplace"
+ * An entity record that represent for a row of table "ttr_linkedin_user_completion".
  *
- * @property int    $id
- * @property int    $course
- * @property string $name
- * @property string $learning_object_marketplace_component
- * @property int    $learning_object_id
- * @property int    $time_modified
- * @property int    $completion_condition
+ * @property int $id
+ * @property int $user_id
+ * @property string $learning_object_urn
+ * @property string $progress
+ * @property bool $completion
+ * @property int|null $xapi_statement_id
+ * @property int $time_created
  *
- * @property-read course $course_entity
- *
- * @method static content_marketplace_repository repository()
+ * @method static user_completion_repository repository()
  */
-class content_marketplace extends entity {
+class user_completion extends entity {
     /**
      * @var string
      */
-    public const TABLE = 'contentmarketplace';
+    public const TABLE = "linkedin_user_completion";
 
     /**
      * @var string
      */
-    public const UPDATED_TIMESTAMP = 'time_modified';
+    public const CREATED_TIMESTAMP = "time_created";
 
     /**
-     * @var bool
+     * Using PHP magic to cast integer-like-boolean into a boolean type value.
+     *
+     * @param bool $value
+     * @return bool
      */
-    public const SET_UPDATED_WHEN_CREATED = true;
+    protected function get_completion_attribute(bool $value): bool {
+        return $value;
+    }
 
     /**
      * @return string
      */
     public static function repository_class_name(): string {
-        return content_marketplace_repository::class;
+        return user_completion_repository::class;
     }
-
-    /**
-     * @return belongs_to
-     */
-    public function course_entity(): belongs_to {
-        return $this->belongs_to(course::class, 'course');
-    }
-
 }

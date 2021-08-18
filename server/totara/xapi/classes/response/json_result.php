@@ -49,4 +49,11 @@ class json_result implements result, JsonSerializable {
     public function jsonSerialize() {
         return $this->data;
     }
+
+    /**
+     * @return array|stdClass
+     */
+    public function get_data() {
+        return $this->data;
+    }
 }

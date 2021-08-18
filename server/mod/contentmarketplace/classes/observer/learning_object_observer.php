@@ -42,16 +42,16 @@ final class learning_object_observer {
         $learning_object_id = $event->objectid;
         $marketplace_component = $event->get_marketplace_component();
 
-        /** @var content_marketplace $entity **/
-        $entity = content_marketplace::repository()->find_by_id_and_component($learning_object_id, $marketplace_component);
+        $entities = content_marketplace::repository()->fetch_by_id_and_component(
+            $learning_object_id,
+            $marketplace_component
+        );
 
-        if (is_null($entity)) {
-            return;
-        }
-
-        if ($entity->name != $event->get_learning_object_name()) {
-            $entity->name = $event->get_learning_object_name();
-            $entity->update();
+        foreach ($entities as $entity) {
+            if ($entity->name != $event->get_learning_object_name()) {
+                $entity->name = $event->get_learning_object_name();
+                $entity->update();
+            }
         }
     }
 }

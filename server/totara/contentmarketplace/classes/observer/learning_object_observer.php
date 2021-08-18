@@ -24,8 +24,10 @@ namespace totara_contentmarketplace\observer;
 
 use coding_exception;
 use container_course\course_helper;
+use core\entity\course;
 use stdClass;
 use totara_contentmarketplace\course\course_image_downloader;
+use totara_contentmarketplace\entity\course_source;
 use totara_contentmarketplace\event\base_learning_object_updated;
 
 final class learning_object_observer {
@@ -40,47 +42,59 @@ final class learning_object_observer {
      */
     public static function on_learning_object_updated(base_learning_object_updated $event): void {
         $other = $event->other;
-        $course = $event->get_course();
 
-        // Learning object has not been imported into a course, so we just return.
-        if (is_null($course)) {
-            return;
-        }
+        $repository = course_source::repository();
+        $course_sources = $repository->fetch_by_id_and_component($event->objectid, $other["marketplace_component"]);
 
-        $new_course = [];
+        try {
+            $map = [
+                "description" => "summary",
+                "name" => "fullname"
+            ];
 
-        foreach (['description' => 'summary', 'name' => 'fullname'] as $key => $value) {
-            if (!$event->validate_data_key($key)) {
-                throw new coding_exception("The key {$key} of event data is incorrect");
-            }
+            /** @var course_source $course_source */
+            foreach ($course_sources as $course_source) {
+                $course = new course(get_course($course_source->course_id));
+                $new_course = [];
 
-            if (isset($other[$key]) && $course->get_attribute($value) !== $other[$key]) {
-                $extra_data_key = $event->get_extra_key($key);
-                if (!$event->validate_data_key($extra_data_key)) {
-                    throw new coding_exception("The key {$extra_data_key} of event other data is incorrect");
+                foreach ($map as $key => $value) {
+                    if (!$event->validate_data_key($key)) {
+                        throw new coding_exception("The key {$key} of event data is incorrect");
+                    }
+
+                    if (isset($other[$key]) && $course->get_attribute($value) !== $other[$key]) {
+                        $extra_data_key = $event->get_extra_key($key);
+                        if (!$event->validate_data_key($extra_data_key)) {
+                            throw new coding_exception("The key {$extra_data_key} of event other data is incorrect");
+                        }
+
+                        $old_value = $other[$extra_data_key];
+                        if (isset($old_value) && $course->get_attribute($value) === $old_value) {
+                            $new_course[$value] = $other[$key];
+                        }
+                    }
                 }
 
-                $old_value = $other[$extra_data_key];
-                if (isset($old_value) && $course->get_attribute($value) === $old_value) {
-                    $new_course[$value] = $other[$key];
+                $new_image = $event->get_new_image();
+                $new_image = new course_image_downloader($course->id, $new_image);
+                $old_image = $event->get_old_image();
+                if (isset($old_image)) {
+                    $old_image = new course_image_downloader($course->id, $old_image);
+                    $old_image->compare_and_update($new_image);
+                } else {
+                    $new_image->download_image_for_course();
                 }
+
+                if (empty($new_course)) {
+                    // Skip updating this course.
+                    continue;
+                }
+
+                // Update the course accordingly.
+                course_helper::update_course($course->id, (object) $new_course);
             }
+        } finally {
+            $course_sources->close();
         }
-
-        $new_image = $event->get_new_image();
-        $new_image = new course_image_downloader($course->id, $new_image);
-        $old_image = $event->get_old_image();
-        if (isset($old_image)) {
-            $old_image = new course_image_downloader($course->id, $old_image);
-            $old_image->compare_and_update($new_image);
-        } else {
-            $new_image->download_image_for_course();
-        }
-
-        // Just in case, new learning object is not updated, we just return.
-        if (count($new_course) == 0) {
-            return;
-        }
-        course_helper::update_course($course->id, (object)$new_course, null);
     }
 }

@@ -39,4 +39,18 @@ class client_provider_repository extends repository {
 
         return $repository->one();
     }
+
+    /**
+     * Given the client's provider name, this function will be able to check that if
+     * there are any record existing under this name.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function exists_for_name(string $name): bool {
+        $repository = client_provider::repository();
+        $repository->where("name", $name);
+
+        return $repository->exists();
+    }
 }

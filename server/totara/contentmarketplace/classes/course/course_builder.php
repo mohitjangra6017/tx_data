@@ -31,6 +31,7 @@ use core_text;
 use coursecat;
 use stdClass;
 use Throwable as throwable;
+use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\event\course_source_created;
 use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
 use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
@@ -88,6 +89,25 @@ class course_builder {
     private $default_section_number;
 
     /**
+     * This variable can only accept either:
+     * @see COMPLETION_TRACKING_AUTOMATIC
+     * @see COMPLETION_TRACKING_MANUAL
+     * @see COMPLETION_TRACKING_NONE
+     *
+     * @var int
+     */
+    private $module_completion_tracking;
+
+    /**
+     * This variable can only accept:
+     * @see completion_constants::COMPLETION_CONDITION_LAUNCH
+     * @see completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE
+     *
+     * @var int|null
+     */
+    private $module_completion_condition;
+
+    /**
      * course_helper constructor.
      */
     public function __construct(model $learning_object, int $category_id, create_course_interactor $interactor) {
@@ -97,6 +117,70 @@ class course_builder {
         $this->course_format = 'singleactivity';
         $this->enrol_names_enable = ['self'];
         $this->default_section_number = 0;
+        $this->module_completion_tracking = COMPLETION_TRACKING_MANUAL;
+        $this->module_completion_condition = null;
+    }
+
+    /**
+     * Set the completion tracking flag for the module. Please note that when
+     * the completion is set to manual or none, the completion condition will be reset back
+     * to null. If it is set to automatic and the completion condition is not set, then it
+     * is default into completion on launch.
+     *
+     * @param int $completion_tracking
+     */
+    public function set_module_completion_tracking(int $completion_tracking): void {
+        $available = [
+            COMPLETION_TRACKING_MANUAL,
+            COMPLETION_TRACKING_NONE,
+            COMPLETION_TRACKING_AUTOMATIC
+        ];
+
+        if (!in_array($completion_tracking, $available)) {
+            throw new coding_exception(
+                "Invalid completion tracking value {$completion_tracking}"
+            );
+        }
+
+        $this->module_completion_tracking = $completion_tracking;
+        if (COMPLETION_TRACKING_AUTOMATIC === $this->module_completion_tracking && null !== $this->module_completion_condition) {
+            // Tracking automatic, hence we default it to on launch.
+            $this->module_completion_condition = completion_constants::COMPLETION_CONDITION_LAUNCH;
+        } else {
+            $this->module_completion_condition = null;
+        }
+    }
+
+    /**
+     * The value can only accept:
+     * + @see completion_constants::COMPLETION_CONDITION_LAUNCH
+     * + @see completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE
+     *
+     * @param int|null $completion_condition
+     * @return void
+     */
+    public function set_module_completion_condition(?int $completion_condition): void {
+        if (null === $completion_condition && COMPLETION_TRACKING_AUTOMATIC === $this->module_completion_tracking) {
+            // Reset it to manual if the completion condition is set to null - not set.
+            $this->module_completion_tracking = COMPLETION_TRACKING_MANUAL;
+        } else if (null !== $completion_condition){
+            // Otherwise, we process with the business logics.
+            $available = [
+                completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE,
+                completion_constants::COMPLETION_CONDITION_LAUNCH
+            ];
+
+            if (!in_array($completion_condition, $available)) {
+                throw new coding_exception(
+                    "Invalid completion condition {$completion_condition}"
+                );
+            }
+
+            // Only completion tracking automatic can have the completion condition.
+            $this->module_completion_tracking = COMPLETION_TRACKING_AUTOMATIC;
+        }
+
+        $this->module_completion_condition = $completion_condition;
     }
 
     /**
@@ -257,7 +341,8 @@ class course_builder {
         $module_info->learning_object_marketplace_component = $this->learning_object::get_marketplace_component();
         $module_info->learning_object_id = $this->learning_object->get_id();
         $module_info->section = $this->default_section_number;
-        $module_info->completion = COMPLETION_TRACKING_MANUAL;
+        $module_info->completion = $this->module_completion_tracking;
+        $module_info->completion_condition = $this->module_completion_condition;
 
         $actor_id = $this->course_interactor->get_actor_id();
         if (!course_helper::is_module_addable('contentmarketplace', $course, $actor_id)) {

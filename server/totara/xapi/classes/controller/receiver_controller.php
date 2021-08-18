@@ -29,6 +29,7 @@ use totara_xapi\handler\factory;
 use totara_xapi\local\helper;
 use totara_xapi\request\request;
 use totara_xapi\response\facade\result;
+use moodle_url;
 
 class receiver_controller extends controller {
     /**
@@ -37,13 +38,27 @@ class receiver_controller extends controller {
     private $request;
 
     /**
-     * @param request|null $request
+     * @var int
      */
-    public function __construct(?request $request = null) {
+    private $time_now;
+
+    /**
+     * @param request|null $request
+     * @param int|null $time_now
+     */
+    public function __construct(?request $request = null, ?int $time_now = null) {
         parent::__construct();
 
         $this->request = $request ?? request::create_from_global();
+
+        // The current of processing time.
+        $this->time_now = $time_now ?? time();
         $this->require_login = false;
+
+        $this->url = new moodle_url(
+            "/totara/xapi/receiver.php",
+            ["component" => $this->request->get_required_parameter("component", PARAM_COMPONENT)]
+        );
     }
 
     /**
@@ -59,6 +74,7 @@ class receiver_controller extends controller {
     public function action(): result {
         $component = $this->request->get_required_parameter("component", PARAM_COMPONENT);
         $handler = factory::create_handler($component, $this->request);
+        $handler->set_time_now($this->time_now);
 
         // Authenticate with the request.
         $result_response = $handler->authenticate();
@@ -69,8 +85,8 @@ class receiver_controller extends controller {
         }
 
         // Logging the xapi statement.
-        helper::logging_request($this->request);
-        return $handler->process();
+        $statement = helper::logging_request($this->request);
+        return $handler->process($statement);
     }
 
     /**

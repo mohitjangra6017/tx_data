@@ -21,6 +21,7 @@
  * @package contentmarketplace_linkedin
  */
 
+use contentmarketplace_linkedin\task\create_oauth2_client_provider_task;
 use contentmarketplace_linkedin\workflow\core_course\coursecreate\contentmarketplace;
 use contentmarketplace_linkedin\workflow\totara_contentmarketplace\exploremarketplace\linkedin;
 
@@ -41,4 +42,8 @@ function xmldb_contentmarketplace_linkedin_install() {
 
     // Install the built in notification
     totara_notification_sync_built_in_notification('contentmarketplace_linkedin');
+
+    // Queue adhoc task to populate the oauth2 table. This is for temporary until the actual work
+    // on oauth2 provider is done properly which allow us to support multiple client id/secret.
+    create_oauth2_client_provider_task::enqueue();
 }

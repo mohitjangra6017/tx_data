@@ -23,10 +23,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2021072000;       // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2021081900;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200;      // Requires this Totara version.
 $plugin->component = 'contentmarketplace_linkedin'; // To check on upgrade, that module sits in correct place
 
 $plugin->dependencies = [
-    'totara_notification' => 2021052500
+    'totara_notification' => 2021052500,
+    'totara_xapi' => 2021080500,
+    'totara_oauth2' => 2021081200
 ];

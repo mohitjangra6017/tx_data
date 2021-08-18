@@ -23,25 +23,24 @@
 namespace mod_contentmarketplace\repository;
 
 use core\orm\entity\repository;
+use core\orm\lazy_collection;
 use mod_contentmarketplace\entity\content_marketplace;
 
 /**
  * Class content_marketplace_repository
  */
 class content_marketplace_repository extends repository {
-
     /**
-     * @param int $learning_object_id
+     * @param int    $learning_object_id
      * @param string $marketplace_component
-     * @return content_marketplace|null
+     *
+     * @return lazy_collection
      */
-    public function find_by_id_and_component(int $learning_object_id, string $marketplace_component): ?content_marketplace {
-        /** @var content_marketplace $entity */
-        $entity = content_marketplace::repository()
-            ->where('learning_object_id', $learning_object_id)
-            ->where('learning_object_marketplace_component', $marketplace_component)
-            ->one();
+    public function fetch_by_id_and_component(int $learning_object_id, string $marketplace_component): lazy_collection {
+        $repository = content_marketplace::repository();
+        $repository->where("learning_object_id", $learning_object_id);
+        $repository->where("learning_object_marketplace_component", $marketplace_component);
 
-        return $entity;
+        return $repository->get_lazy();
     }
 }

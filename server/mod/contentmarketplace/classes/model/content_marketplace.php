@@ -32,6 +32,7 @@ use moodle_url;
 use stdClass;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object;
 use totara_contentmarketplace\learning_object\factory;
+use coding_exception;
 
 /**
  * Model for content marketplace entity.
@@ -104,15 +105,21 @@ class content_marketplace extends model {
     /**
      * @param int $course_id
      * @param learning_object $learning_object
+     * @param int|null $completion_condition
      *
      * @return content_marketplace
      */
-    public static function create(int $course_id, learning_object $learning_object): content_marketplace {
+    public static function create(
+        int $course_id,
+        learning_object $learning_object,
+        ?int $completion_condition = null
+    ): content_marketplace {
         $entity = new model_entity();
         $entity->course = $course_id;
         $entity->learning_object_id = $learning_object->get_id();
         $entity->learning_object_marketplace_component = $learning_object::get_marketplace_component();
         $entity->name = $learning_object->get_name();
+        $entity->completion_condition = $completion_condition;
 
         $entity->save();
 

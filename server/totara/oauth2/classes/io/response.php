@@ -20,7 +20,7 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_oauth2
  */
-namespace totara_oauth2\local;
+namespace totara_oauth2\io;
 
 use Psr\Http\Message\StreamInterface;
 use totara_oauth2\facade\response_interface;

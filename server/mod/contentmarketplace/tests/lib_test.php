@@ -334,8 +334,8 @@ class mod_contentmarketplace_lib_testcase extends testcase {
 
         // This will be changed later on
         self::assertFalse(contentmarketplace_supports(FEATURE_BACKUP_MOODLE2));
+        self::assertTrue(contentmarketplace_supports(FEATURE_COMPLETION_HAS_RULES));
 
-        self::assertNull(contentmarketplace_supports(FEATURE_COMPLETION_HAS_RULES));
         self::assertNull(contentmarketplace_supports(FEATURE_COMMENT));
         self::assertNull(contentmarketplace_supports(FEATURE_ADVANCED_GRADING));
         self::assertNull(contentmarketplace_supports(FEATURE_GRADE_HAS_GRADE));

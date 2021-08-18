@@ -32,25 +32,25 @@ class request {
      *
      * @var array<string, string>
      */
-    private $headerParameters;
+    private $header_parameters;
 
     /**
      * The hashmap of global $_POST.
      * @var array<string, mixed>
      */
-    private $postParameters;
+    private $post_parameters;
 
     /**
      * The hashmap of global $_GET.
      * @var array<string, mixed>
      */
-    private $getParameters;
+    private $get_parameters;
 
     /**
      * The hashmap of global $_SERVER
      * @var array<string, mixed>
      */
-    private $serverParameters;
+    private $server_parameters;
 
     /**
      * The http content.
@@ -59,21 +59,32 @@ class request {
     private $content;
 
     /**
-     * @param array<string, mixed> $postParameters
-     * @param array<string, mixed> $getParameters
-     * @param array<string, mixed> $serverParameters
-     * @param array<string, string> $headerParameters
+     * @param array<string, mixed> $post_parameters
+     * @param array<string, mixed> $get_parameters
+     * @param array<string, mixed> $server_parameters
+     * @param array<string, string> $header_parameters
      */
     public function __construct(
-        array $postParameters,
-        array $getParameters,
-        array $serverParameters,
-        array $headerParameters
+        array $post_parameters,
+        array $get_parameters,
+        array $server_parameters,
+        array $header_parameters
     ) {
-        $this->postParameters = $postParameters;
-        $this->getParameters = $getParameters;
-        $this->headerParameters = $headerParameters;
-        $this->serverParameters = $serverParameters;
+        $this->post_parameters = $post_parameters;
+        $this->get_parameters = $get_parameters;
+        $this->header_parameters = [];
+        $this->server_parameters = [];
+
+        // Change the header and server parameters into all upper cases. This will make sure that
+        // we can predict the data hash-map and hence fetching data via key in these map would be
+        // a lot easier.
+        foreach ($header_parameters as $k => $v) {
+            $this->header_parameters[strtoupper($k)] = $v;
+        }
+
+        foreach ($server_parameters as $k => $v) {
+            $this->server_parameters[strtoupper($k)] = $v;
+        }
 
         $this->content = null;
     }
@@ -121,10 +132,10 @@ class request {
     public function get_parameter(string $field, $default = null, ?string $param = null) {
         $value = $default;
 
-        if (array_key_exists($field, $this->getParameters)) {
-            $value = $this->getParameters[$field];
-        } else if (array_key_exists($field, $this->postParameters)) {
-            $value = $this->postParameters[$field];
+        if (array_key_exists($field, $this->get_parameters)) {
+            $value = $this->get_parameters[$field];
+        } else if (array_key_exists($field, $this->post_parameters)) {
+            $value = $this->post_parameters[$field];
         }
 
         if (null !== $param) {
@@ -152,7 +163,7 @@ class request {
      * @return bool
      */
     public function has_parameter(string $field): bool {
-        return array_key_exists($field, $this->getParameters) || array_key_exists($field, $this->postParameters);
+        return array_key_exists($field, $this->get_parameters) || array_key_exists($field, $this->post_parameters);
     }
 
     /**
@@ -177,7 +188,9 @@ class request {
      * @return string|null
      */
     public function header(string $field): ?string {
-        return $this->headerParameters[$field] ?? null;
+        // Upper case the field name for header, since our Hashmap is all in uppercase.
+        $field = strtoupper($field);
+        return $this->header_parameters[$field] ?? null;
     }
 
     /**
@@ -185,14 +198,51 @@ class request {
      * @return mixed|null
      */
     public function server(string $field) {
-        return $this->serverParameters[$field] ?? null;
+        $field = strtoupper($field);
+        return $this->server_parameters[$field] ?? null;
     }
 
     /**
-     * @param array<string, mixed> $getParameters   Global $_GET - passing the value to this argument, in order
+     * Returns all the parameters from {@see request::$get_parameters}
+     *
+     * @return array<string, mixed>
+     */
+    public function get_get_parameters(): array {
+        return $this->get_parameters;
+    }
+
+    /**
+     * Returns all the parameters from {@see request::$post_parameters}
+     *
+     * @return array<string, mixed>
+     */
+    public function get_post_parameters(): array {
+        return $this->post_parameters;
+    }
+
+    /**
+     * Returns all the parameters from {@see request::$header_parameters}
+     *
+     * @return array<string, mixed>
+     */
+    public function get_header_parameters(): array {
+        return $this->header_parameters;
+    }
+
+    /**
+     * Returns all the parameters from {@see request::$server_parameters}
+     *
+     * @return array<string, mixed>
+     */
+    public function get_server_parameters(): array {
+        return $this->server_parameters;
+    }
+
+    /**
+     * @param array<string, mixed> $get_parameters   Global $_GET - passing the value to this argument, in order
      *                                              to override the global $_GET
      *
-     * @param array<string, mixed> $postParameters  Global $_POST - passing the value to this argument, in order
+     * @param array<string, mixed> $post_parameters  Global $_POST - passing the value to this argument, in order
      *                                              to override the global $_POST.
      *
      * @param array<string, mixed> $servers         Global $_SERVER - passing the value to this argument, in order to
@@ -203,18 +253,18 @@ class request {
      * @return request
      */
     public static function create_from_global(
-        array $getParameters = [],
-        array $postParameters = [],
+        array $get_parameters = [],
+        array $post_parameters = [],
         array $headers = [],
         array $servers = []
     ): request {
         global $_GET, $_POST, $_SERVER;
-        if (empty($postParameters)) {
-            $postParameters = $_POST;
+        if (empty($post_parameters)) {
+            $post_parameters = $_POST;
         }
 
-        if (empty($getParameters)) {
-            $getParameters = $_GET;
+        if (empty($get_parameters)) {
+            $get_parameters = $_GET;
         }
 
         if (empty($servers)) {
@@ -226,6 +276,6 @@ class request {
             $headers = $headers ?: [];
         }
 
-        return new self($postParameters, $getParameters, $servers, $headers);
+        return new self($post_parameters, $get_parameters, $servers, $headers);
     }
 }

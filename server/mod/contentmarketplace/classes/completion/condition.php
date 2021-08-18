@@ -24,6 +24,7 @@ namespace mod_contentmarketplace\completion;
 
 use coding_exception;
 use core_component;
+use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 
 /**
@@ -37,7 +38,7 @@ class condition {
      *
      * @var int
      */
-    public const LAUNCH = 1;
+    public const LAUNCH = completion_constants::COMPLETION_CONDITION_LAUNCH;
 
     /**
      * A constant to say the completion to mark the activity completed
@@ -45,7 +46,7 @@ class condition {
      *
      * @var int
      */
-    public const CONTENT_MARKETPLACE = 2;
+    public const CONTENT_MARKETPLACE = completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE;
 
     /**
      * condition constructor.

@@ -26,11 +26,9 @@ use context;
 use context_system;
 use totara_mvc\controller;
 use totara_oauth2\facade\request_interface;
-use totara_oauth2\facade\response_interface;
-use totara_oauth2\local\request;
+use totara_oauth2\io\request;
 use moodle_url;
 use totara_oauth2\server;
-use JsonSerializable;
 
 class grant_token_controller extends controller {
     /**

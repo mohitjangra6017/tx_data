@@ -22,6 +22,7 @@
  */
 namespace totara_xapi\handler;
 
+use totara_xapi\entity\xapi_statement;
 use totara_xapi\request\request;
 use totara_xapi\response\facade\result;
 
@@ -33,10 +34,25 @@ abstract class base_handler {
     protected $request;
 
     /**
-     * @param request $request
+     * @var int|null
      */
-    public function __construct(request $request) {
+    protected $time_now;
+
+    /**
+     * @param request $request
+     * @param int|null $time_now
+     */
+    public function __construct(request $request, ?int $time_now = null) {
         $this->request = $request;
+        $this->time_now = $time_now ?? time();
+    }
+
+    /**
+     * @param int $time_now
+     * @return void
+     */
+    public function set_time_now(int $time_now): void {
+        $this->time_now = $time_now;
     }
 
     /**
@@ -54,7 +70,8 @@ abstract class base_handler {
      * Process on the xAPI request.
      * Note the process should return the result/response.
      *
+     * @param xapi_statement $statement
      * @return result
      */
-    abstract public function process(): result;
+    abstract public function process(xapi_statement $statement): result;
 }
