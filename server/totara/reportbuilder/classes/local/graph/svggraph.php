@@ -300,11 +300,11 @@ final class svggraph extends base {
 
         if ($this->graphrecord->type === 'bar') {
             if ($seriescount <= 2) {
-                $this->svggraphsettings['bar_space'] = 40;
-            } else if ($seriescount <= 4) {
-                $this->svggraphsettings['bar_space'] = 20;
-            } else {
                 $this->svggraphsettings['bar_space'] = 10;
+            } else if ($seriescount <= 4) {
+                $this->svggraphsettings['bar_space'] = 7;
+            } else {
+                $this->svggraphsettings['bar_space'] = 5;
             }
             if ($singleseries) {
                 $this->svggraphtype = 'HorizontalBarGraph';
@@ -344,13 +344,13 @@ final class svggraph extends base {
         } else { // Type 'column' or unknown.
             $this->graphrecord->type = 'column';
             if ($seriescount <= 2) {
-                $this->svggraphsettings['bar_space'] = 80;
+                $this->svggraphsettings['bar_space'] = 10;
             } else if ($seriescount <= 5) {
-                $this->svggraphsettings['bar_space'] = 50;
+                $this->svggraphsettings['bar_space'] = 15;
             } else if ($seriescount <= 10) {
                 $this->svggraphsettings['bar_space'] = 20;
             } else {
-                $this->svggraphsettings['bar_space'] = 10;
+                $this->svggraphsettings['bar_space'] = 25;
             }
             if ($singleseries) {
                 $this->svggraphtype = 'BarGraph';
