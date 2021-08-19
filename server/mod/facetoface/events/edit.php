@@ -127,9 +127,9 @@ if ($mform->is_cancelled()) {
 }
 if ($todb = $mform->process_data()) { // Form submitted
     $users_in_conflict = $mform->get_users_in_conflict();
-    if (empty($users_in_conflict)) {
-        // If the attendees are not conflicting and event roles are not conflicting then it is able
-        // to save into the database
+    if ((bool)$c || empty($users_in_conflict)) {
+        // If the attendees are not conflicting and event roles are not conflicting or the event is
+        // cloned, then it is able to save into the database.
         $mform->save($todb);
         redirect($returnurl);
     } else {
