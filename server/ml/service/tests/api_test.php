@@ -43,9 +43,10 @@ class ml_service_api_testcase extends testcase {
             });
         $api = api::make($curl_client);
 
-        $CFG->ml_service_url = 'http://example.com';
+        $CFG->ml_service_key = 'abc123';
+        $CFG->ml_service_url = 'http://example1.com';
         $response = $api->get('/my/test.php');
-        self::assertEquals('url: http://example.com/my/test.php', $response->get_body());
+        self::assertEquals('url: http://example1.com/my/test.php', $response->get_body());
 
         $CFG->ml_service_url = 'http://example.com/';
         $response = $api->get('/my/test.php');

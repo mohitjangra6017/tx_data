@@ -30,9 +30,25 @@ use totara_core\http\response;
 class ml_service_healthcheck_testcase extends testcase {
 
     /**
+     * Data provider for the test_invalid_state
+     *
+     * @return array
+     */
+    public function invalid_state_data(): array {
+        return [
+            [null, 'abcd12345'],
+            ['http://example.com', null],
+            [null, null],
+        ];
+    }
+
+    /**
+     * @dataProvider invalid_state_data
+     * @param string|null $url
+     * @param string|null $key
      * @return void
      */
-    public function test_invalid_state(): void {
+    public function test_invalid_state(?string $url, ?string $key): void {
         global $CFG;
 
         // Mocking the API object
@@ -46,7 +62,8 @@ class ml_service_healthcheck_testcase extends testcase {
         self::assertEmpty($healthcheck->get_other_info());
 
         // Assert no configured service
-        $CFG->ml_service_url = null;
+        $CFG->ml_service_url = $url;
+        $CFG->ml_service_key = $key;
         $healthcheck->check_health();
 
         self::assertFalse($healthcheck->get_totara_to_service());
@@ -66,6 +83,7 @@ class ml_service_healthcheck_testcase extends testcase {
         // Mocking the API object
         $mock_api = $this->createMock(api::class);
         $CFG->ml_service_url = 'http://example.com';
+        $CFG->ml_service_key = 'abcd1234';
 
         $healthcheck = healthcheck::make($mock_api);
 
@@ -96,6 +114,7 @@ class ml_service_healthcheck_testcase extends testcase {
         // Mocking the API object
         $mock_api = $this->createMock(api::class);
         $CFG->ml_service_url = 'http://example.com';
+        $CFG->ml_service_key = 'abcd1234';
 
         $healthcheck = healthcheck::make($mock_api);
 
@@ -139,6 +158,7 @@ class ml_service_healthcheck_testcase extends testcase {
         // Mocking the API object
         $mock_api = $this->createMock(api::class);
         $CFG->ml_service_url = 'http://example.com';
+        $CFG->ml_service_key = 'abcd1234';
 
         $healthcheck = healthcheck::make($mock_api);
 

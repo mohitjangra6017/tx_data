@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['error_no_config_defined'] = 'The ml_service_url configuration option has not been defined.';
+$string['error_no_config_defined'] = 'The ml_service_url or ml_service_key configuration option have not been defined.';
 $string['healthy'] = 'Healthy';
 $string['pluginname'] = 'Machine Learning Service';
 $string['unhealthy'] = 'Unhealthy';

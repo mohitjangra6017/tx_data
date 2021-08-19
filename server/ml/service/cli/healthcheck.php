@@ -64,6 +64,7 @@ cli_heading('Checking Machine Learning service health...');
 $healthcheck->check_health();
 
 cli_writeln('ml_service_url set to ' . $healthcheck->get_service_url());
+cli_writeln('ml_service_key is ' . ($healthcheck->is_service_key_set() ? 'set' : 'not set'));
 cli_writeln("");
 
 cli_write('Totara to Service connection... ');
@@ -82,7 +83,7 @@ if (!empty($other_info)) {
 
 $errors = $healthcheck->get_error_messages();
 if (!empty($errors)) {
-    cli_heading("Errors found");
+    cli_heading("Service reports the following:");
     foreach ($errors as $error) {
         cli_error($error);
     }

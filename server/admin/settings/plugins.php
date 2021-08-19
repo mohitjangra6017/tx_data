@@ -622,6 +622,16 @@ if ($hassiteconfig) {
         )
     );
 
+    $env_page->add(
+        new admin_setting_configtext(
+            'ml_service_key',
+            get_string('ml_service_key_label', 'ml'),
+            get_string('ml_service_key_description', 'ml'),
+            '',
+            PARAM_RAW_TRIMMED
+        )
+    );
+
     $ADMIN->add('machine_learning_settings', $env_page);
 
     foreach (core_plugin_manager::instance()->get_plugins_of_type('ml') as $plugin) {

@@ -152,6 +152,14 @@ class healthcheck {
     }
 
     /**
+     * @return bool
+     */
+    public function is_service_key_set(): bool {
+        global $CFG;
+        return (bool) $CFG->ml_service_key;
+    }
+
+    /**
      * @param bool|null $status
      * @return string
      */
@@ -171,7 +179,7 @@ class healthcheck {
      * @return bool
      */
     protected function is_service_configured(): bool {
-        return null !== $this->get_service_url();
+        return null !== $this->get_service_url() && $this->is_service_key_set();
     }
 
     /**

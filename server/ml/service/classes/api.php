@@ -75,8 +75,7 @@ class api {
      */
     protected function make_url(string $endpoint): string {
         global $CFG;
-
-        $service_url = rtrim($CFG->ml_service_url, '/');
+        $service_url = $CFG->ml_service_url ? rtrim($CFG->ml_service_url, '/') : '';
         if (empty($service_url)) {
             throw new coding_exception('No ml_service_url was defined, cannot call the machine learning service.');
         }
@@ -86,9 +85,26 @@ class api {
 
     /**
      * Attach any headers to the requests
+     *
      * @return array
      */
     protected function make_headers(): array {
-        return [];
+        $request_time = time();
+        return [
+            'X-Totara-Ml-Key' => $this->make_key($request_time),
+            'X-Totara-Time' => $request_time,
+        ];
+    }
+
+    /**
+     * @param float $request_time
+     * @return string
+     */
+    protected function make_key(float $request_time): string {
+        global $CFG;
+        if (empty($CFG->ml_service_key)) {
+            throw new coding_exception('No ml_service_key was defined, cannot connect to the machine learning service.');
+        }
+        return hash('sha256', $request_time . $CFG->ml_service_key);
     }
 }
