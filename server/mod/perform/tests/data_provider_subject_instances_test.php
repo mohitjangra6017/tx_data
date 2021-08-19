@@ -23,7 +23,7 @@
 
 use core\collection;
 use core\orm\query\builder;
-use core\pagination\cursor;
+use core\pagination\offset_cursor;
 use mod_perform\data_providers\activity\subject_instance_for_participant;
 use mod_perform\entity\activity\filters\subject_instances_about;
 use mod_perform\entity\activity\activity_type as activity_type_entity;
@@ -206,12 +206,14 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         // Just verifying test parameters here ...
         $this->assertSame(count($expected_subject_instances), count($item_counts));
 
-        $cursor = cursor::create()->set_limit($page_size);
+        $cursor = offset_cursor::create()
+            ->set_page(1)
+            ->set_limit($page_size);
 
         for ($i = 0, $item_count = count($item_counts); $i < $item_count; $i++) {
             $paginator = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
                 ->add_filters(['about' => [subject_instances_about::VALUE_ABOUT_SELF]])
-                ->get_next($cursor);
+                ->get_offset($cursor);
 
             $items = $paginator->get_items();
             $this->assertCount($item_counts[$i], $items);

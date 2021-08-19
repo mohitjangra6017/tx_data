@@ -26,9 +26,12 @@ namespace mod_perform\data_providers\activity;
 use core\collection;
 use core\orm\entity\repository;
 use core\orm\query\builder;
+use core\pagination\base_paginator;
 use core\pagination\cursor;
 use core\pagination\cursor_paginator;
+use core\pagination\offset_cursor;
 use mod_perform\data_providers\cursor_paginator_trait;
+use mod_perform\data_providers\offset_paginator_trait;
 use mod_perform\data_providers\provider;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\filters\subject_instance_id;
@@ -59,7 +62,7 @@ use totara_job\entity\job_assignment;
  * @method collection|subject_instance_model[] get
  */
 class subject_instance_for_participant extends provider {
-    use cursor_paginator_trait;
+    use offset_paginator_trait;
 
     /**
      * @var int
@@ -285,11 +288,41 @@ class subject_instance_for_participant extends provider {
      *
      * @param string $cursor
      * @param int $page_size
+     * @deprecated since Totara 15
      * @return \stdClass
      */
     public function get_subject_sections_page(string $cursor = '', int $page_size = cursor_paginator::DEFAULT_ITEMS_PER_PAGE): \stdClass {
+        debugging('This method is deprecated, pagination changed to offset based pagination, use get_offset_page() instead.', DEBUG_DEVELOPER);
         $cursor = !empty($cursor) ? cursor::decode($cursor) : cursor::create()->set_limit($page_size);
         $paginator = $this->get_next($cursor, true);
+        $items = $paginator->get_items()->map_to(subject_instance_model::class);
+
+        $next_cursor = $paginator->get_next_cursor();
+        return (object)[
+            'items' => subject_sections::create_from_subject_instances($items),
+            'total' => $paginator->get_total(),
+            'next_cursor' => $next_cursor === null ? '' : $next_cursor->encode(),
+        ];
+    }
+
+    /**
+     * Get a page of items.
+     * NOTE: The total count is always included in the returned data set.
+     *
+     * @param array $pagination_params core_pagination_input input params from query, has keys: 'cursor', 'limit', 'page'.
+     * @return array Returns a set of ['items' => (same as what get() does), 'total' => (int), 'next_cursor' => (cursor)]
+     */
+    public function get_offset_page(array $pagination_params): \stdClass {
+        if (!empty($pagination_params['cursor'])) {
+            $cursor = offset_cursor::decode($pagination_params['cursor']);
+        } else {
+            $cursor = offset_cursor::create([
+                'page' => $pagination_params['page'] ?? 1,
+                'limit' => $pagination_params['limit'] ?? base_paginator::DEFAULT_ITEMS_PER_PAGE,
+            ]);
+        }
+
+        $paginator = $this->get_offset($cursor);
         $items = $paginator->get_items()->map_to(subject_instance_model::class);
 
         $next_cursor = $paginator->get_next_cursor();

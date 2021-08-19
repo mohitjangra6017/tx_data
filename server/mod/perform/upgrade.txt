@@ -1,6 +1,11 @@
 This files describes API changes in /mod/perform/*,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* \mod_perform\data_providers\activity\subject_instance_for_participant::get_subject_sections_page() is now deprecated in favour of
+  \mod_perform\data_providers\activity\subject_instance_for_participant::get_offset_page() switching the pagination from cursor based
+  to offset based pagination.
+
 === 14.0 ===
 * respondable_element_plugin::validate_response() function now includes new parameter 'is_draft_validation'
   to check response validation in draft mode. This function signature changed to abstract function and all respondable
