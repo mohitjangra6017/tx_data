@@ -96,11 +96,14 @@ class helper {
      * @param string $resolver_class_name
      * @param extended_context $extended_context
      * @return bool
+     * @deprecated since 14.4
      */
     public static function is_resolver_enabled(
         string $resolver_class_name,
         extended_context $extended_context
     ): bool {
+        debugging('totara_notification\local\helper::is_resolver_enabled was deprecated in 14.4', DEBUG_DEVELOPER);
+
         $notifiable_event_entity = entity::repository()->for_context($resolver_class_name, $extended_context);
         if ($notifiable_event_entity) {
             $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
@@ -120,28 +123,57 @@ class helper {
      * @param string $resolver_class_name
      * @param extended_context $extended_context
      * @return bool
+     * @deprecated since 14.4
      */
     public static function is_resolver_enabled_for_all_parent_contexts(
         string $resolver_class_name,
         extended_context $extended_context
     ): bool {
-        // Start with the current level
-        $parent_context = $extended_context->get_parent();
+        debugging(
+            'totara_notification\local\helper::is_resolver_enabled_for_all_parent_contexts was deprecated in 14.4. ' .
+            'Instead use totara_notification\local\helper::is_resolver_disabled_by_any_context',
+            DEBUG_DEVELOPER
+        );
 
-        // Check if the event has been disabled in a higher context?
-        while ($parent_context !== null) {
-            $notifiable_event_entity = entity::repository()->for_context($resolver_class_name, $parent_context);
+        return !self::is_resolver_disabled_by_any_context(
+            $resolver_class_name,
+            $extended_context->get_parent()
+        );
+    }
+
+    /**
+     * Check the context path from the given context and above to see if there are any disabled flags set.
+     *
+     * @param notifiable_event_resolver|string $resolver_class_name
+     * @param extended_context $descendent_extended_context
+     * @return bool
+     */
+    public static function is_resolver_disabled_by_any_context(
+        string $resolver_class_name,
+        extended_context $descendent_extended_context
+    ): bool {
+        // Start with the descendent context.
+        $extended_context = $descendent_extended_context;
+
+        while ($extended_context !== null) {
+            // Check if the event has been disabled in the context.
+            $notifiable_event_entity = entity::repository()->for_context($resolver_class_name, $extended_context);
             if ($notifiable_event_entity) {
                 $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
                 if ($notifiable_event->get_enabled() !== null) {
-                    return $notifiable_event->get_enabled();
+                    if (!$notifiable_event->get_enabled()) {
+                        // If it is disabled in a context then it is disabled in the given descendent context and
+                        // there's no need to check in any higher context.
+                        return true;
+                    }
                 }
             }
-            $parent_context = $parent_context->get_parent();
+            // Continue up the context path.
+            $extended_context = $extended_context->get_parent();
         }
 
-        // If not set in any parent use default
-        return $resolver_class_name::get_default_enabled();
+        // If all contexts have returned null, get the default.
+        return !$resolver_class_name::get_default_enabled();
     }
 
     /**

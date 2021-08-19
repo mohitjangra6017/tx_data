@@ -1,6 +1,14 @@
 This files describes API changes for code that uses the notification API,
 information provided here is intended especially for developers.
 
+=== 14.4 ===
+
+* Deprecated totara_notification\local\helper::is_resolver_enabled - this function isn't needed and isn't returning
+  the correct value when no preference record is found.
+* Deprecated totara_notification\local\helper::is_resolver_enabled_for_all_parent_contexts - use
+  is_resolver_disabled_by_any_context instead, and pass in the parent context of your target context if you want
+  to know explicitly whether an ancestor is causing the target to be disabled.
+
 === 14.1 ===
 
 * Deprecated the function single_emptiable_placeholder::get_representation_string_for_empty - all empty placeholder

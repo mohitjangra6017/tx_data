@@ -86,8 +86,12 @@ class event_resolvers implements query_resolver, has_middleware {
                     return false;
                 }
 
-                $enabled_in_parent_contexts = helper::is_resolver_enabled_for_all_parent_contexts($resolver_class, $extended_context);
-                if (!$enabled_in_parent_contexts) {
+                // If the resolver has a parent context and it is disabled in the parent context then we exclude it.
+                $parent_extended_context = $extended_context->get_parent();
+                if ($parent_extended_context && helper::is_resolver_disabled_by_any_context(
+                    $resolver_class,
+                    $parent_extended_context
+                )) {
                     return false;
                 }
 

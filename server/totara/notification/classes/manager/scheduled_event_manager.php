@@ -26,9 +26,11 @@ use coding_exception;
 use moodle_recordset;
 use null_progress_trace;
 use progress_trace;
+use totara_core\extended_context;
 use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\event_resolver_schedule;
+use totara_notification\local\helper;
 use totara_notification\local\notification_queue_helper;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 use totara_notification\resolver\resolver_helper;
@@ -68,6 +70,15 @@ class scheduled_event_manager {
 
         $resolver_classes = notifiable_event_resolver_factory::get_scheduled_resolver_classes();
         foreach ($resolver_classes as $resolver_cls) {
+            if (helper::is_resolver_disabled_by_any_context(
+                $resolver_cls,
+                extended_context::make_system()
+            )) {
+                // If the resolver is disabled in the system context then it cannot be enabled in any context,
+                // so there's no need to check any notification schedules.
+                continue;
+            };
+
             $resolver_schedule = event_resolver_schedule::instance($resolver_cls);
             $min_schedule_offset = $resolver_schedule->get_minimum_offset();
             $max_schedule_offset = $resolver_schedule->get_maximum_offset();
@@ -144,6 +155,16 @@ class scheduled_event_manager {
             );
 
             $extended_context = $resolver->get_extended_context();
+
+            if (helper::is_resolver_disabled_by_any_context(
+                $resolver_class_name,
+                $extended_context
+            )) {
+                // If the resolver is disabled in the context where the event occurred or any ancestor context
+                // then there's no need to process any of the notification preferences.
+                continue;
+            };
+
             $fixed_event_time = $resolver->get_fixed_event_time();
 
             if (0 >= $fixed_event_time) {

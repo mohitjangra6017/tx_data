@@ -24,6 +24,7 @@
 use core_phpunit\testcase;
 use core_user\totara_notification\placeholder\user;
 use totara_core\extended_context;
+use totara_notification\entity\notifiable_event_preference as notifiable_event_preference_entity;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\observer\notifiable_event_observer;
@@ -312,5 +313,65 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
             totara_notification_mock_built_in_notification::get_default_subject()->out(),
             $first_notification->subject
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_dispatch_skips_disabled_resolvers(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+        $context_user = context_user::instance($user_one->id);
+
+        $notification_generator = generator::instance();
+        $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
+
+        $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
+
+        // Create a valid queue.
+        $valid_queue = new notification_queue();
+        $valid_queue->set_decoded_event_data([
+            'message' => 'This is a message',
+            'expected_context_id' => context_system::instance()->id,
+        ]);
+        $valid_queue->notification_preference_id = $system_built_in->get_id();
+        $valid_queue->scheduled_time = 10;
+        $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
+        $valid_queue->save();
+
+        // Disable the resolver.
+        $extended_context = extended_context::make_system();
+        $entity = new notifiable_event_preference_entity();
+        $entity->context_id = $extended_context->get_context_id();
+        $entity->resolver_class_name = mock_resolver::class;
+        $entity->component = $extended_context->get_component();
+        $entity->area = $extended_context->get_area();
+        $entity->item_id = $extended_context->get_item_id();
+        $entity->default_delivery_channels = ",email,";
+        $entity->enabled = false;
+        $entity->save();
+
+        // One record at this point.
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+
+        // Set up notification capture.
+        $sink = $this->redirectMessages();
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+
+        // Process the queue.
+        $trace = $notification_generator->get_test_progress_trace();
+        $manager = new notification_queue_manager($trace);
+        $manager->dispatch_queues(15);
+
+        // Check the queue is empty after sending the notifications.
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        // There were no messages sent out.
+        $notifications = $sink->get_messages();
+        self::assertCount(0, $notifications);
     }
 }

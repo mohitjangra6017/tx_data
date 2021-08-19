@@ -61,6 +61,9 @@ class totara_notification_notifiable_event_testcase extends testcase {
     }
 
     public function test_notifiable_event_resolver_enabled_status(): void {
+        $generator = notification_generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+
         // Out of the box we should be able to get default status.
         $this->assertEquals(true, mock_event_resolver::get_default_enabled());
 
@@ -81,25 +84,25 @@ class totara_notification_notifiable_event_testcase extends testcase {
         $this->assertEquals(null, $model->get_enabled());
 
         // At render or queue processing time, we should get what the truth means:
-        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $enabled = !helper::is_resolver_disabled_by_any_context($entity->resolver_class_name, $extended_context);
         $this->assertEquals(true, $enabled);
 
         // Explicitly set false.
         $entity->set_attribute('enabled', false);
         $entity->save();
-        $enabled = helper::is_resolver_enabled($entity->resolver_class_name, $extended_context);
+        $enabled = !helper::is_resolver_disabled_by_any_context($entity->resolver_class_name, $extended_context);
         $this->assertEquals(false, $enabled);
 
         // Explicitly set true.
         $entity->set_attribute('enabled', true);
         $entity->save();
-        $enabled = helper::is_resolver_enabled($entity->resolver_class_name, $extended_context);
+        $enabled = !helper::is_resolver_disabled_by_any_context($entity->resolver_class_name, $extended_context);
         $this->assertEquals(true, $enabled);
 
         // Explicitly set null.
         $entity->set_attribute('enabled', null);
         $entity->save();
-        $enabled = helper::is_resolver_enabled($entity->resolver_class_name, $extended_context);
+        $enabled = !helper::is_resolver_disabled_by_any_context($entity->resolver_class_name, $extended_context);
         $this->assertEquals(true, $enabled);
     }
 }

@@ -136,8 +136,12 @@ if (has_capability('totara/program:configuremessages', $context)) {
                     return false;
                 }
 
-                $enabled_in_parent_contexts = helper::is_resolver_enabled_for_all_parent_contexts($resolver_class, $extended_context);
-                if (!$enabled_in_parent_contexts) {
+                // If any ancestor context is disabled then we won't show the resolver here.
+                $parent_extended_context = $extended_context->get_parent();
+                if (helper::is_resolver_disabled_by_any_context(
+                    $resolver_class,
+                    $parent_extended_context
+                )) {
                     return false;
                 }
 

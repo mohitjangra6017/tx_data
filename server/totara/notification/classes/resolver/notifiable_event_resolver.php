@@ -53,7 +53,7 @@ use totara_notification\recipient\recipient;
 abstract class notifiable_event_resolver {
 
     // Constants indicating reasons why a notification might not have been sent.
-    const NOT_SENT_DISABLED = 1; // The notification preference was disabled.
+    const NOT_SENT_DISABLED = 1; // The notification preference was disabled. DO NOT USE FOR DISABLED RESOLVER!
     const NOT_SENT_NO_PROCESSORS = 2; // No message processors were enabled, so there was no way to send notifications.
 
     /**

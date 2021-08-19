@@ -35,6 +35,7 @@ use stdClass;
 use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\delivery_channel_loader;
+use totara_notification\local\helper;
 use totara_notification\model\notification_preference;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\resolver\resolver_helper;
@@ -106,6 +107,18 @@ class notification_queue_manager {
             );
             return;
         }
+
+        if (helper::is_resolver_disabled_by_any_context(
+            $preference->get_resolver_class_name(),
+            $preference->get_extended_context()
+        )) {
+            // If the resolver is disabled in the context where the event occurred then there's no need to process
+            // any of the notification preferences. We don't inform the resolver when a notification is not sent
+            // due to the resolver being disabled, because this is not the only place where processing could have
+            // been stopped due to a disabled resolver, and we can't easily catch all of them - we should catch all
+            // or none.
+            return;
+        };
 
         $event_data = $queue->get_decoded_event_data();
 

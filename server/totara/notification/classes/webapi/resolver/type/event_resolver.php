@@ -84,21 +84,20 @@ class event_resolver implements type_resolver {
                 // Default extended context.
                 $extended_context = self::get_extended_context_from_args($args, $ec);
 
-                $resolver_class_name = $source;
-
-                $is_enabled_in_all_parents = helper::is_resolver_enabled_for_all_parent_contexts(
-                    $resolver_class_name,
-                    $extended_context
-                );
-                $current_resolver_enabled = helper::is_resolver_enabled($resolver_class_name, $extended_context);
-
-                $is_enabled = $current_resolver_enabled && $is_enabled_in_all_parents;
-
+                // Note that this only works because the only property that can be modified on a resolver below the system
+                // context is the status, and because it is not possible to re-enable it in a lower context. If one of
+                // these properties changes then we'd need to keep track of the 'undefined' (null) value.
                 return [
-                    'is_enabled' => $is_enabled
+                    'is_enabled' => !helper::is_resolver_disabled_by_any_context(
+                        $source,
+                        $extended_context
+                    )
                 ];
 
             case 'default_delivery_channels':
+                // Note that this only works because delivery channel can only be set in the system context. If we allow
+                // it to be changed in lower contexts then we would need to load the specific context and keep track of
+                // the 'undefined' (null) value. Also see comment on 'status' above.
                 $extended_context = extended_context::make_system();
 
                 // Find the notifiable event preference record
