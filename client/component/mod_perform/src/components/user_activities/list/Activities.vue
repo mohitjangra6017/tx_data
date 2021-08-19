@@ -37,9 +37,11 @@
     <Loader :loading="$apollo.loading">
       <Table
         v-if="!$apollo.loading"
+        ref="activity-table"
         :data="subjectInstances"
         :expandable-rows="true"
         :no-items-text="emptyListText"
+        :stack-at="850"
       >
         <template v-slot:header-row>
           <ExpandCell :header="true" />
@@ -251,8 +253,15 @@
           </div>
         </template>
       </Table>
-      <div v-if="showLoadMore" class="tui-performUserActivityList__loadMore">
-        <Button :text="$str('loadmore', 'totara_core')" @click="loadMore" />
+      <div class="tui-performUserActivityList__paging">
+        <Paging
+          v-if="totalActivities"
+          :items-per-page="paginationLimit"
+          :page="paginationPage"
+          :total-items="totalActivities"
+          @count-change="setItemsPerPage"
+          @page-change="setPaginationPage"
+        />
       </div>
     </Loader>
 
@@ -282,6 +291,7 @@ import Loader from 'tui/components/loading/Loader';
 import Lock from 'tui/components/icons/Lock';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import OverdueLozenge from 'mod_perform/components/user_activities/list/ActivityOverdue';
+import Paging from 'tui/components/paging/Paging';
 import RelationshipSelector from 'mod_perform/components/user_activities/list/RelationshipSelector';
 import SectionsList from 'mod_perform/components/user_activities/list/Sections';
 import Table from 'tui/components/datatable/Table';
@@ -300,6 +310,7 @@ export default {
     Lock,
     ModalPresenter,
     OverdueLozenge,
+    Paging,
     RelationshipSelector,
     SectionsList,
     Table,
@@ -334,16 +345,18 @@ export default {
     return {
       activeFilterCount: 0,
       isRelationshipSelectorShown: false,
-      pagination: {
-        nextCursor: '',
-        total: 0,
-      },
+      // items per page limit
+      paginationLimit: 20,
+      // Current pagination page
+      paginationPage: 1,
       relationshipSelectorUrl: '',
       selectedParticipantSections: [],
       selectedSubjectUser: {},
       singleSectionViewOnlyActivities: [],
       sortByFilter: 'created_at',
       subjectInstances: [],
+      // Count of activities across all pages
+      totalActivities: 0,
       userFilters: {
         activityType: null,
         excludeCompleted: false,
@@ -357,12 +370,6 @@ export default {
   computed: {
     isAboutOthers() {
       return this.about === 'others';
-    },
-
-    showLoadMore() {
-      return (
-        this.subjectInstances.length > 0 && this.pagination.nextCursor !== ''
-      );
     },
 
     emptyListText() {
@@ -399,15 +406,15 @@ export default {
           options: {
             sort_by: this.sortByFilter,
           },
+          pagination: {
+            limit: this.paginationLimit,
+            page: this.paginationPage,
+          },
         };
       },
       update: data => data['mod_perform_my_subject_instances'].items,
       result({ data }) {
-        this.pagination = {
-          nextCursor:
-            data['mod_perform_my_subject_instances'].next_cursor || '',
-          total: data['mod_perform_my_subject_instances'].total || 0,
-        };
+        this.totalActivities = data.mod_perform_my_subject_instances.total;
       },
     },
   },
@@ -724,46 +731,39 @@ export default {
     },
 
     /**
-     * Update active filter count and reset paging
+     * Update active filter count and reset page
      *
      * @param {Number} activeFilterCount
      */
     filterChange(activeFilterCount) {
       this.activeFilterCount = activeFilterCount;
-      this.nextCursor = '';
+      this.paginationPage = 1;
     },
 
     /**
-     * Load the next 'page' of results
+     * Update number of items displayed per page
+     *
+     * @param {Number} limit
      */
-    loadMore() {
-      this.$apollo.queries.subjectInstances.fetchMore({
-        variables: {
-          filters: this.currentFilterOptions,
-          options: {
-            sort_by: this.sortByFilter,
-          },
-          pagination: { cursor: this.pagination.nextCursor },
-        },
+    setItemsPerPage(limit) {
+      if (this.$refs['activity-table']) {
+        this.$refs['activity-table'].$el.scrollIntoView();
+      }
 
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          const previousInstances =
-            previousResult.mod_perform_my_subject_instances.items;
-          const newInstances =
-            fetchMoreResult.mod_perform_my_subject_instances.items;
-          const nextCursor =
-            fetchMoreResult.mod_perform_my_subject_instances.next_cursor || '';
-          const total =
-            fetchMoreResult.mod_perform_my_subject_instances.total || 0;
-          return {
-            mod_perform_my_subject_instances: {
-              items: [...previousInstances, ...newInstances],
-              next_cursor: nextCursor,
-              total: total,
-            },
-          };
-        },
-      });
+      this.paginationLimit = limit;
+    },
+
+    /**
+     * Update current paginated page
+     *
+     * @param {Number} page
+     */
+    setPaginationPage(page) {
+      if (this.$refs['activity-table']) {
+        this.$refs['activity-table'].$el.scrollIntoView();
+      }
+
+      this.paginationPage = page;
     },
   },
 };
@@ -800,9 +800,6 @@ export default {
       "user_activities_subject_header",
       "user_activities_title_header",
       "user_activities_type_header"
-    ],
-    "totara_core": [
-      "loadmore"
     ]
   }
 </lang-strings>
@@ -832,9 +829,8 @@ export default {
     }
   }
 
-  &__loadMore {
-    margin-top: var(--gap-3);
-    text-align: center;
+  &__paging {
+    margin-top: var(--gap-5);
   }
 }
 </style>

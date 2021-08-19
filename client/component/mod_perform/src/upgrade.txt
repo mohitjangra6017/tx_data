@@ -2,10 +2,11 @@ This file describes API changes in /client/component/mod_perform,
 information provided here is intended especially for developers.
 
 === 15.0 ===
-* Heavily reworked the template structure of Activities.vue page 
+* Heavily reworked the structure of Activities.vue page 
     * Table heading language strings have been modified
     * The datatable structure and content has been changed.
     * Existing filters have been modified and additional ones have been added
+    * Show more pagination has been replaced with the paging component
     * SCSS changes to existing classes
 
 === 14.0 ===
