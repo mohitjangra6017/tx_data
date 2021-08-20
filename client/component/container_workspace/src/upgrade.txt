@@ -4,6 +4,12 @@ information provided here is intended especially for developers.
 === 15.0 ===
 
 * Updated WorkspaceDiscussionTab, deprecated loadMore in favour of loadMoreItems
+* Updated PostDiscussionForm.vue, WorkspacePageHeader.vue and WorkspacePage.vue to not be hard against the viewport edge on mobile, and make main headings smaller
+  * SCSS changes
+* Updated WorkspacePrimaryAction.vue, to not change the main action button to full width until the xs breakpoint
+  * SCSS changes
+
+
 
 === 14.0 ===
 

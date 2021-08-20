@@ -379,10 +379,18 @@ export default {
   &__primaryAction {
     display: flex;
     width: 100%;
-    margin-top: var(--gap-4);
+    padding: 0 var(--gap-4);
 
     @media (min-width: $tui-screen-sm) {
       justify-content: flex-end;
+    }
+
+    @media (min-width: $tui-screen-md) {
+      padding: var(--gap-4) var(--gap-4) 0 0;
+    }
+
+    @media (min-width: $tui-screen-xl) {
+      padding-right: 0;
     }
 
     &-action {
@@ -395,12 +403,17 @@ export default {
   }
 
   &__tabs {
-    margin-top: var(--gap-4);
+    padding: var(--gap-4);
+
     .tui-tabs__tabs {
       padding-left: var(--gap-4);
       @media (min-width: $tui-screen-sm) {
         padding: 0;
       }
+    }
+
+    @media (min-width: $tui-screen-md) {
+      padding: 0;
     }
 
     &-text {

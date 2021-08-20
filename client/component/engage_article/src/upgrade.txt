@@ -1,6 +1,10 @@
 This files describes API changes in /client/component/engage_article,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* Updated ArticleTitle.vue and ArticleView.vue to not be hard against the viewport edge on mobile, and make main headings smaller
+  * SCSS changes
+
 === 13.3 ===
 * Updates in ArticleForm.vue:
   * Template changes

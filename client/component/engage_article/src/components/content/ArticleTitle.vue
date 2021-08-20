@@ -200,12 +200,20 @@ export default {
   }
 
   &__title {
-    @include tui-font-heading-large;
+    @include tui-font-heading-medium;
     width: 93%;
     margin: 0;
     margin-top: calc(var(--gap-2) / -1);
 
     @include tui-wordbreak--hyphens;
+  }
+}
+
+@media (min-width: $tui-screen-sm) {
+  .tui-engageArticleTitle {
+    &__title {
+      @include tui-font-heading-large;
+    }
   }
 }
 </style>

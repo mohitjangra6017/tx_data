@@ -787,7 +787,7 @@ export default {
   display: flex;
   width: 100%;
 
-  @media (min-width: $tui-screen-sm) {
+  @media (min-width: $tui-screen-xs) {
     justify-content: flex-end;
   }
 
@@ -799,7 +799,7 @@ export default {
   &__dropdown {
     width: 100%;
 
-    @media (min-width: $tui-screen-sm) {
+    @media (min-width: $tui-screen-xs) {
       // IE support - :(
       width: auto;
     }
@@ -807,7 +807,7 @@ export default {
     &-button {
       width: 100%;
 
-      @media (min-width: $tui-screen-sm) {
+      @media (min-width: $tui-screen-xs) {
         // IE support - :(
         width: auto;
       }
@@ -817,7 +817,7 @@ export default {
   &__button {
     width: 100%;
 
-    @media (min-width: $tui-screen-sm) {
+    @media (min-width: $tui-screen-xs) {
       // IE Support - :(
       width: auto;
     }

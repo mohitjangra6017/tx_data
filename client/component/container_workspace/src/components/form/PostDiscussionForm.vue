@@ -99,15 +99,26 @@ export default {
 <style lang="scss">
 .tui-workspacePostDiscussionForm {
   display: flex;
+
   &__avatar {
-    @media (max-width: $tui-screen-sm) {
-      display: none;
-    }
+    display: none;
   }
+
   &__form {
     flex-grow: 1;
     width: 100%;
-    padding-left: var(--gap-2);
+  }
+}
+
+@media (min-width: $tui-screen-sm) {
+  .tui-workspacePostDiscussionForm {
+    &__avatar {
+      display: block;
+    }
+
+    &__form {
+      padding-left: var(--gap-2);
+    }
   }
 }
 </style>

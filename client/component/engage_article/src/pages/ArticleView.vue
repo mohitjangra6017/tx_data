@@ -189,5 +189,19 @@ export default {
     margin-bottom: var(--gap-12);
     padding: var(--gap-4) var(--gap-8);
   }
+
+  &__layout {
+    padding-right: var(--gap-4);
+    padding-left: var(--gap-4);
+  }
+}
+
+@media (min-width: $tui-screen-xs) {
+  .tui-engageArticleView {
+    &__layout {
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
 }
 </style>

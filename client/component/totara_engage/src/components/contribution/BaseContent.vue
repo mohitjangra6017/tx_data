@@ -212,13 +212,14 @@ export default {
   }
 
   &__horizontal {
-    padding: var(--gap-8);
+    padding: var(--gap-4);
+    padding-right: 0;
   }
 
   &__vertical {
     .tui-filterBar__filters,
     .tui-contributionBaseContent__cards {
-      padding: var(--gap-4);
+      padding: var(--gap-4) 0 var(--gap-4) var(--gap-4);
     }
     .tui-contributionFilter__sort {
       padding-right: var(--gap-4);
@@ -315,6 +316,21 @@ export default {
   .tui-contributionFilter--hasSortBy + &__counterContainer {
     margin-top: calc(var(--gap-7) * -1);
     padding-top: 0;
+  }
+}
+
+@media (min-width: $tui-screen-sm) {
+  .tui-contributionBaseContent {
+    &__horizontal {
+      padding: var(--gap-4);
+    }
+
+    &__vertical {
+      .tui-filterBar__filters,
+      .tui-contributionBaseContent__cards {
+        padding: var(--gap-4);
+      }
+    }
   }
 }
 </style>

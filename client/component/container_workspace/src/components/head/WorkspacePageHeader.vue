@@ -248,8 +248,7 @@ export default {
   }
 
   &__head {
-    padding: 0;
-    padding-left: var(--gap-4);
+    padding: 0 var(--gap-4);
 
     @media (min-width: $tui-screen-sm) {
       padding: 0;
@@ -265,7 +264,11 @@ export default {
       margin: 0;
 
       @include tui-wordbreak--hard;
-      @include tui-font-heading-page-title;
+      @include tui-font-heading-medium;
+
+      @media (min-width: $tui-screen-xs) {
+        @include tui-font-heading-page-title;
+      }
     }
 
     &-buttonIcon {
