@@ -301,7 +301,7 @@ class notification_preference {
 
         /** @var lang_string $lang_string */
         $lang_string = $this->get_property_from_built_in_notification('subject');
-        return $lang_string->__toString();
+        return is_null($lang_string)? '' : $lang_string->__toString();
     }
 
     /**
@@ -361,7 +361,8 @@ class notification_preference {
             return $this->parent->get_title();
         }
 
-        return $this->get_property_from_built_in_notification('title');
+        $title = $this->get_property_from_built_in_notification('title');
+        return is_null($title) ? '' : $title;
     }
 
     /**

@@ -93,4 +93,29 @@ class totara_notification_notification_preference_testcase extends testcase {
 
         self::assertFalse($preference->is_on_event());
     }
+
+    /**
+     * @return void
+     */
+    public function test_notification_preference_title_and_subject_nullable(): void {
+        $generator = generator::instance();
+
+        $preference = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            [
+                'recipient' => mock_recipient::class,
+                'schedule_offset' => 3,
+                'title' => '',
+                'subject' => '',
+                'subject_format' => 2,
+                'notification_class_name' => ''
+            ]
+        );
+
+        self::assertEmpty($preference->get_title());
+        self::assertEmpty($preference->get_subject());
+        self::assertEmpty($preference->get_notification_class_name());
+        self::resetDebugging();
+    }
 }

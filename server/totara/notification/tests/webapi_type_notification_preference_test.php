@@ -21,11 +21,13 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\model\notification_preference as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use core_phpunit\testcase;
+use totara_notification_mock_recipient as mock_recipient;
 
 class totara_notification_webapi_type_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
@@ -194,5 +196,44 @@ class totara_notification_webapi_type_notification_preference_testcase extends t
                 $this->system_built_in
             )
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_title_and_subject_nullable(): void {
+        $generator = generator::instance();
+        $preference = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            [
+                'recipient' => mock_recipient::class,
+                'schedule_offset' => 3,
+                'title' => '',
+                'subject' => '',
+                'subject_format' => 2,
+                'notification_class_name' => ''
+            ]
+        );
+
+        self::assertEquals(
+            $preference->get_title(),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference::class),
+                'title',
+                $preference
+            )
+        );
+
+        self::assertEquals(
+            $preference->get_subject(),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference::class),
+                'subject',
+                $preference
+            )
+        );
+
+        self::resetDebugging();
     }
 }
