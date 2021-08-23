@@ -30,33 +30,27 @@ class totara_oauth2_access_token_repository_testcase extends testcase {
      */
     public function test_find_access_token_without_providing_time_now(): void {
         $generator = generator::instance();
-        $created_token = $generator->create_access_token(null, ["access_token" => "hello-world"]);
+        $created_token = $generator->create_access_token(null, ["access_token" => "hello_world"]);
 
         $repository = access_token::repository();
-        $result_one = $repository->find_by_token("hello-world");
+        $result_one = $repository->find_by_token("hello_world");
 
-        self::assertEquals($created_token->id, $result_one->id);
-        self::assertEquals($created_token->client_id, $result_one->client_id);
-        self::assertEquals($created_token->expires, $result_one->expires);
+        self::assertEquals($created_token->getIdentifier(), $result_one->access_token);
+        self::assertEquals($created_token->getClient()->getIdentifier(), $result_one->client_id);
+        self::assertEquals($created_token->getExpiryDateTime()->getTimestamp(), $result_one->expires);
         self::assertNull($result_one->scope);
     }
 
     /**
      * @return void
      */
-    public function test_find_access_token_with_providing_time_now(): void {
+    public function test_find_access_token_with_strict(): void {
         $generator = generator::instance();
-        $created_token = $generator->create_access_token(null, ["expires" => time() + HOURSECS]);
+        $generator->create_access_token(null, ["expires" => time() + HOURSECS]);
+
+        $this->expectException(dml_missing_record_exception::class);
 
         $repository = access_token::repository();
-        $time_now_one = time() + (HOURSECS * 2);
-        $result_one = $repository->find_by_token($created_token->access_token, $time_now_one);
-
-        self::assertNull($result_one);
-
-        $result_two = $repository-> find_by_token($created_token->access_token, time() - HOURSECS);
-        self::assertNotNull($result_two);
-        self::assertEquals($created_token->id, $result_two->id);
-        self::assertEquals($created_token->client_id, $result_two->client_id);
+        $repository->find_by_token("something_not_existing", false);
     }
 }

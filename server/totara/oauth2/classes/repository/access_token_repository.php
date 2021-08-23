@@ -32,22 +32,16 @@ use totara_oauth2\entity\access_token;
 class access_token_repository extends repository {
     /**
      * Returns null when access token is not found, otherwise an entity of access_token.
-     * Provide $time_now if we would want to find the access token that is not yet expired.
-     * Otherwise, null to fetch the access token that is either expired or not.
+     * Pass $strict to make sure that we throw exception when record is not found.
      *
      * @param string $token
-     * @param int|null $time_now
-     *
+     * @param bool $strict
      * @return access_token|null
      */
-    public function find_by_token(string $token, ?int $time_now = null): ?access_token {
+    public function find_by_token(string $token, bool $strict = false): ?access_token {
         $repository = access_token::repository();
         $repository->where("access_token", $token);
 
-        if (null !== $time_now) {
-            $repository->where("expires", ">=", $time_now);
-        }
-
-        return $repository->one();
+        return $repository->one($strict);
     }
 }

@@ -22,12 +22,12 @@
  */
 namespace totara_oauth2\facade;
 
-use OAuth2\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * A wrapper interface for totara OAuth2 internal usage.
  * Please implement this interface if we would want to have a mock
  * request test.
  */
-interface request_interface extends RequestInterface {
+interface request_interface extends ServerRequestInterface {
 }

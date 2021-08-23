@@ -22,13 +22,12 @@
  */
 namespace totara_oauth2\facade;
 
-use JsonSerializable;
-use OAuth2\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * A wrapper interface for totara OAuth2 internal usage.
  * Please implement this interface if we would want to have a mock
  * response test.
  */
-interface response_interface extends ResponseInterface, JsonSerializable {
+interface response_interface extends ResponseInterface {
 }

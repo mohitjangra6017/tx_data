@@ -79,10 +79,19 @@
     <repository>https://github.com/michelf/php-markdown</repository>
   </library>
   <library>
-    <location>required/bshaffer/oauth2-server-php</location>
-    <name>OAuth2 Server for PHP</name>
+    <location>required/league/oauth2-server</location>
+    <name>Oauth 2.0 Server</name>
+    <liences>MIT</liences>
+    <version>8.3.2</version>
+    <licenseversion></licenseversion>
+    <repository>https://github.com/thephpleague/oauth2-server</repository>
+  </library>
+  <library>
+    <location>required/nyholm/psr7</location>
+    <name>PSR-7 implementation</name>
     <license>MIT</license>
-    <version>1.11.1</version>
-    <repository>https://github.com/bshaffer/oauth2-server-php</repository>
+    <version>1.4.1</version>
+    <licenseversion></licenseversion>
+    <repository>https://github.com/Nyholm/psr7</repository>
   </library>
 </libraries>

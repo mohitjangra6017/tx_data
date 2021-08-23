@@ -22,90 +22,134 @@
  */
 namespace totara_oauth2\local;
 
-use OAuth2\Response as oauth2_response;
+use Psr\Http\Message\StreamInterface;
 use totara_oauth2\facade\response_interface;
+use Nyholm\Psr7\Response as library_response;
 
 /**
  * A wrapper of OAuth2 Library response
  */
 class response implements response_interface {
     /**
-     * @var oauth2_response
+     * @var library_response
      */
     private $response;
 
-    /**
-     * @param oauth2_response|null $response
-     */
-    public function __construct(?oauth2_response $response = null) {
-        $this->response = $response ?? new oauth2_response();
+    public function __construct(?library_response $response = null) {
+        $this->response = $response ?? new library_response();
     }
 
     /**
-     * @param array $parameters
-     * @return void
+     * @return string
      */
-    public function addParameters(array $parameters): void {
-        $this->response->addParameters($parameters);
+    public function getProtocolVersion() {
+        return $this->response->getProtocolVersion();
     }
 
     /**
-     * @param array $httpHeaders
-     * @return void
+     * @param string $version
+     * @return response
      */
-    public function addHttpHeaders(array $httpHeaders): void {
-        $this->response->addHttpHeaders($httpHeaders);
+    public function withProtocolVersion($version) {
+        $library_response = $this->response->withProtocolVersion($version);
+        return new self($library_response);
     }
 
-    /**
-     * @param int $statusCode
-     * @return void
-     */
-    public function setStatusCode($statusCode): void {
-        $this->response->setStatusCode($statusCode);
-    }
-
-    /**
-     * @param int    $statusCode
-     * @param string $name
-     * @param null   $description
-     * @param null   $uri
-     *
-     * @return void
-     */
-    public function setError($statusCode, $name, $description = null, $uri = null): void {
-        $this->response->setError($statusCode, $name, $description, $uri);
-    }
-
-    /**
-     * @param int    $statusCode
-     * @param string $url
-     * @param null   $state
-     * @param null   $error
-     * @param null   $errorDescription
-     * @param null   $errorUri
-     *
-     * @return void
-     */
-    public function setRedirect(
-        $statusCode, $url, $state = null, $error = null,
-        $errorDescription = null, $errorUri = null
-    ): void {
-        $this->response->setRedirect($statusCode, $url, $state, $error, $errorDescription, $errorUri);
+    public function getHeaders() {
+        return $this->response->getHeaders();
     }
 
     /**
      * @param string $name
-     * @return mixed
+     * @return array|string[]
      */
-    public function getParameter($name) {
-        return $this->response->getParameter($name);
+    public function getHeader($name) {
+        return $this->response->getHeader($name);
     }
 
     /**
-     * @return array
+     * @param string $name
+     * @return string
      */
-    public function jsonSerialize(): array {
-        return $this->response->getParameters();
+    public function getHeaderLine($name) {
+        return $this->response->getHeaderLine($name);
+    }
+
+    /**
+     * @param string          $name
+     * @param string|string[] $value
+     *
+     * @return response
+     */
+    public function withHeader($name, $value) {
+        $library_response = $this->response->withHeader($name, $value);
+        return new self($library_response);
+    }
+
+    /**
+     * @param string          $name
+     * @param string|string[] $value
+     * @return response
+     */
+    public function withAddedHeader($name, $value) {
+        $library_response = $this->response->withAddedHeader($name, $value);
+        return new self($library_response);
+    }
+
+    /**
+     * @param string $name
+     * @return response
+     */
+    public function withoutHeader($name) {
+        $library_response = $this->response->withoutHeader($name);
+        return new self($library_response);
+    }
+
+    /**
+     * @return StreamInterface
+     */
+    public function getBody() {
+        return $this->response->getBody();
+    }
+
+    /**
+     * @param StreamInterface $body
+     * @return response
+     */
+    public function withBody(StreamInterface $body) {
+        $library_response = $this->response->withBody($body);
+        return new self($library_response);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode() {
+        return $this->response->getStatusCode();
+    }
+
+    /**
+     * @param int    $code
+     * @param string $reasonPhrase
+     * @return response
+     */
+    public function withStatus($code, $reasonPhrase = '') {
+        $library_response = $this->response->withStatus($code, $reasonPhrase);
+        return new self($library_response);
+    }
+
+    /**
+     * @return string
+     */
+    public function getReasonPhrase() {
+        return $this->response->getReasonPhrase();
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasHeader($name) {
+        return $this->response->hasHeader($name);
     }
 }

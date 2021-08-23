@@ -26,6 +26,7 @@ use context;
 use context_system;
 use totara_mvc\controller;
 use totara_oauth2\facade\request_interface;
+use totara_oauth2\facade\response_interface;
 use totara_oauth2\local\request;
 use moodle_url;
 use totara_oauth2\server;
@@ -84,13 +85,14 @@ class grant_token_controller extends controller {
     }
 
     /**
-     * @return JsonSerializable
+     * @return string
      */
-    public function action(): JsonSerializable {
+    public function action(): string {
         $server = server::boot($this->time_now);
 
         // Due to the constraint from totara_mvc, we cannot send the custom headers that was processed
         // from the server yet.
-        return $server->handle_token_request($this->request);
+        $response = $server->handle_token_request($this->request);
+        return $response->getBody()->__toString();
     }
 }

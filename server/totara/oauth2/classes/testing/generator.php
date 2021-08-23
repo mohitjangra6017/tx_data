@@ -23,23 +23,41 @@
 namespace totara_oauth2\testing;
 
 use core\testing\component_generator;
-use totara_oauth2\entity\access_token;
+use League\OAuth2\Server\CryptKey;
+use totara_oauth2\config;
 use totara_oauth2\entity\client_provider;
 use totara_oauth2\grant_type;
+use totara_oauth2\wrapper\league\client_entity;
+use totara_oauth2\wrapper\league\token_entity;
+use totara_oauth2\wrapper\league\token_repository;
+use DateTimeImmutable;
+use coding_exception;
 
 class generator extends component_generator {
+    /**
+     * @return void
+     */
+    public static function setup_required_configuration(): void {
+        global $CFG;
+
+        set_config("private_key_path", "{$CFG->dirroot}/totara/oauth2/tests/fixtures/mock_p_key.pem", "totara_oauth2");
+        set_config("encryption_key", base64_encode(random_bytes(32)), "totara_oauth2");
+        set_config("public_key_path", "{$CFG->dirroot}/totara/oauth2/tests/fixtures/mock_pu_key.pem", "totara_oauth2");
+    }
+
     /**
      * The array $parameters should have these following attributes:
      * + access_token: String
      * + expires: String
-     * + scope: String|array|null
+     * + scope: String|array|null - note that if it is a string, it should be a string of
+     *                              concatenated list by space.
      *
      * @param string|null $client_id
      * @param array $parameters
      *
-     * @return access_token
+     * @return token_entity
      */
-    public function create_access_token(string $client_id = null, array $parameters = []): access_token {
+    public function create_access_token(string $client_id = null, array $parameters = []): token_entity {
         if (array_key_exists("client_id", $parameters)) {
             debugging(
                 "Please do not set the client_id from the parameters, as it will not be used",
@@ -47,43 +65,77 @@ class generator extends component_generator {
             );
         }
 
+        $private_key = config::get_private_key_path();
+        if (empty($private_key)) {
+            throw new coding_exception(
+                sprintf(
+                    "The private key file path is not yet set, please call to function '%s' beforehand.",
+                    "totara_oauth2\\testing\\generator::setup_required_configuration"
+                )
+            );
+        }
+
         if (empty($client_id)) {
             $client_id = uniqid("client_");
         }
 
-        $entity = new access_token();
-        $entity->client_id = $client_id;
-        $entity->access_token = $parameters["access_token"] ?? uniqid("token_");
-        $entity->expires = $parameters["expires"] ?? time() + DAYSECS;
-
-        if (array_key_exists("scope", $parameters)) {
+        if (!empty($parameters["scope"])) {
+            // Populate the scope of token.
             $scope = $parameters["scope"];
-            if (is_array($scope)) {
+            if (is_string($scope)) {
+                $scope = explode(" ", $scope);
                 $scope = implode(" ", $scope);
             }
 
-            $entity->scope = $scope;
+            $parameters["scope"] = $scope;
         }
 
-        $entity->save();
-        $entity->refresh();
+        $client_provider = client_provider::repository()->find_by_client_id($client_id);
+        if (null === $client_provider) {
+            $client_provider = $this->create_client_provider($client_id, ["scope" => $parameters["scope"]]);
+        }
 
-        return $entity;
+        $token_repository = new token_repository();
+        $new_token = $token_repository->getNewToken(
+            new client_entity($client_provider),
+            $parameters["scope"] ?? []
+        );
+
+        $identifier = $parameters["access_token"] ?? bin2hex(random_bytes(32));
+        $new_token->setIdentifier($identifier);
+        $new_token->setPrivateKey(new CryptKey($private_key, null, false));
+
+        // Override the expiry date time from the token repository.
+        if (!empty($parameters["expires"])) {
+            $new_token->setExpiryDateTime(
+                (new DateTimeImmutable())->setTimestamp($parameters["expires"])
+            );
+        }
+
+        $token_repository->persistNewAccessToken($new_token);
+        return $new_token;
     }
 
     /**
      * @param client_provider $client_provider
      * @param int|null $expires
-     * @return access_token
+     * @return token_entity
      */
     public function create_access_token_from_client_provider(
         client_provider $client_provider,
         ?int $expires = null
-    ): access_token {
+    ): token_entity {
+        $scope = $client_provider->scope;
+
+        if (empty($scope)) {
+            // Treating empty string as null.
+            $scope = null;
+        }
+
         return $this->create_access_token(
             $client_provider->client_id,
             [
-                "scope" => $client_provider->scope,
+                "scope" => $scope,
                 "expires" => $expires
             ]
         );
@@ -120,7 +172,7 @@ class generator extends component_generator {
         $entity->description = $parameters["description"] ?? null;
         $entity->description_format = $parameters["description_format"] ?? null;
 
-        if (array_key_exists("scope", $parameters)) {
+        if (!empty($parameters["scope"])) {
             $scope = $parameters["scope"];
             if (is_array($scope)) {
                 $scope = implode(" ", $scope);

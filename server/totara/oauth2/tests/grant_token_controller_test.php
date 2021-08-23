@@ -22,13 +22,18 @@
  */
 use core_phpunit\testcase;
 use totara_oauth2\controller\grant_token_controller;
-use totara_oauth2\entity\access_token;
-use totara_oauth2\facade\response_interface;
 use totara_oauth2\grant_type;
-use totara_oauth2\testing\mock_request;
+use totara_oauth2\local\request;
 use totara_oauth2\testing\generator;
 
 class totara_oauth2_grant_token_controller_testcase extends testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        generator::setup_required_configuration();
+    }
+
     /**
      * @return void
      */
@@ -36,38 +41,35 @@ class totara_oauth2_grant_token_controller_testcase extends testcase {
         $generator = generator::instance();
         $client = $generator->create_client_provider();
 
-        $request = mock_request::mock_post(
+        $request = request::create_from_global(
             [],
             [
                 "grant_type" => grant_type::get_client_credentials(),
                 "client_id" => $client->client_id,
                 "client_secret" => $client->client_secret
-            ],
+            ]
         );
 
         $controller = new grant_token_controller($request, time());
         $response = $controller->action();
 
-        self::assertInstanceOf(response_interface::class, $response);
+        self::assertIsString($response);
+        $parameters = json_decode($response, true);
 
-        $access_token = $response->getParameter("access_token");
-        self::assertNotNull($access_token);
+        self::assertNotEmpty($parameters);
+        self::assertIsArray($parameters);
 
-        $token_entity = access_token::repository()->find_by_token($access_token);
-        self::assertNotNull($token_entity);
-        self::assertEquals($client->client_id, $token_entity-> client_id);
-        self::assertNull($client->scope);
-
-        $token_type = $response->getParameter("token_type");
-        self::assertNotNull($token_type);
-        self::assertEquals("Bearer", $token_type);
+        // JWT value
+        self::assertArrayHasKey("access_token", $parameters);
+        self::assertArrayHasKey("token_type", $parameters);
+        self::assertEquals("Bearer", $parameters["token_type"]);
     }
 
     /**
      * @return void
      */
     public function test_cannot_grant_token(): void {
-        $request = mock_request::mock_post(
+        $request = request::create_from_global(
             [],
             [
                 "grant_type" => grant_type::get_client_credentials(),
@@ -79,14 +81,16 @@ class totara_oauth2_grant_token_controller_testcase extends testcase {
         $controller = new  grant_token_controller($request, time());
         $response = $controller->action();
 
-        self::assertInstanceOf(response_interface::class, $response);
-        $error = $response->getParameter("error");
+        self::assertIsString($response);
+        $parameters = json_decode($response, true);
 
-        self::assertNotNull($error);
-        self::assertEquals("invalid_client", $error);
+        self::assertNotEmpty($parameters);
+        self::assertIsArray($parameters);
 
-        $error_description = $response->getParameter("error_description");
-        self::assertNotNull($error_description);
-        self::assertEquals("The client credentials are invalid", $error_description);
+        self::assertArrayHasKey("error", $parameters);
+        self::assertArrayHasKey("error_description", $parameters);
+
+        self::assertEquals("invalid_client", $parameters["error"]);
+        self::assertEquals("Client authentication failed", $parameters["error_description"]);
     }
 }

@@ -23,13 +23,24 @@
 
 use core\orm\query\builder;
 use core_phpunit\testcase;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
 use totara_oauth2\entity\access_token;
+use totara_oauth2\facade\response_interface;
 use totara_oauth2\grant_type;
+use totara_oauth2\local\request;
 use totara_oauth2\server;
 use totara_oauth2\testing\generator;
-use totara_oauth2\testing\mock_request;
 
 class totara_oauth2_server_testcase extends testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        generator::setup_required_configuration();
+    }
+
     /**
      * @return void
      */
@@ -38,14 +49,15 @@ class totara_oauth2_server_testcase extends testcase {
         $client = $generator->create_client_provider();
 
         $server = server::boot();
-        $request = new mock_request(
+        $request = request::create_from_global(
             [],
             [
                 "grant_type" => grant_type::get_client_credentials(),
                 "client_id" => $client->client_id,
                 "client_secret" => $client->client_secret
             ],
-            ["REQUEST_METHOD" => "POST"],
+            [],
+            ["REQUEST_METHOD" => "POST"]
         );
 
         $db = builder::get_db();
@@ -55,53 +67,27 @@ class totara_oauth2_server_testcase extends testcase {
         $response = $server->handle_token_request($request);
         self::assertEquals(1, $db->count_records(access_token::TABLE, ["client_id" => $client->client_id]));
 
-        $access_token = $response->getParameter("access_token");
-        self::assertNotNull($access_token);
+        self::assertInstanceOf(response_interface::class, $response);
+        $body = $response->getBody()->__toString();
+        $parameters = json_decode($body, true);
 
-        $token_entity = access_token::repository()->find_by_token($access_token);
+        self::assertIsArray($parameters);
+
+        self::assertArrayHasKey("access_token", $parameters);
+        self::assertNotNull($parameters["access_token"]);
+
+        $jwt_configuration = Configuration::forSymmetricSigner(
+            new Sha256(),
+            InMemory::plainText('')
+        );
+
+        $token = $jwt_configuration->parser()->parse($parameters["access_token"]);
+        $token_entity = access_token::repository()->find_by_token($token->claims()->get("jti"));
+
         self::assertNotNull($token_entity);
 
-        $token_type = $response->getParameter("token_type");
-        self::assertNotNull($token_type);
-        self::assertEquals("Bearer", $token_type);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_request_token_with_invalid_method(): void {
-        $generator = generator::instance();
-        $client = $generator->create_client_provider();
-
-        $request = new mock_request(
-            [],
-            [
-                "grant_type" => grant_type::get_client_credentials(),
-                "client_id" => $client->client_id,
-                "client_secret" => $client->client_secret,
-            ],
-            ["REQUEST_METHOD" => "GET"]
-        );
-
-        $server = server::boot();
-        $response = $server->handle_token_request($request);
-
-        $access_token = $response->getParameter("access_token");
-        $token_type = $response->getParameter("token_type");
-
-        self::assertNull($access_token);
-        self::assertNull($token_type);
-
-        $error = $response->getParameter("error");
-        self::assertNotNull($error);
-        self::assertEquals("invalid_request", $error);
-
-        $error_description = $response->getParameter("error_description");
-        self::assertNotNull($error_description);
-        self::assertEquals(
-            "The request method must be POST when requesting an access token",
-            $error_description
-        );
+        self::assertArrayHasKey("token_type", $parameters);
+        self::assertEquals("Bearer", $parameters["token_type"]);
     }
 
     /**
@@ -114,11 +100,10 @@ class totara_oauth2_server_testcase extends testcase {
         $client = $generator->create_client_provider();
         $token = $generator->create_access_token_from_client_provider($client, $time_now + HOURSECS);
 
-        $request = new mock_request(
+        $request = request::create_from_global(
             [],
             [],
-            ["REQUEST_METHOD" =>  "GET"],
-            ["AUTHORIZATION" => "Bearer {$token->access_token}"]
+            ["AUTHORIZATION" => "Bearer {$token}"],
         );
 
         $server = server::boot($time_now);
@@ -135,13 +120,12 @@ class totara_oauth2_server_testcase extends testcase {
         $generator = generator::instance();
 
         $client = $generator->create_client_provider();
-        $token = $generator->create_access_token_from_client_provider($client, $time_now + HOURSECS);
+        $token = $generator->create_access_token_from_client_provider($client, $time_now - HOURSECS);
 
-        $request = new mock_request(
+        $request = request::create_from_global(
             [],
             [],
-            ["HTTP_METHOD" => "GET"],
-            ["AUTHORIZATION" => "Bearer {$token->access_token}"]
+            ["AUTHORIZATION" => "Bearer {$token}"]
         );
 
         $server = server::boot($time_now + (HOURSECS * 2));
@@ -160,44 +144,43 @@ class totara_oauth2_server_testcase extends testcase {
         $client = $generator->create_client_provider();
         $token = $generator->create_access_token_from_client_provider($client, $time_now + HOURSECS);
 
-        $request = new mock_request(
+        $request = request::create_from_global(
             [],
             [],
-            ["REQUEST_METHOD" =>  "GET"],
-            ["AUTHORIZATION" => "Bearer {$token->access_token}"]
+            ["AUTHORIZATION" => "Bearer {$token}"]
         );
 
         $server = server::boot($time_now);
         $response = $server->verify_resource_request($request);
 
-        self::assertNull($response->getParameter("error"));
-        self::assertNull($response->getParameter("error_description"));
+        self::assertInstanceOf(response_interface::class, $response);
+        self::assertEmpty($response->getBody()->__toString());
     }
 
     /**
      * @return void
      */
     public function test_verify_token_with_failure_response(): void {
-        $request = new mock_request(
+        $request = request::create_from_global(
             [],
             [],
-            ["REQUEST_METHOD" => "GET"],
             ["AUTHORIZATION" => "Bearer token"],
         );
 
         $server = server::boot();
         $response = $server->verify_resource_request($request);
 
-        $error = $response->getParameter("error");
-        $error_description = $response->getParameter("error_description");
+        $parameters = json_decode($response->getBody()->__toString(), true);
+        self::assertIsArray($parameters);
 
-        self::assertNotNull($error);
-        self::assertEquals("invalid_token", $error);
+        self::assertArrayHasKey("error", $parameters);
+        self::assertArrayHasKey("error_description", $parameters);
 
-        self::assertNotNull($error_description);
+        self::assertEquals("access_denied", $parameters["error"]);
+
         self::assertEquals(
-            "The access token provided is invalid",
-            $error_description
+            "The resource owner or authorization server denied the request.",
+            $parameters["error_description"]
         );
     }
 }
