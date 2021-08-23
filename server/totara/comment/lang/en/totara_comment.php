@@ -27,6 +27,7 @@ $string['cachedef_author_access'] = "Comment's author access cache";
 $string['comments'] = 'Comments ({$a})';
 $string['comment_author'] = 'Comment author';
 $string['comment_created'] = 'Comment created';
+$string['comment_placeholder_content_text'] = 'Text';
 $string['commenter_placeholder_group'] = 'Commenter\'s {$a}';
 $string['comment_soft_deleted'] = 'Comment deleted';
 $string['deletecommentconfirm'] = 'Your comment will be deleted. Any replies to your comment will remain.';
