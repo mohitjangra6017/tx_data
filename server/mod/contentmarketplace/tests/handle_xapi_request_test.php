@@ -58,7 +58,9 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
      * @return void
      */
     protected function setUp(): void {
+        oauth2_generator::setup_required_configuration();
         $generator = self::getDataGenerator();
+
         $this->time_now = time();
 
         $this->user = new user(
@@ -187,7 +189,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
         $request = xapi_request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["AUTHORIZATION" => "Bearer {$this->access_token->access_token}"],
+            ["AUTHORIZATION" => "Bearer {$this->access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 
@@ -320,7 +322,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
         $request = xapi_request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["Authorization" => "Bearer {$this->access_token->access_token}"],
+            ["Authorization" => "Bearer {$this->access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 
@@ -420,7 +422,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
         $request = xapi_request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["Authorization" => "Bearer {$this->access_token->access_token}"],
+            ["Authorization" => "Bearer {$this->access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 
@@ -564,7 +566,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
         $request = xapi_request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["Authorization" => "Bearer {$this->access_token->access_token}"],
+            ["Authorization" => "Bearer {$this->access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 
@@ -702,7 +704,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
         $request = xapi_request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["Authorization" => "Bearer {$this->access_token->access_token}"],
+            ["Authorization" => "Bearer {$this->access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 

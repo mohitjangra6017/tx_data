@@ -92,7 +92,7 @@ class generator extends component_generator {
 
         $client_provider = client_provider::repository()->find_by_client_id($client_id);
         if (null === $client_provider) {
-            $client_provider = $this->create_client_provider($client_id, ["scope" => $parameters["scope"]]);
+            $client_provider = $this->create_client_provider($client_id, ["scope" => $parameters["scope"] ?? []]);
         }
 
         $token_repository = new token_repository();

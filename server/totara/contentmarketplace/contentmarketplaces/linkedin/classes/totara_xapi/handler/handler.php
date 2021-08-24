@@ -30,7 +30,6 @@ use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\entity\course_source;
 use totara_contentmarketplace\mod_helper;
 use totara_oauth2\io\request;
-use totara_oauth2\io\response;
 use totara_oauth2\server;
 use totara_xapi\entity\xapi_statement;
 use totara_xapi\handler\base_handler;
@@ -44,22 +43,24 @@ class handler extends base_handler {
      * @return result|null
      */
     public function authenticate(): ?result {
-        $oauth2_request = request::create_with_minimal(
+        $oauth2_request = request::create_from_global(
             $this->request->get_get_parameters(),
             $this->request->get_post_parameters(),
-            $this->request->get_server_parameters(),
-            $this->request->get_header_parameters()
+            $this->request->get_header_parameters(),
+            $this->request->get_server_parameters()
         );
 
         $server = server::boot($this->time_now);
-        $oauth2_response = new response();
 
-        if ($server->is_request_verified($oauth2_request, $oauth2_response)) {
+        if ($server->is_request_verified($oauth2_request)) {
             // The server is verified - hence, we should not return any result.
             return null;
         }
 
-        return new json_result($oauth2_response->get_response_parameters());
+        return new json_result([
+            "error" => "access_denied",
+            "error_description" => get_string("access_denied", "contentmarketplace_linkedin")
+        ]);
     }
 
     /**

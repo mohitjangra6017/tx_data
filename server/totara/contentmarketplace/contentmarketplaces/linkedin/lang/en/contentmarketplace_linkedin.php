@@ -30,6 +30,7 @@ $string['a11y_content_type'] = 'Type of content';
 $string['a11y_search_filter'] = 'Search';
 $string['a11y_time_filter'] = 'Time';
 $string['a11y_view_courses'] = 'View the {$a->count} course(s) "{$a->course}" appears in';
+$string['access_denied'] = "Access denied";
 $string['add_linkedin_courses'] = 'Add courses from the LinkedIn Learning content marketplace';
 $string['add_linkedin_courses_description'] = 'Create courses based on what is available in the LinkedIn Learning content marketplace.';
 $string['appears_in'] = 'Appears in';

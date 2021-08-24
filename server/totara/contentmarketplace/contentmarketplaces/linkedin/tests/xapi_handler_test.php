@@ -32,11 +32,6 @@ use totara_xapi\response\json_result;
 
 class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
     /**
-     * @var access_token|null
-     */
-    private $access_token;
-
-    /**
      * @var int|null
      */
     private $time_now;
@@ -45,20 +40,14 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
      * @return void
      */
     protected function setUp(): void {
-        $generator = oauth2_generator::instance();
+        oauth2_generator::setup_required_configuration();
         $this->time_now = time();
-
-        $this->access_token = $generator->create_access_token(
-            "some_client",
-            ["expires" => $this->time_now + HOURSECS]
-        );
     }
 
     /**
      * @return void
      */
     protected function tearDown(): void {
-        $this->access_token = null;
         $this->time_now = null;
     }
 
@@ -66,10 +55,16 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
      * @return void
      */
     public function test_handling_xapi_request_with_non_existing_email(): void {
+        $generator = oauth2_generator::instance();
+        $access_token = $generator->create_access_token(
+            "some_client",
+            ["expires" => $this->time_now + HOURSECS]
+        );
+
         $request = request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["Authorization" => "Bearer {$this->access_token->access_token}"],
+            ["Authorization" => "Bearer {$access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 
@@ -122,16 +117,22 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
      * @return void
      */
     public function test_handling_xapi_request_with_expired_token(): void {
+        $generator = oauth2_generator::instance();
+        $access_token = $generator->create_access_token(
+            "some_client",
+            ["expires" => $this->time_now - HOURSECS]
+        );
+
         $db = builder::get_db();
         self::assertTrue(
-            $db->record_exists(access_token::TABLE, ["access_token" => $this->access_token->access_token])
+            $db->record_exists(access_token::TABLE, ["access_token" => $access_token->getIdentifier()])
         );
 
         // Executing the request, with the time that surpass the expiry time of access token.
         $request = request::create_from_global(
             ["component" => "contentmarketplace_linkedin"],
             [],
-            ["Authorization" => "Bearer {$this->access_token->access_token}"],
+            ["Authorization" => "Bearer {$access_token}"],
             ["REQUEST_METHOD" => "POST"]
         );
 
@@ -148,9 +149,9 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
         self::assertArrayHasKey("error", $data);
         self::assertArrayHasKey("error_description", $data);
 
-        self::assertEquals("invalid_token", $data["error"]);
+        self::assertEquals("access_denied", $data["error"]);
         self::assertEquals(
-            "The access token provided is invalid",
+            get_string("access_denied", "contentmarketplace_linkedin"),
             $data["error_description"]
         );
     }
