@@ -29,6 +29,11 @@ use core\orm\entity\repository;
 use core\orm\query\builder;
 use core\testing\component_generator;
 use core\testing\generator as core_generator;
+use hierarchy_goal\entity\company_goal;
+use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_enttity;
+use hierarchy_goal\entity\personal_goal;
+use hierarchy_goal\performelement_linked_review\company_goal_assignment;
+use hierarchy_goal\performelement_linked_review\personal_goal_assignment;
 use mod_perform\constants;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\element as element_entity;
@@ -77,7 +82,7 @@ final class generator extends component_generator {
      */
     public function create_linked_review_element(array $data, activity $activity = null): element {
         $context = $activity ? $activity->get_context() : context_system::instance();
-        return element::create($context, 'linked_review', 'title', '', json_encode($data));
+        return element::create($context, 'linked_review', 'title', '', json_encode($data, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -114,12 +119,22 @@ final class generator extends component_generator {
     }
 
     /**
+     * Behat wrapper to use existing sections/activities if name matches are found.
+     *
+     * @param array $data Input: activity_name, activity_status, content_type, selection_relationships, section_title,
+     * @return array Output: [activity, section, element, section element]
+     */
+    public function create_activity_with_section_and_review_element_for_behat(array $data = []): array {
+        return $this->create_activity_with_section_and_review_element($data, true);
+    }
+
+    /**
      * Creates a performance activity with a section, a linked_review element in that section, and a corresponding section element.
      *
      * @param array $data Input: activity_name, activity_status, content_type, selection_relationships, section_title,
      * @return array Output: [activity, section, element, section element]
      */
-    public function create_activity_with_section_and_review_element(array $data = []): array {
+    public function create_activity_with_section_and_review_element(array $data = [], $use_existing_instances = false): array {
         $data = array_merge([
             'content_type' => 'totara_competency',
             'selection_relationships' => constants::RELATIONSHIP_SUBJECT,
@@ -129,20 +144,31 @@ final class generator extends component_generator {
             'element_title' => 'linked review element',
             'content_type_settings' => '{}',
         ], $data);
-        $activity = perform_generator::instance()->create_activity_in_container([
-            'activity_name' => $data['activity_name'],
-            'activity_status' => $data['activity_status'],
-            'create_section' => false,
-        ]);
 
-        $section = perform_generator::instance()->create_section($activity, ['title' => $data['section_title']]);
+        $activity_entity = activity_entity::repository()->where('name', $data['activity_name'])->one();
+        if (!$use_existing_instances || $activity_entity === null) {
+            $activity = perform_generator::instance()->create_activity_in_container([
+                'activity_name' => $data['activity_name'],
+                'activity_status' => $data['activity_status'],
+                'create_section' => false,
+            ]);
+        } else {
+            $activity = new activity($activity_entity);
+        }
+
+        $section_entity = section_entity::repository()->where('title', $data['section_title'])->one();
+        if (!$use_existing_instances || $section_entity === null) {
+            $section = perform_generator::instance()->create_section($activity, ['title' => $data['section_title']]);
+        } else {
+            $section = new section($section_entity);
+        }
 
         $relationship_ids = array_map(function ($relationship_idnumber) {
             return (string) relationship::load_by_idnumber($relationship_idnumber)->id;
         }, explode(',', $data['selection_relationships']));
 
         $content_settings = is_string($data['content_type_settings'])
-            ? json_decode($data['content_type_settings'], true)
+            ? json_decode($data['content_type_settings'], true, 512, JSON_THROW_ON_ERROR)
             : $data['content_type_settings'];
 
         if (isset($content_settings['rating_relationship'])) {
@@ -152,14 +178,24 @@ final class generator extends component_generator {
                 $relationship_id = $content_settings['rating_relationship'];
             }
             $content_settings['rating_relationship'] = $relationship_id;
-            $data['content_type_settings'] = json_encode($content_settings);
+            $data['content_type_settings'] = json_encode($content_settings, JSON_THROW_ON_ERROR);
+        }
+
+        if (isset($content_settings['status_change_relationship'])) {
+            if (is_string($content_settings['status_change_relationship'])) {
+                $relationship_id = relationship::load_by_idnumber($content_settings['status_change_relationship'])->id;
+            } else {
+                $relationship_id = $content_settings['status_change_relationship'];
+            }
+            $content_settings['status_change_relationship'] = $relationship_id;
+            $data['content_type_settings'] = json_encode($content_settings, JSON_THROW_ON_ERROR);
         }
 
         $element_data = json_encode([
             'content_type' => $data['content_type'],
-            'content_type_settings' => json_decode($data['content_type_settings'], true),
+            'content_type_settings' => json_decode($data['content_type_settings'], true, 512, JSON_THROW_ON_ERROR),
             'selection_relationships' => $relationship_ids,
-        ]);
+        ], JSON_THROW_ON_ERROR);
 
         $element = element::create(
             $activity->get_context(),
@@ -176,9 +212,9 @@ final class generator extends component_generator {
      * Create a linked content record (simulates a user picking a content item to use an activity)
      *
      * @param array $data Inputs: subject_user, selector_user, element, content_name
-     * @return linked_review_content
+     * @return linked_review_content[]
      */
-    public function create_content_selection(array $data): linked_review_content {
+    public function create_content_selection(array $data): array {
         global $DB;
         if (is_string($data['subject_user'])) {
             $subject_user = $DB->get_record('user', ['username' => $data['subject_user']]);
@@ -206,25 +242,8 @@ final class generator extends component_generator {
         }
         $content_type = $element_plugin->get_content_type($element)::get_identifier();
 
-        $content_id = null;
-        switch ($content_type) {
-            case competency_assignment::get_identifier():
-                $content_id = competency_assignment_user::repository()
-                    ->select('assignment_id')
-                    ->join([competency::TABLE, 'comp'], 'competency_id', 'id')
-                    ->where('comp.fullname', $data['content_name'])
-                    ->where('user_id', $subject_user->id)
-                    ->when(!empty($data['assignment_reason']), function (repository $repo) use ($data) {
-                        $repo
-                            ->join([assignment::TABLE, 'ass'], 'assignment_id', 'id')
-                            ->where('ass.user_group_type', $data['assignment_reason']);
-                    })
-                    ->one(true)
-                    ->assignment_id;
-                break;
-            default:
-                throw new coding_exception($content_type . ' is not implemented in generator::create_content_selection');
-        }
+        $content_ids = $this->find_content_ids($content_type, $data, $subject_user);
+        sort($content_ids);
 
         $section_element_id = section_element::repository()->where('element_id', $element->id)->one()->id;
         $subject_instance_id = subject_instance_entity::repository()
@@ -238,13 +257,19 @@ final class generator extends component_generator {
             ->one()
             ->id;
 
-        $entity = new linked_review_content_entity();
-        $entity->content_id = $content_id;
-        $entity->section_element_id = $section_element_id;
-        $entity->subject_instance_id = $subject_instance_id;
-        $entity->selector_id = $selector_user->id;
-        $entity->save();
-        return linked_review_content::load_by_entity($entity);
+        $linked_review_contents = [];
+        foreach ($content_ids as $content_id) {
+            $entity = new linked_review_content_entity();
+            $entity->content_id = $content_id;
+            $entity->section_element_id = $section_element_id;
+            $entity->subject_instance_id = $subject_instance_id;
+            $entity->selector_id = $selector_user->id;
+            $entity->save();
+
+            $linked_review_contents []= linked_review_content::load_by_entity($entity);
+        }
+
+        return $linked_review_contents;
     }
 
     /**
@@ -543,5 +568,56 @@ final class generator extends component_generator {
         ];
 
         return get_file_storage()->create_file_from_string($file_record, $content);
+    }
+
+    /**
+     * @param string $content_type
+     * @param array $data
+     * @param $subject_user
+     * @return int[]|string[]
+     * @throws coding_exception
+     */
+    public function find_content_ids(string $content_type, array $data, $subject_user): array
+    {
+        $content_names = [];
+        foreach ($data as $key => $value) {
+            // Pull all content_type.* fields.
+            if (strpos($key, 'content_name') === 0) {
+                $content_names[] = $value;
+            }
+        }
+
+        switch ($content_type) {
+            case competency_assignment::get_identifier():
+                return competency_assignment_user::repository()
+                    ->select('assignment_id')
+                    ->join([competency::TABLE, 'comp'], 'competency_id', 'id')
+                    ->where_in('comp.fullname', $content_names)
+                    ->where('user_id', $subject_user->id)
+                    ->when(!empty($data['assignment_reason']), function (repository $repo) use ($data) {
+                        $repo
+                            ->join([assignment::TABLE, 'ass'], 'assignment_id', 'id')
+                            ->where('ass.user_group_type', $data['assignment_reason']);
+                    })
+                    ->get()
+                    ->pluck('assignment_id');
+                break;
+            case company_goal_assignment::get_identifier():
+                return company_goal_assignment_enttity::repository()
+                    ->as('a')
+                    ->join([company_goal::TABLE, 'g'], 'g.id', 'a.goalid')
+                    ->where_in('g.fullname', $content_names)
+                    ->where('a.userid', $subject_user->id)
+                    ->get()
+                    ->pluck('id');
+            case personal_goal_assignment::get_identifier():
+                return personal_goal::repository()
+                    ->where_in('name', $content_names)
+                    ->where('userid', $subject_user->id)
+                    ->get()
+                    ->pluck('id');
+            default:
+                throw new coding_exception($content_type . ' is not implemented in generator::create_content_selection');
+        }
     }
 }

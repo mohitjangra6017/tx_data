@@ -60,16 +60,17 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
         $reporting_user = generator::instance()->create_user();
 
         $content_id1 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
-        $content_id2 = linked_review_generator::instance()->create_competency_assignment(['user' => $user2])->id;
+        $content_id2 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_other_user = linked_review_generator::instance()->create_competency_assignment(['user' => $user2])->id;
 
         $content_items1 = linked_review_content::create_multiple(
-            [$content_id1],
+            [$content_id1, $content_id2],
             $section_element1->id,
             $participant_instance1->id, false
         );
 
         $content_items2 = linked_review_content::create_multiple(
-            [$content_id2],
+            [$content_other_user],
             $section_element1->id,
             $participant_instance2->id, false
         );
@@ -82,27 +83,36 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             'subject_instance_id' => $participant_instance1->subject_instance_id,
         ];
 
+        // The result should be explicitly ordered by id.
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
         $this->assertCount($content_items1->count(), $result['items']);
         $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
         $actual_ids = array_column($result['items'], 'id');
         $expected_ids = $content_items1->pluck('id');
-        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
+        $this->assertEquals($expected_ids, $actual_ids);
 
-        $assignment = assignment::load_by_id($content_id1);
-        /** @var linked_review_content $matched_content_item */
-        $matched_content_item = array_filter($result['items'], function (linked_review_content $item) use ($content_id1) {
-            return $item->content_id == $content_id1;
-        });
-        $matched_content_item = array_shift($matched_content_item);
-        $this->assertInstanceOf(linked_review_content::class, $matched_content_item);
-        $content = $matched_content_item->content;
-        $this->assertIsArray($content);
-        $this->assertEquals($assignment->get_id(), $content['id']);
-        $this->assertNotEmpty($content['competency']);
-        $this->assertNotEmpty($content['achievement']);
-        $this->assertNotEmpty($content['assignment']);
+        $assignment1 = assignment::load_by_id($content_id1);
+        /** @var linked_review_content $matched_content_item1 */
+        $matched_content_item1 = $result['items'][0];
+        $this->assertInstanceOf(linked_review_content::class, $matched_content_item1);
+        $content1 = $matched_content_item1->content;
+        $this->assertIsArray($content1);
+        $this->assertEquals($assignment1->get_id(), $content1['id']);
+        $this->assertNotEmpty($content1['competency']);
+        $this->assertNotEmpty($content1['achievement']);
+        $this->assertNotEmpty($content1['assignment']);
+
+        $assignment2 = assignment::load_by_id($content_id2);
+        /** @var linked_review_content $matched_content_item2 */
+        $matched_content_item2 = $result['items'][1];
+        $this->assertInstanceOf(linked_review_content::class, $matched_content_item2);
+        $content2 = $matched_content_item2->content;
+        $this->assertIsArray($content2);
+        $this->assertEquals($assignment2->get_id(), $content2['id']);
+        $this->assertNotEmpty($content2['competency']);
+        $this->assertNotEmpty($content2['achievement']);
+        $this->assertNotEmpty($content2['assignment']);
     }
 
     public function test_error_cases() {

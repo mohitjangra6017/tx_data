@@ -306,7 +306,7 @@ class behat_base extends Behat\MinkExtension\Context\RawMinkContext {
      * an exception.
      *
      * @throws Exception If it timeouts without receiving something != false from the closure
-     * @param Function|array|string $lambda The function to execute or an array passed to call_user_func (maps to a class method)
+     * @param callable|array|string $lambda The function to execute or an array passed to call_user_func (maps to a class method)
      * @param mixed $args Arguments to pass to the closure
      * @param int $timeout Timeout in seconds
      * @param Exception $exception The exception to throw in case it time outs.

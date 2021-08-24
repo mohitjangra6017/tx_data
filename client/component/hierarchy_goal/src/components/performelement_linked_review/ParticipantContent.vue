@@ -54,10 +54,7 @@
     />
 
     <div class="tui-linkedReviewViewGoal__overview">
-      <div
-        v-if="!preview && content.status && content.target_date"
-        class="tui-linkedReviewViewGoal__timestamp"
-      >
+      <div v-if="!preview" class="tui-linkedReviewViewGoal__timestamp">
         {{ createdAt }}
       </div>
       <div v-if="goalBarVisible" class="tui-linkedReviewViewGoal__bar">

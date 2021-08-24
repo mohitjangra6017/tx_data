@@ -1,4 +1,4 @@
-@totara @perform @mod_perform @perform_element @performelement_linked_review @javascript @vuejs @totara_hierarchy @totara_hierarchy_goals
+@totara @perform @mod_perform @perform_element @performelement_linked_review @totara_hierarchy  @totara_hierarchy_goals @javascript @vuejs
 Feature: Manage performance activity review goal element.
 
   Background:

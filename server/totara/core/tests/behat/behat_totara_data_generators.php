@@ -488,7 +488,7 @@ class behat_totara_data_generators extends behat_base {
         ),
         'performelement_linked_review' => array(
             'activity with section and review element' => array(
-                'datagenerator' => 'activity_with_section_and_review_element',
+                'datagenerator' => 'activity_with_section_and_review_element_for_behat',
                 'required' => array('activity_name', 'section_title', 'content_type'),
             ),
             'participants in section' => array(

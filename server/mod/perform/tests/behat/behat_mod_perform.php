@@ -810,7 +810,7 @@ class behat_mod_perform extends behat_base {
 
         $this->wait_for_pending_js();
 
-        // Please not setting the value on the actual range (using setValue()), does not work.
+        // Please note setting the value on the actual range (using setValue()), does not work.
         if ($element_type === 'numeric rating scale') {
             $element_type .= ':number';
         }
