@@ -43,7 +43,7 @@ When starting the service, the variables marked as required must be specified, o
 
 ### Docker
 
-1. Clone this project into a folder on your server that runs Docker.
+1. Change directory into the `extensions/ml_service` folder.
 2. Build the service with Docker
 
    ```shell
@@ -59,7 +59,7 @@ When starting the service, the variables marked as required must be specified, o
 4. Finally, start the service with Docker
 
    ```shell
-      docker run -it -d --name ml_service -p 5000:5000 -v /path/to/models:/etc/ml/data/models ml_service
+      docker run -it -d --name ml_service -p 5000:5000 --env ML_TOTARA_URL=https://totara-instance.com --env ML_TOTARA_KEY=**** -v /path/to/data:/etc/ml/data ml_service
    ```
 
 5. The ML service should now be available on port 5000.
@@ -68,7 +68,7 @@ When starting the service, the variables marked as required must be specified, o
 
 A docker-compose.yml file is available for development/testing. It should not be used in a production level system.
 
-1. Clone this project into a folder on your machine that is running Docker Compose.
+1. Change directory into the `extensions/ml_service` folder.
 
 2. Copy the `env.dist` file and rename to `.env`. Edit the file and set the environmental variable as described in the env file. 
 
@@ -98,7 +98,7 @@ This service has been designed and tested on the following freshly installed OS:
 
 1. Make sure you have one of the supported versions of python installed
 2. Install python's virtual environment if this machine is used by other projects, and activate a virtual environment
-3. Clone this project
+3. Change directory into the `extensions/ml_service` folder.
 4. Optionally, set the two paths in the environment variables `ML_MODELS_DIR` and `ML_LOGS_DIR`.
 5. You will need `gcc` and  `pip` installed
 
@@ -121,7 +121,7 @@ This service has been designed and tested on the following freshly installed OS:
 7. Install the service using one of the following commands:
 
    ```shell
-      # If you have the environment variables set
+
       ./install.sh
 
       # If you have not set the environment variables
@@ -136,7 +136,7 @@ This service has been designed and tested on the following freshly installed OS:
       ./start.sh
 
       # If you have not set the environment variables
-      ML_MODELS_DIR=/path/to/storage/models ML_LOGS_DIR=/path/to/storage/logs ./start.sh
+      ML_MODELS_DIR=/path/to/storage/models ML_LOGS_DIR=/path/to/storage/logs ML_TOTARA_URL=https://totara-instance.com ML_TOTARA_KEY=**** ./start.sh
    ```
 
    You can also start the service with supervisor by following the instructions as suggested in the section [Starting the Service with Supervisor on Linux](#supervisor).
@@ -150,23 +150,24 @@ This service has been designed and tested on the following freshly installed OS:
 4. Make sure you've updated pip `pip install --upgrade pip`
 5. Install python's virtual environment if this machine is used by other projects, and activate a virtual environment
 6. Check that you've disabled both versions of Python in Settings -> App Execution Aliases, as they may interfere with your installation.
-7. Clone this project
+7. Change directory into the `extensions/ml_service` folder.
 8. Create a `logs` and `models` directory, which will be used as storage by the service.
     ```shell
       mkdir data\models
       mkdir data\logs
     ```
 9. Optionally, set the two paths in the environment variables `ML_MODELS_DIR` and `ML_LOGS_DIR`.
-10. Install the service using the following command:
+10. Set the required environmental variables (`ML_TOTARA_URL` and `ML_TOTARA_KEY`).
+11. Install the service using the following command:
    ```commandline 
       cmd /c install.cmd
    ```
-11. Follow any prompts as the service is installed.
-12. Once installation is complete, start the service using the following command:
+12. Follow any prompts as the service is installed.
+13. Once installation is complete, start the service using the following command:
    ```commandline 
       cmd /c start.cmd
    ```
-13. Check that you can access http://your-ip-address:5000
+14. Check that you can access http://your-ip-address:5000
 
 
 
@@ -187,6 +188,7 @@ You can use supervisor to start the service. The supervisor allows its users in 
      ML_MODELS_DIR="/path/to/storage/models",
      ML_LOGS_DIR="/path/to/storage/logs",
      ML_TOTARA_URL="https://totara.com/server",
+     ML_TOTARA_KEY="****",
      PYTHON_EXEC="/path/to/python"
    command=/path/to/project/start.sh
    autostart=true
@@ -224,22 +226,14 @@ You can use supervisor to start the service. The supervisor allows its users in 
    sudo supervisorctl start ml_service
    ```
 
-## Optional settings
-
-By default, the ML service requests updated data once in 24 hours from Totara and 
-retrains the recommendations models for all tenants. Also, the default modelling 
-algorithm for the recommendations is Hybrid (the other two options are Partial and
-Matrix Factorization). Similarly, the default number of processors for model
-training are set to be 4. These settings can be modified through the following 
-environment variables on the machine that is hosting the service:
-
-```shell
-ML_RECOMMENDATION_RETRAIN_FREQ=1440  # In minutes
-ML_NUM_THREADS=4  # This should be less than total processors on your machine
-ML_RECOMMENDATION_ALGORITHM=hybrid  # One of hybrid, partial or mf
-```
-
 ## Usage
 
-In your Totara instance open the Machine Learning admin settings screen and configure it to point to this ML service
-instance.
+In your Totara instance open the Machine Learning admin settings screen and configure the service address and key to
+point to this instance. Both this service and Totara must share the same key in order to communicate.
+
+Once configured you can check the connection and general status of the service by calling (from Totara) the following
+command line script:
+
+```shell
+php server/ml/service/cli/healthcheck.php
+```

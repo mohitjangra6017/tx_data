@@ -23,6 +23,7 @@ ENV ML_MODELS_DIR=/etc/ml/data/models
 ENV ML_LOGS_DIR=/etc/ml/data/train_logs
 ENV FLASK_ENV=production
 ENV ML_MODELS_GIT_HTTPS="1"
+ENV ML_BIND=0.0.0.0:5000
 
 # Create the base directory we run the service from
 RUN mkdir -p /etc/ml/service
@@ -30,7 +31,10 @@ RUN mkdir -p /etc/ml/service
 COPY scripts /etc/ml/scripts
 RUN chmod +x /etc/ml/scripts/entrypoint.sh
 
-WORKDIR /etc/ml/service
+COPY start.sh /etc/ml
+RUN chmod +x /etc/ml/start.sh
+
+WORKDIR /etc/ml
 ENTRYPOINT [ "/bin/bash", "/etc/ml/scripts/entrypoint.sh" ]
 
 # Built image with source - used for distribution

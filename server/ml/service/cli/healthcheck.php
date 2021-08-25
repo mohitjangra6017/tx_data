@@ -79,6 +79,7 @@ if (!empty($other_info)) {
     foreach ($other_info as $key => $line) {
         cli_writeln("$key: $line");
     }
+    cli_writeln("");
 }
 
 $errors = $healthcheck->get_error_messages();

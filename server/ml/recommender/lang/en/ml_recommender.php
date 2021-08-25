@@ -23,6 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['cachedef_recommended_related_items'] = 'Recommendations related items cache';
+$string['cachedef_recommended_user_items'] = 'Recommendations user cache';
 $string['data_path_label'] = 'Data directory';
 $string['data_path_help'] = 'Path to directory where recommender system data will be stored.';
 $string['enable_recommenders'] = 'Recommendations';

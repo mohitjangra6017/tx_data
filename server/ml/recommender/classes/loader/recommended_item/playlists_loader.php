@@ -29,6 +29,7 @@ use ml_recommender\entity\recommended_item;
 use ml_recommender\entity\recommended_user_item;
 use ml_recommender\query\recommended_item\item_query;
 use ml_recommender\query\recommended_item\user_query;
+use ml_recommender\recommendations;
 use totara_engage\access\access;
 use totara_engage\card\card_resolver;
 use totara_playlist\entity\playlist as playlist_entity;
@@ -39,6 +40,11 @@ use totara_playlist\playlist;
  */
 final class playlists_loader extends loader {
     /**
+     * @var recommendations|null
+     */
+    protected static $recommendations_helper;
+
+    /**
      * Select all related playlists based on the provided component id
      *
      * @param item_query $query
@@ -46,11 +52,19 @@ final class playlists_loader extends loader {
      * @return offset_cursor_paginator
      */
     public static function get_recommended(item_query $query, int $actor_id = 0): offset_cursor_paginator {
-        $builder = static::get_base_playlist_query(recommended_item::TABLE, $actor_id);
+        $builder = self::get_base_playlist_query(recommended_item::TABLE, $actor_id);
 
-        $builder->where('r.target_item_id', $query->get_target_item_id());
-        $builder->where('r.target_component', $query->get_target_component());
-        $builder->where('r.target_area', $query->get_target_area());
+        // If the ml service is enabled, then we link to that first
+        if (recommendations::is_ml_service_enabled()) {
+            $helper = self::$recommendations_helper ?? recommendations::make($actor_id);
+            $recommendations = $helper->get_similar_items($query->get_target_component(), $query->get_target_item_id());
+            $builder->where_in('p.id', $recommendations ?? []);
+            $helper->apply_sort_by_recommendations($builder, 'p.id', $recommendations);
+        } else {
+            $builder->where('r.target_item_id', $query->get_target_item_id());
+            $builder->where('r.target_component', $query->get_target_component());
+            $builder->where('r.target_area', $query->get_target_area());
+        }
 
         $cursor = $query->get_cursor();
         return new offset_cursor_paginator($builder, $cursor);
@@ -64,11 +78,19 @@ final class playlists_loader extends loader {
      * @return offset_cursor_paginator
      */
     public static function get_recommended_for_user(user_query $query, int $actor_id = 0): offset_cursor_paginator {
-        $builder = static::get_base_playlist_query(recommended_user_item::TABLE, $actor_id);
+        $builder = self::get_base_playlist_query(recommended_user_item::TABLE, $actor_id);
 
-        $builder->where('r.user_id', $query->get_target_user_id());
-        $builder->where('r.component', $query->get_target_component());
-        $builder->where('r.area', $query->get_target_area());
+        // If the ml service is enabled, then we link to that first
+        if (recommendations::is_ml_service_enabled()) {
+            $helper = self::$recommendations_helper ?? recommendations::make($actor_id);
+            $recommendations = $helper->get_user_recommendations($query->get_target_component());
+            $builder->where_in('p.id', $recommendations ?? []);
+            $helper->apply_sort_by_recommendations($builder, 'p.id', $recommendations);
+        } else {
+            $builder->where('r.user_id', $query->get_target_user_id());
+            $builder->where('r.component', $query->get_target_component());
+            $builder->where('r.area', $query->get_target_area());
+        }
 
         $cursor = $query->get_cursor();
         return new offset_cursor_paginator($builder, $cursor);
@@ -80,24 +102,36 @@ final class playlists_loader extends loader {
      * @return builder
      */
     private static function get_base_playlist_query(string $table, int $actor_id = 0): builder {
-        $builder = builder::table($table, 'r');
+        // If we're using the new service, then don't join on the recommendations table
+        if (recommendations::is_ml_service_enabled()) {
+            $builder = builder::table(playlist_entity::TABLE, 'p');
+            $builder->select([
+                'p.*',
+                'p.id as instanceid',
+            ]);
+            $builder->add_select_raw("'totara_playlist' as component");
+        } else {
+            // Fall back to the legacy service instead
+            $builder = builder::table($table, 'r');
 
-        // Join against playlists
-        $builder->join([playlist_entity::TABLE, 'p'], 'r.item_id', 'p.id');
-        $builder->select([
-            'p.*',
-            'p.id as instanceid',
-            'r.component as component'
-        ]);
-        $builder->where('r.component', 'totara_playlist');
+            // Join against playlists
+            $builder->join([playlist_entity::TABLE, 'p'], 'r.item_id', 'p.id');
+            $builder->select([
+                'p.*',
+                'p.id as instanceid',
+                'r.component as component'
+            ]);
+            $builder->where('r.component', 'totara_playlist');
+            $builder->order_by_raw('r.score DESC');
+        }
+
         $builder->where('p.access', access::PUBLIC);
         $builder->results_as_arrays();
 
-        static::filter_multi_tenancy($builder, 'p.userid', $actor_id);
+        self::filter_multi_tenancy($builder, 'p.userid', $actor_id);
 
-        $builder->order_by_raw('r.score DESC');
         $builder->map_to(
-            function(array $record) {
+            function (array $record) {
                 return card_resolver::create_card(playlist::get_resource_type(), $record);
             }
         );

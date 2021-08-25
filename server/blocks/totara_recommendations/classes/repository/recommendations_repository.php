@@ -26,6 +26,7 @@ namespace block_totara_recommendations\repository;
 use core\entity\enrol;
 use core\orm\query\builder;
 use core\orm\query\table;
+use ml_recommender\recommendations;
 use totara_engage\access\access;
 use totara_engage\timeview\time_view;
 
@@ -35,6 +36,11 @@ use totara_engage\timeview\time_view;
  * @package block_totara_recently_viewed\repository
  */
 final class recommendations_repository {
+    /**
+     * @var recommendations|null
+     */
+    protected static $recommendations_helper;
+
     /**
      * Fetch the micro-learning items for the provided user.
      *
@@ -48,18 +54,35 @@ final class recommendations_repository {
             $user_id = $USER->id;
         }
 
-        $builder = static::get_base_builder();
+        // Handle both use cases
+        $helper = self::$recommendations_helper ?? recommendations::make($user_id);
+        $recommendations = $helper->get_user_recommendations('engage_microlearning');
+        if (null !== $recommendations) {
+            // If we're loading from the Ml service, then don't connect to the base table
+            $builder = builder::table('engage_resource', 'er');
+            $builder->select_raw($builder::concat('er.resourcetype', 'er.id') . ' AS unique_id');
+            $builder->add_select_raw('er.id AS item_id');
+            $builder->add_select_raw('er.resourcetype AS component');
+            $builder->add_select_raw('null AS area');
+            $builder->add_select_raw('0 AS seen');
 
-        $builder->join(['engage_resource', 'er'], 'er.id', 'ru.item_id');
+            $builder->where('er.resourcetype', 'engage_article');
+            $builder->where_in('er.id', $recommendations);
+
+            $helper->apply_sort_by_recommendations($builder, 'er.id', $recommendations);
+        } else {
+            // Use the existing builder
+            $builder = self::get_base_builder();
+            $builder->join(['engage_resource', 'er'], 'er.id', 'ru.item_id');
+            $builder->where('ru.user_id', $user_id);
+            $builder->where('ru.component', 'engage_article');
+            $builder->order_by_raw('ru.seen ASC, ru.score DESC, ru.time_created DESC');
+        }
+
         $builder->join(['engage_article', 'ea'], 'ea.id', 'er.instanceid');
-
         $builder->where('ea.timeview', time_view::LESS_THAN_FIVE);
         $builder->where('er.access', access::PUBLIC);
-        $builder->where('ru.user_id', $user_id);
 
-        $builder->where('ru.component', 'engage_article');
-
-        $builder->order_by_raw('ru.seen ASC, ru.score DESC, ru.time_created DESC');
         $builder->limit($max_count);
 
         return $builder->fetch();
@@ -106,8 +129,17 @@ final class recommendations_repository {
         require_once($CFG->dirroot . "/lib/enrollib.php");
         require_once($CFG->dirroot . "/totara/coursecatalog/lib.php");
 
-        $builder = self::get_base_builder();
-        $builder->join(['course', 'c'], function (builder $joining) use ($container_type, $user_id) {
+        $helper = self::$recommendations_helper ?? recommendations::make($user_id);
+        $recommendations = $helper->get_user_recommendations($container_type);
+        if (null !== $recommendations) {
+            // Load from the recommenders service (if it's enabled)
+            $builder = builder::table('course', 'c');
+            $builder->select_raw($builder::concat('c.containertype', 'c.id') . ' AS unique_id');
+            $builder->add_select_raw('c.id AS item_id');
+            $builder->add_select_raw('c.containertype AS component');
+            $builder->add_select_raw('null AS area');
+            $builder->add_select_raw('0 AS seen');
+
             [$totara_visibility_sql, $totara_visibility_params] = totara_visibility_where(
                 $user_id,
                 'c.id',
@@ -115,14 +147,44 @@ final class recommendations_repository {
                 'c.audiencevisible',
                 'c'
             );
+            $builder->where_raw($totara_visibility_sql, $totara_visibility_params);
 
-            $joining->where_raw('c.id = ru.item_id')
-                ->where('ru.component', $container_type)
-                ->where_raw('(c.containertype = ru.component OR c.containertype IS NULL)')
-                ->where_raw($totara_visibility_sql, $totara_visibility_params);
-        });
+            $builder->where_in('c.id', $recommendations);
+            $helper->apply_sort_by_recommendations($builder, 'c.id', $recommendations);
+        } else {
+            // Fallback to the legacy service
+            $builder = self::get_base_builder();
+            $builder->join(['course', 'c'], function (builder $joining) use ($container_type, $user_id) {
+                [$totara_visibility_sql, $totara_visibility_params] = totara_visibility_where(
+                    $user_id,
+                    'c.id',
+                    'c.visible',
+                    'c.audiencevisible',
+                    'c'
+                );
 
-        $builder->where('ru.user_id', $user_id);
+                $joining->where_raw('c.id = ru.item_id')
+                    ->where('ru.component', $container_type)
+                    ->where_raw('(c.containertype = ru.component OR c.containertype IS NULL)')
+                    ->where_raw($totara_visibility_sql, $totara_visibility_params);
+            });
+
+            $builder->where('ru.user_id', $user_id);
+            $builder->order_by_raw('ru.time_created DESC');
+        }
+
+        // Exclude private workspaces
+        if ($container_type === 'container_workspace') {
+            $builder->join(['workspace', 'w'],
+                function (builder $join): void {
+                    $join->where_field('c.id', 'w.course_id');
+
+                    // We are filtering out those deleted items.
+                    $join->where('w.to_be_deleted', 0);
+                }
+            );
+            $builder->where('w.private', 0);
+        }
 
         // Exclude courses that don't have self-enrollment enabled
         $builder->join([enrol::TABLE, 'e'], function (builder $joining) {
@@ -144,7 +206,6 @@ final class recommendations_repository {
         $builder->left_join($table, 'c.id', 'jc.id');
         $builder->where_null('jc.id');
 
-        $builder->order_by_raw('ru.time_created DESC');
         $builder->limit($max_count);
 
         return $builder->fetch();

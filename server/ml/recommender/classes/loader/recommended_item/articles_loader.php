@@ -31,6 +31,7 @@ use ml_recommender\entity\recommended_user_item;
 use ml_recommender\local\environment;
 use ml_recommender\query\recommended_item\item_query;
 use ml_recommender\query\recommended_item\user_query;
+use ml_recommender\recommendations;
 use totara_engage\access\access;
 use totara_engage\card\card_resolver;
 use totara_engage\entity\engage_resource;
@@ -40,6 +41,11 @@ use totara_engage\entity\engage_resource;
  */
 final class articles_loader extends loader {
     /**
+     * @var recommendations|null
+     */
+    protected static $recommendations_helper;
+
+    /**
      * Get the related articles for the provided component & id
      *
      * @param item_query $query
@@ -47,11 +53,19 @@ final class articles_loader extends loader {
      * @return offset_cursor_paginator
      */
     public static function get_recommended(item_query $query, int $actor_id = 0): offset_cursor_paginator {
-        $builder = static::get_base_article_query(recommended_item::TABLE, $actor_id);
+        $builder = self::get_base_article_query(recommended_item::TABLE, $actor_id);
 
-        $builder->where('r.target_item_id', $query->get_target_item_id());
-        $builder->where('r.target_component', $query->get_target_component());
-        $builder->where('r.target_area', $query->get_target_area());
+        // If the ml service is enabled, then we link to that first
+        if (recommendations::is_ml_service_enabled()) {
+            $helper = self::$recommendations_helper ?? recommendations::make($actor_id);
+            $recommendations = $helper->get_similar_items($query->get_target_component(), $query->get_target_item_id());
+            $builder->where_in('er.id', $recommendations ?? []);
+            $helper->apply_sort_by_recommendations($builder, 'er.id', $recommendations);
+        } else {
+            $builder->where('r.target_item_id', $query->get_target_item_id());
+            $builder->where('r.target_component', $query->get_target_component());
+            $builder->where('r.target_area', $query->get_target_area());
+        }
 
         $cursor = $query->get_cursor();
         $cursor->set_limit(environment::get_related_items_count());
@@ -66,11 +80,18 @@ final class articles_loader extends loader {
      * @return offset_cursor_paginator
      */
     public static function get_recommended_for_user(user_query $query, int $actor_id = 0): offset_cursor_paginator {
-        $builder = static::get_base_article_query(recommended_user_item::TABLE, $actor_id);
+        $builder = self::get_base_article_query(recommended_user_item::TABLE, $actor_id);
+        if (recommendations::is_ml_service_enabled()) {
+            $helper = self::$recommendations_helper ?? recommendations::make($query->get_target_user_id());
+            $recommendations = $helper->get_user_recommendations($query->get_target_component());
 
-        $builder->where('r.user_id', $query->get_target_user_id());
-        $builder->where('r.component', $query->get_target_component());
-        $builder->where('r.area', $query->get_target_area());
+            $builder->where_in('er.id', $recommendations ?? []);
+            $helper->apply_sort_by_recommendations($builder, 'er.id', $recommendations);
+        } else {
+            $builder->where('r.user_id', $query->get_target_user_id());
+            $builder->where('r.component', $query->get_target_component());
+            $builder->where('r.area', $query->get_target_area());
+        }
 
         $cursor = $query->get_cursor();
         return new offset_cursor_paginator($builder, $cursor);
@@ -84,14 +105,21 @@ final class articles_loader extends loader {
      * @return builder
      */
     private static function get_base_article_query(string $table, int $actor_id = 0): builder {
-        $builder = builder::table($table, 'r');
-        $builder->join([engage_resource::TABLE, 'er'], 'r.item_id', 'er.id');
+        // If we're using the new service, then don't join on the recommendations table
+        if (recommendations::is_ml_service_enabled()) {
+            $builder = builder::table(engage_resource::TABLE, 'er');
+        } else {
+            // Fall back to the legacy service instead
+            $builder = builder::table($table, 'r');
+            $builder->join([engage_resource::TABLE, 'er'], 'r.item_id', 'er.id');
+            $builder->order_by_raw('r.score DESC');
+        }
+
         $builder->results_as_arrays();
 
         // We only want to return public articles
         $builder->where('er.resourcetype', article::get_resource_type());
         $builder->where('er.access', access::PUBLIC);
-        $builder->order_by_raw('r.score DESC');
 
         $builder->select(
             [
@@ -106,10 +134,10 @@ final class articles_loader extends loader {
             ]
         );
 
-        static::filter_multi_tenancy($builder, 'er.userid', $actor_id);
+        self::filter_multi_tenancy($builder, 'er.userid', $actor_id);
 
         $builder->map_to(
-            function(array $record) {
+            function (array $record) {
                 return card_resolver::create_card(article::get_resource_type(), $record);
             }
         );

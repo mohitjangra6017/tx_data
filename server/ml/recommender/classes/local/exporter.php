@@ -173,4 +173,43 @@ class exporter {
         $data_path = rtrim($data_path, "/\\");
         return "{$data_path}/tenants.csv";
     }
+
+    /**
+     * Return a single list of all potential exporter files.
+     *
+     * @param string|null $data_path Use a specific data path instead
+     * @return array
+     */
+    public static function get_list_of_files(string $data_path = null): array {
+        global $CFG, $DB;
+        $data_path = $data_path ?? environment::get_data_path();
+
+        $exporter = new static($data_path);
+        $exporters = $exporter->get_exports();
+
+        $files = [];
+        $tenants = [(object)['id' => 0]];
+
+        // We accept the tenants.csv file even if multi-tenants are disabled
+        $path = self::get_tenant_csv_file_path($data_path);
+        $files[] = [
+            'path' => $path,
+            'group' => 'tenants',
+        ];
+        if ($CFG->tenantsenabled) {
+            $tenants = array_merge($tenants, $DB->get_records('tenant', ['suspended' => 0]));
+        }
+
+        foreach ($exporters as $export) {
+            foreach ($tenants as $tenant) {
+                $path = self::get_export_csv_file_path($export->get_name(), $tenant->id, $data_path);
+                $files[] = [
+                    'path' => $path,
+                    'group' => $export->get_name(),
+                ];
+            }
+        }
+
+        return $files;
+    }
 }

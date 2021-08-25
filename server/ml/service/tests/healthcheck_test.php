@@ -101,7 +101,8 @@ class ml_service_healthcheck_testcase extends testcase {
         self::assertNull($healthcheck->get_service_to_totara());
         self::assertEmpty($healthcheck->get_other_info());
         self::assertEqualsCanonicalizing([
-            'Error message'
+            'Error message',
+            'Service Status Code: 500',
         ], $healthcheck->get_error_messages());
     }
 

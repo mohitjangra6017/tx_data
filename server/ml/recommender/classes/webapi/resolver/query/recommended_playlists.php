@@ -25,7 +25,6 @@ namespace ml_recommender\webapi\resolver\query;
 
 use core\pagination\offset_cursor;
 use core\webapi\execution_context;
-use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
@@ -74,7 +73,7 @@ final class recommended_playlists implements query_resolver, has_middleware {
         }
 
         // Load the interaction items
-        $paginator = playlists_loader::get_recommended($query);
+        $paginator = playlists_loader::get_recommended($query, $target_playlist->get_userid());
         return $paginator->get_items()->all();
     }
 

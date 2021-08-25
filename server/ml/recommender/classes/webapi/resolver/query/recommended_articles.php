@@ -74,7 +74,7 @@ final class recommended_articles implements query_resolver, has_middleware {
         }
 
         // Load the interaction items
-        $paginator = articles_loader::get_recommended($query);
+        $paginator = articles_loader::get_recommended($query, $target_article->get_userid());
         return $paginator->get_items()->all();
     }
 
@@ -86,5 +86,4 @@ final class recommended_articles implements query_resolver, has_middleware {
             new require_login(),
         ];
     }
-
 }

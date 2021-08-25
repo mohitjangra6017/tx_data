@@ -59,6 +59,20 @@ class flag {
     }
 
     /**
+     * Return true if the process has been completed.
+     *
+     * @param string $process
+     * @param string $custom_path
+     * @return bool
+     */
+    public static function is_complete(string $process, string $custom_path = ""): bool {
+        $path = (empty($custom_path)) ? environment::get_data_path() : $custom_path;
+        [$start, $complete] = static::get_flags($process);
+
+        return file_exists($path . $complete);
+    }
+
+    /**
      * If process is in progress, will output error and exit
      *
      * @param string $process     name of process to check (this class constant)

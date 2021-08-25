@@ -98,6 +98,7 @@ class healthcheck {
         // Can Totara talk to the service?
         if (!$response->is_ok()) {
             $this->totara_to_service = false;
+            $this->error_messages[] = 'Service Status Code: ' . $response->get_http_code();
 
             // Why did it fail?
             if ($error = $response->try_get_error_message()) {

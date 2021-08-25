@@ -31,11 +31,17 @@ use ml_recommender\entity\recommended_item;
 use ml_recommender\entity\recommended_user_item;
 use ml_recommender\query\recommended_item\item_query;
 use ml_recommender\query\recommended_item\user_query;
+use ml_recommender\recommendations;
 
 /**
  * Loader class for a recommended item
  */
 final class workspaces_loader extends loader {
+    /**
+     * @var recommendations|null
+     */
+    protected static $recommendations_helper;
+
     /**
      * Select all related workspaces based on the provided component id
      *
@@ -44,11 +50,19 @@ final class workspaces_loader extends loader {
      * @return offset_cursor_paginator
      */
     public static function get_recommended(item_query $query, int $actor_id = 0): offset_cursor_paginator {
-        $builder = static::get_base_workspace_query(recommended_item::TABLE, $actor_id);
+        $builder = self::get_base_workspace_query(recommended_item::TABLE, $actor_id);
 
-        $builder->where('r.target_item_id', $query->get_target_item_id());
-        $builder->where('r.target_component', $query->get_target_component());
-        $builder->where('r.target_area', $query->get_target_area());
+        if (recommendations::is_ml_service_enabled()) {
+            $helper = self::$recommendations_helper ?? recommendations::make($actor_id);
+            $recommendations = $helper->get_similar_items($query->get_target_component(), $query->get_target_item_id());
+
+            $builder->where_in('c.id', $recommendations ?? []);
+            $helper->apply_sort_by_recommendations($builder, 'c.id', $recommendations);
+        } else {
+            $builder->where('r.target_item_id', $query->get_target_item_id());
+            $builder->where('r.target_component', $query->get_target_component());
+            $builder->where('r.target_area', $query->get_target_area());
+        }
 
         $cursor = $query->get_cursor();
         return new offset_cursor_paginator($builder, $cursor);
@@ -62,11 +76,18 @@ final class workspaces_loader extends loader {
      * @return offset_cursor_paginator
      */
     public static function get_recommended_for_user(user_query $query, int $actor_id = 0): offset_cursor_paginator {
-        $builder = static::get_base_workspace_query(recommended_user_item::TABLE, $actor_id);
+        $builder = self::get_base_workspace_query(recommended_user_item::TABLE, $actor_id);
 
-        $builder->where('r.user_id', $query->get_target_user_id());
-        $builder->where('r.component', $query->get_target_component());
-        $builder->where('r.area', $query->get_target_area());
+        if (recommendations::is_ml_service_enabled()) {
+            $helper = self::$recommendations_helper ?? recommendations::make($query->get_target_user_id());
+            $recommendations = $helper->get_user_recommendations($query->get_target_component());
+            $builder->where_in('c.id', $recommendations ?? []);
+            $helper->apply_sort_by_recommendations($builder, 'c.id', $recommendations);
+        } else {
+            $builder->where('r.user_id', $query->get_target_user_id());
+            $builder->where('r.component', $query->get_target_component());
+            $builder->where('r.area', $query->get_target_area());
+        }
 
         $cursor = $query->get_cursor();
         return new offset_cursor_paginator($builder, $cursor);
@@ -83,12 +104,23 @@ final class workspaces_loader extends loader {
             $actor_id = $USER->id;
         }
 
-        $builder = builder::table($table, 'r');
+        // If we're using the new service, then don't join on the recommendations table
+        if (recommendations::is_ml_service_enabled()) {
+            $builder = builder::table('course', 'c');
+            $builder->where('containertype', 'container_workspace');
+        } else {
+            // Fall back to the legacy service instead
+            $builder = builder::table($table, 'r');
 
-        // Join against workspaces
-        $builder->join(['course', 'c'], 'r.item_id', 'c.id');
+            // Join against workspaces
+            $builder->join(['course', 'c'], 'r.item_id', 'c.id');
+            $builder->where('r.component', 'container_workspace');
+
+            $builder->order_by_raw('r.score DESC');
+        }
+
         $builder->join(['workspace', 'w'],
-            function(builder $join): void {
+            function (builder $join): void {
                 $join->where_field('c.id', 'w.course_id');
 
                 // We are filtering out those deleted items.
@@ -97,7 +129,6 @@ final class workspaces_loader extends loader {
         );
 
         $builder->select_raw('c.*, w.user_id, w.id AS w_id');
-        $builder->where('r.component', 'container_workspace');
 
         // Exclude private workspaces
         $builder->where('w.private', 0);
@@ -136,12 +167,9 @@ final class workspaces_loader extends loader {
 
         $builder->where_raw($sql_where, $sql_params);
 
-        $builder->order_by_raw('r.score DESC');
-        $builder->map_to(
-            function(\stdClass $record) {
-                return workspace::from_record($record);
-            }
-        );
+        $builder->map_to(function (\stdClass $record) {
+            return workspace::from_record($record);
+        });
 
         return $builder;
     }

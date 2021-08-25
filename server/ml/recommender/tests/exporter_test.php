@@ -22,13 +22,14 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use ml_recommender\local\exporter;
+use core_phpunit\testcase;
+use ml_recommender\local\environment;
 use ml_recommender\local\export\item_data;
 use ml_recommender\local\export\user_data;
 use ml_recommender\local\export\user_interactions;
-use ml_recommender\local\environment;
+use ml_recommender\local\exporter;
 
-class ml_recommender_exporter_testcase extends advanced_testcase {
+class ml_recommender_exporter_testcase extends testcase {
     /**
      * This test is to annoy someone who add new export types. So that it can remind that
      * person to know it can cause regression.
@@ -48,6 +49,35 @@ class ml_recommender_exporter_testcase extends advanced_testcase {
                 [item_data::class, user_data::class, user_interactions::class]
             );
         }
+    }
+
+    /**
+     * Assert the response from get_list_of_files is what we expect.
+     * Here to trap any new export types added & to make sure we know exactly what's happening.
+     *
+     * @return void
+     */
+    public function test_get_list_of_files(): void {
+        $expected = [
+            [
+                'path' => exporter::get_tenant_csv_file_path('/m/p/'),
+                'group' => 'tenants',
+            ],
+            [
+                'path' => exporter::get_export_csv_file_path('item_data', 0, '/m/p/'),
+                'group' => 'item_data',
+            ],
+            [
+                'path' => exporter::get_export_csv_file_path('user_data', 0, '/m/p/'),
+                'group' => 'user_data',
+            ],
+            [
+                'path' => exporter::get_export_csv_file_path('user_interactions', 0, '/m/p/'),
+                'group' => 'user_interactions',
+            ],
+        ];
+
+        self::assertEqualsCanonicalizing($expected, exporter::get_list_of_files('/m/p/'));
     }
 
     /**

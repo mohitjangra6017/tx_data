@@ -33,10 +33,7 @@ if [[ ! -d "$ML_MODELS_DIR" ]]; then
   mkdir -p "$ML_MODELS_DIR"
 fi
 
-# Start the service
-if [[ "$ML_DEV" == "1" ]]; then
-  cd /etc/ml/service || exit 1
-  FLASK_ENV="Development" python -m flask run --host=0.0.0.0
-else
-  waitress-serve --listen="${ML_BIND:-127.0.0.1:5000}" --call "service.app:create_app"
-fi
+cd /etc/ml
+
+# Run the start script
+/etc/ml/start.sh

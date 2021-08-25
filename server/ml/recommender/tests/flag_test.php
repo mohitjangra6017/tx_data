@@ -77,6 +77,7 @@ class ml_recommender_flag_testcase extends advanced_testcase {
     public function test_export_complete(): void {
         self::assertTrue(flag::complete(flag::EXPORT, $this->file_path));
         self::assertFalse(flag::in_progress(flag::EXPORT, $this->file_path));
+        self::assertTrue(flag::is_complete(flag::EXPORT, $this->file_path));
     }
 
     /**
@@ -100,6 +101,7 @@ class ml_recommender_flag_testcase extends advanced_testcase {
     public function test_import_complete(): void {
         self::assertTrue(flag::complete(flag::IMPORT, $this->file_path));
         self::assertFalse(flag::in_progress(flag::IMPORT, $this->file_path));
+        self::assertTrue(flag::is_complete(flag::IMPORT, $this->file_path));
     }
 
     /**
@@ -123,5 +125,6 @@ class ml_recommender_flag_testcase extends advanced_testcase {
     public function test_ml_complete(): void {
         self::assertTrue(flag::complete(flag::ML, $this->file_path));
         self::assertFalse(flag::in_progress(flag::ML, $this->file_path));
+        self::assertTrue(flag::is_complete(flag::ML, $this->file_path));
     }
 }

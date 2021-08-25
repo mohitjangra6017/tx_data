@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +22,17 @@
  */
 
 use block_totara_recommendations\repository\recommendations_repository;
+use core_phpunit\testcase;
+use ml_recommender\recommendations;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Testing the behaviour of the courses block with the remote recommenders service.
+ *
  * @group block_totara_recommendations
  */
-class block_totara_recommendations_courses_testcase extends advanced_testcase {
+class block_totara_recommendations_courses_recommenders_testcase extends testcase {
     /**
      * Assert that only visible, self-enrollment enabled & not-enrolled courses are seen through courses
      * recommendations.
@@ -162,6 +166,31 @@ class block_totara_recommendations_courses_testcase extends advanced_testcase {
     }
 
     /**
+     * Cleanup
+     */
+    protected function tearDown(): void {
+        $this->set_recommended_data(null);
+    }
+
+    /**
+     * @param array|null $data
+     */
+    protected function set_recommended_data(?array $data): void {
+        $mock_helper = null;
+        if (null !== $data) {
+            $mock_helper = $this->createMock(recommendations::class);
+            $mock_helper
+                ->method('get_user_recommendations')
+                ->willReturn($data);
+        }
+
+        $reflection = new ReflectionProperty(recommendations_repository::class, 'recommendations_helper');
+        $reflection->setAccessible(true);
+        $reflection->setValue($mock_helper);
+        $reflection->setAccessible(false);
+    }
+
+    /**
      * Generate the courses & users & test data
      *
      * @return array
@@ -189,11 +218,11 @@ class block_totara_recommendations_courses_testcase extends advanced_testcase {
         }
 
         // Recommend course 1, 2, 5 & 6
-        foreach ($users as $user) {
-            foreach ([1, 2, 5, 6] as $course_key) {
-                $this->recommend($courses[$course_key]->id, $user->id);
-            }
+        $course_recommendations = [];
+        foreach ([1, 2, 5, 6] as $course_key) {
+            $course_recommendations[] = $courses[$course_key]->id;
         }
+        $this->set_recommended_data($course_recommendations);
 
         // User 1 is enrolled, user 2 is not
         foreach ($courses as $course) {
@@ -213,24 +242,5 @@ class block_totara_recommendations_courses_testcase extends advanced_testcase {
         $enrol = $DB->get_record('enrol', array('courseid' => $course_id, 'enrol' => 'self'), '*', MUST_EXIST);
         $enrol->status = ENROL_INSTANCE_ENABLED;
         $DB->update_record('enrol', $enrol);
-    }
-
-    /**
-     * Add a mock recommendation entry for the specified course
-     *
-     * @param int $course_id
-     * @param int $user_id
-     */
-    private function recommend(int $course_id, int $user_id): void {
-        global $DB;
-        $DB->insert_record('ml_recommender_users', [
-            'user_id' => $user_id,
-            'unique_id' => "container_course{$course_id}_user{$user_id}",
-            'item_id' => $course_id,
-            'component' => 'container_course',
-            'time_created' => time(),
-            'score' => 1,
-            'seen' => 0
-        ]);
     }
 }
