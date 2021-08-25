@@ -285,6 +285,34 @@ class mod_lti_locallib_testcase extends advanced_testcase {
     }
 
     /**
+     * Test that a user's fullname in lti_build_request correctly returns a user's full name.
+     */
+    public function test_lti_build_request_user_fullname() {
+        $expected_fullname = "L'état c'est moi";
+        $user = $this->getDataGenerator()->create_user([
+            'firstname' => "L'état",
+            'lastname' => "c'est moi",
+        ]);
+
+        self::setUser($user);
+        $course   = $this->getDataGenerator()->create_course();
+        $instance = $this->getDataGenerator()->create_module('lti', ['course' => $course->id]);
+
+        $typeconfig = array(
+            'acceptgrades'     => 1,
+            'forcessl'         => 0,
+            'sendname'         => 2,
+            'sendemailaddr'    => 2,
+            'customparameters' => '',
+        );
+
+        $params = lti_build_request($instance, $typeconfig, $course, null, true);
+
+        $actual_fullname = $params['lis_person_name_full'];
+        $this->assertEquals($expected_fullname, $actual_fullname);
+    }
+
+    /**
      * Tests lti_prepare_type_for_save's handling of the "Force SSL" configuration.
      */
     public function test_lti_prepare_type_for_save_forcessl() {
