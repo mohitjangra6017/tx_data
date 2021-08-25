@@ -65,7 +65,8 @@ class rb_filter_category extends rb_filter_type {
 
         // Container for currently selected items.
         $content = html_writer::tag('div', '', array('class' => 'rb-filter-content-list list-' . $this->name));
-        $objs[] =& $mform->createElement('static', $this->name.'_list', '', $content);
+        $element = $mform->createElement('static', $this->name.'_list', '', $content)->set_allow_xss(true);
+        $objs[] =& $element;
 
         // Create a group for the elements.
         $grp =& $mform->addElement('group', $this->name.'_grp', $label, $objs, '', false);
