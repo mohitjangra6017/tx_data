@@ -1095,9 +1095,11 @@ export default {
       const url = this.$url('/mod/perform/activity/index.php');
 
       redirectWithPost(url, {
-        show_about_others_tab: !this.currentUserIsSubject,
         completion_save_success: true,
         closed_on_completion: this.activity.settings.close_on_completion,
+        initially_open_tab: this.answeringAs
+          ? this.answeringAs.core_relationship.id
+          : null,
       });
     },
 
@@ -1109,8 +1111,10 @@ export default {
       const url = this.$url('/mod/perform/activity/index.php');
 
       redirectWithPost(url, {
-        show_about_others_tab: !this.currentUserIsSubject,
         completion_save_success: false,
+        initially_open_tab: this.answeringAs
+          ? this.answeringAs.core_relationship.id
+          : null,
       });
     },
 

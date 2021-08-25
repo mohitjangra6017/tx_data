@@ -25,7 +25,12 @@
       :aria-hidden="true"
       class="tui-participantUserHeader__avatar"
     />
-    <div class="tui-participantUserHeader__name">
+    <div
+      class="tui-participantUserHeader__name"
+      :class="{
+        'tui-participantUserHeader__name--regular': regularWeight,
+      }"
+    >
       {{ userName }}
     </div>
   </div>
@@ -40,9 +45,10 @@ export default {
   },
 
   props: {
-    userName: String,
     profilePicture: String,
+    regularWeight: Boolean,
     size: String,
+    userName: String,
   },
 };
 </script>
@@ -59,6 +65,10 @@ export default {
   &__name {
     @include tui-font-heading-x-small();
     margin-left: var(--gap-2);
+
+    &--regular {
+      font-weight: normal;
+    }
   }
 }
 </style>

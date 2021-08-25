@@ -51,17 +51,17 @@
           v-model="value.search"
           :label="
             $str(
-              about === 'self'
-                ? 'user_activities_filter_search'
-                : 'user_activities_filter_search_others',
+              aboutOthers
+                ? 'user_activities_filter_search_others'
+                : 'user_activities_filter_search',
               'mod_perform'
             )
           "
           :placeholder="
             $str(
-              about === 'self'
-                ? 'user_activities_filter_search_placeholder'
-                : 'user_activities_filter_search_others_placeholder',
+              aboutOthers
+                ? 'user_activities_filter_search_others_placeholder'
+                : 'user_activities_filter_search_placeholder',
               'mod_perform'
             )
           "
@@ -109,7 +109,7 @@ export default {
   },
 
   props: {
-    about: String,
+    aboutOthers: Boolean,
     filterOptions: Object,
     value: Object,
     hasCompleted: Boolean,

@@ -20,7 +20,7 @@
   <div class="tui-performUserActivityList">
     <ActivitiesFilter
       v-model="userFilters"
-      :about="about"
+      :about-others="isAboutOthers"
       :filter-options="filterOptions"
       :has-completed="hasCompleted"
       :has-overdue="hasOverdue"
@@ -29,7 +29,7 @@
 
     <ActivitiesCount
       v-model="sortByFilter"
-      :about="about"
+      :about-others="isAboutOthers"
       :displayed-count="subjectInstances.length"
       :loading="$apollo.loading"
       :sort-by-options="sortByOptions"
@@ -100,18 +100,7 @@
             :size="isAboutOthers ? '4' : '6'"
             valign="center"
           >
-            <Button
-              v-if="
-                currentUserHasMultipleRelationships(
-                  row.subject.participant_instances
-                )
-              "
-              :styleclass="{ transparent: true }"
-              class="tui-performUserActivityList__selectRelationshipLink"
-              :text="getActivityTitle(row.subject)"
-              @click.prevent="showRelationshipSelector(row)"
-            />
-            <a v-else :href="getViewActivityUrl(row)">
+            <a :href="getViewActivityUrl(row)">
               {{ getActivityTitle(row.subject) }}
             </a>
           </Cell>
@@ -235,22 +224,21 @@
             </p>
 
             <SectionsList
+              :about-role="aboutRole"
               :activity-id="row.subject.activity.id"
               :anonymous-responses="row.subject.activity.anonymous_responses"
-              :current-user-id="currentUserId"
               :is-multi-section-active="
                 row.subject.activity.settings.multisection
               "
               :subject-sections="row.sections"
-              :subject-user="row.subject.subject_user"
               :view-url="viewUrl"
               @single-section-view-only="flagActivitySingleSectionViewOnly"
             />
 
-            <Button
-              :text="$str('print_activity', 'mod_perform')"
+            <ActionLink
+              :href="getPrintActivityLink(row)"
               :styleclass="{ small: true }"
-              @click="printActivity(row)"
+              :text="$str('print_activity', 'mod_perform')"
             />
           </div>
         </template>
@@ -266,35 +254,19 @@
         />
       </div>
     </Loader>
-
-    <ModalPresenter
-      :open="isRelationshipSelectorShown"
-      @request-close="hideRelationshipSelector"
-    >
-      <RelationshipSelector
-        v-model="isRelationshipSelectorShown"
-        :current-user-id="currentUserId"
-        :is-for-section="false"
-        :participant-sections="selectedParticipantSections"
-        :subject-user="selectedSubjectUser"
-        :view-url="relationshipSelectorUrl"
-      />
-    </ModalPresenter>
   </div>
 </template>
 <script>
+import ActionLink from 'tui/components/links/ActionLink';
 import ActivitiesCount from 'mod_perform/components/user_activities/list/ActivitiesCount';
 import ActivitiesFilter from 'mod_perform/components/user_activities/list/ActivitiesFilter';
-import Button from 'tui/components/buttons/Button';
 import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Loader from 'tui/components/loading/Loader';
 import Lock from 'tui/components/icons/Lock';
-import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import OverdueLozenge from 'mod_perform/components/user_activities/list/ActivityOverdue';
 import Paging from 'tui/components/paging/Paging';
-import RelationshipSelector from 'mod_perform/components/user_activities/list/RelationshipSelector';
 import SectionsList from 'mod_perform/components/user_activities/list/Sections';
 import Table from 'tui/components/datatable/Table';
 // Query
@@ -302,28 +274,24 @@ import subjectInstancesQuery from 'mod_perform/graphql/my_subject_instances';
 
 export default {
   components: {
+    ActionLink,
     ActivitiesCount,
     ActivitiesFilter,
-    Button,
     Cell,
     ExpandCell,
     HeaderCell,
     Loader,
     Lock,
-    ModalPresenter,
     OverdueLozenge,
     Paging,
-    RelationshipSelector,
     SectionsList,
     Table,
   },
 
   props: {
-    about: {
-      type: String,
-      validator(val) {
-        return ['self', 'others'].includes(val);
-      },
+    aboutRole: {
+      required: true,
+      type: Number,
     },
     //The id of the logged in user.
     currentUserId: {
@@ -332,28 +300,24 @@ export default {
     },
     filterOptions: Object,
     printUrl: {
-      type: String,
       required: true,
+      type: String,
     },
     // An Array of sort options
     sortByOptions: Array,
     viewUrl: {
-      type: String,
       required: true,
+      type: String,
     },
   },
 
   data() {
     return {
       activeFilterCount: 0,
-      isRelationshipSelectorShown: false,
       // items per page limit
       paginationLimit: 20,
       // Current pagination page
       paginationPage: 1,
-      relationshipSelectorUrl: '',
-      selectedParticipantSections: [],
-      selectedSubjectUser: {},
       singleSectionViewOnlyActivities: [],
       sortByFilter: 'created_at',
       subjectInstances: [],
@@ -372,15 +336,24 @@ export default {
   },
 
   computed: {
+    /**
+     * Check if the tab is about the users own activities or others
+     *
+     * @return {Boolean}
+     */
     isAboutOthers() {
-      return this.about === 'others';
+      return this.aboutRole !== 1;
     },
 
+    /**
+     * Return empty list string, either it is empty due to the active filters
+     * Or you haven't been assigned any activities yet.
+     *
+     * @return {Boolean}
+     */
     emptyListText() {
       return this.activeFilterCount
         ? this.$str('user_activities_list_none_filtered', 'mod_perform')
-        : this.isAboutOthers
-        ? this.$str('user_activities_list_none_about_others', 'mod_perform')
         : this.$str('user_activities_list_none_about_self', 'mod_perform');
     },
 
@@ -391,7 +364,8 @@ export default {
      */
     currentFilterOptions() {
       return {
-        about: [this.about.toUpperCase()],
+        about: [this.isAboutOthers ? 'OTHERS' : 'SELF'],
+        about_role: this.aboutRole,
         activity_type: this.userFilters.activityType,
         exclude_complete: this.userFilters.excludeCompleted,
         overdue: this.userFilters.overdueOnly,
@@ -428,11 +402,9 @@ export default {
   methods: {
     /**
      * Get "view" url for a specific user activity.
-     * This method should only be used in the case of single relationships.
      *
      * @param subjectInstance {{Object}}
      * @returns {string}
-     * @see showRelationshipSelector
      */
     getViewActivityUrl(subjectInstance) {
       const participantSection = this.getFirstSectionToParticipate(
@@ -483,8 +455,12 @@ export default {
       let foundSection = null;
 
       subjectSections.forEach(subjectSection => {
+        // Check participant instance is for this user and that the role is for the current tab
         let found = subjectSection.participant_sections.find(
-          item => item.participant_instance.is_for_current_user
+          item =>
+            item.participant_instance.is_for_current_user &&
+            item.participant_instance.core_relationship.id ===
+              this.aboutRole.toString()
         );
         if (found && foundSection === null) {
           foundSection = found;
@@ -492,31 +468,6 @@ export default {
       });
 
       return foundSection;
-    },
-
-    /**
-     * Open the relationship selector modal.
-     *
-     * @param {Object} selectedSubjectInstance
-     * @param {Boolean=undefined} isForPrint
-     */
-    showRelationshipSelector(selectedSubjectInstance, isForPrint) {
-      this.selectedSubjectUser = selectedSubjectInstance.subject.subject_user;
-      this.selectedParticipantSections = [];
-      selectedSubjectInstance.sections.forEach(subjectSection => {
-        subjectSection.participant_sections.forEach(participantSection => {
-          this.selectedParticipantSections.push(participantSection);
-        });
-      });
-      this.relationshipSelectorUrl = isForPrint ? this.printUrl : this.viewUrl;
-      this.isRelationshipSelectorShown = true;
-    },
-
-    /**
-     * Close the relationship selector modal.
-     */
-    hideRelationshipSelector() {
-      this.isRelationshipSelectorShown = false;
     },
 
     /**
@@ -555,11 +506,15 @@ export default {
      * @returns {string}
      */
     getYourProgressText(participantInstances) {
-      let relationships = this.filterToCurrentUser(
-        participantInstances
-      ).map(instance =>
-        this.getParticipantStatusText(instance.progress_status)
-      );
+      let relationships = participantInstances
+        .filter(
+          pi =>
+            pi.is_for_current_user &&
+            pi.core_relationship.id === this.aboutRole.toString()
+        )
+        .map(instance =>
+          this.getParticipantStatusText(instance.progress_status)
+        );
 
       return relationships.join(', ');
     },
@@ -673,23 +628,21 @@ export default {
     },
 
     /**
-     * Does the logged in user have multiple relationships to the subject on an activity.
+     * Get print-friendly page URL for activity.
      *
-     * @param {Array} participantInstances
-     * @return {Boolean}
+     * @param subjectInstance
      */
-    currentUserHasMultipleRelationships(participantInstances) {
-      return this.filterToCurrentUser(participantInstances).length > 1;
-    },
+    getPrintActivityLink(subjectInstance) {
+      const participantSection = this.getFirstSectionToParticipate(
+        subjectInstance.sections
+      );
 
-    /**
-     * Filter participant instances to only ones that belong to the logged in user.
-     *
-     * @param {Object[]} participantInstances
-     * @return {Object[]}
-     */
-    filterToCurrentUser(participantInstances) {
-      return participantInstances.filter(pi => pi.is_for_current_user);
+      if (participantSection) {
+        return this.$url(this.printUrl, {
+          participant_section_id: participantSection.id,
+        });
+      }
+      return '';
     },
 
     /**
@@ -709,31 +662,6 @@ export default {
      */
     isSingleSectionViewOnly(activityId) {
       return this.singleSectionViewOnlyActivities.includes(activityId);
-    },
-
-    /**
-     * Open print-friendly page with activity.
-     *
-     * @param subjectInstance
-     * @return {undefined}
-     */
-    printActivity(subjectInstance) {
-      if (
-        this.currentUserHasMultipleRelationships(
-          subjectInstance.subject.participant_instances
-        )
-      ) {
-        this.showRelationshipSelector(subjectInstance, true);
-        return;
-      }
-
-      const participantSection = this.getFirstSectionToParticipate(
-        subjectInstance.sections
-      );
-      const url = this.$url(this.printUrl, {
-        participant_section_id: participantSection.id,
-      });
-      window.open(url);
     },
 
     /**
@@ -774,6 +702,7 @@ export default {
   },
 };
 </script>
+
 <lang-strings>
   {
     "mod_perform": [
@@ -790,9 +719,7 @@ export default {
       "user_activities_complete_before",
       "user_activities_created_at",
       "user_activities_due_date_header",
-      "user_activities_filter",
       "user_activities_job_assignment_header",
-      "user_activities_list_none_about_others",
       "user_activities_list_none_about_self",
       "user_activities_list_none_filtered",
       "user_activities_single_section_view_only_activity",
@@ -816,11 +743,6 @@ export default {
 
   & > * + * {
     margin-top: var(--gap-4);
-  }
-
-  &__selectRelationshipLink {
-    text-align: left;
-    @include tui-font-link();
   }
 
   &__expandedRow {

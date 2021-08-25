@@ -53,7 +53,7 @@ export default {
   },
 
   props: {
-    about: String,
+    aboutOthers: Boolean,
     displayedCount: Number,
     loading: Boolean,
     sortByOptions: Array,
@@ -69,7 +69,7 @@ export default {
      */
     sortByFilterOptions() {
       let options = this.sortByOptions;
-      if (this.about === 'self') {
+      if (!this.aboutOthers) {
         options = options.filter(item => 'subject_name' !== item.id);
       }
 

@@ -32,35 +32,23 @@
     />
 
     <div class="tui-performUserActivities__content">
-      <Tabs :selected="initialTab">
+      <Tabs :selected="initiallyOpenTab">
         <Tab
-          :id="$id('your-activities-tab')"
-          :name="$str('user_activities_your_activities_title', 'mod_perform')"
+          v-for="tab in activityRoleTabs.tabs"
+          :id="tab.id"
+          :key="tab.id"
+          :name="tab.name"
         >
           <UserActivityList
-            about="self"
+            :about-role="tab.id"
             :current-user-id="currentUserId"
-            :view-url="viewActivityUrl"
-            :print-url="printActivityUrl"
             :filter-options="filterOptions"
+            :print-url="printActivityUrl"
             :sort-by-options="sortByOptions"
+            :view-url="viewActivityUrl"
           />
         </Tab>
-        <Tab
-          :id="$id('activities-about-others-tab')"
-          :name="
-            $str('user_activities_activities_about_others_title', 'mod_perform')
-          "
-        >
-          <UserActivityList
-            about="others"
-            :current-user-id="currentUserId"
-            :view-url="viewActivityUrl"
-            :print-url="printActivityUrl"
-            :filter-options="filterOptions"
-            :sort-by-options="sortByOptions"
-          />
-        </Tab>
+
         <Tab
           v-if="isHistoricActivitiesEnabled"
           :id="$id('your-historic-activities-tab')"
@@ -105,26 +93,12 @@ export default {
     UserHistoricActivityList,
   },
   props: {
-    /**
-     * The id of the logged in user.
-     */
-    currentUserId: {
+    // Tabs for all roles with user visible activities
+    activityRoleTabs: {
       required: true,
-      type: Number,
+      type: Object,
     },
-    viewActivityUrl: {
-      required: true,
-      type: String,
-    },
-    printActivityUrl: {
-      required: true,
-      type: String,
-    },
-    showAboutOthersTab: {
-      required: true,
-      type: Boolean,
-    },
-    completionSaveSuccess: {
+    canPotentiallyManageParticipants: {
       required: true,
       type: Boolean,
     },
@@ -132,21 +106,37 @@ export default {
       type: Boolean,
       default: false,
     },
-    requireManualParticipantsNotification: {
-      type: Boolean,
-      default: false,
-    },
-    canPotentiallyManageParticipants: {
+    completionSaveSuccess: {
       required: true,
       type: Boolean,
     },
+    // The id of the logged in user.
+    currentUserId: {
+      required: true,
+      type: Number,
+    },
+    filterOptions: Object,
+    // The id of the tab to be initially open
+    initiallyOpenTab: Number,
     isHistoricActivitiesEnabled: {
       required: true,
       type: Boolean,
     },
-    filterOptions: Object,
+    printActivityUrl: {
+      required: true,
+      type: String,
+    },
+    requireManualParticipantsNotification: {
+      type: Boolean,
+      default: false,
+    },
     sortOptions: Object,
+    viewActivityUrl: {
+      required: true,
+      type: String,
+    },
   },
+
   data() {
     return {
       openParticipationModal: false,
@@ -154,12 +144,6 @@ export default {
   },
 
   computed: {
-    initialTab() {
-      return this.showAboutOthersTab
-        ? this.$id('activities-about-others-tab')
-        : this.$id('your-activities-tab');
-    },
-
     sortByOptions() {
       if (!this.sortOptions) {
         return null;
@@ -177,6 +161,7 @@ export default {
       this.showSuccessNotification(message, 'mod_perform');
     }
   },
+
   methods: {
     /**
      * Shows a success toast.
@@ -192,16 +177,15 @@ export default {
   },
 };
 </script>
+
 <lang-strings>
   {
     "mod_perform": [
       "manage_participation",
       "toast_success_save_close_on_completion_response",
       "toast_success_save_response",
-      "user_activities_activities_about_others_title",
       "user_activities_historic_activities",
-      "user_activities_page_title",
-      "user_activities_your_activities_title"
+      "user_activities_page_title"
     ]
   }
 </lang-strings>

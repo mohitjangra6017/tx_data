@@ -8,7 +8,8 @@ information provided here is intended especially for developers.
     * Existing filters have been modified and additional ones have been added
     * Show more pagination has been replaced with the paging component
     * SCSS changes to existing classes
-
+    * Users roles have been separated out into their own tabs and activities with multiple roles are now treated independently based on the tab they appear in.
+ 
 === 14.0 ===
 * Updated the template structure of ActivityContentPrint.vue to add new icons, add new pieces of information, and improve element spacing and font sizes
     * Template, SCSS & lang string changes

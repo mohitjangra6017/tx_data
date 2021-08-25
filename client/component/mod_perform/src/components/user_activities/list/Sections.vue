@@ -26,26 +26,16 @@
         v-if="isMultiSectionActive"
         class="tui-performUserActivityListSection__header"
       >
-        <template v-if="subjectSection.canParticipate">
-          <Button
-            v-if="currentUserHasMultipleRelationships(subjectSection)"
-            class="tui-performUserActivityListSection__selectRelationshipLink"
-            :styleclass="{ transparent: true }"
-            :text="subjectSection.section.display_title"
-            @click="showRelationshipSelector(subjectSection)"
-          />
-          <a
-            v-else
-            :href="
-              $url(viewUrl, {
-                participant_section_id: getFirstSectionIdToParticipate(
-                  subjectSection
-                ),
-              })
-            "
-          >
+        <template
+          v-if="
+            subjectSection.canParticipate &&
+              getViewActivitySectionUrl(subjectSection)
+          "
+        >
+          <a :href="getViewActivitySectionUrl(subjectSection)">
             {{ subjectSection.section.display_title }}
           </a>
+
           <span v-if="!subjectSection.canCurrentUserAnswer">
             {{ $str('user_activities_section_view_only', 'mod_perform') }}
           </span>
@@ -65,6 +55,7 @@
         :border-bottom-hidden="true"
         :border-separator-hidden="true"
         :border-top-hidden="!isMultiSectionActive"
+        :hover-off="true"
         :stack-at="512"
       >
         <template v-slot:row="{ row }">
@@ -73,17 +64,17 @@
             :column-header="
               $str('user_activities_status_header_relationship', 'mod_perform')
             "
-            :heavy="row.isForCurrentUser"
+            :heavy="forCurrentUserInRole(row)"
             valign="center"
           >
             {{ row.relationship }}
           </Cell>
+
           <Cell
             size="4"
             :column-header="
               $str('user_activities_subject_header', 'mod_perform')
             "
-            :heavy="row.isForCurrentUser"
             valign="center"
           >
             <ParticipantUserHeader
@@ -93,6 +84,7 @@
                   : row.participant.fullname
               "
               :profile-picture="row.participant.profileimageurlsmall"
+              :regular-weight="!forCurrentUserInRole(row)"
               size="xxsmall"
             />
           </Cell>
@@ -104,7 +96,7 @@
                 'mod_perform'
               )
             "
-            :heavy="row.isForCurrentUser"
+            :heavy="forCurrentUserInRole(row)"
             valign="center"
           >
             {{ getStatusText(row.progressStatus) }}
@@ -142,52 +134,37 @@
         </div>
       </template>
     </div>
-
-    <ModalPresenter
-      :open="isRelationshipSelectorShown"
-      @request-close="hideRelationshipSelector"
-    >
-      <RelationshipSelector
-        v-model="isRelationshipSelectorShown"
-        :current-user-id="currentUserId"
-        :participant-sections="selectedParticipantSections"
-        :is-for-section="true"
-        :subject-user="subjectUser"
-        :view-url="viewUrl"
-      />
-    </ModalPresenter>
   </div>
 </template>
 
 <script>
-import Button from 'tui/components/buttons/Button';
 import Cell from 'tui/components/datatable/Cell';
 import Lock from 'tui/components/icons/Lock';
-import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import OverdueLozenge from 'mod_perform/components/user_activities/list/ActivityOverdue';
 import ParticipantUserHeader from 'mod_perform/components/user_activities/participant/ParticipantUserHeader';
-import RelationshipSelector from 'mod_perform/components/user_activities/list/RelationshipSelector';
 import Table from 'tui/components/datatable/Table';
 
 export default {
   components: {
-    Button,
     Cell,
     Lock,
-    ModalPresenter,
     OverdueLozenge,
     ParticipantUserHeader,
-    RelationshipSelector,
     Table,
   },
 
   props: {
-    /**
-     * The id of the logged in user.
-     */
-    currentUserId: {
+    aboutRole: {
       required: true,
       type: Number,
+    },
+    activityId: {
+      required: true,
+      type: String,
+    },
+    anonymousResponses: {
+      required: true,
+      type: Boolean,
     },
     isMultiSectionActive: {
       required: true,
@@ -201,25 +178,6 @@ export default {
       required: true,
       type: String,
     },
-    subjectUser: {
-      required: true,
-      type: Object,
-    },
-    anonymousResponses: {
-      required: true,
-      type: Boolean,
-    },
-    activityId: {
-      required: true,
-      type: String,
-    },
-  },
-
-  data() {
-    return {
-      isRelationshipSelectorShown: false,
-      selectedParticipantSections: [],
-    };
   },
 
   computed: {
@@ -297,6 +255,19 @@ export default {
 
   methods: {
     /**
+     * Check if row is for current user and the role matched the tab role
+     *
+     * @param {Object} row
+     * @return {Boolean}
+     */
+    forCurrentUserInRole(row) {
+      return (
+        row.isForCurrentUser &&
+        row.relationship_id === this.aboutRole.toString()
+      );
+    },
+
+    /**
      * Get the localized status text for a particular user activity.
      *
      * @param status {String}
@@ -321,50 +292,24 @@ export default {
     },
 
     /**
-     * Get the first section id, if relationship id is supplied it
-     * will get the first section for the user
+     * Get "view" url for a specific user activity section based on current role.
      *
-     * @param {Object} subjectSection
-     * @return {Int}
+     * @param subjectInstance {{Object}}
+     * @returns {string}
      */
-    getFirstSectionIdToParticipate(subjectSection) {
-      let item = subjectSection.participation.find(
-        item => item.isForCurrentUser
+    getViewActivitySectionUrl(subjectSection) {
+      const participantSection = subjectSection.participation.find(
+        item =>
+          item.isForCurrentUser &&
+          item.relationship_id === this.aboutRole.toString()
       );
-      if (!item) {
-        throw 'Section for user not found.';
+
+      if (participantSection) {
+        return this.$url(this.viewUrl, {
+          participant_section_id: participantSection.id,
+        });
       }
-      return item.id;
-    },
-
-    /**
-     * Does the logged in user have multiple relationships to the subject on an activity.
-     *
-     * @param {Object} subjectSection
-     * @return {Boolean}
-     */
-    currentUserHasMultipleRelationships(subjectSection) {
-      return this.filterToCurrentUser(subjectSection.participation).length > 1;
-    },
-
-    /**
-     * Open the relationship selector modal.
-     *
-     * @param {Object} subjectSection
-     */
-    showRelationshipSelector(subjectSection) {
-      this.selectedParticipantSections = [];
-      subjectSection.participant_sections.forEach(participantSection => {
-        this.selectedParticipantSections.push(participantSection);
-      });
-      this.isRelationshipSelectorShown = true;
-    },
-
-    /**
-     * Close the relationship selector modal.
-     */
-    hideRelationshipSelector() {
-      this.isRelationshipSelectorShown = false;
+      return null;
     },
 
     /**
