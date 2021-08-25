@@ -27,6 +27,7 @@ require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 require_once($CFG->dirroot . '/mod/facetoface/classes/rb/filter/f2f_roomavailable.php');
 require_once($CFG->dirroot . '/mod/facetoface/classes/rb/filter/f2f_assetavailable.php');
 require_once($CFG->dirroot . '/mod/facetoface/classes/rb/filter/facilitator_available.php');
+require_once($CFG->dirroot . '/mod/facetoface/classes/rb/filter/f2f_userstatus.php');
 
 abstract class rb_facetoface_base_source extends rb_base_source {
 
@@ -381,10 +382,7 @@ abstract class rb_facetoface_base_source extends rb_base_source {
                 'session',
                 'currentuserstatus',
                 get_string('userstatus', 'rb_source_facetoface_events'),
-                'select',
-                array(
-                    'selectchoices' => self::get_currentuserstatus_options(),
-                )
+                'f2f_userstatus'
             );
     }
 

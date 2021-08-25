@@ -29,6 +29,14 @@
 class rb_filter_select extends rb_filter_type {
 
     /**
+     * Allows overriding of choices for select filters, if set
+     * validation doesn't check to ensure choices are provided and
+     * assumes the filter constructor will provide them
+     * @var bool
+     */
+    protected $choices_required = true;
+
+    /**
      * Constructor
      *
      * @param string $type The filter type (from the db or embedded source)
@@ -48,10 +56,13 @@ class rb_filter_select extends rb_filter_type {
         if (!isset($this->options['simplemode'])) {
             $this->options['simplemode'] = false;
         }
+
         if (!isset($this->options['selectfunc'])) {
             if (!isset($this->options['selectchoices'])) {
-                debugging("No selectchoices provided for filter '{$this->name}' in source '" .
-                    get_class($report->src) . "'", DEBUG_DEVELOPER);
+                if ($this->choices_required) {
+                    debugging("No selectchoices provided for filter '{$this->name}' in source '" .
+                        get_class($report->src) . "'", DEBUG_DEVELOPER);
+                }
                 $this->options['selectchoices'] = array();
             }
         }
