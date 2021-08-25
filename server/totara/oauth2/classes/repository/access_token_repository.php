@@ -34,13 +34,13 @@ class access_token_repository extends repository {
      * Returns null when access token is not found, otherwise an entity of access_token.
      * Pass $strict to make sure that we throw exception when record is not found.
      *
-     * @param string $token
+     * @param string $token_identifier
      * @param bool $strict
      * @return access_token|null
      */
-    public function find_by_token(string $token, bool $strict = false): ?access_token {
+    public function find_by_identifier(string $token_identifier, bool $strict = false): ?access_token {
         $repository = access_token::repository();
-        $repository->where("access_token", $token);
+        $repository->where("identifier", $token_identifier);
 
         return $repository->one($strict);
     }

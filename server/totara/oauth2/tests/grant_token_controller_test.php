@@ -23,7 +23,7 @@
 use core_phpunit\testcase;
 use totara_oauth2\controller\grant_token_controller;
 use totara_oauth2\grant_type;
-use totara_oauth2\local\request;
+use totara_oauth2\io\request;
 use totara_oauth2\testing\generator;
 
 class totara_oauth2_grant_token_controller_testcase extends testcase {

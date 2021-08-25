@@ -30,6 +30,7 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use DateTimeImmutable;
 use coding_exception;
 use totara_oauth2\entity\access_token;
+use totara_oauth2\entity\client_provider;
 
 class token_repository implements AccessTokenRepositoryInterface {
     /**
@@ -90,16 +91,25 @@ class token_repository implements AccessTokenRepositoryInterface {
         }
 
         $repository = access_token::repository();
-        $access_token = $repository->find_by_token($identifier);
+        $access_token = $repository->find_by_identifier($identifier);
 
         if (null !== $access_token) {
             throw UniqueTokenIdentifierConstraintViolationException::create();
         }
 
         $entity = new access_token();
-        $entity->access_token = $identifier;
-        $entity->client_id = $accessTokenEntity->getClient()->getIdentifier();
+        $entity->identifier = $identifier;
         $entity->expires = $accessTokenEntity->getExpiryDateTime()->getTimestamp();
+
+        $client_entity = $accessTokenEntity->getClient();
+        if ($client_entity instanceof client_entity) {
+            $entity->client_provider_id = $client_entity->get_client_provider()->id;
+        } else {
+            // Fetch from database, this should be less likely a case. But who would know that we are going to
+            // reuse this wrapper else where.
+            $client_provider = client_provider::repository()->find_by_client_id($client_entity->getIdentifier(), true);
+            $entity->client_provider_id = $client_provider->id;
+        }
 
         $scopes = array_map(
             function (ScopeEntityInterface $entity): string {
@@ -129,7 +139,7 @@ class token_repository implements AccessTokenRepositoryInterface {
      */
     public function isAccessTokenRevoked($tokenId): bool {
         // We don't support the revoke of token for now, therefore we are checking against the existing of its.
-        $entity = access_token::repository()->find_by_token($tokenId);
+        $entity = access_token::repository()->find_by_identifier($tokenId);
         return null === $entity;
     }
 }

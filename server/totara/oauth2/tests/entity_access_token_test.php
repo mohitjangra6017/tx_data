@@ -31,16 +31,16 @@ class totara_oauth2_entity_access_token_testcase extends testcase {
      */
     public function test_create_access_token(): void {
         $entity = new access_token();
-        $entity->client_id = "abcde";
-        $entity->access_token = "dd";
+        $entity->client_provider_id = 50;
+        $entity->identifier = "dd";
         $entity->expires = time() + DAYSECS;
         $entity->save();
 
         $db = builder::get_db();
         $record = $db->get_record(access_token::TABLE, ["id" => $entity->id]);
 
-        self::assertEquals($entity->client_id, $record->client_id);
-        self::assertEquals($entity->access_token, $record->access_token);
+        self::assertEquals($entity->client_provider_id, $record->client_provider_id);
+        self::assertEquals($entity->identifier, $record->identifier);
         self::assertEquals($entity->expires, $record->expires);
         self::assertNull($record->scope);
     }
@@ -50,8 +50,8 @@ class totara_oauth2_entity_access_token_testcase extends testcase {
      */
     public function test_delete_access_token(): void {
         $entity = new access_token();
-        $entity->client_id = "abcde";
-        $entity->access_token = "dd";
+        $entity->client_provider_id = 42;
+        $entity->identifier = "dd";
         $entity->expires = time() + DAYSECS;
         $entity->save();
 
@@ -72,28 +72,28 @@ class totara_oauth2_entity_access_token_testcase extends testcase {
      */
     public function test_update_access_token(): void {
         $entity = new access_token();
-        $entity->client_id = "abcde";
-        $entity->access_token = "dd";
+        $entity->client_provider_id = 42;
+        $entity->identifier = "dd";
         $entity->expires = time() + DAYSECS;
         $entity->save();
 
         $db = builder::get_db();
-        self::assertTrue($db->record_exists(access_token::TABLE, ["access_token" => "dd"]));
-        self::assertFalse($db->record_exists(access_token::TABLE, ["access_token" => "dca"]));
+        self::assertTrue($db->record_exists(access_token::TABLE, ["identifier" => "dd"]));
+        self::assertFalse($db->record_exists(access_token::TABLE, ["identifier" => "dca"]));
 
-        $entity->access_token = "dca";
+        $entity->identifier = "dca";
         $entity->save();
 
-        self::assertFalse($db->record_exists(access_token::TABLE, ["access_token" => "dd"]));
-        self::assertTrue($db->record_exists(access_token::TABLE, ["access_token" => "dca"]));
+        self::assertFalse($db->record_exists(access_token::TABLE, ["identifier" => "dd"]));
+        self::assertTrue($db->record_exists(access_token::TABLE, ["identifier" => "dca"]));
 
-        self::assertTrue($db->record_exists(access_token::TABLE, ["client_id" => "abcde"]));
-        self::assertFalse($db->record_exists(access_token::TABLE, ["client_id" => "ddca"]));
+        self::assertTrue($db->record_exists(access_token::TABLE, ["client_provider_id" => 42]));
+        self::assertFalse($db->record_exists(access_token::TABLE, ["client_provider_id" => 52]));
 
-        $entity->client_id = "ddca";
+        $entity->client_provider_id = 52;
         $entity->save();
 
-        self::assertFalse($db->record_exists(access_token::TABLE, ["client_id" => "abcde"]));
-        self::assertTrue($db->record_exists(access_token::TABLE, ["client_id" => "ddca"]));
+        self::assertFalse($db->record_exists(access_token::TABLE, ["client_provider_id" => 42]));
+        self::assertTrue($db->record_exists(access_token::TABLE, ["client_provider_id" => 52]));
     }
 }

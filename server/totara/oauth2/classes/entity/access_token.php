@@ -23,6 +23,7 @@
 namespace totara_oauth2\entity;
 
 use core\orm\entity\entity;
+use core\orm\entity\relations\belongs_to;
 use totara_oauth2\repository\access_token_repository;
 
 /**
@@ -30,10 +31,12 @@ use totara_oauth2\repository\access_token_repository;
  *
  * @property int $id
  * @property string $client_id
- * @property string $access_token
+ * @property int $client_provider_id
+ * @property string $identifier
  * @property int $expires
  * @property string|null $scope
  *
+ * @property-read client_provider $client_provider
  * @method static access_token_repository repository()
  */
 class access_token extends entity {
@@ -47,5 +50,12 @@ class access_token extends entity {
      */
     public static function repository_class_name(): string {
         return access_token_repository::class;
+    }
+
+    /**
+     * @return belongs_to
+     */
+    public function client_provider(): belongs_to {
+        return $this->belongs_to(client_provider::class, "client_provider_id");
     }
 }

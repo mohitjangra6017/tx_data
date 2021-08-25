@@ -128,7 +128,7 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
 
         $db = builder::get_db();
         self::assertTrue(
-            $db->record_exists(access_token::TABLE, ["access_token" => $access_token->getIdentifier()])
+            $db->record_exists(access_token::TABLE, ["identifier" => $access_token->getIdentifier()])
         );
 
         // Executing the request, with the time that surpass the expiry time of access token.

@@ -33,6 +33,7 @@ use totara_oauth2\facade\response_interface;
 use totara_oauth2\io\response;
 use totara_oauth2\io\request;
 use coding_exception;
+use totara_oauth2\local\crypto_factory;
 use totara_oauth2\wrapper\league\client_repository;
 use totara_oauth2\wrapper\league\scope_repository;
 use totara_oauth2\wrapper\league\token_repository;
@@ -74,8 +75,8 @@ class server {
         ?request_interface $request_interface = null,
         ?response_interface $response_interface = null
     ): response_interface {
-        $private_key = config::get_private_key_path();
-        $encryption_key = config::get_encryption_key();
+        $private_key = crypto_factory::get_private_key_file_path();
+        $encryption_key = crypto_factory::get_encryption_key();
 
         if (empty($private_key) || !file_exists($private_key)) {
             throw new coding_exception("The private key is invalid or not being set");
@@ -121,10 +122,7 @@ class server {
      * @return bool
      */
     public function is_request_verified(?request_interface $request_interface = null): bool {
-        $public_key = config::get_public_key();
-        if (empty($public_key)) {
-            throw new coding_exception("The public key is invalid or not being set");
-        }
+        $public_key = crypto_factory::get_public_key_file_path();
 
         $key = new CryptKey($public_key, null, false);
         $repository = new token_repository();

@@ -31,9 +31,10 @@ use totara_oauth2\entity\client_provider;
 class client_provider_repository extends repository {
     /**
      * @param string $client_id
+     * @param bool $strict
      * @return client_provider|null
      */
-    public function find_by_client_id(string $client_id): ?client_provider {
+    public function find_by_client_id(string $client_id, bool $strict = false): ?client_provider {
         $repository = client_provider::repository();
         $repository->where("client_id", $client_id);
 

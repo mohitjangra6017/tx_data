@@ -61,11 +61,11 @@ class totara_oauth2_server_testcase extends testcase {
         );
 
         $db = builder::get_db();
-        self::assertEquals(0, $db->count_records(access_token::TABLE, ["client_id" => $client->client_id]));
+        self::assertEquals(0, $db->count_records(access_token::TABLE, ["client_provider_id" => $client->id]));
 
         // Once response is being processed, then we will get a new record of access token.
         $response = $server->handle_token_request($request);
-        self::assertEquals(1, $db->count_records(access_token::TABLE, ["client_id" => $client->client_id]));
+        self::assertEquals(1, $db->count_records(access_token::TABLE, ["client_provider_id" => $client->id]));
 
         self::assertInstanceOf(response_interface::class, $response);
         $body = $response->getBody()->__toString();
@@ -82,7 +82,7 @@ class totara_oauth2_server_testcase extends testcase {
         );
 
         $token = $jwt_configuration->parser()->parse($parameters["access_token"]);
-        $token_entity = access_token::repository()->find_by_token($token->claims()->get("jti"));
+        $token_entity = access_token::repository()->find_by_identifier($token->claims()->get("jti"));
 
         self::assertNotNull($token_entity);
 

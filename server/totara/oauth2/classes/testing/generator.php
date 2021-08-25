@@ -24,17 +24,21 @@ namespace totara_oauth2\testing;
 
 use core\testing\component_generator;
 use League\OAuth2\Server\CryptKey;
-use totara_oauth2\config;
 use totara_oauth2\entity\client_provider;
 use totara_oauth2\grant_type;
+use totara_oauth2\local\crypto_factory;
 use totara_oauth2\wrapper\league\client_entity;
 use totara_oauth2\wrapper\league\token_entity;
 use totara_oauth2\wrapper\league\token_repository;
 use DateTimeImmutable;
-use coding_exception;
 
 class generator extends component_generator {
     /**
+     * This function will preset all the configuration required for oauth2 server to work.
+     * Note that without calling this function before your testing, the system will auto generate
+     * the required configuration, which it would slow the test down. Hence, make sure you that you should
+     * call to this function before executing any tests related to oauth2 server.
+     *
      * @return void
      */
     public static function setup_required_configuration(): void {
@@ -65,15 +69,7 @@ class generator extends component_generator {
             );
         }
 
-        $private_key = config::get_private_key_path();
-        if (empty($private_key)) {
-            throw new coding_exception(
-                sprintf(
-                    "The private key file path is not yet set, please call to function '%s' beforehand.",
-                    "totara_oauth2\\testing\\generator::setup_required_configuration"
-                )
-            );
-        }
+        $private_key = crypto_factory::get_private_key_file_path();
 
         if (empty($client_id)) {
             $client_id = uniqid("client_");

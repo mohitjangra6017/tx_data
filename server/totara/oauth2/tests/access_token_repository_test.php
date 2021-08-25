@@ -33,10 +33,10 @@ class totara_oauth2_access_token_repository_testcase extends testcase {
         $created_token = $generator->create_access_token(null, ["access_token" => "hello_world"]);
 
         $repository = access_token::repository();
-        $result_one = $repository->find_by_token("hello_world");
+        $result_one = $repository->find_by_identifier("hello_world");
 
-        self::assertEquals($created_token->getIdentifier(), $result_one->access_token);
-        self::assertEquals($created_token->getClient()->getIdentifier(), $result_one->client_id);
+        self::assertEquals($created_token->getIdentifier(), $result_one->identifier);
+        self::assertEquals($created_token->getClient()->getIdentifier(), $result_one->client_provider->client_id);
         self::assertEquals($created_token->getExpiryDateTime()->getTimestamp(), $result_one->expires);
         self::assertNull($result_one->scope);
     }
@@ -51,6 +51,6 @@ class totara_oauth2_access_token_repository_testcase extends testcase {
         $this->expectException(dml_missing_record_exception::class);
 
         $repository = access_token::repository();
-        $repository->find_by_token("something_not_existing", false);
+        $repository->find_by_identifier("something_not_existing", true);
     }
 }

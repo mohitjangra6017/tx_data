@@ -46,7 +46,7 @@ class config extends base_plugin_config {
      *
      * @return string|null
      */
-    public static function get_public_key(): ?string {
+    public static function get_public_key_path(): ?string {
         return self::get("public_key_path");
     }
 
@@ -59,5 +59,13 @@ class config extends base_plugin_config {
      */
     public static function get_encryption_key(): ?string {
         return self::get("encryption_key");
+    }
+
+    /**
+     * @param string $key
+     * @return void
+     */
+    public static function set_encryption_key(string $key): void {
+        self::set("encryption_key", $key);
     }
 }

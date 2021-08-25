@@ -69,17 +69,17 @@ function xmldb_totara_oauth2_upgrade(int $old_version): bool {
 
         // Adding fields to table totara_oauth2_access_token.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('client_id', XMLDB_TYPE_CHAR, '80', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('access_token', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('client_provider_id', XMLDB_TYPE_CHAR, '80', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('identifier', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
         $table->add_field('expires', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('scope', XMLDB_TYPE_CHAR, '1333', null, null, null, null);
 
         // Adding keys to table totara_oauth2_access_token.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('client_probider_id_fk', XMLDB_KEY_FOREIGN, ['client_provider_id'], 'totara_oauth2_client_provider', ['id']);
 
         // Adding indexes to table totara_oauth2_access_token.
-        $table->add_index('client_id_idx', XMLDB_INDEX_NOTUNIQUE, ['client_id']);
-        $table->add_index('access_token_idx', XMLDB_INDEX_NOTUNIQUE, ['access_token']);
+        $table->add_index('identifier_idx', XMLDB_INDEX_UNIQUE, ['identifier']);
 
         // Conditionally launch create table for totara_oauth2_access_token.
         if (!$db_manager->table_exists($table)) {

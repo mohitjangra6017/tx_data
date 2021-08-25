@@ -74,4 +74,11 @@ class client_entity implements ClientEntityInterface {
     public function verify(string $secret): string {
         return hash_equals($this->client_provider_entity->client_secret, $secret);
     }
+
+    /**
+     * @return client_provider
+     */
+    public function get_client_provider(): client_provider {
+        return $this->client_provider_entity;
+    }
 }
