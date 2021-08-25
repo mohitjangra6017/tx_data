@@ -31,9 +31,8 @@ use core\orm\entity\entity;
  * @property int $id
  * @property int $user_id
  * @property string $learning_object_urn
- * @property string $progress
+ * @property int $progress
  * @property bool $completion
- * @property int|null $xapi_statement_id
  * @property int $time_created
  *
  * @method static user_completion_repository repository()

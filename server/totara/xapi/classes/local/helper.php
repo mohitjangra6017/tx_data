@@ -38,12 +38,11 @@ class helper {
      * @param request $request
      * @return xapi_statement
      */
-    public static function logging_request(request $request): xapi_statement {
+    public static function log_request(request $request): xapi_statement {
         // Creating a new xapi_statement entity.
         $entity = new xapi_statement();
         $entity->statement = $request->get_content();
         $entity->component = $request->get_required_parameter("component", PARAM_COMPONENT);
-        $entity->request_headers = json_encode($request->get_header_parameters(), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
 
         $entity->save();
         return $entity;

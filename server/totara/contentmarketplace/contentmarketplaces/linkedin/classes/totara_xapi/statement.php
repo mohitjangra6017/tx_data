@@ -36,6 +36,12 @@ use contentmarketplace_linkedin\core_json\structure\xapi_statement as xapi_state
  */
 class statement {
     /**
+     * The result extension keyword, that can help us identify the progress percentage.
+     * @var string
+     */
+    private const RESULT_EXTENSION = "https://w3id.org/xapi/cmi5/result/extensions/progress";
+
+    /**
      * @var xapi_statement
      */
     private $xapi_statement;
@@ -117,7 +123,8 @@ class statement {
                 // Remove the mailto within the statement content.
                 $email = str_replace("mailto:", "", $email);
 
-                // Note: we use MUST_EXIST here because we do not want
+                // Note: we use MUST_EXIST here because we do not want non-existing user with
+                //       the email from linkedin learning's end. Hence, exception.
                 $this->user_id = $db->get_field(
                     user::TABLE,
                     "id",
@@ -143,10 +150,13 @@ class statement {
         $json = $this->xapi_statement->get_statement_as_json_array();
         $completed = $json["result"]["completion"];
 
-        // This is hard-coded, because it is for machine to understand only.
-        // Therefore, no i18n.
-        $progress = $json["verb"]["display"]["en-US"];
-        return progress::create($completed, $progress);
+        // Finding out the progress percentage.
+        $progress = 0;
+        if (isset($json["result"]["extensions"][self::RESULT_EXTENSION])) {
+            $progress = $json["result"]["extensions"][self::RESULT_EXTENSION];
+        }
+
+        return new progress($completed, $progress);
     }
 
     /**

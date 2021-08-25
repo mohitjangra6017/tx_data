@@ -25,6 +25,7 @@ namespace totara_oauth2\wrapper\league;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use totara_oauth2\wrapper\league\scope\xapi_write;
 
 class scope_repository implements ScopeRepositoryInterface {
     // This class is not used for now. But it is needed in order to allow the server to work.
@@ -34,6 +35,10 @@ class scope_repository implements ScopeRepositoryInterface {
      * @return ScopeEntityInterface|null
      */
     public function getScopeEntityByIdentifier($identifier) {
+        if (xapi_write::IDENTIFIER === $identifier) {
+            return new xapi_write();
+        }
+
         return null;
     }
 
@@ -42,6 +47,7 @@ class scope_repository implements ScopeRepositoryInterface {
      * @param string                $grantType
      * @param ClientEntityInterface $clientEntity
      * @param null                  $userIdentifier
+     *
      * @return ScopeEntityInterface[]
      */
     public function finalizeScopes(
@@ -50,6 +56,6 @@ class scope_repository implements ScopeRepositoryInterface {
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
-        return [];
+        return $scopes;
     }
 }

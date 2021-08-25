@@ -51,6 +51,10 @@ class resolver extends base {
     }
 
     /**
+     * Checking whether user had already been progressing on the linkedin learning's course or not.
+     * If user had already progressing on linkedin learning's course, and we are keeping track of it,
+     * then we should mark the activity as completed, since the condition is on launch.
+     *
      * @param int $user_id
      * @param int $learning_object_id
      *
@@ -60,10 +64,15 @@ class resolver extends base {
         $learning_object = new entity($learning_object_id);
         $repository = user_completion::repository();
 
-        return $repository->exists_for_user($user_id, $learning_object->urn);
+        $completion = $repository->find_for_user_with_urn($user_id, $learning_object->urn);
+        return null !== $completion;
     }
 
     /**
+     * Checking if user had already completed the linkedin learning course or not. If yes,
+     * then we are going to mark the activity completion as completed, since this is based
+     * on Linkedin Learning condition.
+     *
      * @param int $user_id
      * @param int $learning_object_id
      *
@@ -73,6 +82,13 @@ class resolver extends base {
         $learning_object = new entity($learning_object_id);
         $repository = user_completion::repository();
 
-        return $repository->exists_for_user($user_id, $learning_object->urn, true);
+        $completion = $repository->find_for_user_with_urn($user_id, $learning_object->urn);
+        if (null !== $completion) {
+            // Check on the completion status.
+            return $completion->completion;
+        }
+
+        // Record is not found hence, user had not yet completed the learning object.
+        return false;
     }
 }

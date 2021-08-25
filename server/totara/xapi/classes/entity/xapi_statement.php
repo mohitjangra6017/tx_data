@@ -30,7 +30,6 @@ use stdClass;
  * @property int $time_created
  * @property string|null $component
  * @property string $statement
- * @property string $request_headers
  */
 class xapi_statement extends entity {
     /**

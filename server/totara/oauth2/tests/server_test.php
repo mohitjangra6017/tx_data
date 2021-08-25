@@ -29,7 +29,7 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use totara_oauth2\entity\access_token;
 use totara_oauth2\facade\response_interface;
 use totara_oauth2\grant_type;
-use totara_oauth2\local\request;
+use totara_oauth2\io\request;
 use totara_oauth2\server;
 use totara_oauth2\testing\generator;
 
@@ -132,55 +132,5 @@ class totara_oauth2_server_testcase extends testcase {
         $result = $server->is_request_verified($request);
 
         self::assertFalse($result);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_verify_token_with_success_response(): void {
-        $time_now = time();
-        $generator = generator::instance();
-
-        $client = $generator->create_client_provider();
-        $token = $generator->create_access_token_from_client_provider($client, $time_now + HOURSECS);
-
-        $request = request::create_from_global(
-            [],
-            [],
-            ["AUTHORIZATION" => "Bearer {$token}"]
-        );
-
-        $server = server::boot($time_now);
-        $response = $server->verify_resource_request($request);
-
-        self::assertInstanceOf(response_interface::class, $response);
-        self::assertEmpty($response->getBody()->__toString());
-    }
-
-    /**
-     * @return void
-     */
-    public function test_verify_token_with_failure_response(): void {
-        $request = request::create_from_global(
-            [],
-            [],
-            ["AUTHORIZATION" => "Bearer token"],
-        );
-
-        $server = server::boot();
-        $response = $server->verify_resource_request($request);
-
-        $parameters = json_decode($response->getBody()->__toString(), true);
-        self::assertIsArray($parameters);
-
-        self::assertArrayHasKey("error", $parameters);
-        self::assertArrayHasKey("error_description", $parameters);
-
-        self::assertEquals("access_denied", $parameters["error"]);
-
-        self::assertEquals(
-            "The resource owner or authorization server denied the request.",
-            $parameters["error_description"]
-        );
     }
 }

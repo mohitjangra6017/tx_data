@@ -177,12 +177,20 @@ class handler extends base_handler {
      * @return void
      */
     private function persist_user_completion(statement $statement): void {
-        $entity = new user_completion();
-        $entity->user_id = $statement->get_user_id();
-        $entity->learning_object_urn = $statement->get_learning_object_urn();
-        $entity->xapi_statement_id = $statement->get_xapi_statement_id();
+        $user_id = $statement->get_user_id();
+        $urn = $statement->get_learning_object_urn();
 
-        // Set the entity completion.
+        $repository = user_completion::repository();
+        $entity = $repository->find_for_user_with_urn($user_id, $urn);
+
+        if (null === $entity) {
+            // No user completion record existing yet.
+            $entity = new user_completion();
+            $entity->user_id = $user_id;
+            $entity->learning_object_urn = $urn;
+        }
+
+        // Set the entity completion
         $progress = $statement->get_progress();
         $entity->progress = $progress->get_progress();
         $entity->completion = $progress->is_completed();

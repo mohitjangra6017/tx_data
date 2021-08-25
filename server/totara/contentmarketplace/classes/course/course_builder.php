@@ -117,8 +117,8 @@ class course_builder {
         $this->course_format = 'singleactivity';
         $this->enrol_names_enable = ['self'];
         $this->default_section_number = 0;
-        $this->module_completion_tracking = COMPLETION_TRACKING_MANUAL;
-        $this->module_completion_condition = null;
+        $this->module_completion_tracking = COMPLETION_TRACKING_AUTOMATIC;
+        $this->module_completion_condition = completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE;
     }
 
     /**

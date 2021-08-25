@@ -22,26 +22,12 @@
  */
 namespace contentmarketplace_linkedin\dto\xapi;
 
-use coding_exception;
-
 class progress {
     /**
-     * From Linkedin Learning help documentation:
-     * sent when the learner/actor has completed a course.
-     *
-     * @see https://docs.microsoft.com/en-us/linkedin/learning/integrations/xapi
-     * @var string
+     * The maximum progress, in percentage unit.
+     * @var int
      */
-    public const COMPLETED = "COMPLETED";
-
-    /**
-     * From Linkedin Learning help documentation:
-     * sent when the learner/actor has completed a video in a course.
-     *
-     * @see https://docs.microsoft.com/en-us/linkedin/learning/integrations/xapi
-     * @var string
-     */
-    public const PROGRESSED = "PROGRESSED";
+    public const PROGRESS_MAXIMUM = 100;
 
     /**
      * @var bool
@@ -49,36 +35,20 @@ class progress {
     private $completed;
 
     /**
-     * The value should be related to the constants which are
-     * {@see progress::COMPLETED} or {@see progress::PROGRESSED}
+     * The value of progress, in percentage. When it is 100%, then
+     * it indicates that user had completed the course.
      *
-     * @var string|null
+     * @var int
      */
     private $progress;
 
     /**
      * @param bool $completed
-     * @param string $progress
+     * @param int $progress
      */
-    private function __construct(bool $completed, string $progress) {
+    public function __construct(bool $completed, int $progress) {
         $this->completed = $completed;
         $this->progress = $progress;
-    }
-
-    /**
-     * Create an instance of progress dto with validation.
-     *
-     * @param bool $completed
-     * @param string $progress
-     *
-     * @return progress
-     */
-    public static function create(bool $completed, string $progress): progress {
-        if (!in_array($progress, [self::PROGRESSED, self::COMPLETED])) {
-            throw new coding_exception("Invalid value for progress");
-        }
-
-        return new self($completed, $progress);
     }
 
     /**
@@ -89,9 +59,9 @@ class progress {
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function get_progress(): string {
+    public function get_progress(): int {
         return $this->progress;
     }
 }

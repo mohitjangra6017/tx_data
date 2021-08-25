@@ -38,14 +38,14 @@ class create_oauth2_client_provider_task extends adhoc_task {
     public function execute(): void {
         $repository = client_provider::repository();
 
-        if (!$repository->exists_for_name("Linkedin Learning")) {
+        if (!$repository->exists_for_id_number("linkedin_learning")) {
             $entity = new client_provider();
             $entity->client_id = uniqid();
             $entity->client_secret = uniqid();
-            $entity->name = "Linkedin Learning";
+            $entity->name = get_string("provider_linkedin", "contentmarketplace_linkedin");
             $entity->grant_types = grant_type::get_client_credentials();
 
-            // Scope for linkedin learning, a string list concatinated by space.
+            // Scope for linkedin learning, a string list concatenated by space.
             $entity->scope = "xapi:write";
             $entity->save();
         }

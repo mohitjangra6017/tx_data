@@ -37,7 +37,6 @@ function xmldb_totara_xapi_upgrade(int $old_version): bool {
         // Adding fields to table xapi_statement.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('statement', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('request_headers', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
         $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('time_created', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 

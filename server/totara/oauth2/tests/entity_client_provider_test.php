@@ -37,6 +37,7 @@ class totara_oauth2_entity_client_provider_testcase extends testcase {
         $entity->client_id = "cc";
         $entity->client_secret = "data";
         $entity->name = "something else";
+        $entity->id_number = uniqid();
         $entity->save();
 
         self::assertEquals(1, $db->count_records(client_provider::TABLE));
@@ -46,6 +47,7 @@ class totara_oauth2_entity_client_provider_testcase extends testcase {
         self::assertEquals($record->client_id, $entity->client_id);
         self::assertEquals($record->client_secret, $entity->client_secret);
         self::assertEquals($record->name, $entity->name);
+        self::assertEquals($record->id_number, $entity->id_number);
 
         self::assertNull($record->description);
         self::assertNull($record->description_format);
@@ -62,6 +64,7 @@ class totara_oauth2_entity_client_provider_testcase extends testcase {
         $entity->client_id = "cc";
         $entity->client_secret = "data";
         $entity->name = "something else";
+        $entity->id_number = uniqid();
         $entity->save();
 
         self::assertEquals(1, $db->count_records(client_provider::TABLE));
@@ -80,6 +83,7 @@ class totara_oauth2_entity_client_provider_testcase extends testcase {
         $entity->client_id = "cc";
         $entity->client_secret = "data";
         $entity->name = "something else";
+        $entity->id_number = uniqid();
         $entity->save();
 
         $db = builder::get_db();

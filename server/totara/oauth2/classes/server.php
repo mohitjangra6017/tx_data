@@ -112,44 +112,12 @@ class server {
     }
 
     /**
-     * @param request_interface|null  $request_interface
-     * @param response_interface|null $response_interface
-     *
-     * @return response_interface
-     */
-    public function verify_resource_request(
-        ?request_interface $request_interface = null,
-        ?response_interface $response_interface = null
-    ): response_interface {
-        $request_interface = $request_interface ?? request::create_from_global();
-        $response_interface = $response_interface ?? new response();
-
-        $public_key = config::get_public_key();
-        if (empty($public_key)) {
-            throw new coding_exception("The public key is invalid or not being set");
-        }
-
-        $key = new CryptKey($public_key, null, false);
-        $repository = new token_repository();
-        $resource_server = new ResourceServer($repository, $key);
-
-        try {
-            $resource_server->validateAuthenticatedRequest($request_interface);
-            return $response_interface->withBody(
-                Stream::create()
-            );
-        } catch (OAuthServerException $e) {
-            // Cannot validate the request
-            return $response_interface->withBody(
-                Stream::create(json_encode($e->getPayload()))
-            );
-        }
-    }
-
-    /**
      * Verify the request from the client, expecting the bearer token to be existing.
-     * @param request_interface|null $request_interface
+     * This function will only return the boolean result, whether the request is verified or not.
      *
+     * It does not return the response object which identify what is wrong.
+     *
+     * @param request_interface|null $request_interface
      * @return bool
      */
     public function is_request_verified(?request_interface $request_interface = null): bool {

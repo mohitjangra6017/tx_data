@@ -73,8 +73,7 @@ class receiver_controller extends controller {
      */
     public function action(): result {
         $component = $this->request->get_required_parameter("component", PARAM_COMPONENT);
-        $handler = factory::create_handler($component, $this->request);
-        $handler->set_time_now($this->time_now);
+        $handler = factory::create_handler($component, $this->request, $this->time_now);
 
         // Authenticate with the request.
         $result_response = $handler->authenticate();
@@ -85,7 +84,7 @@ class receiver_controller extends controller {
         }
 
         // Logging the xapi statement.
-        $statement = helper::logging_request($this->request);
+        $statement = helper::log_request($this->request);
         return $handler->process($statement);
     }
 

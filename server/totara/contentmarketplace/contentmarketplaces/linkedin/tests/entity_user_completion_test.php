@@ -57,15 +57,13 @@ class contentmarketplace_linkedin_entity_user_completion_testcase extends testca
         $entity = new user_completion();
         $entity->user_id = $this->user->id;
         $entity->learning_object_urn = "urn:lyndaCourse:252";
-        $entity->progress = progress::PROGRESSED;
+        $entity->progress = 39;
         $entity->completion = false;
 
         self::assertFalse($entity->exists());
         $entity->save();
 
         self::assertNotEmpty($entity->time_created);
-        self::assertEmpty($entity->xapi_statement_id);
-
         self::assertNotNull($entity->id);
         self::assertTrue($entity->exists());
 
@@ -82,7 +80,7 @@ class contentmarketplace_linkedin_entity_user_completion_testcase extends testca
         $entity = new user_completion();
         $entity->user_id = $this->user->id;
         $entity->learning_object_urn = "urn:lyndaCourse:522";
-        $entity->progress = progress::PROGRESSED;
+        $entity->progress = 42;
         $entity->completion = false;
 
         self::assertFalse(
@@ -108,7 +106,7 @@ class contentmarketplace_linkedin_entity_user_completion_testcase extends testca
         $entity = new user_completion();
         $entity->user_id = $this->user->id;
         $entity->learning_object_urn = "urn:lyndaCourse:252";
-        $entity->progress = progress::PROGRESSED;
+        $entity->progress = 55;
         $entity->completion = true;
 
         $this->expectException(coding_exception::class);
@@ -124,7 +122,7 @@ class contentmarketplace_linkedin_entity_user_completion_testcase extends testca
         $entity = new user_completion();
         $entity->user_id = $this->user->id;
         $entity->learning_object_urn = "urn:lyndaCourse:252";
-        $entity->progress = progress::COMPLETED;
+        $entity->progress = 100;
         $entity->completion = false;
 
         $this->expectException(coding_exception::class);

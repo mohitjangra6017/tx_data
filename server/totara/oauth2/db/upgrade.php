@@ -90,5 +90,33 @@ function xmldb_totara_oauth2_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021081801, 'totara', 'oauth2');
     }
 
+    if ($old_version < 2021081802) {
+        // Define field id_number to be added to totara_oauth2_client_provider.
+        $table = new xmldb_table('totara_oauth2_client_provider');
+        $field = new xmldb_field('id_number', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'name');
+
+        // Conditionally launch add field id_number.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        // Oauth2 savepoint reached.
+        upgrade_plugin_savepoint(true, 2021081802, 'totara', 'oauth2');
+    }
+
+    if ($old_version < 2021081803) {
+        // Define index id_number_idx (unique) to be added to totara_oauth2_client_provider.
+        $table = new xmldb_table('totara_oauth2_client_provider');
+        $index = new xmldb_index('id_number_idx', XMLDB_INDEX_UNIQUE, ['id_number']);
+
+        // Conditionally launch add index id_number_idx.
+        if (!$db_manager->index_exists($table, $index)) {
+            $db_manager->add_index($table, $index);
+        }
+
+        // Oauth2 savepoint reached.
+        upgrade_plugin_savepoint(true, 2021081803, 'totara', 'oauth2');
+    }
+
     return true;
 }

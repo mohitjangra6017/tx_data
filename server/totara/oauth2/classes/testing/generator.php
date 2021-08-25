@@ -150,6 +150,7 @@ class generator extends component_generator {
      * + description_format: int|null
      * + scope: string|array|null
      * + grant_types: string|array|null
+     * + id_number: string
      *
      * @param string|null $client_id
      * @param array       $parameters
@@ -171,6 +172,7 @@ class generator extends component_generator {
         $entity->client_secret = $parameters["client_secret"] ?? uniqid("secret_");
         $entity->description = $parameters["description"] ?? null;
         $entity->description_format = $parameters["description_format"] ?? null;
+        $entity->id_number = $parameters["id_number"] ?? uniqid();
 
         if (!empty($parameters["scope"])) {
             $scope = $parameters["scope"];

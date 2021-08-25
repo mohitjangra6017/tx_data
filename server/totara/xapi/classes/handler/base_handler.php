@@ -69,7 +69,7 @@ abstract class base_handler {
     /**
      * Process on the xAPI request.
      * Note the process should return the result/response.
-     *
+     *A
      * @param xapi_statement $statement
      * @return result
      */

@@ -31,7 +31,7 @@ use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\course\course_builder;
 use totara_contentmarketplace\testing\mock\create_course_interactor;
 use totara_oauth2\entity\access_token;
-use totara_Oauth2\testing\generator as oauth2_generator;
+use totara_oauth2\testing\generator as oauth2_generator;
 use contentmarketplace_linkedin\testing\generator;
 use totara_xapi\controller\receiver_controller;
 use totara_xapi\entity\xapi_statement;
@@ -203,7 +203,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
                 "id" => "some-random-id",
                 "timestamp" => date(DATE_ISO8601, $this->time_now),
                 "verb" => [
-                    "display" => ["en-US" => progress::COMPLETED],
+                    "display" => ["en-US" => "COMPLETED"],
                     "id" => "http://adlnet.gov/expapi/verbs/completed"
                 ],
                 "object" => [
@@ -216,7 +216,7 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
                 "result" => [
                     "completion" => true,
                     "extensions" => [
-                        "https://w3id.org/xapi/cmi5/result/extensions/progress" => "39"
+                        "https://w3id.org/xapi/cmi5/result/extensions/progress" => "100"
                     ]
                 ]
             ])

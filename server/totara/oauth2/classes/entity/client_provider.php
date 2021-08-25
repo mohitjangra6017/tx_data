@@ -31,6 +31,7 @@ use totara_oauth2\repository\client_provider_repository;
  * @property int $id
  * @property string $client_id
  * @property string $client_secret
+ * @property string $id_number
  * @property string $name
  * @property string|null $description
  * @property int|null $description_format

@@ -87,9 +87,8 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user's id of whom is complete the learning item"/>
         <FIELD NAME="learning_object_urn" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The learning object urn that can be used to identify the learning object record"/>
-        <FIELD NAME="progress" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="The progress text that allow us to track that if user completed or not. Should be either 'PROGRESSED' or 'COMPLETED'."/>
+        <FIELD NAME="progress" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The progress of user for the learning object. This is a perecentage that the maximum number is 100."/>
         <FIELD NAME="completion" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="The completion status, '0' means not completed, and '1' is completed."/>
-        <FIELD NAME="xapi_statement_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="This field is to keep track of the relationship between the xapi_statement record logs table and this table"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time created of this very record."/>
       </FIELDS>
       <KEYS>

@@ -34,7 +34,6 @@ class totara_oauth2_entity_xapi_statement_testcase extends testcase {
         self::assertEquals(0, $db->count_records(xapi_statement::TABLE));
 
         $entity = new xapi_statement();
-        $entity->request_headers = json_encode(["Authorization" => "Bearer token"]);
         $entity->statement = json_encode(["data" => ["some_data"]]);
         $entity->component = "totara_core";
 
@@ -50,7 +49,6 @@ class totara_oauth2_entity_xapi_statement_testcase extends testcase {
      */
     public function test_delete_statement(): void  {
         $entity = new xapi_statement();
-        $entity->request_headers = json_encode(["Authorization" => "Bearer token"]);
         $entity->statement = json_encode(["data" => ["some_data"]]);
         $entity->component = "totara_core";
 
@@ -72,7 +70,6 @@ class totara_oauth2_entity_xapi_statement_testcase extends testcase {
      */
     public function test_get_statement_as_array(): void {
         $entity = new xapi_statement();
-        $entity->request_headers = json_encode(["Authorization" => "Bearer token"]);
         $entity->statement = json_encode(["data" => ["some_data"]]);
         $entity->component = "totara_core";
         $entity->save();

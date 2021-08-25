@@ -29,7 +29,9 @@ use core\orm\entity\repository;
 use coding_exception;
 
 /**
- * A repository for table "ttr_linkedin_user_completion"
+ * A repository for table "ttr_linkedin_user_completion".
+ *
+ * @method user_completion one(bool $strict = false)
  */
 class user_completion_repository extends repository {
     /**
@@ -40,18 +42,32 @@ class user_completion_repository extends repository {
         $completion = $entity->completion;
 
         // This is a mini validation that allow us to keep the integrity of data.
-        if ($completion && progress::COMPLETED !== $entity->progress) {
+        if ($completion && $entity->progress < progress::PROGRESS_MAXIMUM) {
             throw new coding_exception(
                 "Cannot save the user completion that identify as completed but also in progress"
             );
-        } else if (!$completion && progress::PROGRESSED !== $entity->progress) {
-            // This would need to be tweaked when the
+        } else if (!$completion && $entity->progress === progress::PROGRESS_MAXIMUM) {
+            // This would need to be tweaked when there are more than just progressed status.
             throw new coding_exception(
                 "Cannot save the user completion that identify as not completed but also not in progressed"
             );
         }
 
         return parent::save_entity($entity);
+    }
+
+    /**
+     * @param int    $user_id
+     * @param string $urn
+     *
+     * @return user_completion|null
+     */
+    public function find_for_user_with_urn(int $user_id, string $urn): ?user_completion {
+        $repository = user_completion::repository();
+        $repository->where("user_id", $user_id);
+        $repository->where("learning_object_urn", $urn);
+
+        return $repository->one();
     }
 
     /**

@@ -53,7 +53,7 @@ class grant_token_controller extends controller {
         $this->time_now = $time_now;
 
         $this->require_login = false;
-        $this->url = new moodle_url("/totara/oauth2/server.php");
+        $this->url = new moodle_url("/totara/oauth2/token.php");
     }
 
     /**
@@ -79,7 +79,7 @@ class grant_token_controller extends controller {
      */
     protected function authorize(): void {
         // Note that for oauth2 server controller, we do not want the required login
-        // to be run, hence this functionw as overridden to left that part out.
+        // to be run, hence this function was overridden to leave that part out.
     }
 
     /**
@@ -89,7 +89,8 @@ class grant_token_controller extends controller {
         $server = server::boot($this->time_now);
 
         // Due to the constraint from totara_mvc, we cannot send the custom headers that was processed
-        // from the server yet.
+        // from the server yet. For example, a custom response status code, which is 400 and it identifies
+        // that the request client does not provide enough information.
         $response = $server->handle_token_request($this->request);
         return $response->getBody()->__toString();
     }
