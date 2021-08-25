@@ -935,17 +935,19 @@ abstract class rb_base_source {
             $key = $option->type . '-' . $option->value;
             $allowed[$key] = array('');
 
-            $classes = $this->get_advanced_aggregation_classes('transform');
-            foreach ($classes as $name => $classname) {
-                if ($classname::is_column_option_compatible($option)) {
-                    $allowed[$key][] = 'transform_'.$name;
+            if (!$option->disableaggregation) {
+                $classes = $this->get_advanced_aggregation_classes('transform');
+                foreach ($classes as $name => $classname) {
+                    if ($classname::is_column_option_compatible($option)) {
+                        $allowed[$key][] = 'transform_'.$name;
+                    }
                 }
-            }
 
-            $classes = $this->get_advanced_aggregation_classes('aggregate');
-            foreach ($classes as $name => $classname) {
-                if ($classname::is_column_option_compatible($option)) {
-                    $allowed[$key][] = 'aggregate_'.$name;
+                $classes = $this->get_advanced_aggregation_classes('aggregate');
+                foreach ($classes as $name => $classname) {
+                    if ($classname::is_column_option_compatible($option)) {
+                        $allowed[$key][] = 'aggregate_'.$name;
+                    }
                 }
             }
         }

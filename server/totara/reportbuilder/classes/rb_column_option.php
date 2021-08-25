@@ -346,6 +346,16 @@ class rb_column_option {
     public $iscompound;
 
     /**
+     * The above $iscompound still allows some transforming of field data (max,
+     * min, average, etc) there are some cases in which this doesn't make sense.
+     * This fields allows the aggregation to be completely disabled even if a column
+     * is compatible with an aggregation
+     *
+     * @var bool
+     */
+    public $disableaggregation;
+
+    /**
      * Generate a new column option instance
      *
      * Options provided by an associative array, e.g.:
@@ -388,6 +398,7 @@ class rb_column_option {
             'issubquery' => false,
             'deprecated' => false,
             'iscompound' => false,
+            'disableaggregation' => false,
         );
         $options = array_merge($defaults, $options);
 
