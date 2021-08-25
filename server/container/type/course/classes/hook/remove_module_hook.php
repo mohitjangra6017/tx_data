@@ -24,6 +24,7 @@ namespace container_course\hook;
 
 use container_course\course;
 use totara_core\hook\base;
+use totara_core\identifier\component_area;
 
 /**
  * A hook to allow any plugins to remove any module(s) from the modules list.
@@ -40,11 +41,31 @@ class remove_module_hook extends base {
     private $module_names;
 
     /**
+     * @var component_area|null
+     */
+    private $component_area;
+
+    /**
      * remove_module_hook constructor.
      * @param array $module_names
      */
     public function __construct(array $module_names) {
         $this->module_names = $module_names;
+        $this->component_area = null;
+    }
+
+    /**
+     * @return component_area|null
+     */
+    public function get_component_area(): ?component_area {
+        return $this->component_area;
+    }
+
+    /**
+     * @param component_area $component_area
+     */
+    public function set_component_area(component_area $component_area): void {
+        $this->component_area = $component_area;
     }
 
     /**

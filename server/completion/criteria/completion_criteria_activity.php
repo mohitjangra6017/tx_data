@@ -66,7 +66,10 @@ class completion_criteria_activity extends completion_criteria {
      * @param stdClass $data details of various modules
      */
     public function config_form_display(&$mform, $data = null) {
-        $modnames = \container_course\course_helper::get_all_modules(false, false, false);
+        $modnames = \container_course\course_helper::get_all_modules_with_context_component_area(
+            "core_completion",
+            "criteria_activity_form"
+        );
         $mform->addElement('checkbox', 'criteria_activity_value['.$data->id.']',
                 $modnames[self::get_mod_name($data->module)]
                 .' - '.

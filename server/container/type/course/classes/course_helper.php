@@ -24,6 +24,8 @@ namespace container_course;
 
 use container_course\hook\remove_module_hook;
 use core_container\factory;
+use totara_core\identifier\component_area;
+use totara_core\identifier\component_area as ca;
 
 final class course_helper {
     /**
@@ -171,12 +173,15 @@ final class course_helper {
      * @param bool $execute_hook        If false then the hook will not be executed. And the modules that normally
      *                                  removed from hooked will be kept and returned.
      *
+     * @param ca|null $component_area   If this component and area is provided, then the hook's watcher is able to identify
+     *                                  more of the context around whether it should include or exclude the modules.
      * @return array
      */
     public static function get_all_modules(
         bool $plural = false,
         bool $include_disabled = false,
-        bool $execute_hook = true
+        bool $execute_hook = true,
+        ?ca $component_area = null
     ): array {
         // The list of modules returned from course::get_module_types_supported
         // includes those activity modules that also does not support creation via
@@ -187,8 +192,37 @@ final class course_helper {
         }
 
         $hook = new remove_module_hook($modules);
+
+        if (null !== $component_area) {
+            $hook->set_component_area($component_area);
+        }
+
         $hook->execute();
 
         return $hook->get_modules();
+    }
+
+    /**
+     * @param string $component
+     * @param string $area
+     * @param bool $plural
+     * @param bool $include_disabled
+     *
+     * @return array
+     */
+    public static function get_all_modules_with_context_component_area(
+        string $component,
+        string $area = "",
+        bool $plural = false,
+        bool $include_disabled = false
+    ): array {
+        $component_area = new component_area($component, $area);
+
+        return self::get_all_modules(
+            $plural,
+            $include_disabled,
+            true,
+            $component_area
+        );
     }
 }

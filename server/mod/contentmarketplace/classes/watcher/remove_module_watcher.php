@@ -37,6 +37,16 @@ class remove_module_watcher {
      * @return void
      */
     public static function watch(remove_module_hook $hook): void {
+        $component_area = $hook->get_component_area();
+        if (null !== $component_area) {
+            if ($component_area->get_component() === "core_completion"
+                && $component_area->get_area() === "criteria_activity_form") {
+                // We are in configuring activity form, hence skipping the execution.
+                // As mod_contentmarketplace supports completion.
+                return;
+            }
+        }
+
         if ($hook->has_module('contentmarketplace')) {
             $hook->remove_module('contentmarketplace');
         }
