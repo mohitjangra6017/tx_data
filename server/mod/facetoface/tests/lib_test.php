@@ -5071,4 +5071,62 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $result = facetoface_get_completion_state($course, $cm, $students[1]->id, $type);
         $this->assertSame($expects[1], $result);
     }
+
+    public function test_facetoface_get_completion_requirements_and_progress() {
+        global $DB;
+
+        [$students, $course, $f2f, $seminarevent, $signups] = $this->prepare_attendance();
+
+        // Set activity completion criteria
+        $f2f->completionpass = seminar::COMPLETION_PASS_ANY;
+        $f2f->completionstatusrequired = json_encode([partially_attended::get_code() => 1]);
+        $f2f->completiondelay = 1; // 1 day.
+        $DB->update_record('facetoface', $f2f);
+
+        $cm = get_coursemodule_from_instance('facetoface', $f2f->id, $course->id, false, MUST_EXIST);
+        // Check requirements.
+        $requirements = facetoface_get_completion_requirements($cm);
+        self::assertEqualsCanonicalizing(['Achieving any grade (0&ndash;100)', 'Partially attended', 'Event is over for 1 day(s)'], $requirements);
+
+        $f2f->completionpass = seminar::COMPLETION_PASS_GRADEPASS;
+        $f2f->completionstatusrequired = json_encode([fully_attended::get_code() => 1]);
+
+        $DB->update_record('facetoface', $f2f);
+        // Check requirements.
+        $requirements = facetoface_get_completion_requirements($cm);
+        self::assertEqualsCanonicalizing(['Achieving passing grade', 'Fully attended', 'Event is over for 1 day(s)'], $requirements);
+
+        // Check progress.
+        $progress1 = facetoface_get_completion_progress($cm, $students[0]->id);
+        self::assertEqualsCanonicalizing(['Has not attended', 'Event has not been over for 1 day(s)'], $progress1);
+
+        $progress2 = facetoface_get_completion_progress($cm, $students[1]->id);
+        self::assertEqualsCanonicalizing(['Has not attended', 'Event has not been over for 1 day(s)'], $progress2);
+
+        // Take event attendance for one learner.
+        self::assertTrue(signup_helper::process_attendance($seminarevent, [$signups[0]->get_id() => fully_attended::get_code()]));
+
+        // Check progress again.
+        $progress1 = facetoface_get_completion_progress($cm, $students[0]->id);
+        self::assertEqualsCanonicalizing(['Fully attended', 'Event has not been over for 1 day(s)'], $progress1);
+
+        $progress2 = facetoface_get_completion_progress($cm, $students[1]->id); // Second learner's progress remains the same.
+        self::assertEqualsCanonicalizing(['Has not attended', 'Event has not been over for 1 day(s)'], $progress2);
+
+        // Set session event as finished 3 days ago (generator creates events 2 days in the future).
+        $event = $DB->get_record('facetoface_sessions_dates', ['sessionid' => $seminarevent->get_id()]);
+        $event->timestart = $event->timestart - 3 * DAYSECS;
+        $event->timefinish = $event->timefinish - 3 * DAYSECS;
+        $DB->update_record('facetoface_sessions_dates', $event);
+
+        // Check progress again.
+        $progress1 = facetoface_get_completion_progress($cm, $students[0]->id);
+        self::assertEqualsCanonicalizing(['Fully attended', 'Event has been over for 1 day(s)'], $progress1);
+
+        // Take event attendance for another learner.
+        self::assertTrue(signup_helper::process_attendance($seminarevent, [$signups[1]->get_id() => partially_attended::get_code()]));
+
+        $progress2 = facetoface_get_completion_progress($cm, $students[1]->id);
+        self::assertEqualsCanonicalizing(['Partially attended', 'Event has been over for 1 day(s)'], $progress2);
+    }
 }

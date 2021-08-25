@@ -314,7 +314,8 @@ class completion_criteria_activity extends completion_criteria {
 
                 if ($cm->completionview) {
                     $lang_str = $data->viewed == COMPLETION_VIEWED ? 'viewedactivity' : 'notviewedactivity';
-                    $details['status'][] = get_string($lang_str, 'completion', $this->module);
+                    $modulename = core_text::strtolower(get_string('modulename', $this->module));
+                    $details['status'][] = get_string($lang_str, 'completion', $modulename);
                 }
 
                 if (!is_null($cm->completiongradeitemnumber)) {
@@ -327,7 +328,7 @@ class completion_criteria_activity extends completion_criteria {
                         // consider it here.
                         $lang_str = 'notachievedgrade';
                     }
-                    $details['status'][] = get_string($lang_str, 'completion', $this->module);
+                    $details['status'][] = get_string($lang_str, 'completion');
                 }
             }
 

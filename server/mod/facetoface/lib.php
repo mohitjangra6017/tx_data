@@ -1303,3 +1303,124 @@ function facetoface_reset_gradebook($courseid) {
         }
     }
 }
+
+/**
+ * Obtains the specific requirements for completion.
+ *
+ * @param object $cm Course-module
+ *
+ * @return array Requirements for completion
+ */
+function facetoface_get_completion_requirements($cm): array {
+    global $DB;
+
+    $seminar = $DB->get_record('facetoface', ['id' => $cm->instance]);
+
+    $result = [];
+
+    // Require grade.
+    if ($seminar->completionpass > seminar::COMPLETION_PASS_DISABLED) {
+        $options = [
+            seminar::COMPLETION_PASS_ANY       => get_string('completionpassrequirement:any', 'mod_facetoface'),
+            seminar::COMPLETION_PASS_GRADEPASS => get_string('completionpassrequirement:pass', 'mod_facetoface'),
+        ];
+        $result[] = $options[$seminar->completionpass];
+    }
+
+    // Require status.
+    if ($seminar->completionstatusrequired) {
+        $completionstatusrequired = json_decode($seminar->completionstatusrequired, true);
+        $states = [
+            signup\state\partially_attended::class,
+            signup\state\fully_attended::class
+        ];
+
+        foreach ($states as $state) {
+            if (!empty($completionstatusrequired[$state::get_code()])) {
+                $result[] = $state::get_string();
+            }
+        }
+    }
+
+    // Require event over for X days.
+    if (!empty($seminar->completiondelay)) {
+        $result[] = get_string('completiondelayrequirement', 'facetoface', $seminar->completiondelay);
+    }
+
+    return $result;
+}
+
+/**
+ * Obtains the completion progress.
+ *
+ * @param object $cm     Course-module
+ * @param int    $userid User ID
+ *
+ * @return array The current status of completion for the user
+ */
+function facetoface_get_completion_progress($cm, $userid): array {
+    global $DB;
+
+    $seminar = $DB->get_record('facetoface', ['id' => $cm->instance]);
+
+    $result = [];
+
+    // Unfortunately, we cannot show detailed grade-related progress here because it is being displayed from
+    // the completion_criteria_activity class. Seminar has its special grading system which overrides general
+    // one. Showing seminar's special grade here can lead to the display of "Has not achieved grade" and
+    // "Achieved grade X" at the same time which would be very confusing to a user.
+
+    // Check status.
+    if ($seminar->completionstatusrequired) {
+        $completionstatusrequired = json_decode($seminar->completionstatusrequired, true);
+        if (!empty($completionstatusrequired)) {
+            $states = [
+                signup\state\partially_attended::get_code() => signup\state\partially_attended::get_string(),
+                signup\state\fully_attended::get_code()     => signup\state\fully_attended::get_string(),
+            ];
+
+            // Get user's latest seminar status regardless of the requirements.
+            $sql = "SELECT f2fss.id AS signupstatusid, f2fss.statuscode, f2fsd.timefinish, f2fs.archived
+                FROM {facetoface_sessions} f2fses
+                    LEFT JOIN {facetoface_signups} f2fs ON (f2fs.sessionid = f2fses.id)
+                    LEFT JOIN {facetoface_signups_status} f2fss ON (f2fss.signupid = f2fs.id AND f2fss.superceded = 0)
+                    LEFT JOIN {facetoface_sessions_dates} f2fsd ON (f2fsd.sessionid = f2fses.id)
+                WHERE f2fses.facetoface = ? AND f2fs.userid = ?
+                ORDER BY f2fsd.timefinish DESC";
+            $params = [$seminar->id, $userid];
+            $status = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE);
+            if ($status && !$status->archived && isset($states[$status->statuscode])) {
+                $result[] = $states[$status->statuscode];
+            }
+
+            // Event hasn't been attended yet.
+            if (empty($result)) {
+                $result[] = get_string('completionstatusrequirement_notachieved', 'facetoface');
+            }
+        }
+    }
+
+    // Check date since the event has been over.
+    if (!empty($seminar->completiondelay)) {
+        // Get signups. Find the earliest possible activity completion window based on signups.
+        $signups = signup_list::user_active_signups_within_seminar($userid, $cm->instance);
+        $delay_seconds = $seminar->completiondelay * DAYSECS;
+        $go_time = 0;
+        foreach ($signups as $signup) {
+            /* @var $signup signup */
+            $seminar_event = $signup->get_seminar_event();
+            $timefinish = $seminar_event->get_maxtimefinish();
+            if ($go_time == 0 || $timefinish + $delay_seconds < $go_time) {
+                $go_time = $timefinish + $delay_seconds;
+            }
+        }
+        if ($go_time && time() < $go_time) {
+            // Earliest window hasn't arrived yet.
+            $result[] = get_string('completiondelayrequirement_notachieved', 'facetoface', $seminar->completiondelay);
+        } else {
+            $result[] = get_string('completiondelayrequirement_achieved', 'facetoface', $seminar->completiondelay);
+        }
+    }
+
+    return $result;
+}
