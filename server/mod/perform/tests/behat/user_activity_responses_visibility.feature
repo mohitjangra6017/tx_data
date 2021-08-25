@@ -58,7 +58,7 @@ Feature: Visibility of my responses
     Given I log in as "manny"
 
     When I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I click on "<activity>" "link"
     Then I should see "<activity>" in the ".tui-performUserActivity h2" "css_element"
     And I should see "<banner_label>" in the perform activity response visibility description

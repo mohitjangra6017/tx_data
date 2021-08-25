@@ -12,28 +12,28 @@ Feature: Responding to competency assignments linked to a performance review
       | user1 | user2   |
       | user2 | user3   |
     And the following "activity with section and review element" exist in "performelement_linked_review" plugin:
-      | activity_name | section_title | element_title  | content_type      |
-      | activity1     | section1      | review1        | totara_competency |
+      | activity_name | section_title | element_title | content_type      |
+      | activity1     | section1      | review1       | totara_competency |
     And the following "child elements" exist in "mod_perform" plugin:
-      | section  | parent_element | element_plugin      | element_title   | after_element   | is_required | data |
+      | section  | parent_element | element_plugin      | element_title   | after_element   | is_required | data                                                                                                                                                                                                                   |
       | section1 | review1        | static_content      | static child    |                 | false       | {"docFormat":"FORMAT_JSON_EDITOR","draftId":0,"format":"HTML","wekaDoc":"{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Static content text\"}]}]}","element_id":0} |
-      | section1 | review1        | long_text           | long text child | static child    | false       |      |
-      | section1 | review1        | multi_choice_single | radio child     | long text child | true        | {"options":[{"name":"option_a","value":"Option A"},{"name":"option_b","value":"Option B"},{"name":"option_c","value":"Option C"}]} |
+      | section1 | review1        | long_text           | long text child | static child    | false       |                                                                                                                                                                                                                        |
+      | section1 | review1        | multi_choice_single | radio child     | long text child | true        | {"options":[{"name":"option_a","value":"Option A"},{"name":"option_b","value":"Option B"},{"name":"option_c","value":"Option C"}]}                                                                                     |
     And the following "participants in section" exist in "performelement_linked_review" plugin:
       | section  | subject_user | user  | relationship     | can_answer |
       | section1 | user1        | user1 | subject          | true       |
       | section1 | user1        | user2 | manager          | true       |
       | section1 | user1        | user3 | managers_manager | false      |
     And the following "competency assignments" exist in "performelement_linked_review" plugin:
-      | competency_name   | user  | reason       | manual_rating              |
-      | Doing paperwork   | user1 | cohort       | Competent                  |
-      | Managing people   | user1 | position     | Not competent              |
-      | Locating stuff    | user1 | organisation |                            |
+      | competency_name | user  | reason       | manual_rating |
+      | Doing paperwork | user1 | cohort       | Competent     |
+      | Managing people | user1 | position     | Not competent |
+      | Locating stuff  | user1 | organisation |               |
     And the following "selected content" exist in "performelement_linked_review" plugin:
-      | element | subject_user | selector_user  | content_name    |
-      | review1 | user1        | user1          | Doing paperwork |
-      | review1 | user1        | user1          | Managing people |
-      | review1 | user1        | user1          | Locating stuff  |
+      | element | subject_user | selector_user | content_name    |
+      | review1 | user1        | user1         | Doing paperwork |
+      | review1 | user1        | user1         | Managing people |
+      | review1 | user1        | user1         | Locating stuff  |
 
   Scenario: Make a response to a linked competency in a performance activity
     When I log in as "user1"
@@ -148,7 +148,7 @@ Feature: Responding to competency assignments linked to a performance review
     When I log out
     And I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link_or_button"
+    And I click on "As a manager" "link_or_button"
     And I click on "activity1" "link"
     And I click show others responses
 
@@ -248,7 +248,7 @@ Feature: Responding to competency assignments linked to a performance review
     When I log out
     And I log in as "user3"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link_or_button"
+    And I click on "As a manager" "link_or_button"
     And I click on "activity1" "link"
 
     # View only participant view: first selected competency: Doing paperwork

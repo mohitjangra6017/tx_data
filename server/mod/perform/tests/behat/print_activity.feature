@@ -222,13 +222,9 @@ Feature: Print view of a single-section user activity
     # Check manager-appraiser's view.
     When I log in as "manager-appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I toggle expanding row "1" of the tui datatable
-    And I click on "Print activity" "button"
-    Then I should see "Select relationship to continue" in the ".tui-modalContent" "css_element"
-    # Check as manager.
-    When I click on the "Manager (Not started)" tui radio
-    And I click on "Continue" "button"
+    And I click on "Print activity" "link"
     Then I should see "Your response"
 
     # Empty print components should be displayed.
@@ -239,12 +235,9 @@ Feature: Print view of a single-section user activity
 
     # Check as appraiser (view-only).
     When I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Appraiser" "link"
     And I toggle expanding row "1" of the tui datatable
-    And I click on "Print activity" "button"
-    Then I should see "Select relationship to continue" in the ".tui-modalContent" "css_element"
-    When I click on the "Appraiser (View only)" tui radio
-    And I click on "Continue" "button"
+    And I click on "Print activity" "link"
     Then I should not see "Your response"
     And I should see "Manager response"
     And I should see "Managerappraiser Three"

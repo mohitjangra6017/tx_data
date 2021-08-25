@@ -3,10 +3,10 @@ Feature: User activity anonymise responses
 
   Background:
     Given the following "users" exist:
-      | username | firstname | lastname  | email             |
-      | subject  | sam       | Subject   | sean@example.com  |
-      | manager  | john      | Manager   | manny@example.com |
-      | appraiser| kyla      | Appraiser | ava@example.com   |
+      | username  | firstname | lastname  | email             |
+      | subject   | sam       | Subject   | sean@example.com  |
+      | manager   | john      | Manager   | manny@example.com |
+      | appraiser | kyla      | Appraiser | ava@example.com   |
     And the following "subject instances" exist in "mod_perform" plugin:
       | activity_name                         | subject_username | subject_is_participating | other_participant_username | third_participant_username | relationships_can_view      | relationships_can_answer    | anonymous_responses |
       | Anonymise responses activity          | subject          | true                     | manager                    | appraiser                  | manager, appraiser, subject | manager, appraiser, subject | true                |
@@ -26,7 +26,7 @@ Feature: User activity anonymise responses
   Scenario: manager can submit anonymise responses
     Given I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I click on "Anonymise responses activity" "link"
     And I answer "short text" question "Question one" with "Manager Answer one"
     And I answer "short text" question "Question two" with "Manager Answer two"
@@ -68,7 +68,7 @@ Feature: User activity anonymise responses
   Scenario: manager can submit anonymise responses and view-only subject can view them
     Given I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I click on "Anonymise responses view-only subject" "link"
     And I answer "short text" question "Question one" with "Manager Answer one"
     And I answer "short text" question "Question two" with "Manager Answer two"

@@ -19,25 +19,25 @@ Feature: Perform evidence activity
       | user1 | user2   |
       | user2 | user3   |
     Given the following "types" exist in "totara_evidence" plugin:
-      | name          | idnumber | fields | location |
-      | Bank Type 1   | bank1    | 0      | 0        |
-      | Bank Type 2   | bank2    | 0      | 0        |
+      | name        | idnumber | fields | location |
+      | Bank Type 1 | bank1    | 0      | 0        |
+      | Bank Type 2 | bank2    | 0      | 0        |
     And the following "type fields" exist in "totara_evidence" plugin:
-      | evidence_type | datatype  | fullname          | shortname       |
-      | Bank Type 1   | text      | Custom text1      | Customtext1     |
-      | Bank Type 1   | checkbox  | Custom cb11       | Customcb11      |
-      | Bank Type 2   | text      | Custom bank text1 | Custombanktext1 |
-      | Bank Type 2   | url       | Earl              | CustomURL       |
+      | evidence_type | datatype | fullname          | shortname       |
+      | Bank Type 1   | text     | Custom text1      | Customtext1     |
+      | Bank Type 1   | checkbox | Custom cb11       | Customcb11      |
+      | Bank Type 2   | text     | Custom bank text1 | Custombanktext1 |
+      | Bank Type 2   | url      | Earl              | CustomURL       |
 
     Given the following "activities" exist in "mod_perform" plugin:
-      | activity_name        | description           | activity_type | create_track | create_section | activity_status | anonymous_responses |
-      | First Activity       | My First description  | check-in      | true         | false          | Draft           | true                |
+      | activity_name  | description          | activity_type | create_track | create_section | activity_status | anonymous_responses |
+      | First Activity | My First description | check-in      | true         | false          | Draft           | true                |
     And the following "activity settings" exist in "mod_perform" plugin:
-      | activity_name   | multisection |
-      | First Activity  | yes          |
+      | activity_name  | multisection |
+      | First Activity | yes          |
     And the following "activity sections" exist in "mod_perform" plugin:
-      | activity_name      | section_name |
-      | First Activity     | section 1-1  |
+      | activity_name  | section_name |
+      | First Activity | section 1-1  |
     And the following "section relationships" exist in "mod_perform" plugin:
       | section_name | relationship | can_view | can_answer |
       | section 1-1  | subject      | yes      | no         |
@@ -96,7 +96,7 @@ Feature: Perform evidence activity
 
     When I log in as "user2"
     And I click on "Activities" in the totara menu
-    And I switch to "Activities about others" tui tab
+    And I click on "As a Manager" "link_or_button"
     And I click on "First Activity" "link"
     Then I should see "Test evidence one"
     And I should see "Custom cb11"

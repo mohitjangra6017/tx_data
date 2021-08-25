@@ -7,15 +7,15 @@ Feature: Perform activity notifications - core relationships
     Given I am on a totara site
     And the following "users" exist:
       | username  | firstname | lastname | email                 |
-      | user1     | User      | One      |     user1@example.com |
-      | user2     | User      | Two      |     user2@example.com |
-      | user3     | User      | Three    |     user3@example.com |
-      | manager   | Mana      | Ger      |   manager@example.com |
+      | user1     | User      | One      | user1@example.com     |
+      | user2     | User      | Two      | user2@example.com     |
+      | user3     | User      | Three    | user3@example.com     |
+      | manager   | Mana      | Ger      | manager@example.com   |
       | appraiser | Appra     | Iser     | appraiser@example.com |
     And the following job assignments exist:
-      | user      | manager | appraiser |
-      | user1     | manager | appraiser |
-      | user2     | manager |           |
+      | user  | manager | appraiser |
+      | user1 | manager | appraiser |
+      | user2 | manager |           |
     And the following "cohorts" exist:
       | name | idnumber |
       | aud1 | aud1     |
@@ -44,21 +44,21 @@ Feature: Perform activity notifications - core relationships
       | track_description | assignment_type | assignment_name |
       | track 1           | cohort          | aud1            |
     And the following "language customisation" exist in "tool_customlang" plugin:
-      | component   | id                                                   | string                               | comment    |
-      | mod_perform | template_instance_created_subject_subject            | New activity notice                  | English    |
-      | mod_perform | template_instance_created_reminder_subject_subject   | Te manatu mō te whakarite            | Maori      |
-      | mod_perform | template_due_date_reminder_subject_subject           | Si avvicina la scadenza              | Italian    |
-      | mod_perform | template_due_date_subject_subject                    | Notificación de fecha de vencimiento | Spanish    |
-      | mod_perform | template_overdue_reminder_subject_subject            | Försenad påminnelse                  | Swedish    |
-      | mod_perform | template_completion_subject_subject                  | Ukončení činnosti                    | Czech      |
-      | mod_perform | template_reopened_subject_subject                    | Ua toe tatalaina se gaoioiga         | Samoan     |
-      | mod_perform | template_instance_created_appraiser_subject          | Nuwe aktiwiteitskennisgewing         | Afrikaans  |
-      | mod_perform | template_instance_created_reminder_appraiser_subject | Herinnering aan activiteit           | Dutch      |
-      | mod_perform | template_due_date_reminder_appraiser_subject         | A határidő közeledik                 | Hungarian  |
-      | mod_perform | template_due_date_appraiser_subject                  | Iraungitze data jakinaraztea         | Basque     |
-      | mod_perform | template_overdue_reminder_appraiser_subject          | Spomenuté oneskorenie                | Slovak     |
-      | mod_perform | template_completion_appraiser_subject                | Finalizarea activității              | Romanian   |
-      | mod_perform | template_reopened_appraiser_subject                  | Dejavnost je bila znova odprta       | Slovenian  |
+      | component   | id                                                   | string                               | comment   |
+      | mod_perform | template_instance_created_subject_subject            | New activity notice                  | English   |
+      | mod_perform | template_instance_created_reminder_subject_subject   | Te manatu mō te whakarite            | Maori     |
+      | mod_perform | template_due_date_reminder_subject_subject           | Si avvicina la scadenza              | Italian   |
+      | mod_perform | template_due_date_subject_subject                    | Notificación de fecha de vencimiento | Spanish   |
+      | mod_perform | template_overdue_reminder_subject_subject            | Försenad påminnelse                  | Swedish   |
+      | mod_perform | template_completion_subject_subject                  | Ukončení činnosti                    | Czech     |
+      | mod_perform | template_reopened_subject_subject                    | Ua toe tatalaina se gaoioiga         | Samoan    |
+      | mod_perform | template_instance_created_appraiser_subject          | Nuwe aktiwiteitskennisgewing         | Afrikaans |
+      | mod_perform | template_instance_created_reminder_appraiser_subject | Herinnering aan activiteit           | Dutch     |
+      | mod_perform | template_due_date_reminder_appraiser_subject         | A határidő közeledik                 | Hungarian |
+      | mod_perform | template_due_date_appraiser_subject                  | Iraungitze data jakinaraztea         | Basque    |
+      | mod_perform | template_overdue_reminder_appraiser_subject          | Spomenuté oneskorenie                | Slovak    |
+      | mod_perform | template_completion_appraiser_subject                | Finalizarea activității              | Romanian  |
+      | mod_perform | template_reopened_appraiser_subject                  | Dejavnost je bila znova odprta       | Slovenian |
     And I log in as "admin"
     And I navigate to the manage perform activities page
     And I follow "Activity test"
@@ -582,7 +582,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I switch to "Activities about others" tui tab
+    And I click on "As a Manager" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "हैलो"
     And I click on "Submit" "button"
@@ -592,7 +592,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I switch to "Activities about others" tui tab
+    And I click on "As a Appraiser" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "שלום"
     And I click on "Submit" "button"
@@ -681,7 +681,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I switch to "Activities about others" tui tab
+    And I click on "As a Manager" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "再见"
     And I click on "Submit" "button"
@@ -691,7 +691,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I switch to "Activities about others" tui tab
+    And I click on "As a Appraiser" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "Прощай"
     And I click on "Submit" "button"

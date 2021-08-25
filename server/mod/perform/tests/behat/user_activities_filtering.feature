@@ -8,16 +8,16 @@ Feature: Filtering user activities list
       | david    | David     | Two      | david.two@example.com   |
       | harry    | Harry     | Three    | harry.three@example.com |
     And the following "subject instances" exist in "mod_perform" plugin:
-      | activity_name                   | activity_type | subject_username | subject_is_participating | other_participant_username | number_repeated_instances | track   |
-      | johns example activity 1        | check-in      | john             | true                     | harry                      | 1                         | track 1 |
-      | johns example activity 2        | appraisal     | john             | true                     | harry                      | 1                         | track 2 |
-      | johns example activity 3        | appraisal     | john             | true                     | harry                      | 1                         | track 3 |
-      | johns example activity 4        | check-in      | john             | true                     | harry                      | 1                         | track 4 |
-      | johns example activity 5        | feedback      | john             | true                     | harry                      | 1                         | track 5 |
-      | johns example activity 6        | check-in      | john             | true                     | harry                      | 1                         | track 6 |
-      | johns example activity 7        | feedback      | john             | true                     | harry                      | 1                         | track 7 |
-      | johns annual review (repeating) | check-in      | john             | true                     | harry                      | 3                         | track 8 |
-      | davids example activity 1       | check-in      | david            | false                    | john                       | 1                         | track 9 |
+      | activity_name                   | activity_type | subject_username | subject_is_participating | other_participant_username | number_repeated_instances | track    |
+      | johns example activity 1        | check-in      | john             | true                     | harry                      | 1                         | track 1  |
+      | johns example activity 2        | appraisal     | john             | true                     | harry                      | 1                         | track 2  |
+      | johns example activity 3        | appraisal     | john             | true                     | harry                      | 1                         | track 3  |
+      | johns example activity 4        | check-in      | john             | true                     | harry                      | 1                         | track 4  |
+      | johns example activity 5        | feedback      | john             | true                     | harry                      | 1                         | track 5  |
+      | johns example activity 6        | check-in      | john             | true                     | harry                      | 1                         | track 6  |
+      | johns example activity 7        | feedback      | john             | true                     | harry                      | 1                         | track 7  |
+      | johns annual review (repeating) | check-in      | john             | true                     | harry                      | 3                         | track 8  |
+      | davids example activity 1       | check-in      | david            | false                    | john                       | 1                         | track 9  |
       | davids example activity 2       | appraisal     | david            | false                    | john                       | 1                         | track 10 |
       | davids example activity 3       | check-in      | david            | false                    | john                       | 1                         | track 11 |
       | davids example activity 4       | appraisal     | harry            | false                    | john                       | 1                         | track 12 |
@@ -58,7 +58,7 @@ Feature: Filtering user activities list
     And I confirm the tui confirmation modal
     Then I should see "Performance activities"
     And I should see "Section submitted" in the tui success notification toast
-    And the "Your activities" tui tab should be active
+    And the "Activities about you" tui tab should be active
     And I should see "Exclude completed activities"
 
     When I set the field "Your progress" to "Complete"

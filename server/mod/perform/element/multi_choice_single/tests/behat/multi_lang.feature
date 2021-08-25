@@ -20,7 +20,7 @@ Feature: Multiple choice element supports multi-lang filters in titles and optio
     And I add a "Multiple choice: single-select" activity content element
     Then "rawTitle" "field" should be visible
     When I set the following fields to these values:
-      | rawTitle   | <span lang="en" class="multilang">it's an English question</span><span lang="de" class="multilang">deutsche Frage</span> |
+      | rawTitle          | <span lang="en" class="multilang">it's an English question</span><span lang="de" class="multilang">deutsche Frage</span> |
       | options[0][value] | <span lang="en" class="multilang">it's the first option</span><span lang="de" class="multilang">erste Option</span>      |
       | options[1][value] | <span lang="en" class="multilang">it's the second option</span><span lang="de" class="multilang">zweite Option</span>    |
     # Currently a changed text won't be filtered until saved
@@ -43,11 +43,11 @@ Feature: Multiple choice element supports multi-lang filters in titles and optio
     When I click on the Edit element button for question "it's an English question"
     Then "rawTitle" "field" should be visible
     And the following fields match these values:
-      | rawTitle   | <span lang="en" class="multilang">it's an English question</span><span lang="de" class="multilang">deutsche Frage</span> |
-      | options[0][value] | <span lang="en" class="multilang">it's the first option</span><span lang="de" class="multilang">erste Option</span>                 |
-      | options[1][value] | <span lang="en" class="multilang">it's the second option</span><span lang="de" class="multilang">zweite Option</span>               |
+      | rawTitle          | <span lang="en" class="multilang">it's an English question</span><span lang="de" class="multilang">deutsche Frage</span> |
+      | options[0][value] | <span lang="en" class="multilang">it's the first option</span><span lang="de" class="multilang">erste Option</span>      |
+      | options[1][value] | <span lang="en" class="multilang">it's the second option</span><span lang="de" class="multilang">zweite Option</span>    |
     When I set the following fields to these values:
-      | rawTitle   | <span lang="en" class="multilang">changed & updated</span><span lang="de" class="multilang">geaendert & gespeichert</span>               |
+      | rawTitle          | <span lang="en" class="multilang">changed & updated</span><span lang="de" class="multilang">geaendert & gespeichert</span>               |
       | options[0][value] | <span lang="en" class="multilang">it's the first changed option</span><span lang="de" class="multilang">erste geaenderte Option</span>   |
       | options[1][value] | <span lang="en" class="multilang">it's the second changed option</span><span lang="de" class="multilang">zweite geaenderte Option</span> |
     # Currently a changed text won't be filtered until saved

@@ -19,15 +19,15 @@ Feature: Rating competencies via performance activities.
       | activity_name | section_name |
       | activity1     | section1     |
     And the following "section relationships" exist in "mod_perform" plugin:
-      | section_name | relationship      | can_view | can_answer |
-      | section1     | Subject           | yes      | yes        |
-      | section1     | Manager           | yes      | yes        |
+      | section_name | relationship | can_view | can_answer |
+      | section1     | Subject      | yes      | yes        |
+      | section1     | Manager      | yes      | yes        |
     And the following "competency assignments" exist in "performelement_linked_review" plugin:
-      | competency_name   | user  | reason       |
-      | Doing paperwork   | user1 | cohort       |
-      | Managing people   | user1 | position     |
-      | Locating stuff    | user1 | organisation |
-      | Locating stuff    | user1 | user         |
+      | competency_name | user  | reason       |
+      | Doing paperwork | user1 | cohort       |
+      | Managing people | user1 | position     |
+      | Locating stuff  | user1 | organisation |
+      | Locating stuff  | user1 | user         |
     And the following "track assignments" exist in "mod_perform" plugin:
       | track_description | assignment_type | assignment_name     |
       | track1            | cohort          | Cohort 1            |
@@ -92,11 +92,11 @@ Feature: Rating competencies via performance activities.
     And I run the scheduled task "mod_perform\task\create_manual_participant_progress_task"
     And I wait for the next second
     And the following "selected content" exist in "performelement_linked_review" plugin:
-      | element | subject_user | selector_user  | content_name    | assignment_reason |
-      | review1 | user1        | user1          | Doing paperwork |                   |
-      | review1 | user1        | user1          | Managing people |                   |
-      | review1 | user1        | user1          | Locating stuff  | organisation      |
-      | review1 | user1        | user1          | Locating stuff  | user              |
+      | element | subject_user | selector_user | content_name    | assignment_reason |
+      | review1 | user1        | user1         | Doing paperwork |                   |
+      | review1 | user1        | user1         | Managing people |                   |
+      | review1 | user1        | user1         | Locating stuff  | organisation      |
+      | review1 | user1        | user1         | Locating stuff  | user              |
     And I log in as "user1"
     And I navigate to the competency profile details page for the "Doing paperwork" competency and user "user1"
     Then "Performance activity" "link" should exist
@@ -113,7 +113,7 @@ Feature: Rating competencies via performance activities.
     When I log out
     And I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I click on "activity1" "link"
     Then I should see "Final rating to be submitted for the competency"
     And I should not see "This will be answered by a Manager."

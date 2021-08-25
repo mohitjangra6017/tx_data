@@ -84,9 +84,9 @@ Feature: Viewing user activities list with view-only access
     Given I log in as "john"
     When I navigate to the outstanding perform activities list page
     Then I should see the tui datatable contains:
-      | Activity                                   | Type      | Your progress    | Overall progress   |
-      | Multi section activity (##today##j F Y##)  | Feedback  | Not started      | Not started        |
-      | Single section activity (##today##j F Y##) | Appraisal | Not started      | Not started        |
+      | Activity                                   | Type      | Your progress | Overall progress |
+      | Multi section activity (##today##j F Y##)  | Feedback  | Not started   | Not started      |
+      | Single section activity (##today##j F Y##) | Appraisal | Not started   | Not started      |
     When I toggle expanding row "2" of the tui datatable
     Then I should not see "Appraiser" under the expanded row of the tui datatable
     And I should see the tui datatable in the ".tui-performUserActivityListSection:nth-child(1)" "css_element" contains:
@@ -114,7 +114,7 @@ Feature: Viewing user activities list with view-only access
   Scenario: View-only access is indicated differently for single and multi section activities
     Given I log in as "appraiser"
     When I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Appraiser" "link"
     Then I should see the tui datatable contains:
       | Activity                                   | Type      | Your progress   | Overall progress |
       | Multi section activity (##today##j F Y##)  | Feedback  | n/a (view only) | Not started      |
@@ -136,11 +136,11 @@ Feature: Viewing user activities list with view-only access
   Scenario: Participant instance progress for mixed access is aggregated correctly
     Given I log in as "manager-appraiser"
     When I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     Then I should see the tui datatable contains:
-      | Activity                                   | Type      | Your progress                | Overall progress  |
-      | Multi section activity (##today##j F Y##)  | Feedback  | Not started, n/a (view only) | Not started       |
-      | Single section activity (##today##j F Y##) | Appraisal | Not started, n/a (view only) | Not started       |
+      | Activity                                   | Type      | Your progress | Overall progress |
+      | Multi section activity (##today##j F Y##)  | Feedback  | Not started   | Not started      |
+      | Single section activity (##today##j F Y##) | Appraisal | Not started   | Not started      |
     When I toggle expanding row "2" of the tui datatable
     Then I should not see "Appraiser" under the expanded row of the tui datatable
     And I should not see "You have view-only access to this activity." under the expanded row of the tui datatable
@@ -149,7 +149,10 @@ Feature: Viewing user activities list with view-only access
       | Subject              | John One | Not started      |
       | Manager              | You      | Not started      |
 
-    When I click on "Multi section activity" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then I should see "Select relationship to continue" in the ".tui-modalContent" "css_element"
-    And I should see "Manager (Not started)"
-    And I should see "Appraiser (View only)"
+    Then I click on "As a Appraiser" "link"
+    And I should see the tui datatable contains:
+      | Activity                                   | Type      | Your progress   | Overall progress |
+      | Multi section activity (##today##j F Y##)  | Feedback  | n/a (view only) | Not started      |
+      | Single section activity (##today##j F Y##) | Appraisal | n/a (view only) | Not started      |
+
+

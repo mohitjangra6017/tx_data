@@ -5,16 +5,16 @@ Feature: Make sure user can see Appraisal in Historic activities under Performan
     Given I am on a totara site
     And I enable the "appraisals" advanced feature
     And the following "users" exist:
-      | username   | firstname  | lastname  | email                  |
-      | learner1   | learner1   | lastname  | learner1@example.com   |
-      | manager    | manager    | lastname  | manager@example.com    |
+      | username | firstname | lastname | email                |
+      | learner1 | learner1  | lastname | learner1@example.com |
+      | manager  | manager   | lastname | manager@example.com  |
     And the following job assignments exist:
-      | user       | fullname       | idnumber | manager   |
-      | manager    | Manager Job    | ja1      |           |
-      | learner1   | Learner1 Job   | ja2      | manager   |
+      | user     | fullname     | idnumber | manager |
+      | manager  | Manager Job  | ja1      |         |
+      | learner1 | Learner1 Job | ja2      | manager |
     And the following "cohorts" exist:
-      | name                  | idnumber  | description             | contextlevel | reference |
-      | Appraisals Audience 1 | AppAud1   | Appraisals Assignments1 | System       | 0         |
+      | name                  | idnumber | description             | contextlevel | reference |
+      | Appraisals Audience 1 | AppAud1  | Appraisals Assignments1 | System       | 0         |
     And the following "cohort members" exist:
       | user     | cohort  |
       | learner1 | AppAud1 |
@@ -22,20 +22,20 @@ Feature: Make sure user can see Appraisal in Historic activities under Performan
 
     # Set up an appraisal using the data generator.
     And the following "appraisals" exist in "totara_appraisal" plugin:
-      | name        |
-      | Appraisal1  |
+      | name       |
+      | Appraisal1 |
     And the following "stages" exist in "totara_appraisal" plugin:
-      | appraisal   | name       | timedue                 |
-      | Appraisal1  | App1_Stage | 1 January 2022 23:59:59 |
+      | appraisal  | name       | timedue                 |
+      | Appraisal1 | App1_Stage | 1 January 2022 23:59:59 |
     And the following "pages" exist in "totara_appraisal" plugin:
-      | appraisal   | stage      | name      |
-      | Appraisal1  | App1_Stage | App1_Page |
+      | appraisal  | stage      | name      |
+      | Appraisal1 | App1_Stage | App1_Page |
     And the following "questions" exist in "totara_appraisal" plugin:
-      | appraisal   | stage      | page      | name     | type          | default | roles   | ExtraInfo |
-      | Appraisal1  | App1_Stage | App1_Page | App1-Q1  | text          | 2       | manager |           |
+      | appraisal  | stage      | page      | name    | type | default | roles   | ExtraInfo |
+      | Appraisal1 | App1_Stage | App1_Page | App1-Q1 | text | 2       | manager |           |
     And the following "assignments" exist in "totara_appraisal" plugin:
-      | appraisal   | type     | id      |
-      | Appraisal1  | audience | AppAud1 |
+      | appraisal  | type     | id      |
+      | Appraisal1 | audience | AppAud1 |
 
     # Set necessary configuration.
     And the following config values are set as admin:
@@ -66,7 +66,6 @@ Feature: Make sure user can see Appraisal in Historic activities under Performan
     And I should see the tui datatable contains:
       | Activity title | Type               | Status |
       | Appraisal1     | Appraisal (legacy) | Active |
-    And I should see "Activities about others"
     And I should see "Activity title" in the ".tui-performOtherHistoricActivityList .tui-dataTableHeaderCell:nth-child(1)" "css_element"
     And I should see "Type" in the ".tui-performOtherHistoricActivityList .tui-dataTableHeaderCell:nth-child(2)" "css_element"
     And I should see "User" in the ".tui-performOtherHistoricActivityList .tui-dataTableHeaderCell:nth-child(3)" "css_element"

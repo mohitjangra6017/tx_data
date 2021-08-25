@@ -35,7 +35,7 @@ Feature: Viewing other responses
     And I confirm the tui confirmation modal
     Then I should see "Performance activities"
     And I should see "Section submitted" in the tui success notification toast
-    And the "Your activities" tui tab should be active
+    And the "Activities about you" tui tab should be active
 
     When I click on "John is participating subject" "link"
     And I wait until ".tui-otherParticipantResponses" "css_element" exists
@@ -74,7 +74,7 @@ Feature: Viewing other responses
   Scenario: Manager can respond to other activities and I can view manager responses
     When I log in as "david"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     Then I should see "John is participating subject" in the ".tui-performUserActivities" "css_element"
 
     When I click on "John is participating subject" "link"
@@ -87,7 +87,8 @@ Feature: Viewing other responses
 
     Then I should see "Performance activities"
     And I should see "Section submitted" in the tui success notification toast
-    And the "Activities about others" tui tab should be active
+    Then I click on "As a Manager" "link"
+    And the "As a Manager" tui tab should be active
 
     When I click on "Close" "button"
     And I log out
@@ -104,10 +105,10 @@ Feature: Viewing other responses
     Then I should see perform "short text" question "Question one" is answered by "Manager" with "Manager Answer one"
     And I should see perform "short text" question "Question two" is answered by "Manager" with "Manager Answer two"
 
-  Scenario: Manager can respond to other activities and view-only participant can view manager's responses
+  Scenario: Manager can respond to other activities and view-only participant can view managers responses
     When I log in as "david"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     Then I should see "John is view-only subject" in the ".tui-performUserActivities" "css_element"
 
     When I click on "John is view-only subject" "link"
@@ -120,7 +121,8 @@ Feature: Viewing other responses
 
     Then I should see "Performance activities"
     And I should see "Section submitted" in the tui success notification toast and close it
-    And the "Activities about others" tui tab should be active
+    And I click on "As a Manager" "link"
+    And the "As a Manager" tui tab should be active
 
     When I log out
     And I log in as "john"
@@ -155,7 +157,7 @@ Feature: Viewing other responses
     And I confirm the tui confirmation modal
     Then I should see "Performance activities"
     And I should see "Section submitted" in the tui success notification toast
-    And the "Your activities" tui tab should be active
+    And the "Activities about you" tui tab should be active
 
   Scenario: I can save as a draft
     When I log in as "john"
@@ -169,7 +171,7 @@ Feature: Viewing other responses
     And I log out
     When I log in as "david"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I click on "John draft" "link"
     And I should see that show others responses is toggled "off"
     And I click show others responses
@@ -183,7 +185,7 @@ Feature: Viewing other responses
     Then I should see "Performance activities"
 
     When I click on "Performance activities" "link"
-    Then I should see "Your activities"
+    Then I should see "Activities about you"
     And I should see "John draft"
     And I should see "John is view-only subject"
     And I should see "John is participating subject"

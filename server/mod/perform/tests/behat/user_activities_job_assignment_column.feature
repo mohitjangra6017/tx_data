@@ -8,9 +8,9 @@ Feature: Job assignment column on user activities list.
       | jake     | Jake      | Johnson  | jake.johnson@example.com |
       | susan    | Susan     | Steele   | susan.steele@example.com |
     And the following job assignments exist:
-      | user   | manager  | appraiser | fullname | idnumber |
-      | edward | mark     | jake      | Mark man | Y1k      |
-      | edward | susan    | mark      |          | Y2k      |
+      | user   | manager | appraiser | fullname | idnumber |
+      | edward | mark    | jake      | Mark man | Y1k      |
+      | edward | susan   | mark      |          | Y2k      |
     And the following "activities" exist in "mod_perform" plugin:
       | activity_name              | activity_type | create_section | create_track | activity_status |
       | All job assignments        | appraisal     | false          | false        | Active          |
@@ -74,15 +74,22 @@ Feature: Job assignment column on user activities list.
 
     # Tests job assignment column isn't shown when all the subject instances are not created per job assignment
     Then I should see the tui datatable contains:
-      | Activity                                      | Type      | Your progress  | Overall progress  |
-      | Another Subject assignment (##today##j F Y##) | Appraisal | Not started    | Not started       |
-      | Subject assignment (##today##j F Y##)         | Appraisal | Not started    | Not started       |
+      | Activity                                      | Type      | Your progress | Overall progress |
+      | Another Subject assignment (##today##j F Y##) | Appraisal | Not started   | Not started      |
+      | Subject assignment (##today##j F Y##)         | Appraisal | Not started   | Not started      |
 
-    When I click on "Activities about others" "link"
+    When I click on "As a Manager" "link"
 
     # Tests job assignment column is shown when any of the subject instances are created per job assignment
     Then I should see the tui datatable contains:
-      | Activity                                      | Name         | Type      | Job assignment                   | Your progress             | Overall progress |
-      | Another Subject assignment (##today##j F Y##) | Edward Eiger | Appraisal | Mark man                         | Not started               | Not started      |
-      | Specific job assignments (##today##j F Y##)   | Edward Eiger | Appraisal | Unnamed job assignment (ID: Y2k) | Not started               | Not started      |
-      | All job assignments (##today##j F Y##)        | Edward Eiger | Appraisal |                                  | Not started, Not started  | Not started      |
+      | Activity                                      | Name         | Type      | Job assignment | Your progress | Overall progress |
+      | Another Subject assignment (##today##j F Y##) | Edward Eiger | Appraisal | Mark man       | Not started   | Not started      |
+      | All job assignments (##today##j F Y##)        | Edward Eiger | Appraisal |                | Not started   | Not started      |
+
+    When I click on "As a Appraiser" "link"
+
+    # Tests job assignment column is shown when any of the subject instances are created per job assignment
+    Then I should see the tui datatable contains:
+      | Activity                                    | Name         | Type      | Job assignment                   | Your progress | Overall progress |
+      | Specific job assignments (##today##j F Y##) | Edward Eiger | Appraisal | Unnamed job assignment (ID: Y2k) | Not started   | Not started      |
+      | All job assignments (##today##j F Y##)      | Edward Eiger | Appraisal |                                  | Not started   | Not started      |

@@ -3,30 +3,30 @@ Feature: Allow users to select manual (internal and external) participants for a
 
   Background:
     Given the following "users" exist:
-      | username  | firstname | lastname  |
-      | subject   | Subject   | User      |
-      | manager   | Manager   | User      |
-      | appraiser | Appraiser | User      |
-      | colleague | Colleague | User      |
+      | username  | firstname | lastname |
+      | subject   | Subject   | User     |
+      | manager   | Manager   | User     |
+      | appraiser | Appraiser | User     |
+      | colleague | Colleague | User     |
 
     Given the following "organisation" frameworks exist:
       | fullname                    | idnumber | description           |
       | Test organisation framework | FW002    | Framework description |
     And the following "organisation" hierarchy exists:
-      | framework | fullname           | idnumber | description             |
-      | FW002     | Test Organisation  | ORG001   | This is an organisation |
+      | framework | fullname          | idnumber | description             |
+      | FW002     | Test Organisation | ORG001   | This is an organisation |
 
     And the following "position" frameworks exist:
       | fullname      | idnumber |
       | PosHierarchy1 | FW001    |
     And the following "position" hierarchy exists:
-      | framework | idnumber | fullname   |
-      | FW001     | POS001   | Position1  |
+      | framework | idnumber | fullname  |
+      | FW001     | POS001   | Position1 |
 
     And the following job assignments exist:
-      | user      | manager | appraiser | fullname     | organisation | position |
-      | subject   | manager | appraiser | Subject JA   | ORG001       | POS001   |
-      | colleague | manager |           |              | ORG001       |          |
+      | user      | manager | appraiser | fullname   | organisation | position |
+      | subject   | manager | appraiser | Subject JA | ORG001       | POS001   |
+      | colleague | manager |           |            | ORG001       |          |
     And the following "cohorts" exist:
       | name | idnumber | description | contextlevel | reference | cohorttype |
       | aud1 | aud1     | Audience 1  | System       | 0         | 1          |
@@ -62,7 +62,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I click on "Edit content elements" "link_or_button"
     And I add a "Text: Short response" activity content element
     When I set the following fields to these values:
-      | rawTitle   | Question 1   |
+      | rawTitle | Question 1 |
     And I save the activity content element
     And I follow "Content (Act1)"
     And I click on "Assignments" "link"
@@ -80,24 +80,24 @@ Feature: Allow users to select manual (internal and external) participants for a
     Then I should see "Selection of participants"
     And I should see "Participants for each relationship below must be manually chosen by the selected role."
     And the following fields match these values:
-      | Peer                 | Subject |
-      | Mentor               | Subject |
-      | Reviewer             | Subject |
-      | External respondent  | Subject |
+      | Peer                | Subject |
+      | Mentor              | Subject |
+      | Reviewer            | Subject |
+      | External respondent | Subject |
     When I set the following fields to these values:
-      | Peer                 | Subject   |
-      | Mentor               | Manager   |
-      | Reviewer             | Appraiser |
-      | External respondent  | Manager   |
+      | Peer                | Subject   |
+      | Mentor              | Manager   |
+      | Reviewer            | Appraiser |
+      | External respondent | Manager   |
     And I click on "Save" "button"
     Then I should see "Activity saved" in the tui success notification toast
     When I reload the page
     And I click on "General" "link"
     Then the following fields match these values:
-      | Peer                 | Subject   |
-      | Mentor               | Manager   |
-      | Reviewer             | Appraiser |
-      | External respondent  | Manager   |
+      | Peer                | Subject   |
+      | Mentor              | Manager   |
+      | Reviewer            | Appraiser |
+      | External respondent | Manager   |
 
     # Activate the activity
     When I click on "Activate" "button"
@@ -119,7 +119,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I should see the current date in format "j F Y" in the ".tui-performActivityParticipantSelector:nth-child(2) .tui-performActivityParticipantSelector__meta" "css_element"
     # Subject can select themselves
     And I should see the following options in the tui taglist in the ".tui-formRow" "css_element":
-      | Admin User |
+      | Admin User     |
       | Appraiser User |
       | Colleague User |
       | Manager User   |
@@ -156,7 +156,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     Then I should see "Mentor" in the ".tui-formRow:nth-child(1)" "css_element"
     And I should see "External respondent" in the ".tui-formRow:nth-child(2)" "css_element"
     And I should see the following options in the tui taglist in the ".tui-formRow:nth-child(1)" "css_element":
-      | Admin User |
+      | Admin User     |
       | Appraiser User |
       | Colleague User |
       | Manager User   |
@@ -181,8 +181,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     Then I should see "The participants have been successfully saved." in the tui success notification toast
     When I click on "Back to all performance activities" "link"
     Then I should see "Select participants"
-    When I click on "Activities about others" "link"
-    And I should see "You have not been added as a participant in someone else's activity yet"
+    And I should not see "As a Manager"
     And I should not see "Act1"
     And I log out
 
@@ -192,7 +191,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I click on "Select participants" "link" in the ".tui-actionCard" "css_element"
     Then I should see "Reviewer" in the ".tui-formRow" "css_element"
     And I should see the following options in the tui taglist in the ".tui-formRow" "css_element":
-      | Admin User |
+      | Admin User     |
       | Appraiser User |
       | Colleague User |
       | Manager User   |
@@ -203,22 +202,14 @@ Feature: Allow users to select manual (internal and external) participants for a
     Then I should not see "Select participants"
 
     # Appraiser was the last person that needed to make a selection, so participant instances should exist now
-    When I click on "Activities about others" "link"
-    And I should not see "There are no activities assigned to you yet"
-    When I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then I should see "Select relationship to continue"
-    And I should see "Appraiser (Not started)"
-    And I should see "Peer (Not started)"
-    And I should not see "Mentor"
-    And I should not see "Reviewer"
-    And the "Appraiser (Not started)" radio button is selected
-    When I click on "Continue" "button"
+    When I click on "As a Appraiser" "link"
+    Then I should see "Act1"
+
+    When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Appraiser"
     When I press the "back" button in the browser
-    And I click on "Activities about others" "link"
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    And I click on the "Peer (Not started)" tui radio
-    And I click on "Continue" "button"
+    And I click on "As a Peer" "link"
+    And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Peer"
     And I log out
 
@@ -233,7 +224,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Colleague views activity
     When I log in as "colleague"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Mentor" "link"
     And I should not see "There are no activities assigned to you yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Mentor"
@@ -242,22 +233,14 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Manager views activity
     When I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I should not see "You have not been added as a participant in someone else's activity yet"
-    When I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then I should see "Select relationship to continue"
-    And I should see "Manager (Not started)"
-    And I should see "Reviewer (Not started)"
-    And I should not see "Mentor"
-    And I should not see "Peer"
-    And the "Manager (Not started)" radio button is selected
-    When I click on "Continue" "button"
+
+    When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Manager"
     When I press the "back" button in the browser
-    And I click on "Activities about others" "link"
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    And I click on the "Reviewer (Not started)" tui radio
-    And I click on "Continue" "button"
+    And I click on "As a Reviewer" "link"
+    When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Reviewer"
     When I log out
 
@@ -287,17 +270,14 @@ Feature: Allow users to select manual (internal and external) participants for a
 
     When I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then the "Manager (In progress)" radio button is selected
-    When I click on "Continue" "button"
+    And I click on "As a Manager" "link"
+    And I click on "Act1" "link"
     Then I should see that show others responses is toggled "off"
     And I answer "short text" question "Question 1" with "My Answer one"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then the "Manager (Complete)" radio button is selected
-    When I click on "Continue" "button"
+    And I click on "As a Manager" "link"
+    And I click on "Act1" "link"
     And I wait until ".tui-otherParticipantResponses" "css_element" exists
     Then I should see that show others responses is toggled "off"
     Then I should see "Mark Metcalfe"
@@ -317,25 +297,16 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Complete as appraiser and peer
     When I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then I should see "Select relationship to continue"
-    And I should see "Appraiser (In progress)"
-    And I should see "Peer (In progress)"
-    And the "Appraiser (In progress)" radio button is selected
-    When I click on "Continue" "button"
+    And I click on "As a Appraiser" "link"
+    And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Appraiser"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Appraiser was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
     And I close the tui notification toast
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then I should see "Select relationship to continue"
-    And I should see "Appraiser (Complete)"
-    And I should see "Peer (In progress)"
-    When I click on the "Peer (In progress)" tui radio
-    And I click on "Continue" "button"
+    And I click on "As a Peer" "link"
+    And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Peer"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Peer was here"
@@ -360,7 +331,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Complete as colleague
     When I log in as "colleague"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Mentor" "link"
     And I should not see "You have not been added as a participant in someone else's activity yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Mentor"
@@ -374,24 +345,17 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Complete as the maanager and the reviewer
     When I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link"
+    And I click on "As a Manager" "link"
     And I should not see "You have not been added as a participant in someone else's activity yet"
-    When I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    Then I should see "Select relationship to continue"
-    And I should see "Manager (Complete)"
-    And I should see "Reviewer (In progress)"
-    And the "Manager (Complete)" radio button is selected
-    When I click on "Continue" "button"
+    When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Manager"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Manager was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
     And I close the tui notification toast
-    When I click on "Activities about others" "link"
-    And I click on "Act1" "button" in the ".tui-dataTableCell__content" "css_element"
-    And I click on the "Reviewer (In progress)" tui radio
-    And I click on "Continue" "button"
+    When I click on "As a Reviewer" "link"
+    And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Reviewer"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Reviewer was here"

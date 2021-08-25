@@ -7,8 +7,8 @@ Feature: Selecting competency assignments linked to a performance review
       | user1    | User      | One      | user1@example.com |
       | user2    | User      | Two      | user2@example.com |
     And the following "activity with section and review element" exist in "performelement_linked_review" plugin:
-      | activity_name | section_title | element_title  | content_type      |
-      | activity1     | section1      | review1        | totara_competency |
+      | activity_name | section_title | element_title | content_type      |
+      | activity1     | section1      | review1       | totara_competency |
     And the following "child elements" exist in "mod_perform" plugin:
       | section  | parent_element | element_plugin | element_title   | after_element   |
       | section1 | review1        | long_text      | long text child |                 |
@@ -32,7 +32,7 @@ Feature: Selecting competency assignments linked to a performance review
   Scenario: Waiting for another user to select the competencies
     When I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link_or_button"
+    And I click on "As a manager" "link_or_button"
     And I click on "activity1" "link"
     Then I should see "Awaiting competency selection from a Subject."
 
@@ -41,8 +41,8 @@ Feature: Selecting competency assignments linked to a performance review
       | username | firstname | lastname | email             |
       | user3    | User      | Three    | user3@example.com |
     And the following "activity with section and review element" exist in "performelement_linked_review" plugin:
-      | activity_name | section_title | element_title  | content_type      |
-      | activity2     | section2      | review2        | totara_competency |
+      | activity_name | section_title | element_title | content_type      |
+      | activity2     | section2      | review2       | totara_competency |
     And the following "section relationships" exist in "mod_perform" plugin:
       | section_name | relationship | can_view | can_answer |
       | section2     | subject      | yes      | no         |
@@ -50,8 +50,8 @@ Feature: Selecting competency assignments linked to a performance review
       | section  | subject_user | user  | relationship |
       | section2 | user1        | user1 | subject      |
     And the following "competency assignments" exist in "performelement_linked_review" plugin:
-      | competency_name   | user  | reason       | manual_rating              |
-      | Doing paperwork   | user1 | user         | Competent                  |
+      | competency_name | user  | reason | manual_rating |
+      | Doing paperwork | user1 | user   | Competent     |
     When I log in as "user1"
     And I navigate to the outstanding perform activities list page
     And I click on "activity2" "link"
@@ -90,18 +90,18 @@ Feature: Selecting competency assignments linked to a performance review
     When I click on "Show filters" "link_or_button"
     And I set the field "Filter items by search" to "Stuff"
     Then I should see the tui datatable contains:
-      | Competency       | Reason assigned                    | Proficient | Achievement level          |
-      | Locating stuff   | Test Organisation 1 (Organisation) | - No       | No value achieved          |
+      | Competency     | Reason assigned                    | Proficient | Achievement level |
+      | Locating stuff | Test Organisation 1 (Organisation) | - No       | No value achieved |
     When I set the field "Filter items by search" to ""
     And I set the field "Reason assigned" to "Test Position 1"
     Then I should see the tui datatable contains:
-      | Competency       | Reason assigned                    | Proficient | Achievement level          |
-      | Managing people  | Test Position 1 (Position)         | - No       | Not competent              |
+      | Competency      | Reason assigned            | Proficient | Achievement level |
+      | Managing people | Test Position 1 (Position) | - No       | Not competent     |
     When I set the field "Reason assigned" to ""
     And I set the field "Proficiency status" to "Proficient"
     Then I should see the tui datatable contains:
-      | Competency       | Reason assigned                    | Proficient | Achievement level          |
-      | Doing paperwork  | Cohort 1 (Audience)                | Yes        | Competent                  |
+      | Competency      | Reason assigned     | Proficient | Achievement level |
+      | Doing paperwork | Cohort 1 (Audience) | Yes        | Competent         |
 
     # Select some assignments
     When I set the field "Proficiency status" to "All"

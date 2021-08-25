@@ -42,7 +42,7 @@ Feature: Make sure the correct navigation breadcrumbs and blocks are shown.
     And I should not see "Category:" in the "#settingsnav" "css_element"
 
     # Single activity page
-    When I click on "Activities about others" "link"
+    When I click on "As a Manager" "link"
     And I click on "activity_one" "link"
     Then I should see "activity_one"
     And I should see perform activity relationship to user "Manager"
