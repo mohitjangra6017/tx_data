@@ -79,6 +79,9 @@ Feature: Theme settings basic validations for tenants
     And I set the field "Primary brand colour" to "#FF000B"
     And I set the field "Accent colour" to "#00FFE6"
     And I click on "Save Colours Settings" "button"
+    And I click on "Custom" "link" in the ".tui-tabs__tabs" "css_element"
+    And I set the field "Custom footer" to "First Tenant Footer"
+    And I click on "Save Custom Settings" "button"
     And I reload the page
 
     # Confirm that nothing changed for admin user who uses 'site' theme colours
@@ -102,6 +105,15 @@ Feature: Theme settings basic validations for tenants
     And I log in as "user3"
     Then element ":root" should have a css property "--color-state" with a value of "#4b7e2b"
     And element ":root" should have a css property "--color-primary" with a value of "#69bd45"
+
+    # Confirm that the tenant participants do not see the tenant footer
+    When I log out
+    Then I should not see "First Tenant Footer"
+
+    # Confirm that tenant member sees the tenant footer
+    When I log in as "user1"
+    And I log out
+    Then I should see "First Tenant Footer"
 
   Scenario: Log in as tenant domain manager and confirm that we can send test emails
     Given I log out

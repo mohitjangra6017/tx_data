@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
         </div>
 
         <?php
-        $tenant_id = (!isloggedin() || empty($USER->tenantid)) ? 0 : $USER->tenantid;
+        $tenant_id = (!isloggedin() || empty($USER->tenantid)) ? \core\theme\helper::get_prelogin_tenantid() : $USER->tenantid;
         $theme_settings = new core\theme\settings($PAGE->theme, $tenant_id);
         $property = $theme_settings->get_property('custom', 'formcustom_field_customfooter');
         $options = ['allowid' => true];
