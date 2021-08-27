@@ -133,4 +133,60 @@ class user_csv_field_mapping_test extends totara_sync_csv_testcase {
         $this->assertEquals('GB', $user->country);
         $this->assertEquals('testuser@example.com', $user->email);
     }
+
+    public function test_user_csv_field_mapping_custom_fields() {
+        global $DB;
+
+        $user_generator = \core_user\testing\generator::instance();
+
+        $menu_field = $user_generator->create_custom_field('menu', 'menu_test');
+        $text_field = $user_generator->create_custom_field('text', 'text_test');
+
+        $configcsv = [
+            'csvuserencoding' => 'UTF-8',
+
+            'import_username' => '1',
+            'import_timemodified' => '1',
+            'import_email' => '1',
+            'import_firstname' => '1',
+            'import_lastname' => '1',
+            'import_idnumber' => '1',
+            'import_deleted' => '1',
+            'import_customfield_menu_test' => '1',
+            'import_customfield_text_test' => '1',
+
+            'fieldmapping_customfield_menu_test' => 'menu1',
+            'fieldmapping_customfield_text_test' => 'text1'
+        ];
+
+        foreach ($configcsv as $k => $v) {
+            set_config($k, $v, 'totara_sync_source_user_csv');
+        }
+
+        $data = file_get_contents(__DIR__ . '/fixtures/user_csv_fieldmapping_3.csv');
+        $filepath = $this->filedir . '/csv/ready/user.csv';
+        file_put_contents($filepath, $data);
+
+        $element = new totara_sync_element_user();
+        $element->set_config('allow_update', '1');
+        $element->set_config('allow_create', '1');
+        $element->set_config('allow_delete', '1');
+        $result = $element->sync();
+        $this->assertTrue($result);
+
+        $user1 = $DB->get_record('user', ['firstname' => 'Clive', 'lastname' => 'Jones']);
+        $user2 = $DB->get_record('user', ['firstname' => 'John', 'lastname' => 'Smith']);
+
+        $record = $DB->get_record('user_info_data', ['userid' => $user1->id, 'fieldid' => $menu_field->fieldid]);
+        $this->assertEquals('xx', $record->data);
+
+        $record = $DB->get_record('user_info_data', ['userid' => $user1->id, 'fieldid' => $text_field->fieldid]);
+        $this->assertEquals('import test', $record->data);
+
+        $record = $DB->get_record('user_info_data', ['userid' => $user2->id, 'fieldid' => $menu_field->fieldid]);
+        $this->assertFalse($record); // No value set so we haven't got a record
+
+        $record = $DB->get_record('user_info_data', ['userid' => $user2->id, 'fieldid' => $text_field->fieldid]);
+        $this->assertEquals('import2', $record->data);
+    }
 }

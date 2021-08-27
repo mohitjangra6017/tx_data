@@ -274,7 +274,11 @@ class totara_sync_source_user_csv extends totara_sync_source_user {
                 foreach (array_keys($this->customfields) as $cf) {
                     if (!empty($this->config->{'import_'.$cf})) {
                         // Get shortname and check if we need to do field type processing
-                        $value = trim($csvrow[$cf]);
+                        if ($realfieldname = array_search($cf, $importmap)) {
+                            $value = trim($csvrow[$realfieldname]);
+                        } else {
+                            $value = trim($csvrow[$cf]);
+                        }
                         if ($value === '') {
                             if (!$csvsaveemptyfields) {
                                 // Empty means skip, don't import.

@@ -41,7 +41,7 @@ final class generator extends \core\testing\component_generator {
         switch ($field_data_type) {
             case 'menu':
                 $clone_data = fullclone($current_data);
-                $clone_data->param1 = 'xx';
+                $clone_data->param1 = "xx\nyy\nzz";
 
                 return $clone_data;
 

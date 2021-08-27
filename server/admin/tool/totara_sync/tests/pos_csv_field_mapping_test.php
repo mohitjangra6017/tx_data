@@ -125,4 +125,59 @@ class pos_csv_field_mapping_test extends totara_sync_csv_testcase {
         $this->assertEquals('PID4', $position->idnumber);
         $this->assertEquals($posframework->id, $position->frameworkid);
     }
+
+    public function test_pos_csv_field_mapping_custom_fields() {
+        global $DB;
+
+        $this->setAdminUser();
+
+        $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $hierarchygenerator->create_framework('position', ['idnumber' => 'POSF1']);
+
+        $postypeid = $hierarchygenerator->create_pos_type(['idnumber' => 'POST1']);
+
+        $menudata = ['hierarchy' => 'position', 'typeidnumber' => 'POST1', 'value' => '1234', 'shortname' => 'pos_menu'];
+        $hierarchygenerator->create_hierarchy_type_menu($menudata);
+        $textdata = ['hierarchy' => 'position', 'typeidnumber' => 'POST1', 'value' => '', 'shortname' => 'pos_text'];
+        $hierarchygenerator->create_hierarchy_type_text($textdata);
+
+        // Get data for new type custom fields
+        $menucf = $DB->get_record('pos_type_info_field', ['shortname' => 'pos_menu']);
+        $textcf = $DB->get_record('pos_type_info_field', ['shortname' => 'pos_text']);
+
+        $configcsv = [
+            'fieldmapping_customfield_' . $postypeid . '_pos_menu' => 'the_menu',
+            'fieldmapping_customfield_' . $postypeid . '_pos_text' => 'the_text',
+
+            'import_idnumber' => '1',
+            'import_fullname' => '1',
+            'import_frameworkidnumber' => '1',
+            'import_timemodified' => '1',
+            'import_typeidnumber' => '1',
+            'import_deleted' => '1',
+            'import_customfield_' . $postypeid . '_pos_menu' => '1',
+            'import_customfield_' . $postypeid . '_pos_text' => '1',
+        ];
+
+        foreach ($configcsv as $k => $v) {
+            set_config($k, $v, 'totara_sync_source_pos_csv');
+        }
+
+        $data = file_get_contents(__DIR__ . '/fixtures/positions_field_mapping_5.csv');
+        $filepath = $this->filedir . '/csv/ready/pos.csv';
+        file_put_contents($filepath, $data);
+
+        $element = new totara_sync_element_pos();
+        $element->set_config('allow_update', '1');
+        $element->set_config('allow_create', '1');
+        $result = $element->sync();
+        $this->assertTrue($result);
+
+        $position = $DB->get_record('pos', ['idnumber' => 'PID3']);
+
+        $record = $DB->get_record('pos_type_info_data', ['fieldid' => $menucf->id, 'positionid' => $position->id]);
+        $this->assertEquals('3456', $record->data);
+        $record = $DB->get_record('pos_type_info_data', ['fieldid' => $textcf->id, 'positionid' => $position->id]);
+        $this->assertEquals('some text', $record->data);
+    }
 }

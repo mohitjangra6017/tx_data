@@ -85,4 +85,59 @@ class comp_csv_field_mapping_test extends totara_sync_csv_testcase {
         $competency = $DB->get_record('comp', ['fullname' => 'Competency 3']);
         $this->assertEquals('CID3', $competency->idnumber);
     }
+
+    public function test_comp_csv_field_mapping_custom_fields() {
+        global $DB;
+
+        $this->setAdminUser();
+
+        $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $hierarchygenerator->create_framework('competency', ['idnumber' => 'COMPF1']);
+
+        $comptypeid = $hierarchygenerator->create_comp_type(['idnumber' => 'COMPT1']);
+
+        $menudata = ['hierarchy' => 'competency', 'typeidnumber' => 'COMPT1', 'value' => '1234', 'shortname' => 'comp_menu'];
+        $hierarchygenerator->create_hierarchy_type_menu($menudata);
+        $textdata = ['hierarchy' => 'competency', 'typeidnumber' => 'COMPT1', 'value' => '', 'shortname' => 'comp_text'];
+        $hierarchygenerator->create_hierarchy_type_text($textdata);
+
+        // Get data for new type custom fields
+        $menucf = $DB->get_record('comp_type_info_field', ['shortname' => 'comp_menu']);
+        $textcf = $DB->get_record('comp_type_info_field', ['shortname' => 'comp_text']);
+
+        $configcsv = [
+            'fieldmapping_customfield_' . $comptypeid . '_comp_menu' => 'the_menu',
+            'fieldmapping_customfield_' . $comptypeid . '_comp_text' => 'the_text',
+
+            'import_idnumber' => '1',
+            'import_fullname' => '1',
+            'import_frameworkidnumber' => '1',
+            'import_timemodified' => '1',
+            'import_typeidnumber' => '1',
+            'import_deleted' => '1',
+            'import_customfield_' . $comptypeid . '_comp_menu' => '1',
+            'import_customfield_' . $comptypeid . '_comp_text' => '1',
+        ];
+
+        foreach ($configcsv as $k => $v) {
+            set_config($k, $v, 'totara_sync_source_comp_csv');
+        }
+
+        $data = file_get_contents(__DIR__ . '/fixtures/competencies_field_mapping_4.csv');
+        $filepath = $this->filedir . '/csv/ready/comp.csv';
+        file_put_contents($filepath, $data);
+
+        $element = new totara_sync_element_comp();
+        $element->set_config('allow_update', '1');
+        $element->set_config('allow_create', '1');
+        $result = $element->sync();
+        $this->assertTrue($result);
+
+        $competency = $DB->get_record('comp', ['idnumber' => 'COMP3']);
+
+        $record = $DB->get_record('comp_type_info_data', ['fieldid' => $menucf->id, 'competencyid' => $competency->id]);
+        $this->assertEquals('3456', $record->data);
+        $record = $DB->get_record('comp_type_info_data', ['fieldid' => $textcf->id, 'competencyid' => $competency->id]);
+        $this->assertEquals('extra info', $record->data);
+    }
 }
