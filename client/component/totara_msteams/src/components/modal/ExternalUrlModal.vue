@@ -82,7 +82,11 @@ export default {
     },
 
     modalConfirmed() {
-      window.open(this.externalUrl);
+      if (this.externalUrl.includes('totara_msteams_confirm_redirect=1')) {
+        window.open(this.externalUrl, 'redirect_from_url_activity');
+        return;
+      }
+      window.open(this.externalUrl, '');
       this.modalOpen = false;
     },
 

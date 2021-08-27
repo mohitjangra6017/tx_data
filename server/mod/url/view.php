@@ -31,6 +31,12 @@ require_once($CFG->libdir . '/completionlib.php');
 $id       = optional_param('id', 0, PARAM_INT);        // Course module ID
 $u        = optional_param('u', 0, PARAM_INT);         // URL instance id
 $redirect = optional_param('redirect', 0, PARAM_BOOL);
+$from_msteams = optional_param('totara_msteams_confirm_redirect', 0, PARAM_INT);
+
+// Totara: Remove msteams theme from session.
+if ($from_msteams == 1 && $SESSION->theme === 'msteams') {
+    unset($SESSION->theme);
+}
 
 if ($u) {  // Two ways to specify the module
     $url = $DB->get_record('url', array('id'=>$u), '*', MUST_EXIST);

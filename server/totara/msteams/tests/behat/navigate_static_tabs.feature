@@ -309,3 +309,21 @@ Feature: Navigate a learning item in a static tab
       | tab        |
       | catalog    |
       | mylearning |
+
+  Scenario Outline: Theme not being reset after visiting external URL in MS teams for the url activity
+    Given I am on Microsoft Teams "<tab>" page
+    And I click on "Activity test course" "text"
+    Then I should see "Course: Activity test course" in the page title
+    When I follow "Test url"
+    Then I should see "Logged in as User One."
+    And  I should see "Sign out"
+    And I should see "You are about to be taken to your default browser to view this page"
+    And I click on "OK" "button"
+    When I switch to "redirect_from_url_activity" window
+    Then I should see "Test url"
+    And I should see "Test url description"
+    And I should not see "Logged in as User One."
+    And I should not see "Sign out"
+    Examples:
+      | tab        |
+      | catalog    |
