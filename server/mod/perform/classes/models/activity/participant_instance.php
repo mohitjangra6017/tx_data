@@ -27,6 +27,7 @@ use coding_exception;
 use context_module;
 use core\collection;
 use core\orm\entity\model;
+use core\orm\query\builder;
 use mod_perform\controllers\activity\view_external_participant_activity;
 use mod_perform\controllers\activity\view_user_activity;
 use mod_perform\entity\activity\participant_instance as participant_instance_entity;
@@ -41,6 +42,7 @@ use mod_perform\state\state;
 use mod_perform\state\state_aware;
 use mod_perform\state\subject_instance\closed as subject_instance_closed;
 use moodle_url;
+use stdClass;
 use totara_core\relationship\relationship as relationship_model;
 
 /**
@@ -100,6 +102,26 @@ class participant_instance extends model {
         'participation_url',
         'anonymise_responses'
     ];
+
+    /**
+     * Returns the participant roles the specified user across all activities.
+     *
+     * @param @int $user_id the user to look up.
+     *
+     * @return collection|relationship[] a list of relationships.
+     */
+    public static function get_activity_roles_for(int $user_id): collection {
+        return builder::table(participant_instance_entity::TABLE)
+            ->select_raw('distinct(core_relationship_id) as role_id')
+            ->where('participant_id', $user_id)
+            ->group_by('core_relationship_id')
+            ->get()
+            ->map(
+                function(stdClass $result): relationship_model {
+                    return relationship_model::load_by_id($result->role_id);
+                }
+            );
+    }
 
     protected static function get_entity_class(): string {
         return participant_instance_entity::class;

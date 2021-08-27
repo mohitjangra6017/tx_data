@@ -30,18 +30,17 @@ use core\pagination\base_paginator;
 use core\pagination\cursor;
 use core\pagination\cursor_paginator;
 use core\pagination\offset_cursor;
-use mod_perform\data_providers\cursor_paginator_trait;
 use mod_perform\data_providers\offset_paginator_trait;
 use mod_perform\data_providers\provider;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\filters\subject_instance_id;
 use mod_perform\entity\activity\filters\subject_instances_about;
+use mod_perform\entity\activity\filters\subject_instances_about_role;
 use mod_perform\entity\activity\filters\subject_instances_search_term;
 use mod_perform\entity\activity\filters\subject_instances_activity_type;
 use mod_perform\entity\activity\filters\subject_instances_overdue;
 use mod_perform\entity\activity\filters\subject_instances_participant_progress;
 use mod_perform\entity\activity\participant_instance;
-use mod_perform\entity\activity\subject_instance;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\entity\activity\subject_instance_repository;
 use mod_perform\entity\activity\track as track_entity;
@@ -97,6 +96,8 @@ class subject_instance_for_participant extends provider {
     /**
      * @param subject_instance_repository|repository $repository
      * @param string|string[] $about Subject instance about constant(s)
+     *
+     * @deprecated replaced by filter_query_by_about_role().
      */
     protected function filter_query_by_about(repository $repository, $about): void {
         if (!is_array($about)) {
@@ -106,6 +107,15 @@ class subject_instance_for_participant extends provider {
         $repository->set_filter(
             (new subject_instances_about($this->participant_id, 'si'))->set_value($about)
         );
+    }
+
+    /**
+     * @param subject_instance_repository|repository $repository
+     * @param string|string[] $about Subject instance about constant(s)
+     */
+    protected function filter_query_by_about_role(repository $repository, int $role): void {
+        $filter = new subject_instances_about_role($this->participant_id);
+        $repository->set_filter($filter->set_value($role));
     }
 
     /**

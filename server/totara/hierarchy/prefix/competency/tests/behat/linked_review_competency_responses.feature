@@ -148,7 +148,7 @@ Feature: Responding to competency assignments linked to a performance review
     When I log out
     And I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a manager" "link_or_button"
+    And I click on "As a Manager" "link_or_button"
     And I click on "activity1" "link"
     And I click show others responses
 
@@ -248,7 +248,7 @@ Feature: Responding to competency assignments linked to a performance review
     When I log out
     And I log in as "user3"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a manager" "link_or_button"
+    And I click on "As a Manager" "link_or_button"
     And I click on "activity1" "link"
 
     # View only participant view: first selected competency: Doing paperwork

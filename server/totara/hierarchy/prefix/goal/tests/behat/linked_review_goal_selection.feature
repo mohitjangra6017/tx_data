@@ -53,7 +53,7 @@ Feature: Selecting goals linked to a performance review
   Scenario: Waiting for another user to select the goals
     When I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link_or_button"
+    And I click on "As a Manager" "link_or_button"
     And I click on "activity1" "link"
     Then I should see "Awaiting personal goal selection from a Subject."
     Then I should see "Awaiting company goal selection from a Subject."

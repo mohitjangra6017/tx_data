@@ -24,8 +24,8 @@
 use core\collection;
 use core\orm\query\builder;
 use core\pagination\offset_cursor;
+use mod_perform\constants;
 use mod_perform\data_providers\activity\subject_instance_for_participant;
-use mod_perform\entity\activity\filters\subject_instances_about;
 use mod_perform\entity\activity\activity_type as activity_type_entity;
 use mod_perform\entity\activity\participant_instance as participant_instance_entity;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
@@ -37,6 +37,7 @@ use mod_perform\state\participant_instance\not_started as participant_instance_n
 use mod_perform\state\subject_instance\complete as subject_instance_complete;
 use mod_perform\state\subject_instance\in_progress as subject_instance_in_progress;
 use mod_perform\state\subject_instance\not_started as subject_instance_not_started;
+use mod_perform\testing\generator;
 use totara_job\job_assignment;
 
 require_once(__DIR__ . '/subject_instance_testcase.php');
@@ -110,53 +111,45 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         }
     }
 
-    public function test_get_only_about_user(): void {
-        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
-            ->add_filters(['about' => [subject_instances_about::VALUE_ABOUT_SELF]])
+    public function test_get_subject_instances_by_roles(): void {
+        $generator = generator::instance();
+        $data_provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+
+        $subject_role = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
+        $returned_subject_instances = $data_provider
+            ->add_filters(['about_role' => $subject_role->id])
             ->fetch()
             ->get();
 
         self::assertCount(1, $returned_subject_instances);
-
         self::assert_same_subject_instance(self::$about_user_and_participating, $returned_subject_instances->first());
-    }
 
-    public function test_get_subject_instances_only_about_other_users(): void {
-        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
-            ->add_filters(['about' => [subject_instances_about::VALUE_ABOUT_OTHERS]])
+        $manager_role = $generator->get_core_relationship(constants::RELATIONSHIP_MANAGER);
+        $returned_subject_instances = $data_provider
+            ->add_filters(['about_role' => $manager_role->id])
             ->fetch()
             ->get();
 
         self::assertCount(1, $returned_subject_instances);
-
         self::assert_same_subject_instance(self::$about_someone_else_and_participating, $returned_subject_instances->first());
-    }
 
-    public function test_get_user_about_self_and_others_via_all_filter_options(): void {
-        $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
-            ->add_filters(['about' =>
-                [subject_instances_about::VALUE_ABOUT_SELF, subject_instances_about::VALUE_ABOUT_OTHERS]
-            ])
+        $peer_role = $generator->get_core_relationship(constants::RELATIONSHIP_PEER);
+        $returned_subject_instances = $data_provider
+            ->add_filters(['about_role' => $peer_role->id])
             ->fetch()
             ->get();
 
-        self::assertCount(2, $returned_subject_instances);
-
-        self::assert_same_subject_instance(
-            self::$about_someone_else_and_participating, $returned_subject_instances->first()
-        ); // 538003
-
-        self::assert_same_subject_instance(
-            self::$about_user_and_participating, $returned_subject_instances->last()
-        ); // 538001
+        self::assertCount(0, $returned_subject_instances);
     }
 
     /**
      * Check that the result includes all participant instances not just the one for $user->id.
-     */
+    */
     public function test_attaches_all_participant_instance(): void {
+        $subject_role = generator::instance()->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
+
         $returned_subject_instances = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
-            ->add_filters(['about' => [subject_instances_about::VALUE_ABOUT_SELF]])
+            ->add_filters(['about_role' => $subject_role->id])
             ->fetch()
             ->get();
 
@@ -210,9 +203,11 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
             ->set_page(1)
             ->set_limit($page_size);
 
+        $subject_role = generator::instance()->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
+
         for ($i = 0, $item_count = count($item_counts); $i < $item_count; $i++) {
             $paginator = (new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL))
-                ->add_filters(['about' => [subject_instances_about::VALUE_ABOUT_SELF]])
+                ->add_filters(['about_role' => $subject_role->id])
                 ->get_offset($cursor);
 
             $items = $paginator->get_items();

@@ -610,12 +610,16 @@ input toggle_activity_setting {
 Activity subject instance filters
 """
 input mod_perform_subject_instance_filters {
-  about: [mod_perform_subject_instance_about_filter!]!
+  about_role: core_id
   activity_type: [core_id!]
   exclude_complete: param_boolean
   overdue: param_boolean
   participant_progress: [mod_perform_participant_instance_progress_status!]
   search_term: param_text
+  """
+  @deprecated since Totara 15: Use the about_role filter instead.
+  """
+  about: [mod_perform_subject_instance_about_filter!]
 }
 
 input mod_perform_subject_instance_options {
@@ -625,6 +629,8 @@ input mod_perform_subject_instance_options {
 """
 Options for filtering the subject instance list.
 SELF for activities about viewing user, OTHERS for activities about other users that I am participating in.
+
+@deprecated since Totara 15: Use the about_role filter instead.
 """
 enum mod_perform_subject_instance_about_filter {
   SELF

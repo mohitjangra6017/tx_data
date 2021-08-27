@@ -29,11 +29,13 @@ use core\entity\user;
 use mod_perform\controllers\perform_controller;
 use mod_perform\data_providers\activity\activity_type;
 use mod_perform\data_providers\activity\subject_instance_for_participant;
+use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\helpers\manual_participant_helper;
 use mod_perform\state\participant_instance\participant_instance_progress;
 use mod_perform\state\state_helper;
 use mod_perform\state\subject_instance\subject_instance_progress;
 use mod_perform\util;
+use totara_core\relationship\relationship;
 use totara_mvc\tui_view;
 
 /*
@@ -56,17 +58,19 @@ class user_activities extends perform_controller {
         $this->set_url(self::get_url());
 
         $current_user_id = user::logged_in()->id;
+        [$subject_role_id, $tabs] = $this->get_activity_role_tabs($current_user_id);
 
         $props = [
             'current-user-id' => $current_user_id,
+            'activity-role-tabs' => ['tabs' => $tabs],
             'view-activity-url' => (string) view_user_activity::get_url(),
             'print-activity-url' => (string) print_user_activity::get_url(),
-            'show-about-others-tab' => (bool) $this->get_optional_param('show_about_others_tab', false, PARAM_BOOL),
             'completion-save-success' => (bool) $this->get_optional_param('completion_save_success', false, PARAM_BOOL),
             'closed-on-completion' => (bool) $this->get_optional_param('closed_on_completion', false, PARAM_BOOL),
             'require-manual-participants-notification' => manual_participant_helper::for_user($current_user_id)
                 ->has_pending_selections(),
             'can-potentially-manage-participants' => util::can_potentially_manage_participants($current_user_id),
+            'initially-open-tab' => (int)$this->get_optional_param('initially_open_tab', $subject_role_id, PARAM_INT),
             'is-historic-activities-enabled' => util::is_historic_activities_enabled(),
             'filter-options' => $this->get_filter_options(),
             'sort-options' => $this->get_sort_options(),
@@ -82,7 +86,7 @@ class user_activities extends perform_controller {
     public static function get_base_url(): string {
         return '/mod/perform/activity/index.php';
     }
-    
+
     /**
      * @return array
      */
@@ -105,6 +109,40 @@ class user_activities extends perform_controller {
             'activityTypes' => $activity_types,
             'progressOptions' => $progress_options,
         ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_activity_role_tabs(int $user_id): array {
+        $subject_idnumber = 'subject';
+        $subject_role_id = relationship::load_by_idnumber($subject_idnumber)->id;
+
+        $initial = [
+            // The FE requires the subject role to be returned even if this
+            // participant does not have a subject role.
+            [
+                'id' => $subject_role_id,
+                'name' => get_string('user_activities_your_activities_title', 'mod_perform')
+            ]
+        ];
+
+        $tabs = participant_instance::get_activity_roles_for($user_id)
+            ->reduce(
+                function (array $roles, relationship $relationship) use ($subject_idnumber): array {
+                    if ($relationship->idnumber !== $subject_idnumber) {
+                        $roles[] = [
+                            'id' => $relationship->id,
+                            'name' => get_string('user_activities_as_a_role', 'mod_perform', $relationship->name)
+                        ];
+                    }
+
+                    return $roles;
+                },
+                $initial
+            );
+
+        return [$subject_role_id, $tabs];
     }
 
     /**

@@ -5,6 +5,10 @@ information provided here is intended especially for developers.
 * \mod_perform\data_providers\activity\subject_instance_for_participant::get_subject_sections_page() is now deprecated in favour of
   \mod_perform\data_providers\activity\subject_instance_for_participant::get_offset_page() switching the pagination from cursor based
   to offset based pagination.
+* Deprecated the following:
+    * mod_perform\entity\activity\filters\subject_instances_about; use mod_perform\entity\activity\filters\subject_instances_about_role instead.
+    * GraphQL enum mod_perform_subject_instance_about_filter has been deprecated, please update all calls to mod_perform_subject_instance_filters
+    * GraphQL input mod_perform_subject_instance_filters has deprecated the "about" filter; use the new "about_role" filter instead.
 
 === 14.0 ===
 * respondable_element_plugin::validate_response() function now includes new parameter 'is_draft_validation'

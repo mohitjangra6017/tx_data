@@ -27,6 +27,9 @@ use coding_exception;
 use core\collection;
 use core\orm\entity\filter\filter;
 
+/**
+ * @deprecated replaced by subject_instances_about_role filter.
+ */
 class subject_instances_about extends filter {
 
     public const VALUE_ABOUT_SELF = 'SELF';

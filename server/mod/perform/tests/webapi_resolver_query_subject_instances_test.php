@@ -89,7 +89,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ]
         ];
 
@@ -214,9 +214,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $participant_id = $participant_instance->participant_id;
         self::setUser($participant_id);
 
+        $subject_relationship = $perform_generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ]
         ];
 
@@ -281,9 +282,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         self::setUser($appraiser->to_record());
 
+        $appraiser_relationship = $perform_generator->get_core_relationship(constants::RELATIONSHIP_APPRAISER);
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_OTHERS]
+                'about_role' => $appraiser_relationship->id
             ]
         ];
 
@@ -343,7 +345,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ]
         ];
 
@@ -513,7 +515,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ]
         ];
 
@@ -740,7 +742,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ]
         ];
 
@@ -944,7 +946,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_OTHERS]
+                'about_role' => $manager_relationship->id
             ]
         ];
 
@@ -960,7 +962,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_OTHERS]
+                'about_role' => $manager_relationship->id
             ]
         ];
 
@@ -1116,9 +1118,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         self::setUser($subject_instance_model->subject_user_id);
 
         // Retrieve the data.
+        $subject_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ]
         ];
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
@@ -1157,8 +1160,6 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $expected_error_message =
             'Variable "$filters" got invalid value {"not_real_filter":1}; ';
-        $expected_error_message .=
-            'Field value.about of required type [mod_perform_subject_instance_about_filter!]! was not provided.';
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_failed($result, $expected_error_message);
     }
@@ -1169,12 +1170,13 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $subject_user = self::getDataGenerator()->create_user();
 
-        perform_generator::instance()->create_subject_instance([
+        $generator = perform_generator::instance();
+        $generator->create_subject_instance([
             'activity_name' => 'AAA activity',
             'subject_user_id' => $subject_user->id,
             'subject_is_participating' => true,
         ]);
-        perform_generator::instance()->create_subject_instance([
+        $generator->create_subject_instance([
             'activity_name' => 'ZZZ activity',
             'subject_user_id' => $subject_user->id,
             'subject_is_participating' => true,
@@ -1183,9 +1185,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         self::setUser($subject_user);
 
         // Without sort_by should default to "most recent first".
+        $subject_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ],
             'options' => [
                 'sort_by' => null,
@@ -1202,7 +1205,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         // Sort by activity_name should reverse the order.
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_SELF]
+                'about_role' => $subject_relationship->id
             ],
             'options' => [
                 'sort_by' => 'activity_name',
@@ -1220,9 +1223,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     public function test_query_invalid_sort_by(): void {
         self::setAdminUser();
 
+        $manager_relationship = perform_generator::instance()->get_core_relationship(constants::RELATIONSHIP_MANAGER);
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_OTHERS]
+                'about_role' => $manager_relationship->id
             ],
             'options' => [
                 'sort_by' => 'invalid',
@@ -1235,9 +1239,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_failed_ajax_query(): void {
+        $manager_relationship = perform_generator::instance()->get_core_relationship(constants::RELATIONSHIP_MANAGER);
         $args = [
             'filters' => [
-                'about' => [subject_instances_about::VALUE_ABOUT_OTHERS]
+                'about_role' => $manager_relationship->id
             ]
         ];
 
