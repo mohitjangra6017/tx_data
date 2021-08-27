@@ -35,6 +35,7 @@ use mod_perform\models\activity\subject_instance;
 use performelement_linked_review\content_type;
 use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_core\advanced_feature;
+use totara_core\hook\component_access_check;
 use totara_evidence\customfield_area\field_helper;
 use totara_evidence\entity\evidence_item as evidence_item_entity;
 use totara_evidence\models\evidence_item as evidence_item_model;
@@ -46,6 +47,13 @@ use totara_evidence\formatter\evidence_type as evidence_type_formatter;
 use totara_evidence\formatter\evidence_item_field as evidence_item_field_formatter;
 
 class evidence extends content_type {
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_component(): string {
+        return 'totara_evidence';
+    }
 
     /**
      * @inheritDoc
@@ -229,6 +237,13 @@ class evidence extends content_type {
      */
     public static function get_response_report_helper(): content_type_response_report {
         return new response_report();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function is_for_access_hook(component_access_check $hook): bool {
+        return $hook->get_component_name() === static::get_component();
     }
 
 }

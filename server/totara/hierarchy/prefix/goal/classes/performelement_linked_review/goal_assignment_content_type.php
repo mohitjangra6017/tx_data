@@ -39,6 +39,7 @@ use performelement_linked_review\content_type;
 use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_core\advanced_feature;
+use totara_core\hook\component_access_check;
 use totara_core\relationship\relationship;
 use totara_core\relationship\relationship as relationship_model;
 
@@ -48,6 +49,13 @@ abstract class goal_assignment_content_type extends content_type {
      * The format type to use when formatting strings for output.
      */
     protected const TEXT_FORMAT = format::FORMAT_PLAIN;
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_component(): string {
+        return 'hierarchy_goal';
+    }
 
     /**
      * @inheritDoc
@@ -262,4 +270,17 @@ abstract class goal_assignment_content_type extends content_type {
             'scale_value' => $scale_value,
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public static function is_for_access_hook(component_access_check $hook): bool {
+        $data = $hook->get_extra_data();
+        if (!isset($data['content_type'])) {
+            return false;
+        }
+
+        return $hook->get_component_name() === static::get_component() && $data['content_type'] === static::get_identifier();
+    }
+
 }

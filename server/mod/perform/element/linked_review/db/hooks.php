@@ -22,12 +22,14 @@
 
 use mod_perform\hook\post_element_response_submission;
 use mod_perform\hook\pre_section_relationship_deleted;
+use performelement_linked_review\watcher\component_access;
 use performelement_linked_review\watcher\post_response_submission;
 use performelement_linked_review\watcher\section_relationship_deletion_check;
 use totara_evidence\hook\evidence_item_usage;
 use totara_evidence\hook\pluginfile_access;
 use performelement_linked_review\watcher\pluginfile_access as pluginfile_access_watcher;
 use performelement_linked_review\watcher\evidence_item_usage as evidence_item_usage_watcher;
+use totara_core\hook\component_access_check;
 
 $watchers = [
     [
@@ -45,5 +47,9 @@ $watchers = [
     [
         'hookname' => evidence_item_usage::class,
         'callback' => [evidence_item_usage_watcher::class, 'in_use'],
+    ],
+    [
+        'hookname' => component_access_check::class,
+        'callback' => [component_access::class, 'check_selecting_participants'],
     ],
 ];

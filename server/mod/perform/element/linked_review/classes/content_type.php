@@ -29,6 +29,7 @@ use mod_perform\entity\activity\participant_section;
 use mod_perform\models\activity\subject_instance;
 use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\rb\helper\content_type_response_report;
+use totara_core\hook\component_access_check;
 
 /**
  * This is the base class for all linked review content types.
@@ -55,6 +56,13 @@ abstract class content_type {
     public function __construct(context $context) {
         $this->context = $context;
     }
+
+    /**
+     * Associated component
+     *
+     * @return string
+     */
+    abstract public static function get_component(): string;
 
     /**
      * The unique name identifier of this content type.
@@ -210,6 +218,16 @@ abstract class content_type {
      */
     public static function get_admin_content_footer_component(): string {
         return '';
+    }
+
+    /**
+     * Is the hook for this content type?
+     *
+     * @param component_access_check $hook
+     * @return string
+     */
+    public static function is_for_access_hook(component_access_check $hook): bool {
+        return false;
     }
 
 }

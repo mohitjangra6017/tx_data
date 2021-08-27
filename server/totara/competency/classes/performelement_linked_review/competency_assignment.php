@@ -44,6 +44,7 @@ use totara_competency\formatter\scale_value;
 use totara_competency\models\assignment as assignment_model;
 use totara_competency\models\profile\proficiency_value;
 use totara_core\advanced_feature;
+use totara_core\hook\component_access_check;
 use totara_core\relationship\relationship;
 use totara_core\relationship\relationship as relationship_model;
 
@@ -53,6 +54,13 @@ class competency_assignment extends content_type {
      * The format type to use when formatting strings for output.
      */
     private const TEXT_FORMAT = format::FORMAT_PLAIN;
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_component(): string {
+        return 'totara_competency';
+    }
 
     /**
      * @inheritDoc
@@ -362,6 +370,13 @@ class competency_assignment extends content_type {
      */
     public static function get_response_report_helper(): content_type_response_report {
         return new response_report();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function is_for_access_hook(component_access_check $hook): bool {
+        return $hook->get_component_name() === static::get_component();
     }
 
 }

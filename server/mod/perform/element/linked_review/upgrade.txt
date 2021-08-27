@@ -1,0 +1,6 @@
+This files describes API changes in /mod/perform/element/linked_review/*,
+information provided here is intended especially for developers.
+
+=== 15.0 ===
+
+* performelement_linked_review\content_type\get_component() method is now abstract.

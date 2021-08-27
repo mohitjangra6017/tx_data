@@ -175,3 +175,112 @@ Feature: Selecting goals linked to a performance review
     Then I should see "Complete your personal goal"
     And I should see "Complete part 1"
     And I should see "Complete part 2"
+
+  Scenario: Selecting participant can select goals and change status
+    Given the following "users" exist:
+      | username | firstname | lastname | email             |
+      | user4    | User      | Four     | user4@example.com |
+    And the following job assignments exist:
+      | user  | manager | appraiser |
+      | user4 | user2   | user3     |
+    And the following "activity with section and review element" exist in "performelement_linked_review" plugin:
+      | activity_name | section_title | element_title        | content_type  | selection_relationships |content_type_settings                                                |
+      | activity3     | section3      | Personal goal review | personal_goal | appraiser               | {"enable_status_change":true,"status_change_relationship":"appraiser"} |
+      | activity3     | section3      | Company goal review  | company_goal  | appraiser               | {"enable_status_change":true,"status_change_relationship":"appraiser"} |
+    And the following "section relationships" exist in "mod_perform" plugin:
+      | section_name | relationship | can_view | can_answer |
+      | section3     | subject      | yes      | yes        |
+      | section3     | manager      | yes      | yes        |
+      | section3     | appraiser    | yes      | no         |
+    And the following "participants in section" exist in "performelement_linked_review" plugin:
+      | section  | subject_user | user  | relationship     | can_answer | can_view |
+      | section3 | user4        | user4 | subject          | true       | true     |
+      | section3 | user4        | user2 | manager          | true       | true     |
+      | section3 | user4        | user3 | appraiser        | false      | true     |
+    And I log out
+
+    And I log in as "user4"
+    And I am on "Goals" page
+    And I press "Add company goal"
+    And I click on "Company goal A" "link"
+    And I click on "Company goal B" "link"
+    And I press "Save"
+
+    And I press "Add personal goal"
+    And I set the following fields to these values:
+      | Name                | Personal goal 4A            |
+      | Description         | Complete your personal goal |
+      | Scale               | Goal scale                  |
+      | targetdate[enabled] | 1                           |
+      | targetdate[day]     | 4                           |
+      | targetdate[month]   | 12                          |
+      | targetdate[year]    | 2040                        |
+    And I press "Save changes"
+
+    And I press "Add personal goal"
+    And I set the following fields to these values:
+      | Name | Personal goal 4B |
+    And I press "Save changes"
+    And I log out
+
+    When I log in as "user3"
+    And I navigate to the outstanding perform activities list page
+    And I click on "Activities about others" "link_or_button"
+    And I click on "activity3" "link"
+    And I click on "Add personal goals" "link_or_button"
+    Then I should not see "No items to display" in the tui modal
+    And I should see "Items selected: 0" in the tui modal
+    Then I should see the tui datatable contains:
+      | Goal             | Target date     |
+      | Personal goal 4A | 4 December 2040 |
+      | Personal goal 4B | -               |
+
+    When I toggle the adder picker entry with "Personal goal 4A" for "Goal"
+    And I should see "Items selected: 1" in the tui modal
+    And I click on "Add" "button" in the ".tui-modal" "css_element"
+    And I click on "Confirm selection" "button"
+    Then I should see "Complete your personal goal"
+
+    When I set the following fields to these values:
+      | status | Goal in progress |
+    And I click on "Submit status" "button"
+    Then I should see "You've given 'Personal goal 4A' a status of Goal in progress for User Four" in the ".tui-modal" "css_element"
+    And I should see "This will be submitted to the goal" in the ".tui-modal" "css_element"
+
+    When I click on "Submit status" "button" in the ".tui-modal" "css_element"
+    Then I should see "Goal status updated" in the tui success notification toast
+    And I should see "Goal status" in the 1st selected content item for the "Personal goal review" linked review element
+    And I should see "Status update by: User Three (Appraiser)" in the 1st selected content item for the "Personal goal review" linked review element
+    And I should see "##today##j F Y##" in the 1st selected content item for the "Personal goal review" linked review element
+    And I should see "Goal status: Goal in progress" in the 1st selected content item for the "Personal goal review" linked review element
+
+    When I click on "Add company goals" "link_or_button"
+    Then I should not see "No items to display" in the tui modal
+    And I should see "Items selected: 0" in the tui modal
+    And I should see the tui datatable contains:
+      | Goal           | Target date     |
+      | Company goal A | 4 December 2045 |
+      | Company goal B | -               |
+
+    And I toggle the adder picker entry with "Company goal B" for "Goal"
+    And I should see "Items selected: 1" in the tui modal
+    And I click on "Add" "button" in the ".tui-modal" "css_element"
+    And I click on "Confirm selection" "button"
+    Then I should see "Company goal B"
+
+    When I set the following fields to these values:
+      | status | Goal completed |
+    And I click on "Submit status" "button"
+    Then I should see "You've given 'Company goal B' a status of Goal completed for User Four" in the ".tui-modal" "css_element"
+    And I should see "This will be submitted to the goal" in the ".tui-modal" "css_element"
+
+    When I click on "Submit status" "button" in the ".tui-modal" "css_element"
+    Then I should see "Goal status updated" in the tui success notification toast
+    And I should see "Goal status" in the 1st selected content item for the "Company goal review" linked review element
+    And I should see "Status update by: User Three (Appraiser)" in the 1st selected content item for the "Company goal review" linked review element
+    And I should see "##today##j F Y##" in the 1st selected content item for the "Company goal review" linked review element
+    And I should see "Goal status: Goal completed" in the 1st selected content item for the "Company goal review" linked review element
+
+    When I reload the page
+    Then I should see "Complete your personal goal"
+    And I should see "Company goal B"

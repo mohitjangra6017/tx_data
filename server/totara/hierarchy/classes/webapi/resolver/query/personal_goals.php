@@ -38,6 +38,8 @@ use core\webapi\resolver\has_middleware;
 use hierarchy_goal\personal_goal_assignment_type;
 use hierarchy_goal\data_providers\goal_data_provider;
 use hierarchy_goal\data_providers\personal_goals as personal_goals_provider;
+use required_capability_exception;
+use totara_core\hook\component_access_check;
 
 /**
  * Handles the "totara_hierarchy_personal_goals" GraphQL query.
@@ -97,10 +99,21 @@ class personal_goals implements query_resolver, has_middleware {
 
         if ($logged_on_user_id === $target_user_id) {
             $context = context_user::instance($logged_on_user_id);
-            require_capability('totara/hierarchy:viewownpersonalgoal', $context);
+            $capability = 'totara/hierarchy:viewownpersonalgoal';
         } else {
             $context = context_user::instance($target_user_id);
-            require_capability('totara/hierarchy:viewstaffpersonalgoal', $context);
+            $capability = 'totara/hierarchy:viewstaffpersonalgoal';
+        }
+        if (!has_capability($capability, $context)) {
+            $hook = new component_access_check(
+                'hierarchy_goal',
+                $logged_on_user_id,
+                $target_user_id,
+                ['content_type' => 'personal_goal']
+            );
+            if (!$hook->execute()->has_permission()) {
+                throw new required_capability_exception($context, $capability, 'nopermissions', '');
+            }
         }
     }
 

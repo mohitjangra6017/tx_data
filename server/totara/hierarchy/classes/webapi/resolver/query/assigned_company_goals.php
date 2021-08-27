@@ -41,6 +41,8 @@ use hierarchy_goal\company_goal_assignment_type;
 use hierarchy_goal\data_providers\goal_data_provider;
 use hierarchy_goal\data_providers\assigned_company_goals as assigned_company_goals_provider;
 use hierarchy_goal\entity\company_goal_assignment_type_extended;
+use required_capability_exception;
+use totara_core\hook\component_access_check;
 
 /**
  * Handles the "totara_hierarchy_assigned_company_goals" GraphQL query.
@@ -150,10 +152,21 @@ class assigned_company_goals implements query_resolver, has_middleware {
 
         if ($logged_on_user_id === $target_user_id) {
             $context = context_user::instance($logged_on_user_id);
-            require_capability('totara/hierarchy:viewowncompanygoal', $context);
+            $capability = 'totara/hierarchy:viewowncompanygoal';
         } else {
             $context = context_user::instance($target_user_id);
-            require_capability('totara/hierarchy:viewstaffcompanygoal', $context);
+            $capability = 'totara/hierarchy:viewstaffcompanygoal';
+        }
+        if (!has_capability($capability, $context)) {
+            $hook = new component_access_check(
+                'hierarchy_goal',
+                $logged_on_user_id,
+                $target_user_id,
+                ['content_type' => 'company_goal']
+            );
+            if (!$hook->execute()->has_permission()) {
+                throw new required_capability_exception($context, $capability, 'nopermissions', '');
+            }
         }
     }
 
