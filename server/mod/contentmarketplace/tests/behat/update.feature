@@ -21,7 +21,8 @@ Feature: Update content marketplace activity within course
     When I click on "Find Learning" in the totara menu
     Then I should see "Hibernate"
     And I am on "Hibernate" course homepage
-    And I follow "Edit settings"
+    And I click on "Administration" "button"
+    And I click on "Edit settings" "link"
     Then I should see "Updating: External content marketplace"
     And the field "Name" matches value "Hibernate"
     And the "Name" "field" should be disabled
@@ -31,7 +32,8 @@ Feature: Update content marketplace activity within course
     And I set the field "ID number" to "lil_101"
     When I click on "Save and display" "button"
     Then I should see "Hibernate"
-    And I follow "Edit settings"
+    And I click on "Administration" "button"
+    And I click on "Edit settings" "link"
     And I follow "Common module settings"
     And the field "ID number" matches value "lil_101"
 
@@ -47,7 +49,8 @@ Feature: Update content marketplace activity within course
     When I click on "Find Learning" in the totara menu
     Then I should see "Hibernate"
     And I am on "Hibernate" course homepage
-    And I follow "Edit settings"
+    And I click on "Administration" "button"
+    And I click on "Edit settings" "link"
     And I follow "Activity completion"
     And I should see "Completion condition"
     And I should see "Mark the activity completed on launch"
@@ -63,7 +66,8 @@ Feature: Update content marketplace activity within course
     Then the field "Show activity as complete when LinkedIn Learning conditions have been met" matches value "0"
     When I click on "Save and display" "button"
     Then I should see "Hibernate"
-    And I follow "Edit settings"
+    And I click on "Administration" "button"
+    And I click on "Edit settings" "link"
     When I follow "Activity completion"
     Then the field "Mark the activity completed on launch" matches value "1"
     And the field "Show activity as complete when LinkedIn Learning conditions have been met" matches value "0"
@@ -74,7 +78,8 @@ Feature: Update content marketplace activity within course
     And the "Show activity as complete when LinkedIn Learning conditions have been met" "field" should be disabled
     And I click on "Save and display" "button"
     And I should see "Hibernate"
-    And I follow "Edit settings"
+    And I click on "Administration" "button"
+    And I click on "Edit settings" "link"
     And I follow "Activity completion"
     Then the field "Mark the activity completed on launch" matches value "0"
     And the field "Show activity as complete when LinkedIn Learning conditions have been met" matches value "0"

@@ -3,8 +3,8 @@ Feature: General behaviour with mod contentmarketplace
 
   Background:
     Given the following "courses" exist:
-      | fullname   | shortname | format |
-      | Course 101 | c101      | topics |
+      | fullname   | shortname | format |         summary           |
+      | Course 101 | c101      | topics | This is a learning object |
     And the following "content marketplace" exist in "mod_contentmarketplace" plugin:
       | name       | course | marketplace_component       |
       | Learning 1 | c101   | contentmarketplace_linkedin |
@@ -22,6 +22,6 @@ Feature: General behaviour with mod contentmarketplace
     And I log in as "admin"
     When I am on "Course 101" course homepage
     Then I should see "Learning 1"
-    And I follow "Learning 1"
-    Then I should see "language: en"
-    And I should see "Learning 1"
+    When I follow "Learning 1"
+    Then I should see "Course 101"
+    And I should see "This is a learning object"
