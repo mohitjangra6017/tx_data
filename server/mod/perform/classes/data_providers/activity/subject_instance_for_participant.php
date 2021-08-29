@@ -208,6 +208,7 @@ class subject_instance_for_participant extends provider {
 
         return subject_instance_entity::repository()
             ->as('si')
+            ->select('*')
             ->with('subject_user')
             ->with([
                 'track.activity' => function (repository $repository) {
@@ -376,14 +377,23 @@ class subject_instance_for_participant extends provider {
      * @param repository $repository
      */
     protected function sort_query_by_due_date(repository $repository): void {
-        $repository->order_by('si.due_date')->order_by('id', 'DESC');
+        // MySQL, PostgreSQL & MSSQL sort null values differently. Make sure null values are sorted at the end.
+        $far_in_the_future = 9999999999;
+        $repository
+            ->order_by_raw("COALESCE(si.due_date, {$far_in_the_future})")
+            ->order_by('id', 'DESC');
     }
 
     /**
      * @param repository $repository
      */
     protected function sort_query_by_job_assignment(repository $repository): void {
-        $repository->order_by('ja.fullname')->order_by('id', 'DESC');
+        // MySQL, PostgreSQL & MSSQL sort null values differently. Make sure null values are sorted at the end.
+        $repository
+            ->add_select_raw('CASE WHEN ja.id IS NULL THEN 1 ELSE 0 END AS ja_nulls_last')
+            ->order_by_raw('ja_nulls_last')
+            ->order_by('ja.fullname')
+            ->order_by('id', 'DESC');
     }
 
 }
