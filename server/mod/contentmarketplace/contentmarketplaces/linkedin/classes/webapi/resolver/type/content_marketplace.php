@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,16 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplaceactivity_linkedin
  */
-namespace contentmarketplaceactivity_linkedin\webapi\resolver\query;
+namespace contentmarketplaceactivity_linkedin\webapi\resolver\type;
 
-use mod_contentmarketplace\webapi\resolver\query\content_marketplace;
+use mod_contentmarketplace\webapi\resolver\type\content_marketplace_activity;
 
 /**
- * Query resolver for linkedin learning activity content marketplace.
+ * An explicit implementation of content marketplace data, which is specific to Linkedin Learning
+ * activity content marketplace.
  */
-final class linkedin_activity extends content_marketplace {
-    // Note that the resolving of this query is mostly being done by the parent class.
+class content_marketplace extends content_marketplace_activity {
+    // Note that if you are wondering to implement resolving extended field,
+    // there is a function for that at parent's level to do so.
 }

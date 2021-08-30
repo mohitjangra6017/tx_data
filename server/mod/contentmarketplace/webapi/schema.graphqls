@@ -9,6 +9,15 @@ type mod_contentmarketplace_content_marketplace {
   completion_condition: Boolean
 }
 
+"""
+An interface that help to put the content marketplace activity data
+into a sort of partialy defined schema.
+"""
+interface mod_contentmarketplace_content_marketplace_activity {
+  module: mod_contentmarketplace_content_marketplace!
+  learning_object: totara_contentmarketplace_learning_object!
+}
+
 extend type Mutation {
   mod_contentmarketplace_set_self_completion(
     cm_id: core_id!

@@ -63,7 +63,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Check that this only works for courses.
      */
     public function test_resolve_courses_only() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setAdminUser();
 
         try {
@@ -139,7 +139,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the id field
      */
     public function test_resolve_id() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -153,7 +153,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the idnumber field
      */
     public function test_resolve_idnumber() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -167,7 +167,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the shortname field
      */
     public function test_resolve_shortname() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
         $formats = [format::FORMAT_HTML, format::FORMAT_PLAIN];
@@ -201,7 +201,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the fullname field
      */
     public function test_resolve_fullname() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
         $formats = [format::FORMAT_HTML, format::FORMAT_PLAIN];
@@ -235,7 +235,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the summary field
      */
     public function test_resolve_summary() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
         $formats = [format::FORMAT_HTML, format::FORMAT_PLAIN];
@@ -274,7 +274,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the summaryformat field
      */
     public function test_resolve_summaryformat() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $formats = [ // Note: HTML is default so not included here, and RAW is not a saved format.
             FORMAT_PLAIN => format::FORMAT_PLAIN,
@@ -301,7 +301,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the timecreated field
      */
     public function test_resolve_timecreated() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
 
         // Check that each core instance of course gets resolved correctly.
@@ -314,7 +314,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the timemodified field
      */
     public function test_resolve_timemodified() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
 
         // Check that each core instance of course gets resolved correctly.
@@ -327,7 +327,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the timemodified field
      */
     public function test_resolve_startdate() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
 
         // Check that each core instance of course gets resolved correctly.
@@ -340,7 +340,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the timemodified field
      */
     public function test_resolve_enddate() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
 
         // Check that each core instance of course gets resolved correctly.
@@ -357,7 +357,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the theme field
      */
     public function test_resolve_theme() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -371,7 +371,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the lang field
      */
     public function test_resolve_lang() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -385,7 +385,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the format field
      */
     public function test_resolve_format() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -399,7 +399,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the coursetype field
      */
     public function test_resolve_coursetype() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -413,7 +413,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the icon field
      */
     public function test_resolve_icon() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
 
@@ -433,7 +433,7 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
      * Test the course type resolver for the image (url) and mobile_image fields
      */
     public function test_resolve_image() {
-        list($users, $courses) = $this->create_faux_courses();
+        [$users, $courses] = $this->create_faux_courses();
         $this->setUser($users[0]);
         $course = get_course($courses[0]->id);
         $course->image = course_get_image($course);
@@ -486,5 +486,33 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
         $this->setAdminUser();
         $this->assertTrue($this->resolve('showgrades', $c1));
         $this->assertfalse($this->resolve('showgrades', $c2));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_course_view_url(): void {
+        $course = self::getDataGenerator()->create_course();
+        self::setAdminUser();
+
+        self::assertEquals(
+            course_get_url($course)->out(),
+            $this->resolve("url", $course)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_course_format(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/course/format/lib.php");
+
+        $course = self::getDataGenerator()->create_course(["format" => "singleactivity"]);
+        self::setAdminUser();
+
+        $format = $this->resolve("course_format", $course);
+        self::assertInstanceOf(format_base::class, $format);
+        self::assertInstanceOf(format_singleactivity::class, $format);
     }
 }

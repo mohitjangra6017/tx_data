@@ -26,8 +26,7 @@ use totara_contentmarketplace\learning_object\text;
 
 /**
  * Implement this interface if your learning object can provide the description.
- * Otherwise just use model interface.
- *
+ * Otherwise, just use model interface.
  */
 interface detailed_model extends model {
     /**

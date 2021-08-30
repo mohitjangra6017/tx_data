@@ -24,7 +24,6 @@
 use core_phpunit\testcase;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use mod_contentmarketplace\model\content_marketplace as model;
-use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 
 class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activity_test_testcase extends testcase {
     use webapi_phpunit_helper;
@@ -49,23 +48,14 @@ class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activit
             ['cm_id' => $cm->cmid]
         );
 
-        self::assertNotEmpty($result);
+        self::assertInstanceOf(model::class, $result);
+        self::assertEquals($result->course->id, $cm->course);
+        self::assertEquals($result->id, $cm->id);
+        self::assertEquals($result->name, $cm->name);
+        self::assertEquals($result->completion_condition, $cm->completion_condition);
 
-        $result = (array)$result;
-        self::assertArrayHasKey('module', $result);
-        self::assertArrayHasKey('learning_object', $result);
-
-        /** @var model $module */
-        $module = $result['module'];
-        self::assertInstanceOf(model::class, $module);
-        self::assertEquals($module->course->id, $cm->course);
-        self::assertEquals($module->id, $cm->id);
-        self::assertEquals($module->name, $cm->name);
-        self::assertEquals($module->completion_condition, $cm->completion_condition);
-
-        $learning_object = $result['learning_object'];
-        self::assertInstanceOf(learning_object_model::class, $learning_object);
-
+        $learning_object = $result->get_learning_object();
+        self::assertEquals($learning_object->get_name(), $cm->name);
     }
 
     /**
@@ -124,10 +114,7 @@ class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activit
             ['cm_id' => $cm->cmid]
         );
 
-        self::assertNotEmpty($result);
-        $result = (array)$result;
-        self::assertArrayHasKey('module', $result);
-        self::assertArrayHasKey('learning_object', $result);
+        self::assertInstanceOf(model::class, $result);
     }
 
     /**
@@ -161,9 +148,46 @@ class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activit
             ['cm_id' => $cm->cmid]
         );
 
-        self::assertNotEmpty($result);
-        $result = (array)$result;
-        self::assertArrayHasKey('module', $result);
-        self::assertArrayHasKey('learning_object', $result);
+        self::assertInstanceOf(model::class, $result);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_execute_content_marketplace_query_gql_operation(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course(["format" => "singleactivity"]);
+
+        $content_marketplace = $generator->create_module("contentmarketplace", ["course" => $course->id]);
+
+        self::setAdminUser();
+        $result = $this->execute_graphql_operation(
+            "contentmarketplaceactivity_linkedin_linkedin_activity",
+            ["cm_id" => $content_marketplace->cmid]
+        );
+
+        self::assertEmpty($result->errors);
+        self::assertNotEmpty($result->data);
+
+        self::assertIsArray($result->data);
+        self::assertArrayHasKey("instance", $result->data);
+
+        $instance_data = $result->data["instance"];
+        self::assertIsArray($instance_data);
+        self::assertArrayHasKey("module", $instance_data);
+        self::assertArrayHasKey("learning_object", $instance_data);
+
+        $module_data = $instance_data["module"];
+        self::assertIsArray($module_data);
+        self::assertArrayHasKey("course", $module_data);
+        self::assertArrayHasKey("url", $module_data["course"]);
+        self::assertEquals(course_get_url($course)->out(), $module_data["course"]["url"]);
+
+        self::assertArrayHasKey("course_format", $module_data["course"]);
+        $course_format = $module_data["course"]["course_format"];
+
+        self::assertIsArray($course_format);
+        self::assertArrayHasKey("has_course_view_page", $course_format);
+        self::assertFalse($course_format["has_course_view_page"]);
     }
 }

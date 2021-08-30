@@ -9,6 +9,10 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
         fullname
         summary(format: HTML)
         image
+        url
+        course_format {
+          has_course_view_page
+        }
       }
       name
       completion_condition

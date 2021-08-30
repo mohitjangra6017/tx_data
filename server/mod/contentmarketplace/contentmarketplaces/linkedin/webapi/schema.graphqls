@@ -1,4 +1,4 @@
-type contentmarketplaceactivity_linkedin_content_marketplace {
+type contentmarketplaceactivity_linkedin_content_marketplace implements mod_contentmarketplace_content_marketplace_activity {
   module: mod_contentmarketplace_content_marketplace!
   learning_object: contentmarketplace_linkedin_learning_object!
 }

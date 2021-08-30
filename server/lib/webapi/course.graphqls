@@ -99,6 +99,15 @@ type core_course {
   The aggregation method for the overall course criteria
   """
   criteriaaggregation: String
+  """
+  Course view url.
+  """
+  url: String!
+
+  """
+  The course's format metadata information.
+  """
+  course_format: core_course_format!
 }
 
 type core_category {
@@ -314,6 +323,31 @@ type core_course_completion {
   The users grade in the course as a percentage of grademax
   """
   gradepercentage: Float
+}
+
+"""
+GraphQL type for the course's format.
+"""
+type core_course_format {
+  """
+  The type name of course format, which can be any of the course's format plugin name,
+  for example it can be either of these following:
+  + topics
+  + singleactivity
+  + demo
+  + none
+  """
+  format: String!
+
+  """
+  A language label string for the course format. Which is for human to understand.
+  """
+  name: String!
+
+  """
+  The flag to identify whether the course format support course view page or not.
+  """
+  has_course_view_page: Boolean!
 }
 
 extend type Query {

@@ -77,6 +77,11 @@ class course implements type_resolver {
             }
         }
 
+        // Course view url.
+        if ($field === "url") {
+            return course_get_url($course->id)->out();
+        }
+
         // Transform the format field from the constants to a core_format string.
         if ($field == 'summaryformat') {
             switch ($course->summaryformat) {
@@ -182,6 +187,12 @@ class course implements type_resolver {
             $info = new \completion_info($course);
             $aggregationtypes = $info::get_aggregation_methods();
             return $aggregationtypes[$info->get_aggregation_method()];
+        }
+
+        // Course format metadata.
+        if ($field === "course_format") {
+            require_once("{$CFG->dirroot}/course/format/lib.php");
+            return course_get_format($course);
         }
 
         if (in_array($field, ['sections', 'modcount'])) {
