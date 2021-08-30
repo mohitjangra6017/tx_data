@@ -479,17 +479,23 @@ export default {
       },
     },
     rightSidePanelIsOpen(val) {
-      storage.set('sidepanel', { isOpen: val });
+      if (this.$el.offsetWidth > 764) {
+        storage.set('sidepanel', { isOpen: val });
+      }
     },
   },
   mounted() {
-    let state = this.rightSidePanelInitiallyOpen;
-    const sidePanelState = storage.get('sidepanel');
+    // Never start with the side panel open on mobile.
+    // We use innerWidth directly because currentBoundary isn't know on at this point or even in next tick.
+    if (this.$el.offsetWidth > 764) {
+      let state = this.rightSidePanelInitiallyOpen;
+      const sidePanelState = storage.get('sidepanel');
 
-    if (sidePanelState) {
-      state = sidePanelState.isOpen;
+      if (sidePanelState) {
+        state = sidePanelState.isOpen;
+      }
+      this.rightSidePanelIsOpen = state;
     }
-    this.rightSidePanelIsOpen = state;
   },
   methods: {
     /**

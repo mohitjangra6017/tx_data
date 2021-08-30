@@ -321,6 +321,10 @@ export default {
     }
   }
 
+  &--sticky&--closed {
+    overflow: visible;
+  }
+
   /**
    * Close button, somewhat complicated by the SidePanel being configurably
    * bi-directional and both of those directions also requiring RTL support

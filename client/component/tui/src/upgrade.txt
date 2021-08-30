@@ -25,6 +25,8 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Updated ActionCard.vue to accept two additional props, has-shadow property now has to be manually provided and is no longer enabled by default
   * Template changes
+* Updated SidePanel.vue to show the close handle when in sticky mode and on mobile
+  * SCSS changes
 
 === 14.0 ===
 

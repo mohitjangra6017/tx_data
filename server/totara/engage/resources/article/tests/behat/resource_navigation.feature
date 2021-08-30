@@ -73,3 +73,61 @@ Feature: Users can navigate back to the parent page from a resource.
     And I click on "Article 1" "link" in the "Recently viewed" "block"
     Then I should see "Article 1"
     And I should see "Dashboard" in the ".tui-resourceNavigationBar" "css_element"
+
+  Scenario: Resource side panel state is remembered tablet and up
+    Given the following "workspaces" exist in "container_workspace" plugin:
+      | name        | owner | summary       | topics |
+      | Workspace 1 | user2 | The Workspace | Topic1 |
+    And the following is shared with workspaces:
+      | component      | name      | sharer | workspace_name |
+      | engage_article | Article 1 | user2  | Workspace 1    |
+      | engage_article | Article 2 | user2  | Workspace 1    |
+    And I log in as "user2"
+
+    # Open the workspace
+    And I click on "Your Workspaces" in the totara menu
+    And I click on "Workspace 1" "link" in the ".tui-workspaceMenu__group" "css_element"
+    And I click on "Library" "link" in the ".tui-tabs__tabs" "css_element"
+    And I click on "Article 1" "link" in the ".tui-contributionBaseContent__cards" "css_element"
+
+    # The side panel should be open by default
+    Then ".tui-sidePanel--open" "css_element" should exist
+
+    When I press the "back" button in the browser
+    And I click on "Library" "link" in the ".tui-tabs__tabs" "css_element"
+    And I click on "Article 2" "link" in the ".tui-contributionBaseContent__cards" "css_element"
+    Then ".tui-sidePanel--open" "css_element" should exist
+
+    When I click on ".tui-sidePanel__outsideClose" "css_element"
+    Then ".tui-sidePanel--closed" "css_element" should exist
+
+    When I press the "back" button in the browser
+    And I click on "Library" "link" in the ".tui-tabs__tabs" "css_element"
+    And I click on "Article 2" "link" in the ".tui-contributionBaseContent__cards" "css_element"
+    Then ".tui-sidePanel--closed" "css_element" should exist
+
+    # Now on mobile we should not remember this state, or begin with it open (even with desktop state in local storage)
+    When I click on ".tui-sidePanel__outsideClose" "css_element"
+    Then ".tui-sidePanel--open" "css_element" should exist
+
+    When I press the "back" button in the browser
+    And I click on "Library" "link" in the ".tui-tabs__tabs" "css_element"
+    And I change viewport size to "small"
+    And I click on "Article 1" "link" in the ".tui-contributionBaseContent__cards" "css_element"
+
+    # The side panel should be closed by default
+    Then ".tui-sidePanel--closed" "css_element" should exist
+
+    When I press the "back" button in the browser
+    And I click on "Library" "link" in the ".tui-tabs__tabs" "css_element"
+    And I click on "Article 2" "link" in the ".tui-contributionBaseContent__cards" "css_element"
+    Then ".tui-sidePanel--closed" "css_element" should exist
+
+    When I click on ".tui-sidePanel__outsideClose" "css_element"
+    Then ".tui-sidePanel--open" "css_element" should exist
+
+    When I press the "back" button in the browser
+    And I click on "Library" "link" in the ".tui-tabs__tabs" "css_element"
+    And I click on "Article 2" "link" in the ".tui-contributionBaseContent__cards" "css_element"
+    # The side panel should still start in closed state, despite opening it in article 1
+    Then ".tui-sidePanel--closed" "css_element" should exist

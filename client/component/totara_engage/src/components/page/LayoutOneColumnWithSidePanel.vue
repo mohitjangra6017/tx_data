@@ -53,7 +53,7 @@
             ref="sidepanel"
             direction="rtl"
             :animated="!onSmallScreen"
-            :sticky="!onSmallScreen"
+            sticky
             :show-button-control="true"
             :initially-open="sidePanelIsOpen"
             :overflows="false"
@@ -150,16 +150,22 @@ export default {
   },
   watch: {
     sidePanelIsOpen(val) {
-      storage.set('sidepanel', { isOpen: val });
+      if (this.$el.offsetWidth > 764) {
+        storage.set('sidepanel', { isOpen: val });
+      }
     },
   },
   mounted() {
-    let state = !this.onSmallScreen;
-    const sidePanelState = storage.get('sidepanel');
-    if (sidePanelState) {
-      state = sidePanelState.isOpen;
+    // Never start with the side panel open on mobile.
+    // We use innerWidth directly because currentBoundary isn't know on at this point or even in next tick.
+    if (this.$el.offsetWidth > 764) {
+      let state = true;
+      const sidePanelState = storage.get('sidepanel');
+      if (sidePanelState) {
+        state = sidePanelState.isOpen;
+      }
+      this.sidePanelIsOpen = state;
     }
-    this.sidePanelIsOpen = state;
   },
   methods: {
     /**
