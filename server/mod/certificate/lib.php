@@ -259,19 +259,14 @@ function certificate_supports($feature) {
 function certificate_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
     global $CFG, $DB, $USER;
 
-    if ($context->contextlevel != CONTEXT_MODULE) {
-        return false;
-    }
-
-    if (!$certificate = $DB->get_record('certificate', array('id' => $cm->instance))) {
-        return false;
-    }
-
     require_login($course, false, $cm);
 
     require_once($CFG->libdir.'/filelib.php');
 
-    if ($filearea === 'issue') {
+    if ($filearea === 'issue'
+        && $context->contextlevel === CONTEXT_MODULE
+        && $DB->record_exists('certificate', ['id' => $cm->instance])
+    ) {
         $certrecord = (int)array_shift($args);
 
         if (!$certrecord = $DB->get_record('certificate_issues', array('id' => $certrecord))) {
@@ -291,6 +286,17 @@ function certificate_pluginfile($course, $cm, $context, $filearea, $args, $force
         }
         send_stored_file($file, 0, 0, true); // download MUST be forced - security!
     }
+
+    if (in_array($filearea, ['border', 'seal', 'signature', 'watermark']) && $context->contextlevel === CONTEXT_SYSTEM) {
+        $fullpath = "/{$context->id}/mod_certificate/$filearea/$args[0]/$args[1]";
+
+        $fs = get_file_storage();
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            return false;
+        }
+        send_stored_file($file, 0, 0, false);
+    }
+    return false;
 }
 
 /**

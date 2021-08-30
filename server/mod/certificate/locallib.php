@@ -251,6 +251,15 @@ function certificate_email_student($course, $certificate, $certrecord, $context,
     // Make the HTML version more XHTML happy  (&amp;)
     $messagehtml = text_to_html(get_string('emailstudenttext', 'certificate', $info));
 
+    $view_generator_exists = \mod_certificate\output\view_generator_factory::exists($certificate->certificatetype);
+    if ($view_generator_exists) {
+        $cm = get_coursemodule_from_instance('certificate', $certificate->id, $course->id);
+        $link = new moodle_url('/mod/certificate/view.php?id=' . $cm->id . '&action=html');
+        $label = get_string('view_html_version', 'mod_certificate');
+        $message .= "\n{$label}: {$link->out()}";
+        $messagehtml .= '<br/> ' . html_writer::link($link, $label) . '<br/>';
+    }
+
     $tempdir = make_temp_directory('certificate/attachment');
     if (!$tempdir) {
         return false;

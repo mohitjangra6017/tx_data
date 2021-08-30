@@ -93,6 +93,7 @@ make_cache_directory('tcpdf');
 
 // Load the specific certificate type.
 require("$CFG->dirroot/mod/certificate/type/$certificate->certificatetype/certificate.php");
+$view_generator_exists = \mod_certificate\output\view_generator_factory::exists($certificate->certificatetype);
 
 if (empty($action)) { // Not displaying PDF
     echo $OUTPUT->header();
@@ -124,19 +125,30 @@ if (empty($action)) { // Not displaying PDF
         $str = get_string('openemail', 'certificate');
     }
     echo html_writer::tag('p', $str, array('style' => 'text-align:center'));
+
     $linkname = get_string('getcertificate', 'certificate');
 
     $link = new moodle_url('/mod/certificate/view.php?id='.$cm->id.'&action=get');
     $button = new single_button($link, $linkname);
     if ($certificate->delivery != 1) {
         $button->add_action(new popup_action('click', $link, 'view' . $cm->id, array('height' => 600, 'width' => 800)));
+
+        if ($view_generator_exists) {
+            $html_link = new moodle_url('/mod/certificate/view.php?id='.$cm->id.'&action=html');
+            $html_button = new single_button($html_link, get_string('view_html_version', 'mod_certificate'));
+            $html_button->add_action(new popup_action('click', $html_link, 'certificatehtml', array('height' => 600, 'width' => 800)));
+        }
     }
 
-    echo html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:center'));
+    echo html_writer::start_div('mod_certificate__getCertificate');
+    echo $OUTPUT->render($button);
+    if ($view_generator_exists) {
+        echo $OUTPUT->render($html_button);
+    }
+    echo html_writer::end_div();
     echo $OUTPUT->footer($course);
     exit;
-} else { // Output to pdf
-
+} else if ($action === 'get') { // Output to pdf
     // No debugging here, sorry.
     $CFG->debugdisplay = 0;
     @ini_set('display_errors', '0');
@@ -162,4 +174,12 @@ if (empty($action)) { // Not displaying PDF
         // Open in browser after sending email.
         send_file($filecontents, $filename, 0, 0, true, false, 'application/pdf', false, ['allowpdfembedding' => true]);
     }
+} else if ($action === 'html') {
+    if (!$view_generator_exists) {
+        send_file_not_found();
+        die();
+    }
+
+    $view_generator = \mod_certificate\output\view_generator_factory::create($certificate, $certrecord, $course, $cm);
+    echo $view_generator->generate_html();
 }

@@ -211,6 +211,7 @@ $string['userdata_certificate_issues_history'] = 'Certificate issues history';
 $string['userdata_notify_users'] = 'Certificates using an email address in Notify Users field';
 $string['validate'] = 'Verify';
 $string['verifycertificate'] = 'Verify Certificate';
+$string['view_html_version'] = 'View HTML version';
 $string['viewcertificateviews'] = 'View {$a} issued certificates';
 $string['viewed'] = 'You received this certificate on:';
 $string['viewtranscript'] = 'View Certificates';
