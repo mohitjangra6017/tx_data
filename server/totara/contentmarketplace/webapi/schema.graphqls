@@ -8,3 +8,16 @@ interface totara_contentmarketplace_learning_object {
   language: String!
   image_url: String
 }
+
+enum totara_contentmarketplace_completion_condition {
+  """
+  Whether marking the completion base on the launch status of marketplace provider's course or not.
+  Which if even the marketplace provider's course is viewed, then the system will mark the activity
+  completion as completed.
+  """
+  LAUNCH
+  """
+  Whether marking the completion base on the condition from content marketplace provider.
+  """
+  CONTENT_MARKETPLACE
+}

@@ -28,12 +28,14 @@ use core\entity\course;
 use core\entity\enrol;
 use core\orm\entity\model;
 use core_component;
+use core_container\entity\module;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
 use moodle_url;
 use stdClass;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object;
 use totara_contentmarketplace\learning_object\factory;
 use coding_exception;
+use completion_info;
 
 /**
  * Model for content marketplace entity.
@@ -49,12 +51,17 @@ use coding_exception;
  * @property-read learning_object $learning_object
  * @property-read moodle_url      $view_url
  * @property-read string          $activity_module_marketplace_component
- *
+ * @property-read bool            $completion_enabled
+ * @property-read int             $completion_tracking
  * @property-read bool            $self_enrol_enabled
  * @property-read bool            $guest_enrol_enabled
  * @property-read array           $self_enrol_enabled_with_required_key
  */
 class content_marketplace extends model {
+    /**
+     * @var module
+     */
+    private $course_module;
 
     /**
      * @var model_entity
@@ -94,9 +101,11 @@ class content_marketplace extends model {
         'activity_module_marketplace_component',
         'course',
         'course_id',
+        'completion_enabled',
+        'completion_tracking',
         'self_enrol_enabled',
         'guest_enrol_enabled',
-        'self_enrol_enabled_with_required_key'
+        'self_enrol_enabled_with_required_key',
     ];
 
     /**
@@ -107,6 +116,7 @@ class content_marketplace extends model {
         parent::__construct($entity);
         $this->context = null;
         $this->internal_learning_object = null;
+        $this->course_module = null;
     }
 
     /**
@@ -261,6 +271,46 @@ class content_marketplace extends model {
         }
 
         return 'contentmarketplaceactivity_' . $plugin_name;
+    }
+
+    /**
+     * Returns the course's module entity.
+     * @return module
+     */
+    public function get_course_module(): module {
+        if (!isset($this->course_module)) {
+            $cm_id = $this->get_cm_id();
+            $this->course_module = new module($cm_id);
+        }
+
+        return $this->course_module;
+    }
+
+    /**
+     * Whether the completion is enabled for this content marketplace model or not.
+     *
+     * @return bool
+     */
+    public function get_completion_enabled(): bool {
+        $course = $this->entity->course_entity;
+        $completion = new completion_info($course->to_record());
+
+        $module = $this->get_course_module();
+        return $completion->is_enabled($module->to_record());
+    }
+
+    /**
+     * Returns the completion tracking constant value. Which the constant value is either of these following:
+     *
+     * + {@see COMPLETION_TRACKING_NONE}
+     * + {@see COMPLETION_TRACKING_MANUAL}
+     * + {@see COMPLETION_TRACKING_AUTOMATIC}
+     *
+     * @return int
+     */
+    public function get_completion_tracking(): int {
+        $module = $this->get_course_module();
+        return $module->completion;
     }
 
     /**

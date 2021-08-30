@@ -142,12 +142,14 @@ function contentmarketplace_update_instance(stdClass $content_marketplace, $mood
  * Obtains the automatic completion state for this content marketplace activity based on any conditions
  * in content marketplace settings.
  *
- * @param object $course Course
- * @param object $cm Course-module
+ * @param stdClass $course Course
+ * @param stdClass $cm Course-module
  * @param int $userid User ID
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions).
+ *                   This ignored for now.
+ *
  * @return bool True if completed, false if not. (If no conditions, then return
- *   value depends on comparison type)
+ *              value depends on comparison type)
  */
 function contentmarketplace_get_completion_state($course, $cm, $userid, $type): bool {
     if (empty($userid)) {

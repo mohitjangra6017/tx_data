@@ -33,12 +33,13 @@ class mod_contentmarketplace_content_marketplace_model_testcase extends testcase
      */
     public function test_instance_from_cm_id(): void {
         $generator = self::getDataGenerator();
-        $course = $generator->create_course();
+        $course = $generator->create_course(["enablecompletion" => 1]);
         $cm = $generator->create_module(
             'contentmarketplace',
             [
                 'course' => $course->id,
                 'learning_object_marketplace_component' => 'contentmarketplace_linkedin',
+                'completion' => COMPLETION_TRACKING_MANUAL
             ]
         );
 
@@ -48,6 +49,8 @@ class mod_contentmarketplace_content_marketplace_model_testcase extends testcase
         self::assertEquals($cm->learning_object_id, $learning_object->get_id());
         self::assertEquals($cm->name, $content_marketplace->name);
         self::assertEquals($cm->learning_object_marketplace_component, $learning_object::get_marketplace_component());
+        self::assertTrue($content_marketplace->completion_enabled);
+        self::assertEquals(COMPLETION_TRACKING_MANUAL, $content_marketplace->completion_tracking);
     }
 
     /**

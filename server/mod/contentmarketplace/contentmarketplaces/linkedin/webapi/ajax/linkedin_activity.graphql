@@ -16,6 +16,9 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
       }
       name
       completion_condition
+      completion_status
+      completion_enabled
+      self_completion
       self_enrol_enabled
       guest_enrol_enabled
       self_enrol_enabled_with_required_key {

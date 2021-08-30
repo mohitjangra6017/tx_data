@@ -29,6 +29,7 @@ use core\webapi\type_resolver;
 use mod_contentmarketplace\interactor\content_marketplace_interactor;
 use mod_contentmarketplace\model\content_marketplace as model;
 use mod_contentmarketplace\formatter\content_marketplace as formatter;
+use core\orm\query\builder;
 
 /**
  * Type resolver for content marketplace.
@@ -42,6 +43,8 @@ class content_marketplace implements type_resolver {
      * @return mixed
      */
     public static function resolve(string $field, $content_marketplace, array $args, execution_context $ec) {
+        global $CFG;
+
         if (!($content_marketplace instanceof model)) {
             throw new coding_exception('Expected content marketplace model');
         }
@@ -50,9 +53,48 @@ class content_marketplace implements type_resolver {
             return new content_marketplace_interactor($content_marketplace);
         }
 
+        if ("self_completion" === $field) {
+            require_once("{$CFG->dirroot}/lib/completionlib.php");
+
+            $module = $content_marketplace->get_course_module();
+            return COMPLETION_TRACKING_MANUAL == $module->completion;
+        }
+
+        if ("completion_status" === $field) {
+            return self::resolve_completion_status($content_marketplace);
+        }
+
         $context = $ec->has_relevant_context() ? $ec->get_relevant_context() : $content_marketplace->get_context();
         $formatter = new formatter($content_marketplace, $context);
 
         return $formatter->format($field, $args['format'] ?? format::FORMAT_PLAIN);
+    }
+
+    /**
+     * @param model $content_marketplace
+     * @return bool|null
+     */
+    private static function resolve_completion_status(model $content_marketplace): ?bool {
+        global $CFG, $USER;
+
+        $db = builder::get_db();
+        $completion_record = $db->get_record(
+            "course_modules_completion",
+            [
+                "userid" => $USER->id,
+                "coursemoduleid" => $content_marketplace->get_cm_id()
+            ],
+            "id, completionstate"
+        );
+
+        if (empty($completion_record)) {
+            // No record existing yet, hence not yet started.
+            return null;
+        }
+
+        // As long as completion incomplete is not the value of the completion state then
+        // the current user in session had completed the course.
+        require_once("{$CFG->dirroot}/mod/contentmarketplace/lib.php");
+        return COMPLETION_INCOMPLETE != $completion_record->completionstate;
     }
 }

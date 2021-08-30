@@ -26,6 +26,9 @@ type mod_contentmarketplace_self_enrol_enabled_with_required_key_payload {
 }
 
 type mod_contentmarketplace_content_marketplace {
+  """
+  The instance's id.
+  """
   id: core_id!
   """
   course_module id
@@ -33,8 +36,38 @@ type mod_contentmarketplace_content_marketplace {
   cm_id: core_id!
   course: core_course!
   name(format: core_format = PLAIN): String!
-  completion_condition: Boolean
+  """
+  NULL means that this content marketplace activity does not have a completion condition.
+  """
+  completion_condition: totara_contentmarketplace_completion_condition
+  """
+  Whether the self completion is set for this very content marketplace or not, by checking the field
+  "completion" (or completion_tracking constants) of course module table.
+
+  If this field is TRUE then the field "completion_condition" MUST be set to NULL, otherwise
+  there would be a serious violation of data integrity.
+
+  Note that this field is a quick implementation for content marketplace only. Ideally, it should be
+  resolved as a part of core_course_module type.
+  """
+  self_completion: Boolean!
+
+  """
+  Whether the current user in session had completed this content marketplace or not, which
+  the following value are representing for the statuses:
+  + TRUE - as user completed the module.
+  + FALSE - as user are in progress with the module.
+  + NULL - as user had not yet started.
+  """
+  completion_status: Boolean
+
+  """
+  Whether the content marketplace activity is enabled with the completion or not.
+  """
+  completion_enabled: Boolean!
+
   interactor: mod_contentmarketplace_content_marketplace_interactor!
+
   """
   Whether self enrol is enabled or not.
   """

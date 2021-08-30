@@ -31,57 +31,63 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
     use webapi_phpunit_helper;
 
     /**
-     * @var content_marketplace_interactor
-     */
-    protected $interacter;
-
-    /**
-     * @var enrol_plugin
+     * @var enrol_plugin|null
      */
     protected $self_plugin;
 
     /**
-     * @var enrol_plugin
+     * @var enrol_plugin|null
      */
     protected $guest_plugin;
+
+    /**
+     * @var int|null
+     */
+    protected $course_module_id;
 
     /**
      * @inheritDoc
      */
     protected function setUp(): void {
         global $DB;
+
         $generator = self::getDataGenerator();
         $course = $generator->create_course(['enablecompletion' => 1]);
-        $cm = $generator->create_module(
+        $marketplace = $generator->create_module(
             'contentmarketplace',
             [
                 'course' => $course->id,
                 'completion' => COMPLETION_TRACKING_MANUAL
             ]
         );
-        $cm = content_marketplace::load_by_id($cm->id);
-        $this->interacter = new content_marketplace_interactor(content_marketplace::load_by_id($cm->id));
+
+        $this->course_module_id = $marketplace->cmid;
 
         // Enabled self enrolment.
         $this->self_plugin = enrol_get_plugin('self');
         $instance = $DB->get_record(
             'enrol',
             [
-                'courseid' => $cm->get_course_id(),
+                'courseid' => $marketplace->course,
                 'enrol' => 'self'
             ],
             '*',
             MUST_EXIST
         );
+
         $this->self_plugin->update_status($instance, ENROL_INSTANCE_ENABLED);
 
         // Enabled guest access.
         $enrol_instance = $DB->get_record(
             'enrol',
-            ['enrol' => 'guest', 'courseid' => $cm->get_course_id()],
+            [
+                'enrol' => 'guest',
+                'courseid' => $marketplace->course
+            ],
             '*',
             MUST_EXIST
         );
+
         $this->guest_plugin = enrol_get_plugin('guest');
         $this->guest_plugin->update_status($enrol_instance, ENROL_INSTANCE_ENABLED);
     }
@@ -92,43 +98,26 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
     protected function tearDown(): void {
         $this->self_plugin = null;
         $this->guest_plugin = null;
-        $this->interacter = null;
-    }
-
-    /**
-     * @param string $enrol_plugin
-     *  @return void
-     */
-    private function disable_enrol_plugin(string $enrol_plugin = 'guest'): void {
-        global $DB;
-
-        // Disabled gusest access.
-        $enrol_instance = $DB->get_record(
-            'enrol',
-            ['enrol' => $enrol_plugin, 'courseid' => $this->interacter->get_course_id()],
-            '*',
-            MUST_EXIST
-        );
-
-        if ($enrol_plugin == 'guest') {
-            $this->guest_plugin->update_status($enrol_instance, ENROL_INSTANCE_DISABLED);
-            return;
-        }
-
-        $this->self_plugin->update_status($enrol_instance, ENROL_INSTANCE_DISABLED);
+        $this->course_module_id = null;
     }
 
     /**
      * @return void
      */
     public function test_content_markertplace_interactor_type_is_admin(): void {
-        self::setAdminUser();
+        $interactor = new content_marketplace_interactor(
+            content_marketplace::from_course_module_id($this->course_module_id),
+            get_admin()->id
+        );
+
+        self::assertTrue($interactor->is_admin());
+
         self::assertEquals(
-            $this->interacter->is_admin(),
+            $interactor->is_admin(),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_content_marketplace_interactor::class),
                 'is_admin',
-                $this->interacter
+                $interactor
             )
         );
     }
@@ -137,14 +126,18 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
      * @return void
      */
     public function test_content_markertplace_interactor_type_can_enrol(): void {
-        self::setAdminUser();
-        self::assertTrue($this->interacter->can_enrol());
+        $interactor = new content_marketplace_interactor(
+            content_marketplace::from_course_module_id($this->course_module_id),
+            get_admin()->id
+        );
+
+        self::assertTrue($interactor->can_enrol());
         self::assertEquals(
-            $this->interacter->can_enrol(),
+            $interactor->can_enrol(),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_content_marketplace_interactor::class),
                 'can_enrol',
-                $this->interacter
+                $interactor
             )
         );
     }
@@ -153,13 +146,18 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
      * @return void
      */
     public function test_content_markertplace_interactor_type_is_site_guest(): void {
-        self::setGuestUser();
+        $guest_user = guest_user();
+        $interactor = new content_marketplace_interactor(
+            content_marketplace::from_course_module_id($this->course_module_id),
+            $guest_user->id
+        );
+
         self::assertEquals(
-            $this->interacter->is_site_guest(),
+            $interactor->is_site_guest(),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_content_marketplace_interactor::class),
                 'is_site_guest',
-                $this->interacter
+                $interactor
             )
         );
     }

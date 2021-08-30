@@ -25,6 +25,7 @@ namespace mod_contentmarketplace\formatter;
 
 use core\orm\formatter\entity_model_formatter;
 use core\webapi\formatter\field\string_field_formatter;
+use totara_contentmarketplace\webapi\completion_condition_helper;
 
 class content_marketplace extends entity_model_formatter {
     /**
@@ -36,7 +37,14 @@ class content_marketplace extends entity_model_formatter {
             'name' => string_field_formatter::class,
             'course' => null,
             'cm_id' => null,
-            'completion_condition' => null,
+            'completion_condition' => function(?int $value): ?string {
+                if (empty($value)) {
+                    return null;
+                }
+
+                return completion_condition_helper::get_enum($value);
+            },
+            'completion_enabled' => null,
             'self_enrol_enabled' => null,
             'guest_enrol_enabled' => null,
             'self_enrol_enabled_with_required_key' => null

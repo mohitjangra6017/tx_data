@@ -71,12 +71,17 @@
         />
 
         <!-- Current status and self completion -->
-        <div class="tui-linkedinActivity__status">
+        <div
+          v-if="activity.completionEnabled"
+          class="tui-linkedinActivity__status"
+        >
           <div class="tui-linkedinActivity__status-completion">
             <Lozenge :text="activity.status" />
           </div>
 
+          <!-- Display the completion toggle when there is self completion enabled. -->
           <ToggleSwitch
+            v-if="activity.selfCompletion"
             v-model="setCompletion"
             class="tui-linkedinActivity__status-toggle"
             :text="
@@ -174,280 +179,6 @@ export default {
 
   data() {
     return {
-      adminTree: [
-        {
-          id: 'marketplaceModuleAdministration',
-          label: 'Content marketplace module administration',
-          children: [
-            {
-              id: 'editSettings',
-              label: 'Edit settings',
-              linkUrl: '#editSettings',
-            },
-            {
-              id: 'locallyAssignedRoles',
-              label: 'Locally assigned roles',
-              linkUrl: '#locallyAssignedRoles',
-            },
-            {
-              id: 'Permissions',
-              label: 'Permissions',
-              linkUrl: '#Permissions',
-            },
-            {
-              id: 'checkPermissions',
-              label: 'Check permissions',
-              linkUrl: '#checkPermissions',
-            },
-            {
-              id: 'Filters',
-              label: 'Filters',
-              linkUrl: '#Filters',
-            },
-            {
-              id: 'Logs',
-              label: 'Logs',
-              linkUrl: '#Logs',
-            },
-          ],
-        },
-        {
-          id: 'courseAdministration',
-          label: 'Course administration',
-          children: [
-            {
-              id: 'editSettings',
-              label: 'Edit settings',
-              linkUrl: '#editSettings',
-            },
-            {
-              id: 'turnEditingOn',
-              label: 'Turn editing on',
-              linkUrl: '#turnEditingOn',
-            },
-            {
-              id: 'courseCompletion',
-              label: 'Course completion',
-              linkUrl: '#courseCompletion',
-            },
-            {
-              id: 'completionsArchive',
-              label: 'Completions archive',
-              linkUrl: '#completionsArchive',
-            },
-            {
-              id: 'completionEditor',
-              label: 'Completion editor',
-              linkUrl: '#completionEditor',
-            },
-            {
-              id: 'reminders',
-              label: 'Reminders',
-              linkUrl: '#reminders',
-            },
-            {
-              id: 'courseAdministrationUsers',
-              label: 'Users',
-              children: [
-                {
-                  id: 'EnrolledUsers',
-                  label: 'Enrolled users',
-                  linkUrl: '#EnrolledUsers',
-                },
-                {
-                  id: 'courseAdministrationUserEnrolmentMethods',
-                  label: 'Enrolment methods',
-                  children: [
-                    {
-                      id: 'ManualEnrolments',
-                      label: 'Manual enrolments',
-                      linkUrl: '#ManualEnrolments',
-                    },
-                    {
-                      id: 'GuestAccess',
-                      label: 'Guest access',
-                      linkUrl: '#GuestAccess',
-                    },
-                    {
-                      id: 'SelfEnrolmentLearner',
-                      label: 'Self enrolment (Learner)',
-                      linkUrl: '#SelfEnrolmentLearner',
-                    },
-                  ],
-                },
-                {
-                  id: 'Groups',
-                  label: 'Groups',
-                  linkUrl: '#Groups',
-                },
-                {
-                  id: 'courseAdministrationUserPermissions',
-                  label: 'Permissions',
-                  linkUrl: '#Permissions',
-                  children: [
-                    {
-                      id: 'CheckPermissions',
-                      label: 'Check permissions',
-                      linkUrl: '#CheckPermissions',
-                    },
-                  ],
-                },
-                {
-                  id: 'OtherUsers',
-                  label: 'Other users',
-                  linkUrl: '#OtherUsers',
-                },
-              ],
-            },
-            {
-              id: 'enrolmentOptions',
-              label: 'Enrolment options',
-              linkUrl: '#enrolmentOptions',
-            },
-            {
-              id: 'filters',
-              label: 'Filters',
-              linkUrl: '#Filters',
-            },
-            {
-              id: 'courseAdministrationReports',
-              label: 'Reports',
-              children: [
-                {
-                  id: 'Logs',
-                  label: 'Logs',
-                  linkUrl: '#Logs',
-                },
-                {
-                  id: 'LiveLogs',
-                  label: 'Live logs',
-                  linkUrl: '#LiveLogs',
-                },
-                {
-                  id: 'ActivityReport',
-                  label: 'Activity report',
-                  linkUrl: '#ActivityReport',
-                },
-                {
-                  id: 'CourseParticipation',
-                  label: 'Course participation',
-                  linkUrl: '#CourseParticipation',
-                },
-                {
-                  id: 'ActivityCompletion',
-                  label: 'Activity completion',
-                  linkUrl: '#ActivityCompletion',
-                },
-              ],
-            },
-            {
-              id: 'grades',
-              label: 'Grades',
-              linkUrl: '#Grades',
-            },
-            {
-              id: 'GradebookSetup',
-              label: 'Gradebook setup',
-              linkUrl: '#GradebookSetup',
-            },
-            {
-              id: 'courseAdministrationBadges',
-              label: 'Badges',
-              children: [
-                {
-                  id: 'ManageBadges',
-                  label: 'Manage badges',
-                  linkUrl: '#ManageBadges',
-                },
-                {
-                  id: 'AddANewBadge',
-                  label: 'Add a new badge',
-                  linkUrl: '#AddANewBadge',
-                },
-              ],
-            },
-            {
-              id: 'Backup',
-              label: 'Backup',
-              linkUrl: '#Backup',
-            },
-            {
-              id: 'Restore',
-              label: 'Restore',
-              linkUrl: '#Restore',
-            },
-            {
-              id: 'Import',
-              label: 'Import',
-              linkUrl: '#Import',
-            },
-            {
-              id: 'Reset',
-              label: 'Reset',
-              linkUrl: '#Reset',
-            },
-            {
-              id: 'courseAdministrationQuestionBank',
-              label: 'Question bank',
-              linkUrl: '#questionBank',
-              children: [
-                {
-                  id: 'Questions',
-                  label: 'Questions',
-                  linkUrl: '#Questions',
-                },
-                {
-                  id: 'Categories',
-                  label: 'Categories',
-                  linkUrl: '#Categories',
-                },
-                {
-                  id: 'Import',
-                  label: 'Import',
-                  linkUrl: '#Import',
-                },
-                {
-                  id: 'Export',
-                  label: 'Export',
-                  linkUrl: '#Export',
-                },
-              ],
-            },
-            {
-              id: 'courseAdministrationSwitchRoles',
-              label: 'Switch role to...',
-              linkUrl: '#roles',
-              children: [
-                {
-                  id: 'siteManager',
-                  label: 'Site Manager',
-                  linkUrl: '#siteManager',
-                },
-                {
-                  id: 'courseCreator',
-                  label: 'Course creator',
-                  linkUrl: '#courseCreator',
-                },
-                {
-                  id: 'Trainer',
-                  label: 'Trainer',
-                  linkUrl: '#Trainer',
-                },
-                {
-                  id: 'Learner',
-                  label: 'Learner',
-                  linkUrl: '#Learner',
-                },
-                {
-                  id: 'Guest',
-                  label: 'Guest',
-                  linkUrl: '#Guest',
-                },
-              ],
-            },
-          ],
-        },
-      ],
       interactor: {
         // Can self enrol in activity
         canEnrol: false,
@@ -540,12 +271,15 @@ export default {
           image: module.course.image,
           levelString: learning_object.level,
           name: module.course.fullname,
+          // Default to completion not started
           status: this.$str(
             'activity_status_not_started',
             'mod_contentmarketplace'
           ),
+          completionEnabled: module.completion_enabled,
           timeToComplete: learning_object.time_to_complete,
           updated: learning_object.last_updated_at,
+          selfCompletion: module.self_completion,
         };
 
         this.webLaunchUrl = learning_object.web_launch_url;
@@ -565,6 +299,22 @@ export default {
           module.self_enrol_enabled_with_required_key.redirect_url || '';
         this.selfEnrolEnabledWithRequiredKey.enabled =
           module.self_enrol_enabled_with_required_key.enabled;
+
+        if (module.completion_status !== null) {
+          // The completion of this activity had been started and it is either completed or in progress
+          // base upon the value of this field "completion_status".
+          if (module.completion_status) {
+            learningObject.status = this.$str(
+              'activity_status_completed',
+              'mod_contentmarketplace'
+            );
+          } else {
+            learningObject.status = this.$str(
+              'activity_status_in_progress',
+              'mod_contentmarketplace'
+            );
+          }
+        }
 
         return learningObject;
       },
@@ -594,6 +344,28 @@ export default {
           variables: {
             cm_id: this.cmId,
             status: this.setCompletion,
+          },
+          update: (store, { data: { result: completionResult } }) => {
+            // Update the completion result to apollo cache.
+            let { instance } = store.readQuery({
+              query: LinkedinActivityQuery,
+              variables: {
+                cm_id: this.cmId,
+              },
+            });
+
+            instance = Object.assign({}, instance);
+            instance.module = Object.assign({}, instance.module, {
+              completion_status: completionResult,
+            });
+
+            store.writeQuery({
+              query: LinkedinActivityQuery,
+              variables: {
+                cm_id: this.cmId,
+              },
+              data: { instance },
+            });
           },
         });
 

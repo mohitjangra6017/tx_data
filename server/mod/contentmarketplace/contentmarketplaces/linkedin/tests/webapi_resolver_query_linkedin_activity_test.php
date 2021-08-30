@@ -49,13 +49,16 @@ class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activit
         );
 
         self::assertInstanceOf(model::class, $result);
-        self::assertEquals($result->course->id, $cm->course);
+
+        self::assertEquals($result->course_id, $cm->course);
         self::assertEquals($result->id, $cm->id);
         self::assertEquals($result->name, $cm->name);
         self::assertEquals($result->completion_condition, $cm->completion_condition);
 
         $learning_object = $result->get_learning_object();
-        self::assertEquals($learning_object->get_name(), $cm->name);
+
+        self::assertNotEmpty($learning_object->get_id());
+        self::assertEquals($result->name, $learning_object->get_name());
     }
 
     /**
