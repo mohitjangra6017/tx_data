@@ -62,9 +62,10 @@ abstract class provider {
     /**
      * Build the base ORM query using the relevant repository.
      *
+     * @param bool $include_relations defaults to true
      * @return repository
      */
-    abstract protected function build_query(): repository;
+    abstract protected function build_query(bool $include_relations = true): repository;
 
     /**
      * Add filters for this provider.

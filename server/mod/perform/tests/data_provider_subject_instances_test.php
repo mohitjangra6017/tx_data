@@ -752,6 +752,68 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         self::assertSame($expected_activity_order, $activity_names);
     }
 
+    public function test_overdue_count(): void {
+        $activity_types = activity_type_entity::repository()
+            ->order_by('name')
+            ->get();
+        $activity_types = array_combine($activity_types->pluck('name'), $activity_types->pluck('id'));
+
+        // Create a set for each activity type
+        $instances = self::create_activities_for_all_types($activity_types);
+
+        $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+        $actual_count = $provider->get_overdue_count();
+        $this->assertSame(0, $actual_count);
+
+        // Set overdue
+        self::set_subject_instance_due_date($instances['check-in']['about_user_and_participating'], strtotime("-1 day"));
+        self::set_subject_instance_due_date($instances['appraisal']['about_user_and_participating'], strtotime("-1 day"));
+
+        $actual_count = $provider->get_overdue_count();
+        $this->assertSame(2, $actual_count);
+
+        $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_SELF]);
+        $actual_count = $provider->get_overdue_count();
+        $this->assertSame(2, $actual_count);
+
+        $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_OTHERS]);
+        $actual_count = $provider->get_overdue_count();
+        $this->assertSame(0, $actual_count);
+    }
+
+    public function test_completed_count(): void {
+        $activity_types = activity_type_entity::repository()
+            ->order_by('name')
+            ->get();
+        $activity_types = array_combine($activity_types->pluck('name'), $activity_types->pluck('id'));
+
+        // Create a set for each activity type
+        $instances = self::create_activities_for_all_types($activity_types);
+
+        $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+        $actual_count = $provider->get_completed_count();
+        $this->assertSame(0, $actual_count);
+
+        // Set overdue and progress some instances
+        self::set_participant_instance_progress($instances['appraisal']['about_someone_else_and_participating'], participant_instance_complete::get_code());
+        self::set_participant_instance_progress($instances['check-in']['about_someone_else_and_participating'], participant_instance_complete::get_code());
+
+        $actual_count = $provider->get_completed_count();
+        $this->assertSame(2, $actual_count);
+
+        $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_SELF]);
+        $actual_count = $provider->get_completed_count();
+        $this->assertSame(0, $actual_count);
+
+        $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
+        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_OTHERS]);
+        $actual_count = $provider->get_completed_count();
+        $this->assertSame(2, $actual_count);
+    }
+
     /**
      * @param array $activity_types
      * @return array

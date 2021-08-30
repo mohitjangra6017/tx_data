@@ -39,7 +39,7 @@ class activity_type extends provider {
     /**
      * @inheritDoc
      */
-    protected function build_query(): repository {
+    protected function build_query(bool $include_relations = true): repository {
         return activity_type_entity::repository()
             ->order_by('id');
     }

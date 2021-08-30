@@ -55,7 +55,7 @@ class selectable_users extends provider {
     /**
      * @inheritDoc
      */
-    protected function build_query(): repository {
+    protected function build_query(bool $include_relations = true): repository {
         global $USER;
 
         $reference_context = null;

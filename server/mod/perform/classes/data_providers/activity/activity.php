@@ -65,7 +65,7 @@ class activity extends provider {
     /**
      * @inheritDoc
      */
-    protected function build_query(): repository {
+    protected function build_query(bool $include_relations = true): repository {
         return activity_entity::repository()
             ->as('a')
             ->filter_by_visible()
@@ -88,11 +88,13 @@ class activity extends provider {
                 [$sql, $params] = access::get_has_capability_sql('mod/perform:view_participation_reporting', 'ctx.id', $USER->id);
                 $builder->or_where_raw($sql, $params);
             })
-            ->with('type')
-            // The following relations are all needed for reducing the amount of queries
-            // triggered by the activity status conditions
-            ->with('tracks')
-            ->with('sections_ordered_with_respondable_element_count.section_relationships.core_relationship');
+            ->when($include_relations, function (repository $repository) {
+                $repository->with('type')
+                   // The following relations are all needed for reducing the amount of queries
+                   // triggered by the activity status conditions
+                   ->with('tracks')
+                   ->with('sections_ordered_with_respondable_element_count.section_relationships.core_relationship');
+            });
     }
 
     /**

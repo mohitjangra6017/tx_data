@@ -78,5 +78,7 @@ query mod_perform_my_subject_instances(
     }
     total
     next_cursor
+    completed_count
+    overdue_count
   }
 }

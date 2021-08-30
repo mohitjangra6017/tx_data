@@ -46,6 +46,7 @@ use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\entity\activity\subject_instance_repository;
 use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_user_assignment as track_user_assignment_entity;
+use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\models\response\subject_sections;
 use mod_perform\state\participant_instance\complete;
@@ -198,9 +199,10 @@ class subject_instance_for_participant extends provider {
     /**
      * Build query for user activities that can be managed by the logged in user.
      *
+     * @param bool $include_relations
      * @return subject_instance_repository
      */
-    protected function build_query(): repository {
+    protected function build_query(bool $include_relations = true): repository {
         global $CFG;
         require_once($CFG->dirroot . "/totara/coursecatalog/lib.php");
 
@@ -209,39 +211,41 @@ class subject_instance_for_participant extends provider {
         return subject_instance_entity::repository()
             ->as('si')
             ->select('*')
-            ->with('subject_user')
-            ->with([
-                'track.activity' => function (repository $repository) {
-                    $repository
-                        ->with('settings')
-                        ->with('type');
-                }
-            ])
-            ->with('job_assignment')
-            ->with([
-                'participant_instances' => function (repository $repository) {
-                    $repository
-                        ->with([
-                            'participant_sections' => function (repository $repository) {
-                                $repository
-                                    ->with('section.section_relationships.core_relationship')
-                                    ->with([
-                                        'participant_instance' => function (repository $repository) {
-                                            $repository
-                                                ->with('core_relationship')
-                                                ->with('participant_user')
-                                                ->with('external_participant')
-                                                ->with('subject_instance.track.activity');
-                                        }
-                                    ]);
-                            }
-                        ])
-                        ->with('core_relationship')
-                        ->with('subject_instance.track.activity')
-                        ->with('participant_user')
-                        ->with('external_participant');
-                }
-            ])
+            ->when($include_relations, function (repository $repository) {
+                $repository->with('subject_user')
+                    ->with([
+                        'track.activity' => function (repository $repository) {
+                            $repository
+                                ->with('settings')
+                                ->with('type');
+                        }
+                    ])
+                    ->with('job_assignment')
+                    ->with([
+                        'participant_instances' => function (repository $repository) {
+                            $repository
+                                ->with([
+                                    'participant_sections' => function (repository $repository) {
+                                        $repository
+                                            ->with('section.section_relationships.core_relationship')
+                                            ->with([
+                                                'participant_instance' => function (repository $repository) {
+                                                    $repository
+                                                        ->with('core_relationship')
+                                                        ->with('participant_user')
+                                                        ->with('external_participant')
+                                                        ->with('subject_instance.track.activity');
+                                                }
+                                            ]);
+                                    }
+                                ])
+                                ->with('core_relationship')
+                                ->with('subject_instance.track.activity')
+                                ->with('participant_user')
+                                ->with('external_participant');
+                        }
+                    ]);
+            })
             ->join([track_user_assignment_entity::TABLE, 'tua'], 'track_user_assignment_id', 'id')
             ->join([track_entity::TABLE, 't'], 'tua.track_id', 'id')
             ->join([activity_entity::TABLE, 'a'], 't.activity_id', 'id')
@@ -345,6 +349,40 @@ class subject_instance_for_participant extends provider {
             ->add_filters(['subject_instance_id' => $subject_instance_id])
             ->get()
             ->first();
+    }
+
+    /**
+     * Get count of the completed participant instance for this user
+     *
+     * @return int
+     */
+    public function get_completed_count(): int {
+        $query = $this->build_query(false);
+        // Only apply the about filter, ignore the rest
+        if (isset($this->filters['about'])) {
+            $this->filter_query_by_about($query, $this->filters['about']);
+        }
+        return $query->join([participant_instance::TABLE, 'pi'], 'si.id', 'pi.subject_instance_id')
+            ->where('pi.participant_source', $this->participant_source)
+            ->where('pi.participant_id', $this->participant_id)
+            ->where('pi.progress', complete::get_code())
+            ->count();
+    }
+
+    /**
+     * Get count of the completed participant instance for this user
+     *
+     * @return int
+     */
+    public function get_overdue_count(): int {
+        $query = $this->build_query(false);
+        // Only apply the about filter, ignore the rest
+        if (isset($this->filters['about'])) {
+            $this->filter_query_by_about($query, $this->filters['about']);
+        }
+        $this->filter_query_by_overdue($query, 1);
+
+        return $query->count();
     }
 
     /**

@@ -508,6 +508,14 @@ type mod_perform_subject_sections_page implements core_pageable_result {
   Cursor to request the next set of results for this query
   """
   next_cursor: String!
+  """
+  The total number of completed instances
+  """
+  completed_count: Int!
+  """
+  The number of overdue activities
+  """
+  overdue_count: Int!
 }
 
 """

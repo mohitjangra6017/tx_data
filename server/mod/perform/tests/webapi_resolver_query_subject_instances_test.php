@@ -96,7 +96,12 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);
 
-        $actual = ($this->get_webapi_operation_data($result))['items'];
+        $result = $this->get_webapi_operation_data($result);
+        $this->assertEquals($result['total'], 1);
+        $this->assertEquals($result['completed_count'], 0);
+        $this->assertEquals($result['overdue_count'], 0);
+
+        $actual = $result['items'];
         $this->assertCount(1, $actual, 'wrong subject count');
 
         $subject = $actual[0];
@@ -742,7 +747,12 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);
 
-        $actual = ($this->get_webapi_operation_data($result))['items'];
+        $result = $this->get_webapi_operation_data($result);
+        $this->assertEquals($result['total'], 1);
+        $this->assertEquals($result['completed_count'], 0);
+        $this->assertEquals($result['overdue_count'], 0);
+
+        $actual = $result['items'];
         $this->assertCount(1, $actual, 'wrong subject count');
 
         $subject = $actual[0];

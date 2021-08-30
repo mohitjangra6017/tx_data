@@ -58,6 +58,10 @@ class my_subject_instances implements query_resolver, has_middleware {
             : util::get_default_context();
         $ec->set_relevant_context($context);
 
+        // Also return the completed activities count
+        $results->completed_count = $data_provider->get_completed_count();
+        $results->overdue_count = $data_provider->get_overdue_count();
+
         return $results;
     }
 
