@@ -45,17 +45,17 @@ class crypto_factory {
     /**
      * @return string
      */
-    private static function create_private_key_file_path(): string {
+    private static function default_private_key_file_path(): string {
         global $CFG;
-        return "{$CFG->dataroot}/totara_oauth2/private_key.pem";
+        return "{$CFG->dataroot}/totara/oauth2/private_key.pem";
     }
 
     /**
      * @return string
      */
-    private static function create_public_key_file_path(): string {
+    private static function default_public_key_file_path(): string {
         global $CFG;
-        return "{$CFG->dataroot}/totara_oauth2/public_key.pem";
+        return "{$CFG->dataroot}/totara/oauth2/public_key.pem";
     }
 
     /**
@@ -63,7 +63,7 @@ class crypto_factory {
      */
     private static function prepare_directory(): void {
         global $CFG;
-        $dir_path = "{$CFG->dataroot}/totara_oauth2";
+        $dir_path = "{$CFG->dataroot}/totara/oauth2";
 
         if (!file_exists($dir_path)) {
             // I am not so sure if this function is allow to be called here, as it was marked private.
@@ -80,8 +80,8 @@ class crypto_factory {
             throw new coding_exception("Extension openssl is not enabled");
         }
 
-        $private_key_path = self::create_private_key_file_path();
-        $public_key_path = self::create_public_key_file_path();
+        $private_key_path = self::default_private_key_file_path();
+        $public_key_path = self::default_public_key_file_path();
 
         if (file_exists($private_key_path) && file_exists($public_key_path)) {
             // We only skip when two keys are existing. Otherwise, if one missing or none
@@ -121,7 +121,7 @@ class crypto_factory {
         }
 
         self::generate_pair_of_keys();
-        return self::create_private_key_file_path();
+        return self::default_private_key_file_path();
     }
 
     /**
@@ -137,10 +137,12 @@ class crypto_factory {
         }
 
         self::generate_pair_of_keys();
-        return self::create_public_key_file_path();
+        return self::default_public_key_file_path();
     }
 
     /**
+     * Fetch the encryption key, or generate a new one if it doesn't already exist.
+     *
      * @return string
      */
     public static function get_encryption_key(): string {

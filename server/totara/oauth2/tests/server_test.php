@@ -48,7 +48,7 @@ class totara_oauth2_server_testcase extends testcase {
         $generator = generator::instance();
         $client = $generator->create_client_provider();
 
-        $server = server::boot();
+        $server = server::create();
         $request = request::create_from_global(
             [],
             [
@@ -106,7 +106,7 @@ class totara_oauth2_server_testcase extends testcase {
             ["AUTHORIZATION" => "Bearer {$token}"],
         );
 
-        $server = server::boot($time_now);
+        $server = server::create($time_now);
         $result = $server->is_request_verified($request);
 
         self::assertTrue($result);
@@ -128,7 +128,7 @@ class totara_oauth2_server_testcase extends testcase {
             ["AUTHORIZATION" => "Bearer {$token}"]
         );
 
-        $server = server::boot($time_now + (HOURSECS * 2));
+        $server = server::create($time_now + (HOURSECS * 2));
         $result = $server->is_request_verified($request);
 
         self::assertFalse($result);

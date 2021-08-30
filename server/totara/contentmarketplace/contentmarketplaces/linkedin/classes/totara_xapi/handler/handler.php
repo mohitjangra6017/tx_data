@@ -50,7 +50,7 @@ class handler extends base_handler {
             $this->request->get_server_parameters()
         );
 
-        $server = server::boot($this->time_now);
+        $server = server::create($this->time_now);
 
         if ($server->is_request_verified($oauth2_request)) {
             // The server is verified - hence, we should not return any result.

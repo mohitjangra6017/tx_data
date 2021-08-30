@@ -154,7 +154,7 @@ class request {
      * @return mixed
      */
     public function get_required_parameter(string $field, ?string $param = null) {
-        $this->required_parameter($field);
+        $this->require_parameter($field);
         return $this->get_parameter($field, null, $param);
     }
 
@@ -173,7 +173,7 @@ class request {
      * @param string $field
      * @return void
      */
-    public function required_parameter(string $field): void {
+    public function require_parameter(string $field): void {
         if ($this->has_parameter($field)) {
             return;
         }
@@ -182,12 +182,12 @@ class request {
     }
 
     /**
-     * Returns the value of the request's header. Null is returned when
+     * Returns the value of the request's header, or null if it is not present in the request.
      *
      * @param string $field
      * @return string|null
      */
-    public function header(string $field): ?string {
+    public function get_header(string $field): ?string {
         // Upper case the field name for header, since our Hashmap is all in uppercase.
         $field = strtoupper($field);
         return $this->header_parameters[$field] ?? null;

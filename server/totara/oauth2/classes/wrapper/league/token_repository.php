@@ -33,6 +33,7 @@ use totara_oauth2\entity\access_token;
 use totara_oauth2\entity\client_provider;
 
 class token_repository implements AccessTokenRepositoryInterface {
+// phpcs:disable Totara.NamingConventions
     /**
      * The expiry times in seconds. By default, it is 24h
      * @var int
@@ -142,4 +143,5 @@ class token_repository implements AccessTokenRepositoryInterface {
         $entity = access_token::repository()->find_by_identifier($tokenId);
         return null === $entity;
     }
+// phpcs:enable
 }

@@ -27,6 +27,7 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use totara_oauth2\entity\client_provider;
 
 class client_entity implements ClientEntityInterface {
+// phpcs:disable Totara.NamingConventions
     /**
      * @var client_provider
      */
@@ -81,4 +82,5 @@ class client_entity implements ClientEntityInterface {
     public function get_client_provider(): client_provider {
         return $this->client_provider_entity;
     }
+// phpcs:enable
 }

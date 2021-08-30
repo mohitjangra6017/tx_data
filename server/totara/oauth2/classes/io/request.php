@@ -32,6 +32,7 @@ use totara_core\http\util;
  * A wrapper request.
  */
 class request implements request_interface {
+// phpcs:disable Totara.NamingConventions
     /**
      * @var library_request
      */
@@ -88,10 +89,7 @@ class request implements request_interface {
         }
 
         if (empty($headers)) {
-            $headers = util::get_request_headers();
-            if (false === $headers) {
-                $headers = [];
-            }
+            $headers = util::get_request_headers()?: [];
         }
 
         $library_request = new library_request($method, $uri, $headers);
@@ -351,4 +349,5 @@ class request implements request_interface {
         $library_request = $this->request->withoutAttribute($name);
         return new self($library_request);
     }
+// phpcs:enable
 }

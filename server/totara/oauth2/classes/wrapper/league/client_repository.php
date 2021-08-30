@@ -27,6 +27,7 @@ use totara_oauth2\entity\client_provider;
 use totara_oauth2\grant_type;
 
 class client_repository implements ClientRepositoryInterface {
+// phpcs:disable Totara.NamingConventions
     /**
      * @param string $clientIdentifier
      * @return client_entity|null
@@ -58,4 +59,5 @@ class client_repository implements ClientRepositoryInterface {
         $client_entity = $this->getClientEntity($clientIdentifier);
         return $client_entity->verify($clientSecret);
     }
+// phpcs:enable
 }

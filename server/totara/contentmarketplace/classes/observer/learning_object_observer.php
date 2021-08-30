@@ -47,33 +47,10 @@ final class learning_object_observer {
         $course_sources = $repository->fetch_by_id_and_component($event->objectid, $other["marketplace_component"]);
 
         try {
-            $map = [
-                "description" => "summary",
-                "name" => "fullname"
-            ];
-
             /** @var course_source $course_source */
             foreach ($course_sources as $course_source) {
-                $course = new course(get_course($course_source->course_id));
-                $new_course = [];
-
-                foreach ($map as $key => $value) {
-                    if (!$event->validate_data_key($key)) {
-                        throw new coding_exception("The key {$key} of event data is incorrect");
-                    }
-
-                    if (isset($other[$key]) && $course->get_attribute($value) !== $other[$key]) {
-                        $extra_data_key = $event->get_extra_key($key);
-                        if (!$event->validate_data_key($extra_data_key)) {
-                            throw new coding_exception("The key {$extra_data_key} of event other data is incorrect");
-                        }
-
-                        $old_value = $other[$extra_data_key];
-                        if (isset($old_value) && $course->get_attribute($value) === $old_value) {
-                            $new_course[$value] = $other[$key];
-                        }
-                    }
-                }
+                $course = $course_source->course;
+                $new_course = self::get_updated_course_record($event, $course);
 
                 $new_image = $event->get_new_image();
                 $new_image = new course_image_downloader($course->id, $new_image);
@@ -96,5 +73,41 @@ final class learning_object_observer {
         } finally {
             $course_sources->close();
         }
+    }
+
+    /**
+     * @param base_learning_object_updated $event
+     * @param course                       $course
+     *
+     * @return array
+     */
+    private static function  get_updated_course_record(base_learning_object_updated $event, course $course): array {
+        $map = [
+            "description" => "summary",
+            "name" => "fullname"
+        ];
+
+        $new_course = [];
+        $other = $event->other;
+
+        foreach ($map as $key => $value) {
+            if (!$event->validate_data_key($key)) {
+                throw new coding_exception("The key {$key} of event data is incorrect");
+            }
+
+            if (isset($other[$key]) && $course->get_attribute($value) !== $other[$key]) {
+                $extra_data_key = $event->get_extra_key($key);
+                if (!$event->validate_data_key($extra_data_key)) {
+                    throw new coding_exception("The key {$extra_data_key} of event other data is incorrect");
+                }
+
+                $old_value = $other[$extra_data_key];
+                if (isset($old_value) && $course->get_attribute($value) === $old_value) {
+                    $new_course[$value] = $other[$key];
+                }
+            }
+        }
+
+        return $new_course;
     }
 }

@@ -49,10 +49,12 @@ class course_source_repository extends repository {
     /**
      * @param int    $learning_object_id
      * @param string $marketplace_component
-     *
-     * @return lazy_collection
+     * @return lazy_collection|course_source[]
      */
-    public function fetch_by_id_and_component(int $learning_object_id, string $marketplace_component): lazy_collection {
+    public function fetch_by_id_and_component(
+        int $learning_object_id,
+        string $marketplace_component
+    ): lazy_collection {
         $repository = course_source::repository();
         $repository->where("learning_object_id", $learning_object_id);
         $repository->where("marketplace_component", $marketplace_component);

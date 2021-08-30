@@ -94,5 +94,7 @@ class receiver_controller extends controller {
     protected function authorize(): void {
         // NOTE: we do not authorize for this controller, because it has been delegated down
         // to the xAPI handler/processor.
+        // Despite the flag $this->require_login is already set to FALSE, there is also
+        // another flag from global $CFG (which is forcelogin) that can make this function run.
     }
 }

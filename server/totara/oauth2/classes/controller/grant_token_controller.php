@@ -80,13 +80,15 @@ class grant_token_controller extends controller {
     protected function authorize(): void {
         // Note that for oauth2 server controller, we do not want the required login
         // to be run, hence this function was overridden to leave that part out.
+        // Despite the flag $this->require_login is already set to FALSE, there is also
+        // another flag from global $CFG (which is forcelogin) that can make this function run.
     }
 
     /**
      * @return string
      */
     public function action(): string {
-        $server = server::boot($this->time_now);
+        $server = server::create($this->time_now);
 
         // Due to the constraint from totara_mvc, we cannot send the custom headers that was processed
         // from the server yet. For example, a custom response status code, which is 400 and it identifies

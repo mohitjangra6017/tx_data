@@ -23,6 +23,8 @@
 namespace totara_contentmarketplace\entity;
 
 use core\orm\entity\entity;
+use core\orm\entity\relations\belongs_to;
+use core\entity\course;
 use totara_contentmarketplace\repository\course_source_repository;
 
 /**
@@ -32,6 +34,8 @@ use totara_contentmarketplace\repository\course_source_repository;
  * @property string $marketplace_component
  * @property int    $course_id
  * @property int    $learning_object_id
+ *
+ * @property-read course $course
  *
  * @method static course_source_repository repository()
  */
@@ -46,5 +50,12 @@ class course_source extends entity {
      */
     public static function repository_class_name(): string {
         return course_source_repository::class;
+    }
+
+    /**
+     * @return belongs_to
+     */
+    public function course(): belongs_to {
+        return $this->belongs_to(course::class, "course_id");
     }
 }

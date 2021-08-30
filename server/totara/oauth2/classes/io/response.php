@@ -30,11 +30,15 @@ use Nyholm\Psr7\Response as library_response;
  * A wrapper of OAuth2 Library response
  */
 class response implements response_interface {
+// phpcs:disable Totara.NamingConventions
     /**
      * @var library_response
      */
     private $response;
 
+    /**
+     * @param library_response|null $response
+     */
     public function __construct(?library_response $response = null) {
         $this->response = $response ?? new library_response();
     }
@@ -152,4 +156,5 @@ class response implements response_interface {
     public function hasHeader($name) {
         return $this->response->hasHeader($name);
     }
+// phpcs:enable
 }

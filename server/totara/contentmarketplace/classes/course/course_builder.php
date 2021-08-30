@@ -163,7 +163,7 @@ class course_builder {
         if (null === $completion_condition && COMPLETION_TRACKING_AUTOMATIC === $this->module_completion_tracking) {
             // Reset it to manual if the completion condition is set to null - not set.
             $this->module_completion_tracking = COMPLETION_TRACKING_MANUAL;
-        } else if (null !== $completion_condition){
+        } else if (null !== $completion_condition) {
             // Otherwise, we process with the business logics.
             $available = [
                 completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE,

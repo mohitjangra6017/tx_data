@@ -27,9 +27,11 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use totara_oauth2\wrapper\league\scope\xapi_write;
 
+/**
+ * The class is not used much for now.
+ */
 class scope_repository implements ScopeRepositoryInterface {
-    // This class is not used for now. But it is needed in order to allow the server to work.
-
+// phpcs:disable Totara.NamingConventions
     /**
      * @param string $identifier
      * @return ScopeEntityInterface|null
@@ -58,4 +60,5 @@ class scope_repository implements ScopeRepositoryInterface {
     ) {
         return $scopes;
     }
+// phpcs:enable
 }

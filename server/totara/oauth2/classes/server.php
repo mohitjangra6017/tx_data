@@ -60,7 +60,7 @@ class server {
      * @param int|null $time_now
      * @return server
      */
-    public static function boot(?int $time_now = null): server {
+    public static function create(?int $time_now = null): server {
         $time_now = $time_now ?? time();
         return new self($time_now);
     }

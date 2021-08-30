@@ -32,6 +32,7 @@ use totara_oauth2\entity\access_token;
  * The wrapper of access_token
  */
 class token_entity implements AccessTokenEntityInterface {
+// phpcs:disable Totara.NamingConventions
     use TokenEntityTrait, EntityTrait, AccessTokenTrait;
 
     /**
@@ -43,4 +44,5 @@ class token_entity implements AccessTokenEntityInterface {
         // For now, we don't need user's identifier.
         $this->userIdentifier = null;
     }
+// phpcs:enable
 }

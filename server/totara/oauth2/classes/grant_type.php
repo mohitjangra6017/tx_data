@@ -22,8 +22,6 @@
  */
 namespace totara_oauth2;
 
-use OAuth2\GrantType\ClientCredentials;
-
 /**
  * A metadata class that provides the grant type.
  */
@@ -39,7 +37,6 @@ class grant_type {
      * @return string
      */
     public static function get_client_credentials(): string {
-        /** @see ClientCredentials::getQueryStringIdentifier() */
         return "client_credentials";
     }
 }

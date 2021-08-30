@@ -38,7 +38,7 @@ class client_provider_repository extends repository {
         $repository = client_provider::repository();
         $repository->where("client_id", $client_id);
 
-        return $repository->one();
+        return $repository->one($strict);
     }
 
     /**
