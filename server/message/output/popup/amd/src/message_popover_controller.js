@@ -122,7 +122,7 @@ define(['jquery', 'core/ajax', 'core/templates', 'core/str',
     MessagePopoverController.prototype.renderUnreadCount = function() {
         var element = this.root.find(SELECTORS.COUNT_CONTAINER);
 
-        if (this.unreadCount) {
+        if (this.unreadCount && this.unreadCount > 0) {
             element.text(this.unreadCount);
             element.removeClass('hidden');
         } else {

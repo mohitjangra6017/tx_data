@@ -48,7 +48,7 @@ function message_popup_render_navbar_output(\renderer_base $renderer) {
         $unreadcount = \core_message\api::count_unread_conversations($USER);
         $context = [
             'userid' => $USER->id,
-            'unreadcount' => $unreadcount,
+            'unreadcount' => $unreadcount > 0 ? $unreadcount : false,
             'urls' => [
                 'seeall' => (new moodle_url('/message/index.php'))->out(),
                 'writeamessage' => (new moodle_url('/message/index.php', ['contactsfirst' => 1]))->out(),
@@ -64,7 +64,7 @@ function message_popup_render_navbar_output(\renderer_base $renderer) {
         $unreadcount = \message_popup\api::count_unread_popup_notifications($USER->id);
         $context = [
             'userid' => $USER->id,
-            'unreadcount' => $unreadcount,
+            'unreadcount' => $unreadcount > 0 ? $unreadcount : false,
             'urls' => [
                 'seeall' => (new moodle_url('/message/output/popup/notifications.php'))->out(),
                 'preferences' => (new moodle_url('/message/notificationpreferences.php', ['userid' => $USER->id]))->out(),
