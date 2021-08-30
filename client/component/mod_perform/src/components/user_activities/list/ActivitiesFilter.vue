@@ -71,9 +71,13 @@
       </template>
     </FilterBar>
 
-    <div class="tui-performUserActivitiesFilter__toggles">
+    <div
+      v-if="hasOverdue || hasCompleted"
+      class="tui-performUserActivitiesFilter__toggles"
+    >
       <!-- Toggle overdue only -->
       <ToggleSwitch
+        v-if="hasOverdue"
         v-model="value.overdueOnly"
         :text="$str('user_activities_filter_overdue_only', 'mod_perform')"
         :toggle-first="true"
@@ -81,6 +85,7 @@
 
       <!-- Toggle exclude completed activities only -->
       <ToggleSwitch
+        v-if="hasCompleted"
         v-model="value.excludeCompleted"
         :text="$str('user_activities_filter_exclude_completed', 'mod_perform')"
         :toggle-first="true"
@@ -107,6 +112,8 @@ export default {
     about: String,
     filterOptions: Object,
     value: Object,
+    hasCompleted: Boolean,
+    hasOverdue: Boolean,
   },
 
   computed: {

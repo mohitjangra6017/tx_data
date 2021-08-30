@@ -1035,7 +1035,13 @@ final class generator extends \core\testing\component_generator {
         $manager_can_answer = empty($relationships_can_answer) || in_array('manager', $relationships_can_answer, true);
         $appraiser_can_answer = empty($relationships_can_answer) || in_array('appraiser', $relationships_can_answer, true);
 
-        $track = track::create($activity, "track for {$activity->name}");
+        if (!empty($data['track'])) {
+            $track = $data['track'];
+        } else {
+            $track = "track for {$activity->name}";
+        }
+
+        $track = track::create($activity, $track);
 
         $user_assignment = new track_user_assignment();
         $user_assignment->track_id = $track->id;

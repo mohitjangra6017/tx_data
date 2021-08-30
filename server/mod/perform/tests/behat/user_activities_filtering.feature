@@ -8,26 +8,29 @@ Feature: Filtering user activities list
       | david    | David     | Two      | david.two@example.com   |
       | harry    | Harry     | Three    | harry.three@example.com |
     And the following "subject instances" exist in "mod_perform" plugin:
-      | activity_name                   | activity_type | subject_username | subject_is_participating | other_participant_username | number_repeated_instances |
-      | johns example activity 1        | check-in      | john             | true                     | harry                      | 1                         |
-      | johns example activity 2        | appraisal     | john             | true                     | harry                      | 1                         |
-      | johns example activity 3        | appraisal     | john             | true                     | harry                      | 1                         |
-      | johns example activity 4        | check-in      | john             | true                     | harry                      | 1                         |
-      | johns example activity 5        | feedback      | john             | true                     | harry                      | 1                         |
-      | johns example activity 6        | check-in      | john             | true                     | harry                      | 1                         |
-      | johns example activity 7        | feedback      | john             | true                     | harry                      | 1                         |
-      | johns annual review (repeating) | check-in      | john             | true                     | harry                      | 3                         |
-      | davids example activity 1       | check-in      | david            | false                    | john                       | 1                         |
-      | davids example activity 2       | appraisal     | david            | false                    | john                       | 1                         |
-      | davids example activity 3       | check-in      | david            | false                    | john                       | 1                         |
-      | davids example activity 4       | appraisal     | harry            | false                    | john                       | 1                         |
-      | davids example activity 5       | check-in      | harry            | false                    | john                       | 1                         |
-      | davids example activity 6       | appraisal     | harry            | false                    | john                       | 1                         |
+      | activity_name                   | activity_type | subject_username | subject_is_participating | other_participant_username | number_repeated_instances | track   |
+      | johns example activity 1        | check-in      | john             | true                     | harry                      | 1                         | track 1 |
+      | johns example activity 2        | appraisal     | john             | true                     | harry                      | 1                         | track 2 |
+      | johns example activity 3        | appraisal     | john             | true                     | harry                      | 1                         | track 3 |
+      | johns example activity 4        | check-in      | john             | true                     | harry                      | 1                         | track 4 |
+      | johns example activity 5        | feedback      | john             | true                     | harry                      | 1                         | track 5 |
+      | johns example activity 6        | check-in      | john             | true                     | harry                      | 1                         | track 6 |
+      | johns example activity 7        | feedback      | john             | true                     | harry                      | 1                         | track 7 |
+      | johns annual review (repeating) | check-in      | john             | true                     | harry                      | 3                         | track 8 |
+      | davids example activity 1       | check-in      | david            | false                    | john                       | 1                         | track 9 |
+      | davids example activity 2       | appraisal     | david            | false                    | john                       | 1                         | track 10 |
+      | davids example activity 3       | check-in      | david            | false                    | john                       | 1                         | track 11 |
+      | davids example activity 4       | appraisal     | harry            | false                    | john                       | 1                         | track 12 |
+      | davids example activity 5       | check-in      | harry            | false                    | john                       | 1                         | track 13 |
+      | davids example activity 6       | appraisal     | harry            | false                    | john                       | 1                         | track 14 |
 
   Scenario: Can view and filter activities I am a participant in that are about me
     Given I log in as "john"
     When I navigate to the outstanding perform activities list page
-    And I set the field "Type" to "Appraisal"
+    Then I should not see "Exclude completed activities"
+    Then I should not see "Overdue activities only"
+
+    When I set the field "Type" to "Appraisal"
     Then I should see "2" rows in the tui datatable
 
     When I set the field "Type" to "Check-in"
@@ -56,6 +59,7 @@ Feature: Filtering user activities list
     Then I should see "Performance activities"
     And I should see "Section submitted" in the tui success notification toast
     And the "Your activities" tui tab should be active
+    And I should see "Exclude completed activities"
 
     When I set the field "Your progress" to "Complete"
     Then I should see "1" rows in the tui datatable
@@ -70,3 +74,8 @@ Feature: Filtering user activities list
     When I set the field "Sort by" to "Activity"
     Then I should see "3" rows in the tui datatable
 
+    When Subject instances for "track 1" track are due "##yesterday##"
+    And I reload the page
+    Then I should see "Overdue activities only"
+    When I click on "Overdue activities only" tui "toggle_switch"
+    Then I should see "1" rows in the tui datatable

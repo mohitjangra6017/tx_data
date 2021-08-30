@@ -22,6 +22,8 @@
       v-model="userFilters"
       :about="about"
       :filter-options="filterOptions"
+      :has-completed="hasCompleted"
+      :has-overdue="hasOverdue"
       @filter-change="filterChange"
     />
 
@@ -364,6 +366,8 @@ export default {
         overdueOnly: false,
         search: null,
       },
+      hasCompleted: false,
+      hasOverdue: false,
     };
   },
 
@@ -413,8 +417,10 @@ export default {
         };
       },
       update: data => data['mod_perform_my_subject_instances'].items,
-      result({ data }) {
-        this.totalActivities = data.mod_perform_my_subject_instances.total;
+      result({ data: { mod_perform_my_subject_instances: data } }) {
+        this.totalActivities = data.total;
+        this.hasCompleted = data.completed_count > 0;
+        this.hasOverdue = data.overdue_count > 0;
       },
     },
   },
