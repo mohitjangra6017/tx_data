@@ -70,6 +70,8 @@ type contentmarketplace_linkedin_learning_object implements totara_contentmarket
   short_description(format: core_format = PLAIN): String!
   last_updated_at(format: core_date_format = DATE): core_date!
   published_at(format: core_date_format = DATE): core_date!
+  web_launch_url: String!
+  sso_launch_url: String
   asset_type: contentmarketplace_linkedin_asset_type!
   classifications: [contentmarketplace_linkedin_classification!]!
   subjects: [contentmarketplace_linkedin_classification!]!

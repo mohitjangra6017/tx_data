@@ -67,6 +67,7 @@
           :disabled="launchInNewWindowDisabled"
           :styleclass="{ primary: 'true' }"
           :text="$str('launch_in_new_window', 'mod_contentmarketplace')"
+          @click="launchNewWindow"
         />
 
         <!-- Current status and self completion -->
@@ -464,6 +465,8 @@ export default {
         redirectUrl: '',
         enabled: false,
       },
+      webLaunchUrl: null,
+      ssoLaunchUrl: null,
     };
   },
 
@@ -545,6 +548,8 @@ export default {
           updated: learning_object.last_updated_at,
         };
 
+        this.webLaunchUrl = learning_object.web_launch_url;
+        this.ssoLaunchUrl = learning_object.sso_launch_url;
         this.setCompletion = module.completion_condition || false;
         this.openContents = getAllNodeKeys(contentsTree);
 
@@ -567,6 +572,18 @@ export default {
   },
 
   methods: {
+    launchNewWindow() {
+      // This window name is used for behat.
+      const windowName = 'linkedIn_course_window';
+      if (this.ssoLaunchUrl) {
+        window.open(this.ssoLaunchUrl, windowName);
+        return;
+      }
+
+      // If ssoLaunchUrl is null, it will fallback to webLaunchUrl.
+      window.open(this.webLaunchUrl, windowName);
+    },
+
     async setCompletionHandler() {
       try {
         let {

@@ -175,6 +175,8 @@ class generator extends component_generator implements learning_object_generator
      * @return learning_object
      */
     public function create_learning_object(string $urn, array $record = []): learning_object {
+        global $CFG;
+
         if (!array_key_exists('title', $record)) {
             $record['title'] = "This is title " . rand(0, 100);
         }
@@ -213,6 +215,10 @@ class generator extends component_generator implements learning_object_generator
 
         if (!array_key_exists('time_to_complete', $record)) {
             $record['time_to_complete'] = timespan::minutes(90)->get();
+        }
+
+        if (!array_key_exists('web_launch_url', $record)) {
+            $record['web_launch_url'] = "{$CFG->wwwroot}/totara/contentmarketplace/tests/fixtures/learning_object.html";
         }
 
         $entity = new learning_object();

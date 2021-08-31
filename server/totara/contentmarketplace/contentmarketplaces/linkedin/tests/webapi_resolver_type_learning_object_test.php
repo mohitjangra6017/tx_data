@@ -66,7 +66,8 @@ class contentmarketplace_linkedin_webapi_resolver_type_learning_object_testcase 
                 // Time to complete is around 30 minutes.
                 "time_to_complete" => 30 * MINSECS,
                 "last_updated_at" => time() - MINSECS,
-                "published_at" => time() - DAYSECS
+                "published_at" => time() - DAYSECS,
+                'sso_launch_url' => 'www.example.com'
             ]
         );
 
@@ -332,6 +333,34 @@ class contentmarketplace_linkedin_webapi_resolver_type_learning_object_testcase 
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_learning_object::class),
                 "image_url",
+                $this->learning_object
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_web_launch_url_type(): void {
+        self::assertEquals(
+            $this->learning_object->web_launch_url,
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(type_learning_object::class),
+                "web_launch_url",
+                $this->learning_object
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_sso_launch_url_type(): void {
+        self::assertEquals(
+            $this->learning_object->sso_launch_url,
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(type_learning_object::class),
+                "sso_launch_url",
                 $this->learning_object
             )
         );

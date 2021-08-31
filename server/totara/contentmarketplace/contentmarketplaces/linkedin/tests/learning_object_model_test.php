@@ -66,7 +66,9 @@ class contentmarketplace_linkedin_learning_object_model_testcase extends testcas
             'level' => 'BEGINNER',
             'image_url' => 'https://cdn.lynda.com/course/260/260-636456652549313738-16x9.jpg',
             'time_to_complete' => 32153,
+            'web_launch_url' => 'https://www.linkedin.com/learning/visio-2007-essential-training'
         ];
+
         foreach ($expected_values as $attribute => $expected_value) {
             $this->assertEquals($expected_value, $loaded_model->$attribute);
         }

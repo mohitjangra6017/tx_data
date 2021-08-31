@@ -93,6 +93,8 @@ class learning_object extends model implements detailed_model, configuration {
         'level',
         'time_to_complete',
         'asset_type',
+        'web_launch_url',
+        'sso_launch_url'
     ];
 
     protected $model_accessor_whitelist = [
@@ -235,6 +237,13 @@ class learning_object extends model implements detailed_model, configuration {
      */
     public function get_image_url(): ?string {
         return $this->entity->primary_image_url;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_web_launch_url(): ?string {
+        return $this->entity->web_launch_url;
     }
 
     /**

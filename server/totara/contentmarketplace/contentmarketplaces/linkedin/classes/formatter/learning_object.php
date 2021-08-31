@@ -49,6 +49,8 @@ class learning_object extends entity_model_formatter {
             'classifications' => null,
             'subjects' => null,
             'courses' => null,
+            'web_launch_url' => null,
+            'sso_launch_url' => null
         ];
     }
 

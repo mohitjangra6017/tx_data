@@ -25,3 +25,27 @@ Feature: General behaviour with mod contentmarketplace
     When I follow "Learning 1"
     Then I should see "Course 101"
     And I should see "This is a learning object"
+
+  Scenario: Launch new course created from learning object
+    Given I am on a totara site
+    And I log in as "admin"
+    And I set up the LinkedIn Learning content marketplace plugin
+    And the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
+      | urn          | title     |
+      | urn:course:1 | Spring    |
+    And the following "categories" exist:
+      | name       | category | idnumber |
+      | Category A | 0        | A        |
+    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I should see "Spring"
+    And I toggle the selection of row "1" of the tui select table
+    And I set the field "Select category" to "Category A"
+    And I click on "Next: Review" "button"
+    And I click on "Create course(s)" "button"
+    And I am on "Spring" course homepage
+    And I click on "//button[contains(text(),'Enrol')]" "xpath_element"
+    Then I should see "You've been enrolled successfully"
+    And the "Launch (opens in new window)" "button" should be enabled
+    And I click on "Launch (opens in new window)" "button"
+    When I switch to "linkedIn_course_window" window
+    Then I should see "Learning object launched from activity page"

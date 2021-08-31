@@ -35,6 +35,8 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
       level
       time_to_complete
       last_updated_at
+      web_launch_url
+      sso_launch_url
     }
   }
 }
