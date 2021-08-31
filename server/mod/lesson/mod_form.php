@@ -347,10 +347,13 @@ class mod_lesson_mod_form extends moodleform_mod {
         $this->standard_coursemodule_elements();
         //-------------------------------------------------------------------------------
 
-        // Update text for completion recieve grade and add extra disabled condition
-        $completionusegrade_element = $mform->getElement('completionusegrade');
-        $completionusegrade_element->setText(get_string('completionmustrecievegrade', 'lesson'));
-        $mform->disabledIf('completionusegrade', 'grade[modgrade_type]', 'eq', 'none');
+        $completion = new completion_info($COURSE);
+        if ($completion->is_enabled()) {
+            // Update text for completion recieve grade and add extra disabled condition
+            $completionusegrade_element = $mform->getElement('completionusegrade');
+            $completionusegrade_element->setText(get_string('completionmustrecievegrade', 'lesson'));
+            $mform->disabledIf('completionusegrade', 'grade[modgrade_type]', 'eq', 'none');
+        }
 
         // buttons
         $this->add_action_buttons();
