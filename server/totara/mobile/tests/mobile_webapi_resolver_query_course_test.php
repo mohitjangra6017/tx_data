@@ -37,7 +37,7 @@ class totara_mobile_webapi_resolver_query_course_testcase extends advanced_testc
      * Create some programs and assign some users for testing.
      * @return []
      */
-    private function create_faux_data() {
+    private function create_faux_data(): array {
         $users = [];
         $users[] = $this->getDataGenerator()->create_user();
         $users[] = $this->getDataGenerator()->create_user();
@@ -72,7 +72,7 @@ class totara_mobile_webapi_resolver_query_course_testcase extends advanced_testc
     /**
      * Test the results of the query when the current user is not logged in.
      */
-    public function test_resolve_no_login() {
+    public function test_resolve_no_login(): void {
         list($users, $courses) = $this->create_faux_data();
 
         $this->expectException(moodle_exception::class);
@@ -84,7 +84,7 @@ class totara_mobile_webapi_resolver_query_course_testcase extends advanced_testc
     /**
      * Test the results of the query when the current user is logged in as the guest user.
      */
-    public function test_resolve_guest_user() {
+    public function test_resolve_guest_user(): void {
         list($users, $courses) = $this->create_faux_data();
         $this->setGuestUser();
 
@@ -96,9 +96,202 @@ class totara_mobile_webapi_resolver_query_course_testcase extends advanced_testc
     }
 
     /**
+     * Test that users can access the course via guest access (no pw) when not enrolled.
+     */
+    public function test_resolve_guest_access_allowed(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user->id);
+
+        $plugin = enrol_get_plugin('guest');
+
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => 'guest course',
+            'shortname' => 'guest',
+        ]);
+
+        $plugin->add_instance(
+            $course,
+            [
+                'status' => ENROL_INSTANCE_ENABLED,
+                'name' => 'Guest Access',
+                'customint6' => 1,
+            ]
+        );
+
+        try {
+            // This should fail with the incorrect guest password.
+            $result = $this->resolve_graphql_query(
+                'totara_mobile_course',
+                [
+                    'courseid' => $course->id,
+                ]
+            );
+            $this->assertEquals($course->fullname, $result['course']->fullname);
+        } catch (\require_login_exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+
+    /**
+     * Test that users can't access the course via guest access when missing a required password.
+     */
+    public function test_resolve_guest_access_password_missing(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user->id);
+
+        $plugin = enrol_get_plugin('guest');
+
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => 'guest course',
+            'shortname' => 'guest',
+        ]);
+
+        $plugin->add_instance(
+            $course,
+            [
+                'status' => ENROL_INSTANCE_ENABLED,
+                'name' => 'Guest Access',
+                'customint6' => 1,
+                'password' => 'abc123'
+            ]
+        );
+
+        try {
+            // This should fail with the incorrect guest password.
+            $result = $this->resolve_graphql_query(
+                'totara_mobile_course',
+                [
+                    'courseid' => $course->id,
+                ]
+            );
+            $this->fail('fatal error expected');
+        } catch (\require_login_exception $e) {
+            $this->assertSame('Course or activity not accessible. (Not enrolled)', $e->getMessage());
+        }
+    }
+
+    /**
+     * Test that users can't access the course via guest access when handing through the incorrect password.
+     */
+    public function test_resolve_guest_access_password_fail(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user->id);
+
+        $plugin = enrol_get_plugin('guest');
+
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => 'guest course',
+            'shortname' => 'guest',
+        ]);
+
+        $plugin->add_instance(
+            $course,
+            [
+                'status' => ENROL_INSTANCE_ENABLED,
+                'name' => 'Guest Access',
+                'customint6' => 1,
+                'password' => 'abc123'
+            ]
+        );
+
+        try {
+            // This should fail with the incorrect guest password.
+            $result = $this->resolve_graphql_query(
+                'totara_mobile_course',
+                [
+                    'courseid' => $course->id,
+                    'guestpw' => 'xyz987'
+                ]
+            );
+            $this->fail('fatal error expected');
+        } catch (\require_login_exception $e) {
+            $this->assertSame('Course or activity not accessible. (Not enrolled)', $e->getMessage());
+        }
+    }
+
+    /**
+     * Test that users can access the course via guest access when handing through the correct password.
+     */
+    public function test_resolve_guest_access_password_success(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user->id);
+
+        $plugin = enrol_get_plugin('guest');
+
+        // Test guest access without a password.
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => 'guest course',
+            'shortname' => 'guest',
+        ]);
+
+        $plugin->add_instance(
+            $course,
+            [
+                'status' => ENROL_INSTANCE_ENABLED,
+                'name' => 'Guest Access',
+                'customint6' => 1,
+                'password' => 'abc123'
+            ]
+        );
+
+        try {
+            // This should work without any worries.
+            $result = $this->resolve_graphql_query(
+                'totara_mobile_course',
+                [
+                    'courseid' => $course->id,
+                    'guestpw' => 'abc123'
+                ]
+            );
+            $this->assertEquals($course->fullname, $result['course']->fullname);
+        } catch (\require_login_exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+
+    /**
+     * Test that users can't access the course via guest access when the instance is disabled
+     */
+    public function test_resolve_guest_access_password_disabled(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user->id);
+
+        $plugin = enrol_get_plugin('guest');
+
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => 'guest course',
+            'shortname' => 'guest',
+        ]);
+
+        $plugin->add_instance(
+            $course,
+            [
+                'status' => ENROL_INSTANCE_DISABLED,
+                'name' => 'Guest Access',
+                'customint6' => 1,
+                'password' => 'abc123'
+            ]
+        );
+
+        try {
+            // This should fail even with the correct guest password, as the instance is disabled.
+            $result = $this->resolve_graphql_query(
+                'totara_mobile_course',
+                [
+                    'courseid' => $course->id,
+                    'guestpw' => 'abc123'
+                ]
+            );
+            $this->fail('fatal error expected');
+        } catch (\require_login_exception $e) {
+            $this->assertSame('Course or activity not accessible. (Not enrolled)', $e->getMessage());
+        }
+    }
+
+    /**
      * Test the results of the query when the current user is the site administrator.
      */
-    public function test_resolve_user() {
+    public function test_resolve_user(): void {
         list($users, $courses) = $this->create_faux_data();
         $this->setUser($users[0]->id);
 
@@ -115,7 +308,7 @@ class totara_mobile_webapi_resolver_query_course_testcase extends advanced_testc
     /**
      * Test the results of the query when the current user is the site administrator.
      */
-    public function test_resolve_admin_user() {
+    public function test_resolve_admin_user(): void {
         global $PAGE;
 
         list($users, $courses) = $this->create_faux_data();
@@ -138,7 +331,7 @@ class totara_mobile_webapi_resolver_query_course_testcase extends advanced_testc
      * this doesn't test all the data in the course object since there are already tests
      * for that, main tests that the expected data is there and the extra data is correct.
      */
-    public function test_embedded_query() {
+    public function test_embedded_query(): void {
         list($users, $courses) = $this->create_faux_data();
         $this->setUser($users[0]);
 

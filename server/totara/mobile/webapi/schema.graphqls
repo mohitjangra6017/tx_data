@@ -350,8 +350,12 @@ extend type Query {
 
   """
   Return a single course from its ID if the user can access it
+  The optional guestpw will grant guest access if there is an associated guest enrolment instance
   """
-  totara_mobile_course(courseid: core_id!): totara_mobile_course!
+  totara_mobile_course(
+    courseid: core_id!
+    guestpw: String
+  ): totara_mobile_course!
 
   """
   Query to return a specific certification the user can access, given its program ID.

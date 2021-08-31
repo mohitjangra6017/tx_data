@@ -1,0 +1,5 @@
+This files describes API changes in Totara Mobile.
+information provided here is intended especially for developers.
+
+=== 15.0 ===
+Update the totara_mobile_course query to take an optional guest password argument and conditionally allow for guest access

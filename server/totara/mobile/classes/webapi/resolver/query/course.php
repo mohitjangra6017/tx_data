@@ -30,19 +30,53 @@ use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use core\orm\query\builder;
 
-final class course implements query_resolver, has_middleware {
+final class course implements query_resolver {
 
     public static function resolve(array $args, execution_context $ec) {
-        global $CFG, $OUTPUT;
+        global $CFG, $USER, $OUTPUT;
         require_once($CFG->dirroot . '/course/lib.php');
 
-        // Course visibility and access is already covered in the course_require_login middleware.
-        $course = get_course($args['courseid']);
-        $course->image = course_get_image($course);
+        $courseid = $args['courseid'];
+        try {
+            $course = get_course($courseid);
+        } catch (\Exception $exception) {
+            throw new \moodle_exception('invalidcourse');
+        }
 
         // Set execution context context.
         $context = context_course::instance($course->id);
         $ec->set_relevant_context($context);
+
+        // Workaround for guest access, if used elsewhere consider making it a new middleware.
+        $password = $args['guestpw'] ?? null;
+        if (!empty($password)) {
+            $guest = null;
+            $instances = enrol_get_instances($course->id, true);
+            foreach ($instances as $instance) {
+                if ($instance->enrol == 'guest') {
+                    $guest = $instance;
+                }
+            }
+
+            // Check that we found a valid guest instance.
+            if (!empty($guest) && !empty($guest->password) && $guest->password == $password) {
+                // This is some rather hacky $USER stuff, but it's how guest access is handled.
+                $USER->enrol_guest_passwords[$guest->id] = $password;
+                if (isset($USER->enrol['tempguest'][$course->id])) {
+                    remove_temp_course_roles($context);
+                }
+                load_temp_course_role($context, $CFG->guestroleid);
+                $USER->enrol['tempguest'][$course->id] = ENROL_MAX_TIMESTAMP;
+            }
+        }
+
+        // This is the last part of the require_login_course middleware.
+        require_login($course, false, null, false, true);
+
+        // Course visibility and access is already covered in the course_require_login middleware.
+        $course = get_course($courseid);
+        $course->image = course_get_image($course);
+
         // Trigger course viewed event.
         course_view($context);
 
@@ -89,11 +123,4 @@ final class course implements query_resolver, has_middleware {
 
         return ['course' => $course, 'mobile_coursecompat' => $mobile_coursecompat, 'mobile_image' => $mobile_image];
     }
-
-    public static function get_middleware(): array {
-        return [
-            new require_login_course('courseid')
-        ];
-    }
-
 }
