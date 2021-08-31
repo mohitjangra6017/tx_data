@@ -697,4 +697,73 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         self::assertNotNull($course_id);
         self::assertTrue($db->record_exists('course', ['id' => $course_id]));
     }
+
+    /**
+     * @return void
+     */
+    public function test_create_course_with_completion_criteria(): void {
+        $admin = get_admin();
+        $marketplace_generator = generator::instance();
+
+        $learning_object = $marketplace_generator->create_learning_object("contentmarketplace_linkedin");
+        $interactor = new create_course_interactor($admin->id);
+
+        $course_builder = course_builder::create_with_learning_object(
+            $learning_object::get_marketplace_component(),
+            $learning_object->get_id(),
+            $interactor
+        );
+
+        $db = builder::get_db();
+        self::assertEquals(0, $db->count_records("course_completion_criteria"));
+
+        $result = $course_builder->create_course();
+        self::assertTrue($result->is_successful());
+
+        $course_id = $result->get_course_id();
+        self::assertNotNull($course_id);
+
+        // Check that the completion criteria had been created.
+        self::assertTrue(
+            $db->record_exists(
+                "course_completion_criteria",
+                [
+                    "course" => $course_id,
+                    "criteriatype" => COMPLETION_CRITERIA_TYPE_ACTIVITY,
+                    "module" => "contentmarketplace"
+                ]
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_course_without_completion_criteria(): void {
+        $admin = get_admin();
+        $marketplace_generator = generator::instance();
+
+        $learning_object = $marketplace_generator->create_learning_object("contentmarketplace_linkedin");
+        $interactor = new create_course_interactor($admin->id);
+
+        $course_builder = course_builder::create_with_learning_object(
+            $learning_object::get_marketplace_component(),
+            $learning_object->get_id(),
+            $interactor
+        );
+
+        $course_builder->set_enable_course_completion(false);
+
+        $db = builder::get_db();
+        self::assertEquals(0, $db->count_records("course_completion_criteria"));
+
+        $result = $course_builder->create_course();
+        self::assertTrue($result->is_successful());
+
+        $course_id = $result->get_course_id();
+        self::assertNotNull($course_id);
+
+        // No course criteria get created.
+        self::assertEquals(0, $db->count_records("course_completion_criteria"));
+    }
 }

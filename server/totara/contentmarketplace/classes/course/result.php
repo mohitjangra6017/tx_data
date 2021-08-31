@@ -49,6 +49,13 @@ class result {
     public const ERROR_ON_MODULE_CREATION = 2;
 
     /**
+     * Constant for error when setup course's settings.
+     *
+     * @var int
+     */
+    public const ERROR_ON_COURSE_SETTINGS = 3;
+
+    /**
      * A localised string.
      *
      * @var string|null

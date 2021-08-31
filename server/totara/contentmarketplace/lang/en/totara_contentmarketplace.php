@@ -62,6 +62,7 @@ $string['enabled'] = 'Enabled';
 $string['enable_plugin'] = 'Enable {$a}';
 $string['error:cannot_add_course_to_category'] = 'User actor cannot add course to category {$a}';
 $string['error:cannot_add_module_to_course'] = 'Cannot add module to course {$a}';
+$string['error:cannot_configure_course'] = 'Cannot configure course {$a}';
 $string['error:cannot_create_course'] = 'Cannot create a course';
 $string['error:cannot_obtain_token_by_missing_field'] = 'Cannot obtain the access token due to missing attribute \'{$a}\'';
 $string['error:cannot_obtain_token_by_invalid_value'] = 'Cannot obtain the access token due to invalid value of attribute \'{$a}\'';

@@ -27,9 +27,11 @@ use container_course\course;
 use container_course\course_helper;
 use context_coursecat;
 use core\orm\query\builder;
+use core_container\module\module;
 use core_text;
 use coursecat;
 use stdClass;
+use completion_criteria_activity;
 use Throwable as throwable;
 use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\event\course_source_created;
@@ -108,6 +110,14 @@ class course_builder {
     private $module_completion_condition;
 
     /**
+     * A flag to say whether the course completion is enabled or not.
+     * By default, it will be true.
+     *
+     * @var bool
+     */
+    private $enable_course_completion;
+
+    /**
      * course_helper constructor.
      */
     public function __construct(model $learning_object, int $category_id, create_course_interactor $interactor) {
@@ -119,6 +129,26 @@ class course_builder {
         $this->default_section_number = 0;
         $this->module_completion_tracking = COMPLETION_TRACKING_AUTOMATIC;
         $this->module_completion_condition = completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE;
+
+        $this->enable_course_completion = true;
+    }
+
+    /**
+     * @param bool $value
+     * @return void
+     */
+    public function set_enable_course_completion(bool $value): void {
+        $this->enable_course_completion = $value;
+
+        if (!$this->enable_course_completion) {
+            // Set to completion tracking NONE when course completion is not enabled.
+            $this->set_module_completion_tracking(COMPLETION_TRACKING_NONE);
+            return;
+        }
+
+        // Otherwise, set it back to default content marketplace condition.
+        $this->set_module_completion_tracking(COMPLETION_TRACKING_AUTOMATIC);
+        $this->set_module_completion_condition(completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE);
     }
 
     /**
@@ -288,7 +318,7 @@ class course_builder {
         $record->visibleold = 1;
         $record->format = $this->course_format;
         $record->containertype = course::get_type();
-        $record->enablecompletion = 1;
+        $record->enablecompletion = $this->enable_course_completion;
         $record->lang = $this->learning_object->get_language();
 
         if ('singleactivity' === $this->course_format) {
@@ -332,9 +362,9 @@ class course_builder {
 
     /**
      * @param course $course
-     * @return void
+     * @return module
      */
-    private function do_add_module(course $course): void {
+    private function do_add_module(course $course): module {
         $module_info = new stdClass();
         $module_info->modulename = 'contentmarketplace';
         $module_info->visible = 1;
@@ -351,7 +381,7 @@ class course_builder {
             );
         }
 
-        $course->add_module($module_info);
+        return $course->add_module($module_info);
     }
 
     /**
@@ -375,6 +405,7 @@ class course_builder {
             );
         }
 
+        // Create course.
         try {
             $course = $this->do_create_course();
         } catch (throwable $e) {
@@ -386,8 +417,9 @@ class course_builder {
             );
         }
 
+        // Create course's module.
         try {
-            $this->do_add_module($course);
+            $module = $this->do_add_module($course);
         } catch (throwable $e) {
             return result::create(
                 null,
@@ -397,8 +429,49 @@ class course_builder {
             );
         }
 
+        if ($course->enablecompletion && $module->get_completion() !== COMPLETION_TRACKING_NONE) {
+            // Yep course completion is enabled as well as activity completion, hence we are going
+            // to update the course completion criteria.
+
+            // Enable course completion criteria.
+            try {
+                $this->do_create_completion_criteria($course, $module);
+            } catch (throwable $e) {
+                return result::create(
+                    null,
+                    result::ERROR_ON_COURSE_SETTINGS,
+                    get_string("error:cannot_configure_course", "totara_contentmarketplace", $course->fullname),
+                    $e
+                );
+            }
+        }
+
         // Everything runs successfully.
         return result::create($course->get_id());
+    }
+
+    /**
+     * @param course $course
+     * @param module $module
+     *
+     * @return void
+     */
+    private function do_create_completion_criteria(course $course, module $module): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/completion/criteria/completion_criteria_activity.php");
+
+        // Create a mock data form.
+        $form_data = new stdClass();
+        $form_data->id = $course->id;
+        $form_data->unlockdelete = 0;
+        $form_data->unlockonly = 0;
+        $form_data->overall_aggregation = COMPLETION_AGGREGATION_ALL;
+        $form_data->criteria_activity_value = [
+            $module->get_id() => true
+        ];
+
+        $criterion = new completion_criteria_activity();
+        $criterion->update_config($form_data);
     }
 
     /**

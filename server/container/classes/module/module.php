@@ -99,6 +99,19 @@ abstract class module {
     }
 
     /**
+     * Returns the completion tracking constants, which is one of either
+     * these following:
+     * + {@see COMPLETION_TRACKING_NONE}
+     * + {@see COMPLETION_TRACKING_MANUAL}
+     * + {@see COMPLETION_TRACKING_AUTOMATIC}
+     *
+     * @return int
+     */
+    public function get_completion(): int {
+        return $this->entity->completion;
+    }
+
+    /**
      * Lazy loading the context module.
      *
      * @return \context_module

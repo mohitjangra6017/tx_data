@@ -131,6 +131,11 @@ if ($form->is_cancelled()) {
 
         $class = 'completion_criteria_'.$type;
         $criterion = new $class();
+
+        echo "<pre>";
+        var_dump($data);
+        echo "</pre>";
+        exit();
         $criterion->update_config($data);
     }
 
