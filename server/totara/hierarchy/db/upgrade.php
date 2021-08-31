@@ -86,5 +86,33 @@ function xmldb_totara_hierarchy_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021090900, 'totara', 'hierarchy');
     }
 
+    if ($oldversion < 2021092000) {
+
+        // Define table goal_item_target_date_history to be created.
+        $table = new xmldb_table('goal_item_target_date_history');
+
+        // Adding fields to table goal_item_target_date_history.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('scope', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('itemid', XMLDB_TYPE_INTEGER, '18', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('targetdate', XMLDB_TYPE_INTEGER, '18', null, null, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '18', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '18', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table goal_item_target_date_history.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table goal_item_target_date_history.
+        $table->add_index('itemscope', XMLDB_INDEX_NOTUNIQUE, array('scope', 'itemid'));
+
+        // Conditionally launch create table for goal_item_target_date_history.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Hierarchy savepoint reached.
+        upgrade_plugin_savepoint(true, 2021092000, 'totara', 'hierarchy');
+    }
+
     return true;
 }

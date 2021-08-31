@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="totara/hierarchy/db" VERSION="20210630" COMMENT="XMLDB file for Moodle totara/hierarchy"
+<XMLDB PATH="totara/hierarchy/db" VERSION="20210831" COMMENT="XMLDB file for Moodle totara/hierarchy"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -902,6 +902,22 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="goalitemhist_sca_fk" TYPE="foreign" FIELDS="scalevalueid" REFTABLE="goal_scale_values" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="itemscope" UNIQUE="false" FIELDS="scope, itemid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="goal_item_target_date_history" COMMENT="Store changes to target dates in goal_record and goal_personal.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="scope" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="targetdate" TYPE="int" LENGTH="18" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="itemscope" UNIQUE="false" FIELDS="scope, itemid"/>
