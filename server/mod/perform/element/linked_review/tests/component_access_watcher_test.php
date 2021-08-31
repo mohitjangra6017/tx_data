@@ -54,7 +54,7 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
         access_controller::clear_instance_cache();
     }
 
-    public function test_component_access_check(): void {
+    public function test_component_access_check_goals(): void {
         self::setAdminUser();
 
         $users = [
@@ -66,7 +66,7 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
         ];
 
         $activity_params = [
-            'name' => 'Single activity with company_goal linked_review and subject selection_relationship',
+            'name' => 'Single activity with company_goal linked_review and manager selection_relationship',
             'relationships' => [
                 constants::RELATIONSHIP_SUBJECT,
                 constants::RELATIONSHIP_MANAGER,
@@ -112,6 +112,56 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
 
             $hook2->execute();
             self::assertSame($key == 'admin' ? true : false, $hook2->has_permission());
+        }
+    }
+
+    public function test_component_access_check_competencies(): void {
+        self::setAdminUser();
+
+        $users = [
+            'admin' => get_admin(),
+            'other' => self::getDataGenerator()->create_user(['username' => 'otheruser', 'firstname' => 'Another', 'lastname' => 'User']),
+            'subject' => self::getDataGenerator()->create_user(['username' => 'subjectuser', 'firstname' => 'Subject', 'lastname' => 'User']),
+            'manager' => self::getDataGenerator()->create_user(['username' => 'manageruser', 'firstname' => 'Manager', 'lastname' => 'User']),
+            'appraiser' => self::getDataGenerator()->create_user(['username' => 'appraiseruser', 'firstname' => 'Appraiser', 'lastname' => 'User']),
+        ];
+
+        $activity_params = [
+            'name' => 'Single activity with competency linked_review and manager selection_relationship',
+            'relationships' => [
+                constants::RELATIONSHIP_SUBJECT,
+                constants::RELATIONSHIP_MANAGER,
+                constants::RELATIONSHIP_APPRAISER,
+            ],
+            'elements' => [
+                [
+                    'plugin_type' => 'linked_review',
+                    'content_type' => 'totara_competency',
+                    'selection_relationship' => constants::RELATIONSHIP_MANAGER,
+                ],
+            ]
+        ];
+
+        $this->create_activity_with_elements($users, 'subject', $activity_params);
+
+        $to_test = [
+            'admin' => true,
+            'other' => false,
+            'subject' => false,
+            'manager' => true,
+            'appraiser' => false,
+        ];
+
+        foreach ($to_test as $key => $expected) {
+            $hook1 = new component_access_check(
+                'totara_competency',
+                $users[$key]->id,
+                $users['subject']->id,
+                ['content_type' => 'totara_competency']
+            );
+
+            $hook1->execute();
+            self::assertSame($expected, $hook1->has_permission());
         }
     }
 

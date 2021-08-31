@@ -60,11 +60,26 @@ trait linked_review_test_data_trait {
             $element_data = null;
 
             if ($element_plugin == 'linked_review') {
+                $content_type = $element_params['content_type'] ?? 'company_goal';
+                $content_type_settings = [];
+
+                switch ($content_type) {
+                    case 'personal_goal':
+                    case 'company_goal':
+                        $content_type_settings = [
+                            'enable_status_change' => false,
+                        ];
+                        break;
+
+                    case 'totara_competency':
+                        $content_type_settings = [
+                            'enable_rating' => false,
+                        ];
+                        break;
+                }
                 $element_data = json_encode([
-                    'content_type' => $element_params['content_type'] ?? 'company_goal',
-                    'content_type_settings' => [
-                        'enable_status_change' => false,
-                    ],
+                    'content_type' => $content_type,
+                    'content_type_settings' => $content_type_settings,
                     'selection_relationships' => [$perform_generator->get_core_relationship($element_params['selection_relationship'])->id],
                 ]);
             }
