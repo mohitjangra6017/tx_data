@@ -27,29 +27,6 @@
       <PageBackLink :link="activity.course.url" :text="activity.course.name" />
     </template>
 
-    <!-- Side panel area -->
-    <template v-slot:side-panel="{ stacked }">
-      <!-- If side panel has been stacked in layout-->
-
-      <Collapsible
-        v-if="stacked"
-        :label="$str('activity_contents', 'mod_contentmarketplace')"
-      >
-        <div class="tui-linkedinActivity__collapsibleContent">
-          <ContentTree
-            v-model="openContents"
-            :tree-data="activity.contentsTree"
-          />
-        </div>
-      </Collapsible>
-
-      <ContentTree
-        v-else
-        v-model="openContents"
-        :tree-data="activity.contentsTree"
-      />
-    </template>
-
     <!-- Banner image content area -->
     <template v-slot:banner-content="{ stacked }">
       <div class="tui-linkedinActivity__admin">
@@ -158,8 +135,6 @@
 import ActionCard from 'tui/components/card/ActionCard';
 import AdminMenu from 'mod_contentmarketplace/components/administration/AdminMenu';
 import Button from 'tui/components/buttons/Button';
-import Collapsible from 'tui/components/collapsible/Collapsible';
-import ContentTree from 'mod_contentmarketplace/components/side_panel/LinkedInActivityContentsTree';
 import Layout from 'mod_contentmarketplace/components/layouts/LayoutBannerSidepanelTwoColumn';
 import Lozenge from 'tui/components/lozenge/Lozenge';
 import NotificationBanner from 'tui/components/notifications/NotificationBanner';
@@ -178,8 +153,6 @@ export default {
     ActionCard,
     AdminMenu,
     Button,
-    Collapsible,
-    ContentTree,
     Layout,
     Lozenge,
     NotificationBanner,
@@ -218,65 +191,7 @@ export default {
         };
       },
       update({ instance: data }) {
-        const contentsTree = [
-          {
-            id: 'introduction',
-            label: 'Introduction',
-            content: {
-              items: ['Your video conference presence'],
-            },
-          },
-          {
-            id: 'proTips',
-            label: '1. Video conferencing pro tips',
-            content: {
-              items: [
-                'Expectations and preparations',
-                'Introducing yourself and speaking up',
-                'Keeping it engaging',
-                'Using visuals to support your content',
-                'Enhancing your conversation',
-                'Chapter quiz',
-              ],
-            },
-          },
-          {
-            id: 'bodyLanguage',
-            label: '2. Video body language',
-            content: {
-              items: [
-                'Perfecting eye contact',
-                'Hand gestures on video',
-                'Using confident body posture',
-                'Wardrobe choices',
-                'Chapter quiz',
-                '3 questions',
-              ],
-            },
-          },
-          {
-            id: 'technicals',
-            label: '3. The technicals: Preparing your studio',
-            content: {
-              items: [
-                'Positioning your camera',
-                'Lighting is the key',
-                'Crisp and clear audio',
-                'Backdrops and backgrounds',
-                'Tips to help you stand out',
-                'Chapter quiz',
-                '2 questions',
-              ],
-            },
-          },
-          {
-            id: 'conclusion',
-            label: 'Conclusion',
-            content: {
-              items: ['Practice run'],
-            },
-          },
-        ];
+        const contentsTree = [];
 
         const { learning_object, module } = data;
         const has_course_view_page =

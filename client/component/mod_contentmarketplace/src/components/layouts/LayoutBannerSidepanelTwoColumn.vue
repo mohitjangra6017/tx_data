@@ -27,13 +27,6 @@
       <slot name="modals" />
     </template>
 
-    <!-- Side content area -->
-    <template v-slot:side-panel="{ outerStacked }">
-      <aside class="tui-marketplaceLayoutBannerSidepanelTwoColumn__sidePanel">
-        <slot name="side-panel" :stacked="outerStacked" />
-      </aside>
-    </template>
-
     <!-- Banner image content area -->
     <template
       v-if="$scopedSlots['banner-content']"

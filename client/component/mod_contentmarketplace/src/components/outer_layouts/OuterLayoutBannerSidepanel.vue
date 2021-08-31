@@ -108,13 +108,13 @@ export default {
         },
         medium: {
           gridDirection: 'horizontal',
-          gridUnitsLeft: 6,
-          gridUnitsRight: 18,
+          gridUnitsLeft: 0,
+          gridUnitsRight: 24,
         },
         large: {
           gridDirection: 'horizontal',
-          gridUnitsLeft: 5,
-          gridUnitsRight: 19,
+          gridUnitsLeft: 0,
+          gridUnitsRight: 24,
         },
       },
       // Breakpoints for layout, changing these will impact child layouts
@@ -205,8 +205,6 @@ export default {
 
   &__banner {
     position: relative;
-    left: calc(var(--grid-gutter) * -1);
-    width: calc(var(--grid-gutter) + 100%);
 
     &-image {
       min-height: 120px;
