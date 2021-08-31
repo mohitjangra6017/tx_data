@@ -39,7 +39,7 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
     use webapi_phpunit_helper;
     use linked_review_test_data_trait;
 
-    public $users;
+    protected $users;
 
     protected function setUp(): void {
         parent::setUp();
@@ -52,18 +52,23 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
             ]
         ]);
         access_controller::clear_instance_cache();
-    }
 
-    public function test_component_access_check_goals(): void {
-        self::setAdminUser();
-
-        $users = [
+        $this->users = [
             'admin' => get_admin(),
             'other' => self::getDataGenerator()->create_user(['username' => 'otheruser', 'firstname' => 'Another', 'lastname' => 'User']),
             'subject' => self::getDataGenerator()->create_user(['username' => 'subjectuser', 'firstname' => 'Subject', 'lastname' => 'User']),
             'manager' => self::getDataGenerator()->create_user(['username' => 'manageruser', 'firstname' => 'Manager', 'lastname' => 'User']),
             'appraiser' => self::getDataGenerator()->create_user(['username' => 'appraiseruser', 'firstname' => 'Appraiser', 'lastname' => 'User']),
         ];
+    }
+
+    protected function tearDown(): void {
+        $this->users = null;
+        parent::tearDown();
+    }
+
+    public function test_component_access_check_goals(): void {
+        self::setAdminUser();
 
         $activity_params = [
             'name' => 'Single activity with company_goal linked_review and manager selection_relationship',
@@ -81,7 +86,7 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
             ]
         ];
 
-        $this->create_activity_with_elements($users, 'subject', $activity_params);
+        $this->create_activity_with_elements($this->users, 'subject', $activity_params);
 
         $to_test = [
             'admin' => true,
@@ -94,8 +99,8 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
         foreach ($to_test as $key => $expected) {
             $hook1 = new component_access_check(
                 'hierarchy_goal',
-                $users[$key]->id,
-                $users['subject']->id,
+                $this->users[$key]->id,
+                $this->users['subject']->id,
                 ['content_type' => 'company_goal']
             );
 
@@ -105,8 +110,8 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
             // Only admin has permission on personal_goal
             $hook2 = new component_access_check(
                 'hierarchy_goal',
-                $users[$key]->id,
-                $users['subject']->id,
+                $this->users[$key]->id,
+                $this->users['subject']->id,
                 ['content_type' => 'personal_goal']
             );
 
@@ -115,19 +120,41 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
         }
     }
 
-    public function test_component_access_check_competencies(): void {
+    public function component_access_check_types_data_provider(): array {
+        return [
+            [
+                'content_type' => 'totara_competency',
+                'to_test' => [
+                    'admin' => true,
+                    'other' => false,
+                    'subject' => false,
+                    'manager' => true,
+                    'appraiser' => false,
+                ],
+            ],
+            [
+                'content_type' => 'totara_evidence',
+                'to_test' => [
+                    'admin' => true,
+                    'other' => false,
+                    'subject' => false,
+                    'manager' => true,
+                    'appraiser' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param string $content_type
+     * @param array $to_test
+     * @dataProvider component_access_check_types_data_provider
+     */
+    public function test_component_access_check_types(string $content_type, array $to_test): void {
         self::setAdminUser();
 
-        $users = [
-            'admin' => get_admin(),
-            'other' => self::getDataGenerator()->create_user(['username' => 'otheruser', 'firstname' => 'Another', 'lastname' => 'User']),
-            'subject' => self::getDataGenerator()->create_user(['username' => 'subjectuser', 'firstname' => 'Subject', 'lastname' => 'User']),
-            'manager' => self::getDataGenerator()->create_user(['username' => 'manageruser', 'firstname' => 'Manager', 'lastname' => 'User']),
-            'appraiser' => self::getDataGenerator()->create_user(['username' => 'appraiseruser', 'firstname' => 'Appraiser', 'lastname' => 'User']),
-        ];
-
         $activity_params = [
-            'name' => 'Single activity with competency linked_review and manager selection_relationship',
+            'name' => 'Single activity with linked_review and manager selection_relationship',
             'relationships' => [
                 constants::RELATIONSHIP_SUBJECT,
                 constants::RELATIONSHIP_MANAGER,
@@ -136,27 +163,19 @@ class performelement_linked_review_component_access_watcher_testcase extends tes
             'elements' => [
                 [
                     'plugin_type' => 'linked_review',
-                    'content_type' => 'totara_competency',
+                    'content_type' => $content_type,
                     'selection_relationship' => constants::RELATIONSHIP_MANAGER,
                 ],
             ]
         ];
 
-        $this->create_activity_with_elements($users, 'subject', $activity_params);
-
-        $to_test = [
-            'admin' => true,
-            'other' => false,
-            'subject' => false,
-            'manager' => true,
-            'appraiser' => false,
-        ];
+        $this->create_activity_with_elements($this->users, 'subject', $activity_params);
 
         foreach ($to_test as $key => $expected) {
             $hook1 = new component_access_check(
-                'totara_competency',
-                $users[$key]->id,
-                $users['subject']->id,
+                $content_type,
+                $this->users[$key]->id,
+                $this->users['subject']->id,
                 ['content_type' => 'totara_competency']
             );
 

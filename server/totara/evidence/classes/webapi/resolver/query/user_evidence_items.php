@@ -29,6 +29,7 @@ use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_core\hook\component_access_check;
 use totara_evidence\data_providers\evidence as evidence_provider;
 use totara_evidence\entity\evidence_item as evidence_entity;
 use totara_evidence\models\evidence_item as evidence_model;
@@ -44,11 +45,20 @@ class user_evidence_items implements query_resolver, has_middleware {
 
         // Check capability
         if (!evidence_item_capability_helper::for_user($user_id)->can_view_list()) {
-            return [
-                'items' => [],
-                'total' => 0,
-                'next_cursor' => '',
-            ];
+             $hook = new component_access_check(
+                'totara_evidence',
+                user::logged_in()->id,
+                $user_id,
+                []
+            );
+
+            if (!$hook->execute()->has_permission()) {
+                return [
+                    'items' => [],
+                    'total' => 0,
+                    'next_cursor' => '',
+                ];
+            }
         }
 
         $args['input']['filters']['user_id'] = $user_id;
