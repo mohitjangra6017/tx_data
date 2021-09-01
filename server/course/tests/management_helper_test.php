@@ -771,9 +771,6 @@ class core_course_management_helper_test extends advanced_testcase {
      * \core_course\management\helper::action_category_resort_courses
      */
     public function test_action_category_resort_subcategories() {
-        // TODO: Remove this in TL-28468
-        $this->markTestSkipped('Unskip this test in TL-28468');
-
         global $DB;
 
         $generator = $this->getDataGenerator();
@@ -1106,9 +1103,6 @@ class core_course_management_helper_test extends advanced_testcase {
      * Tests the fetching of actions for a category.
      */
     public function test_get_category_listitem_actions() {
-        // TODO: Remove this in TL-28468
-        $this->markTestSkipped('Unskip this test in TL-28468');
-
         global $PAGE;
 
         $PAGE->set_url(new moodle_url('/course/management.php'));

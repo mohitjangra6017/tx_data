@@ -2933,7 +2933,7 @@ class coursecat implements renderable, cacheable_object, IteratorAggregate {
      * @return bool
      */
     public function has_manage_capability() {
-        if ($this->hasmanagecapability === null) {
+        if ($this->hasmanagecapability === null || PHPUNIT_TEST) {
             $this->hasmanagecapability = has_capability('moodle/category:manage', $this->get_context());
         }
         return $this->hasmanagecapability;
