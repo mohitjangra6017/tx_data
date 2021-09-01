@@ -21,7 +21,6 @@
  * @package mod_contentmarketplace
  */
 
-use contentmarketplace_linkedin\dto\xapi\progress;
 use contentmarketplace_linkedin\entity\user_completion;
 use core\entity\course;
 use core\entity\user;
@@ -265,113 +264,9 @@ class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
             )
         );
 
-        // Check that the user is now completed the course. As a result, user should not
-        // yet completed the course because there is no course compeltion criteria.
-        self::assertFalse($course_one_completion->is_course_complete($this->user->id));
-        self::assertFalse($course_two_completion->is_course_complete($this->user->id));
-    }
-
-    /**
-     * @return void
-     */
-    public function test_handle_xapi_for_learning_object_which_complete_the_course(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/completion/criteria/completion_criteria_activity.php");
-
-        $linkedin_generator = generator::instance();
-        $learning_object = $linkedin_generator->create_learning_object("urn:lyndaCourse:252");
-
-        $admin_user = get_admin();
-        $course_builder = course_builder::create_with_learning_object(
-            "contentmarketplace_linkedin",
-            $learning_object->id,
-            new create_course_interactor($admin_user->id)
-        );
-
-        $course_builder->set_module_completion_condition(completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE);
-        $result = $course_builder->create_course();
-
-        $db = builder::get_db();
-
-        self::assertTrue($result->is_successful());
-        self::assertTrue(
-            $db->record_exists("course", ["id" => $result->get_course_id()])
-        );
-
-        // Get module instance of the newly created course.
-        $module_instance_id = $db->get_field(
-            "course_modules",
-            "id",
-            [
-                "course" => $result->get_course_id(),
-                "module" => $db->get_field("modules", "id", ["name" => "contentmarketplace"])
-            ]
-        );
-
-        $generator = self::getDataGenerator();
-        $generator->enrol_user($this->user->id, $result->get_course_id());
-
-        // Adding course completion criteria.
-        $criteria_activity = new completion_criteria_activity();
-        $criteria_activity->course = $result->get_course_id();
-        $criteria_activity->moduleinstance = $module_instance_id;
-        $criteria_activity->module = "contentmarketplace";
-        $criteria_activity->criteriatype = COMPLETION_CRITERIA_TYPE_ACTIVITY;
-        $criteria_activity->insert();
-
-        $request = xapi_request::create_from_global(
-            ["component" => "contentmarketplace_linkedin"],
-            [],
-            ["Authorization" => "Bearer {$this->access_token}"],
-            ["REQUEST_METHOD" => "POST"]
-        );
-
-        $request->set_content(
-            json_encode([
-                "actor" => [
-                    "mbox" => "mailto:{$this->user->email}",
-                    "objectType" => "Agent"
-                ],
-                "result" => [
-                    "completion" => true,
-                    "extensions" => [
-                        "https://w3id.org/xapi/cmi5/result/extensions/progress" => "100"
-                    ]
-                ],
-                "id" => "some-random-id",
-                "verb" => [
-                    "display" => ["en-US" => "COMPLETED"],
-                    "id" => "http://adlnet.gov/expapi/verbs/completed"
-                ],
-                "object" => [
-                    "definition" => [
-                        "type" => "http://adlnet.gov/expapi/activities/course"
-                    ],
-                    "id" => $learning_object->urn,
-                    "objectType" => "Activity"
-                ],
-                "timestamp" => date(DATE_ISO8601, $this->time_now)
-            ])
-        );
-
-        $course = new course($result->get_course_id());
-        $completion_info = new completion_info($course->to_record());
-
-        self::assertFalse($completion_info->is_course_complete($this->user->id));
-
-        $controller = new receiver_controller($request, $this->time_now);
-        $result = $controller->action();
-
-        self::assertInstanceOf(json_result::class, $result);
-        $data = $result->get_data();
-
-        self::assertIsArray($data);
-        self::assertNotEmpty($data);
-        self::assertArrayHasKey("success", $data);
-        self::assertTrue($data["success"]);
-
-        // The course should be completed.
-        self::assertTrue($completion_info->is_course_complete($this->user->id));
+        // Check that the user is now completed the course.
+        self::assertTrue($course_one_completion->is_course_complete($this->user->id));
+        self::assertTrue($course_two_completion->is_course_complete($this->user->id));
     }
 
     /**

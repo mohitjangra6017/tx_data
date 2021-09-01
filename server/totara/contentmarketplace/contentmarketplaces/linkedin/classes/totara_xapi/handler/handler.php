@@ -26,9 +26,7 @@ use contentmarketplace_linkedin\entity\learning_object;
 use contentmarketplace_linkedin\entity\user_completion;
 use contentmarketplace_linkedin\totara_xapi\statement;
 use core\entity\course;
-use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\entity\course_source;
-use totara_contentmarketplace\mod_helper;
 use totara_oauth2\io\request;
 use totara_oauth2\server;
 use totara_xapi\entity\xapi_statement;
@@ -153,18 +151,7 @@ class handler extends base_handler {
                         continue;
                     }
 
-                    // Get the condition flag, which is needed to identify if we should mark the completion
-                    // when user had completed the course on launch or not.
-                    $condition_flag = mod_helper::get_completion_condition($cm->instance);
-                    $complete_state = COMPLETION_INCOMPLETE;
-
-                    if (completion_constants::COMPLETION_CONDITION_LAUNCH == $condition_flag ||
-                        $progress->is_completed()
-                    ) {
-                        $complete_state = COMPLETION_COMPLETE;
-                    }
-
-                    $completion_info->update_state($cm, $complete_state, $target_user_id);
+                    $completion_info->update_state($cm, COMPLETION_UNKNOWN, $target_user_id);
                 }
             }
         } finally {
