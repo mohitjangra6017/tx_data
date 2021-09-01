@@ -34,7 +34,11 @@
               aria-live="polite"
               role="status"
               aria-atomic="false"
-              :aria-label="$str('tags_selected', 'totara_core')"
+              :aria-label="
+                labelName
+                  ? $str('selected_tag_list_name', 'totara_core', labelName)
+                  : $str('tags_selected', 'totara_core')
+              "
               aria-relevant="additions"
             >
               <template v-for="(tag, index) in tags">
@@ -54,7 +58,12 @@
                           small: true,
                         }"
                         :aria-label="
-                          $str('tag_remove', 'totara_core', tag.text)
+                          labelName
+                            ? $str('tag_remove_from', 'totara_core', {
+                                name: tag.text,
+                                taglist: labelName,
+                              })
+                            : $str('tag_remove', 'totara_core', tag.text)
                         "
                         @click.stop.prevent="handleRemove(tag, index)"
                       >
@@ -71,7 +80,13 @@
                   :styleclass="{ transparent: true }"
                   :disabled="disabled"
                   :placeholder="placeholderText"
-                  :aria-label="$str('tag_list', 'totara_core')"
+                  :aria-label="
+                    $str(
+                      'filter_x_taglist',
+                      'totara_core',
+                      labelName || $str('tag_list', 'totara_core')
+                    )
+                  "
                   @focus.native="!isOpen && toggle()"
                 />
               </div>
@@ -88,9 +103,9 @@
           class="tui-tagList__expandArrow"
           :aria-expanded="isOpen.toString()"
           :aria-label="
-            $str(isOpen ? 'collapse' : 'expand', 'core') +
-              ' ' +
-              $str('tag_list', 'totara_core')
+            labelName
+              ? $str('tag_list_x', 'totara_core', labelName)
+              : $str('tag_list', 'totara_core')
           "
           aria-haspopup="menu"
           :disabled="disabled"
@@ -162,6 +177,7 @@ export default {
     Loader,
   },
   props: {
+    labelName: String,
     disabled: {
       type: Boolean,
       default: false,
@@ -295,15 +311,15 @@ export default {
 
 <lang-strings>
 {
-  "core": [
-    "expand",
-    "collapse"
-  ],
   "totara_core": [
+    "filter_x_taglist",
     "n_more",
+    "selected_tag_list_name",
     "tag_list",
     "tag_list_placeholder",
+    "tag_list_x",
     "tag_remove",
+    "tag_remove_from",
     "tags_selected"
   ]
 }

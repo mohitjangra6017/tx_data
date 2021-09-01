@@ -42,7 +42,7 @@ Feature: Contribute new resource and share with workspace
 
     # Create the resource.
     When I click on "5 to 10 mins" "text"
-    And I click on "Expand Tag list" "button" in the ".tui-topicsSelector" "css_element"
+    And I click on "Tag list" "button" in the ".tui-topicsSelector" "css_element"
     And I click on "Topic1" option in the dropdown menu
     And I click on "Done" "button"
     And I wait for the next second
@@ -76,7 +76,7 @@ Feature: Contribute new resource and share with workspace
     And I should see "Only you"
     And I should see "Limited people"
     And I click on "Everyone" "text" in the ".tui-accessSelector" "css_element"
-    And I click on "Expand Tag list" "button" in the ".tui-topicsSelector" "css_element"
+    And I click on "Tag list" "button" in the ".tui-topicsSelector" "css_element"
     And I click on "Topic1" option in the dropdown menu
     Then the "Done" "button" should be enabled
     And I click on "Done" "button"
@@ -110,7 +110,7 @@ Feature: Contribute new resource and share with workspace
     Then I should not see "Test Workspace 1" in the ".tui-engageSharedRecipientsSelector" "css_element"
 
     # Try adding the workspace back in again
-    When I click on "Expand Tag list" "button" in the ".tui-engageSharedRecipientsSelector" "css_element"
+    When I click on "Tag list" "button" in the ".tui-engageSharedRecipientsSelector" "css_element"
     Then I should see "Test Workspace 1" in the ".tui-engageSharedRecipientsSelector__recipient-summary li" "css_element"
 
     # We click on "Test Workspace 1 Workspace" as that's what the custom element transforms into

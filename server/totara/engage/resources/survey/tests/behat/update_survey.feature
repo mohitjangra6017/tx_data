@@ -82,7 +82,7 @@ Feature: Update survey
     And I should see "Limited people"
     And I should see "Everyone"
     And I click on "Everyone" "text" in the ".tui-accessSelector" "css_element"
-    When I click on "Expand Tag list" "button" in the ".tui-topicsSelector" "css_element"
+    When I click on "Tag list" "button" in the ".tui-topicsSelector" "css_element"
     And I click on "Topic 2" option in the dropdown menu
     Then the "Done" "button" should be enabled
     And I click on "Done" "button"

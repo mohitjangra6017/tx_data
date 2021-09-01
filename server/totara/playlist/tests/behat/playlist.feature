@@ -40,9 +40,9 @@ Feature: Manipulate playlist instance
     And I should see "Everyone"
 
     When I click on "Everyone" "text" in the ".tui-accessSelector" "css_element"
-    And I click on "Expand Tag list" "button" in the ".tui-topicsSelector" "css_element"
+    And I click on "Tag list" "button" in the ".tui-topicsSelector" "css_element"
     And I click on "Topic 1" option in the dropdown menu
-    And I click on "Expand Tag list" "button" in the ".tui-engageSharedRecipientsSelector" "css_element"
+    And I click on "Tag list" "button" in the ".tui-engageSharedRecipientsSelector" "css_element"
     Then the "Done" "button" should be enabled
 
     When I click on "Done" "button"

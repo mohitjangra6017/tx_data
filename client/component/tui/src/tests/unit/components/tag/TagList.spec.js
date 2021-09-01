@@ -62,7 +62,16 @@ describe('presentation/tag/TagList.vue', () => {
     wrapper = shallowMount(component, {
       stubs,
       data,
-      propsData: Object.assign(propsData, { closeOnClick: true }),
+      propsData: Object.assign({}, propsData, { closeOnClick: true }),
+    });
+    expect(wrapper.element).toMatchSnapshot();
+  });
+
+  it('uses the labelName provided for dropdown button, input field and remove tag button', () => {
+    wrapper = mount(component, {
+      propsData: Object.assign({}, propsData, {
+        labelName: 'Learning category',
+      }),
     });
     expect(wrapper.element).toMatchSnapshot();
   });

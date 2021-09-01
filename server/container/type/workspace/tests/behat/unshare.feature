@@ -34,7 +34,7 @@ Feature: Unshare resources from workspace
     And I click on "Next" "button"
     And I wait for the next second
     When I click on "5 to 10 mins" "text"
-    And I click on "Expand Tag list" "button" in the ".tui-topicsSelector" "css_element"
+    And I click on "Tag list" "button" in the ".tui-topicsSelector" "css_element"
     And I click on "Topic1" option in the dropdown menu
     And I click on "Done" "button"
     Then I should see "Test Article 1" in the ".tui-contributionBaseContent__cards" "css_element"
@@ -74,7 +74,7 @@ Feature: Unshare resources from workspace
     And I click on "Next" "button"
     And I wait for the next second
     And I click on "5 to 10 mins" "text"
-    And I click on "Expand Tag list" "button" in the ".tui-topicsSelector" "css_element"
+    And I click on "Tag list" "button" in the ".tui-topicsSelector" "css_element"
     And I click on "Topic1" option in the dropdown menu
     When I click on "Done" "button"
     Then I should see "Test Article 1" in the ".tui-contributionBaseContent__cards" "css_element"
