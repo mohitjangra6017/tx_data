@@ -51,7 +51,13 @@ class block_totara_recent_learning extends block_base {
 
         $completions = completion_info::get_all_courses($USER->id);
 
-        list($visibilitysql, $visibilityparams) = totara_visibility_where($USER->id, 'c.id', 'c.visible', 'c.audiencevisible');
+        list($visibilitysql, $visibilityparams) = totara_visibility_where(
+            $USER->id,
+            'c.id',
+            'c.visible',
+            'c.audiencevisible',
+            'c'
+        );
         $params = array('userid' => $USER->id, 'roleid' => $CFG->learnerroleid);
         $params = array_merge($params, $visibilityparams);
 
