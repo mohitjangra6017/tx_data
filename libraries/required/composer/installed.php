@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-t15-release',
-        'version' => 'dev-t15-release',
+        'pretty_version' => 'dev-TL-28246/15',
+        'version' => 'dev-TL-28246/15',
         'type' => 'metapackage',
         'install_path' => __DIR__ . '/../',
         'aliases' => array(),
-        'reference' => 'ce50a9f57c5f9c84802da985fbb1dfc47fc0190f',
+        'reference' => 'fd7e3a7628d5d00e8be0676623af5467a4916846',
         'name' => 'totara/totara_require',
         'dev' => true,
     ),
@@ -101,12 +101,12 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v6.2.0',
-            'version' => '6.2.0.0',
+            'pretty_version' => 'v6.5.1',
+            'version' => '6.5.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
-            'reference' => 'e38888a75c070304ca5514197d4847a59a5c853f',
+            'reference' => 'dd803df5ad7492e1b40637f7ebd258fee5ca7355',
             'dev_requirement' => false,
         ),
         'phpoffice/phpspreadsheet' => array(
@@ -200,12 +200,12 @@
             'dev_requirement' => false,
         ),
         'totara/totara_require' => array(
-            'pretty_version' => 'dev-t15-release',
-            'version' => 'dev-t15-release',
+            'pretty_version' => 'dev-TL-28246/15',
+            'version' => 'dev-TL-28246/15',
             'type' => 'metapackage',
             'install_path' => __DIR__ . '/../',
             'aliases' => array(),
-            'reference' => 'ce50a9f57c5f9c84802da985fbb1dfc47fc0190f',
+            'reference' => 'fd7e3a7628d5d00e8be0676623af5467a4916846',
             'dev_requirement' => false,
         ),
         'webonyx/graphql-php' => array(
