@@ -82,7 +82,7 @@
         <INDEX NAME="classification_map_idx" UNIQUE="true" FIELDS="parent_id, child_id"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="linkedin_user_completion" COMMENT="A table to keep track of user completion on linkedin learning content.">
+    <TABLE NAME="marketplace_linkedin_user_completion" COMMENT="A table to keep track of user completion on linkedin learning content.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user's id of whom is complete the learning item"/>

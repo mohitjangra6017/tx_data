@@ -35,7 +35,7 @@ class xapi_statement extends entity {
     /**
      * @var string
      */
-    public const TABLE = "xapi_statement";
+    public const TABLE = "totara_xapi_statement";
 
     /**
      * @var string

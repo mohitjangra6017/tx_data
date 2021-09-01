@@ -63,5 +63,28 @@ function xmldb_contentmarketplace_linkedin_upgrade($old_version): bool {
         upgrade_plugin_savepoint(true, 2021081900, 'contentmarketplace', 'linkedin');
     }
 
+    if ($old_version < 2021090200) {
+        // Define table marketplace_linkedin_user_completion to be renamed to marketplace_linkedin_user_completion.
+        $table = new xmldb_table('linkedin_user_completion');// Define key user_id_fk (foreign) to be dropped form marketplace_linkedin_user_completion.
+        $key = new xmldb_key('user_id_fk', XMLDB_KEY_FOREIGN, ['user_id'], 'user', ['id'], 'cascade');
+
+        // Launch drop key user_id_fk.
+        if ($db_manager->key_exists($table, $key)) {
+            $db_manager->drop_key($table, $key);
+        }
+
+
+        if ($db_manager->table_exists("linkedin_user_completion")) {
+            // Launch rename table for marketplace_linkedin_user_completion.
+            $db_manager->rename_table($table, 'marketplace_linkedin_user_completion');
+            $new_table = new xmldb_table("marketplace_linkedin_user_completion");
+
+            $db_manager->add_key($new_table, $key);
+        }
+
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021090200, 'contentmarketplace', 'linkedin');
+    }
+
     return true;
 }

@@ -56,5 +56,18 @@ function xmldb_totara_xapi_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021081800, 'totara', 'xapi');
     }
 
+    if ($old_version < 2021090200) {
+        // Define table totara_xapi_statement to be renamed to totara_xapi_statement.
+        $table = new xmldb_table('xapi_statement');
+
+        if ($db_manager->table_exists("xapi_statement")) {
+            // Launch rename table for totara_xapi_statement.
+            $db_manager->rename_table($table, 'totara_xapi_statement');
+        }
+
+        // Xapi savepoint reached.
+        upgrade_plugin_savepoint(true, 2021090200, 'totara', 'xapi');
+    }
+
     return true;
 }

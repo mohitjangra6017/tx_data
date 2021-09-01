@@ -41,7 +41,7 @@ class user_completion extends entity {
     /**
      * @var string
      */
-    public const TABLE = "linkedin_user_completion";
+    public const TABLE = "marketplace_linkedin_user_completion";
 
     /**
      * @var string

@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="xapi_statement" COMMENT="The table that stores the xapi statement from xapi request">
+    <TABLE NAME="totara_xapi_statement" COMMENT="The table that stores the xapi statement from xapi request">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="statement" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The xAPI statement, which is stored as json blob."/>
