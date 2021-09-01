@@ -19,6 +19,9 @@
 import { shallowMount } from '@vue/test-utils';
 import component from 'totara_comment/components/box/SidePanelCommentBox.vue';
 
+jest.mock('tui/apollo_client', () => null);
+jest.mock('tui/tui', () => null);
+
 describe('totara_comment/components/box/SidePanelCommentBox', () => {
   const template = {
     component: '?',

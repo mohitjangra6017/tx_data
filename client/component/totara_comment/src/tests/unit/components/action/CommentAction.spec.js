@@ -21,27 +21,29 @@ import { shallowMount } from '@vue/test-utils';
 jest.mock('tui/tui', () => null);
 
 describe('totara_comment/components/action/CommentAction.vue', () => {
-  let wrapper = null;
-
-  beforeAll(() => {
-    wrapper = shallowMount(CommentAction, {
-      propsData: {
-        totalReplies: 15,
-        commentId: 5,
-        area: 'comment',
-        reacted: true,
-        totalReactions: 100,
-      },
-
-      mocks: {
-        $str(x, y) {
-          return `${x}-${y}`;
-        },
-      },
-    });
-  });
+  const propsData = {
+    totalReplies: 15,
+    commentId: 5,
+    area: 'comment',
+    reacted: true,
+    totalReactions: 100,
+  };
+  const mocks = {
+    $str(x, y) {
+      return `${x}-${y}`;
+    },
+  };
 
   it('Checks snapshot', () => {
+    const wrapper = shallowMount(CommentAction, { propsData, mocks });
+    expect(wrapper.element).toMatchSnapshot();
+  });
+
+  it('Checks snapshot without thumbs up', () => {
+    const wrapper = shallowMount(CommentAction, {
+      propsData: Object.assign({}, propsData, { showLikeButton: false }),
+      mocks,
+    });
     expect(wrapper.element).toMatchSnapshot();
   });
 });

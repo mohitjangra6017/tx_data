@@ -63,6 +63,7 @@
       :reacted="reacted"
       :react-able="reactAble"
       :reply-able="replyAble"
+      :show-like-button="showLikeButton"
       :show-like-button-text="showLikeButtonText"
       :show-reply-button-text="showReplyButtonText"
       area="comment"
@@ -82,6 +83,7 @@
       :total-replies="totalReplies"
       :submitting="innerSubmitting"
       :size="size"
+      :show-like-button="showLikeButton"
       :show-like-button-text="showLikeButtonText"
       :show-reply-button-text="showReplyButtonText"
       :reply-to="replyTo"
@@ -231,6 +233,11 @@ export default {
     deleted: {
       type: Boolean,
       required: true,
+    },
+
+    showLikeButton: {
+      type: Boolean,
+      default: true,
     },
 
     /**

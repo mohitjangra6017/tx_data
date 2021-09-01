@@ -18,6 +18,8 @@
 <template>
   <div class="tui-commentAction">
     <SimpleLike
+      v-if="showLikeButton"
+      class="tui-commentAction__likeButton"
       :instance-id="commentId"
       component="totara_comment"
       :area="area"
@@ -103,6 +105,10 @@ export default {
       default: true,
     },
 
+    showLikeButton: {
+      type: Boolean,
+      default: true,
+    },
     showLikeButtonText: Boolean,
     showReplyButtonText: Boolean,
   },
@@ -140,13 +146,16 @@ export default {
 
   &__replyBox {
     display: flex;
-    margin-left: var(--gap-4);
 
     &-text {
       &--small {
         @include tui-font-body-small();
       }
     }
+  }
+
+  &__likeButton + &__replyBox {
+    margin-left: var(--gap-4);
   }
 }
 </style>

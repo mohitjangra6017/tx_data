@@ -1,7 +1,7 @@
 /**
  * This file is part of Totara Enterprise Extensions.
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * Totara Enterprise Extensions is provided only to Totara
  * Learning Solutions LTD's customers and partners, pursuant to
@@ -12,23 +12,26 @@
  * LTD, you may not access, use, modify, or distribute this software.
  * Please contact [licensing@totaralearning.com] for more information.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Tatsuhiro Kirihara <tatsuhiro.kirihara@totaralearning.com>
  * @module totara_comment
  */
 
-import CommentBox from 'totara_comment/components/box/CommentBox';
 import { shallowMount } from '@vue/test-utils';
 import { SIZE_SMALL } from 'totara_comment/size';
+import ReplyBox from 'totara_comment/components/box/ReplyBox.vue';
 
 jest.mock('tui/apollo_client', () => null);
 jest.mock('tui/tui', () => null);
 
-describe('totara_comment/components/box/CommentBox.vue', () => {
+describe('totara_comment/components/box/ReplyBox', () => {
   const propsData = {
     component: 'totara_comment',
     area: 'comment',
-    instanceId: 15,
+    commentId: 15,
+    totalReplies: 1,
     size: SIZE_SMALL,
+    showReplyForm: true,
+    replyAble: true,
   };
 
   const mocks = {
@@ -36,11 +39,7 @@ describe('totara_comment/components/box/CommentBox.vue', () => {
       loading: false,
 
       queries: {
-        comments: {
-          loading: false,
-        },
-
-        totalComments: {
+        replies: {
           loading: false,
         },
       },
@@ -52,12 +51,12 @@ describe('totara_comment/components/box/CommentBox.vue', () => {
   };
 
   const data = () => ({
-    totalComments: 1,
-    comments: [
+    replies: [
       {
         edited: false,
         deleted: false,
         id: 12,
+        commentid: 11,
         content: 'Hello world',
         updateable: true,
         deleteable: true,
@@ -70,17 +69,26 @@ describe('totara_comment/components/box/CommentBox.vue', () => {
           profileimageurl: 'http://example.com',
           profileimagealt: 'Hello world',
         },
+        interactor: {
+          can_update: true,
+          can_delete: true,
+          can_report: true,
+          can_follow_reply: true,
+          can_react: true,
+          can_view_author: true,
+        },
+        totalreactions: 56,
       },
     ],
   });
 
   it('Checks snapshot', () => {
-    const wrapper = shallowMount(CommentBox, { propsData, mocks, data });
+    const wrapper = shallowMount(ReplyBox, { propsData, mocks, data });
     expect(wrapper.element).toMatchSnapshot();
   });
 
   it('Checks snapshot without thumbs up', () => {
-    const wrapper = shallowMount(CommentBox, {
+    const wrapper = shallowMount(ReplyBox, {
       propsData: Object.assign({}, propsData, { showLikeButton: false }),
       mocks,
       data,

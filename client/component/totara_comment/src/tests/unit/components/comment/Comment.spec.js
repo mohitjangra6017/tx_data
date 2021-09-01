@@ -23,48 +23,52 @@ jest.mock('tui/apollo_client', () => null);
 jest.mock('tui/tui', () => null);
 
 describe('totara_comment/components/comment/Comment.vue', function() {
-  let wrapper = null;
+  const propsData = {
+    content: 'Hello world',
+    userFullName: 'xx fwf',
+    userId: 15,
+    userProfileImageUrl: 'http://example.com',
+    updateAble: true,
+    deleteAble: true,
+    totalReplies: 21,
+    reportAble: false,
+    timeDescription: '5th September 2019',
+    commentId: 42,
+    component: 'totara_comment',
+    area: 'comment',
+    instanceId: 22,
+    edited: false,
+    deleted: false,
+  };
 
-  beforeAll(function() {
-    wrapper = shallowMount(Comment, {
-      mocks: {
-        $str(id, component) {
-          return `${id}, ${component}`;
-        },
+  const mocks = {
+    $str(id, component) {
+      return `${id}, ${component}`;
+    },
 
-        $url(url, params) {
-          return `${url}?${params.toString()}`;
-        },
+    $url(url, params) {
+      return `${url}?${params.toString()}`;
+    },
 
-        $apollo: {
-          queries: {
-            replies: {
-              loading: false,
-            },
-          },
+    $apollo: {
+      queries: {
+        replies: {
+          loading: false,
         },
       },
-      propsData: {
-        content: 'Hello world',
-        userFullName: 'xx fwf',
-        userId: 15,
-        userProfileImageUrl: 'http://example.com',
-        updateAble: true,
-        deleteAble: true,
-        totalReplies: 21,
-        reportAble: false,
-        timeDescription: '5th September 2019',
-        commentId: 42,
-        component: 'totara_comment',
-        area: 'comment',
-        instanceId: 22,
-        edited: false,
-        deleted: false,
-      },
-    });
-  });
+    },
+  };
 
   it('Checks snapshot', function() {
+    const wrapper = shallowMount(Comment, { propsData, mocks });
+    expect(wrapper.element).toMatchSnapshot();
+  });
+
+  it('Checks snapshot without thumbs up', () => {
+    const wrapper = shallowMount(Comment, {
+      propsData: Object.assign({}, propsData, { showLikeButton: false }),
+      mocks,
+    });
     expect(wrapper.element).toMatchSnapshot();
   });
 });

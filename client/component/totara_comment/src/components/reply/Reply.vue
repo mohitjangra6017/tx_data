@@ -64,6 +64,7 @@
       :reply-able="replyAble"
       :show-reply-button-text="showReplyButtonText"
       :show-like-button-text="showLikeButtonText"
+      :show-like-button="showLikeButton"
       area="reply"
       class="tui-commentReply__footer"
       @click-reply="handleReply"
@@ -190,6 +191,10 @@ export default {
       default: true,
     },
 
+    showLikeButton: {
+      type: Boolean,
+      default: true,
+    },
     showLikeButtonText: Boolean,
     showReplyButtonText: Boolean,
     inlineHead: Boolean,

@@ -34,6 +34,7 @@
         contextId: editorContextId,
       }"
       :show-comment-form="showCommentForm"
+      :show-like-button="showLikeButton"
       :comment-able="reallyCommentAble"
       class="tui-sidePanelCommentBox__box"
       @update-total-comments="totalComments = $event"
@@ -84,6 +85,11 @@ export default {
     },
 
     showComment: {
+      type: Boolean,
+      default: true,
+    },
+
+    showLikeButton: {
       type: Boolean,
       default: true,
     },

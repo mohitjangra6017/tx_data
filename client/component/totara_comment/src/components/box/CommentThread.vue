@@ -56,6 +56,7 @@
           :submitting="submitting"
           :total-reactions="comment.totalreactions"
           :reacted="comment.interactor.reacted"
+          :show-like-button="showLikeButton"
           :show-like-button-text="showLikeButtonText"
           :show-reply-button-text="showReplyButtonText"
           :inline-head="commentInlineHead"
@@ -130,6 +131,10 @@ export default {
     showReplyButtonText: Boolean,
     withBorder: Boolean,
     commentInlineHead: Boolean,
+    showLikeButton: {
+      type: Boolean,
+      default: true,
+    },
     /**
      * Editor setting, do not modify this object.
      */

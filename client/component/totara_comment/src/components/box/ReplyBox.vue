@@ -71,6 +71,7 @@
           :submitting="innerSubmitting"
           :show-reply-button-text="showReplyButtonText"
           :show-like-button-text="showLikeButtonText"
+          :show-like-button="showLikeButton"
           :inline-head="replyHeadInline"
           :editor="editor"
           class="tui-commentReplyBox__reply"
@@ -171,6 +172,10 @@ export default {
     },
 
     submitting: Boolean,
+    showLikeButton: {
+      type: Boolean,
+      default: true,
+    },
     showLikeButtonText: Boolean,
     showReplyButtonText: Boolean,
     replyTo: null,

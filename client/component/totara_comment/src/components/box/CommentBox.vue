@@ -30,6 +30,7 @@
       :area="area"
       :instance-id="instanceId"
       :submitting="innerSubmitting"
+      :show-like-button="showLikeButton"
       :show-like-button-text="showLikeButtonText"
       :show-reply-button-text="showReplyButtonText"
       :with-border="withBorder"
@@ -164,6 +165,10 @@ export default {
     submitFormButtonText: String,
     withBorder: Boolean,
     showCommentForm: {
+      type: Boolean,
+      default: true,
+    },
+    showLikeButton: {
       type: Boolean,
       default: true,
     },

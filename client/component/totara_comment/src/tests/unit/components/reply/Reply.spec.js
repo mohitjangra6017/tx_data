@@ -22,39 +22,42 @@ import { shallowMount } from '@vue/test-utils';
 jest.mock('tui/apollo_client', () => null);
 
 describe('totara_comment/components/reply/Reply.vue', () => {
-  let wrapper = null;
+  const propsData = {
+    userFullName: 'Admin user',
+    content: 'Hello world',
+    updateAble: true,
+    deleteAble: true,
+    timeDescription: '5th of September 1996',
+    userProfileImageUrl: 'http://example.com',
+    reportAble: false,
+    userId: 42,
+    replyId: 12,
+    commentId: 45,
+    edited: false,
+    deleted: false,
+    component: 'totara_comment',
+  };
 
-  beforeAll(() => {
-    wrapper = shallowMount(Reply, {
-      propsData: {
-        userFullName: 'Admin user',
-        content: 'Hello world',
-        updateAble: true,
-        deleteAble: true,
-        timeDescription: '5th of September 1996',
-        userProfileImageUrl: 'http://example.com',
-        reportAble: false,
-        userId: 42,
-        replyId: 12,
-        commentId: 45,
-        edited: false,
-        deleted: false,
-        component: 'totara_comment',
-      },
+  const mocks = {
+    $url(path) {
+      return path;
+    },
 
-      mocks: {
-        $url(path) {
-          return path;
-        },
-
-        $str(x, y) {
-          return `${x}-${y}`;
-        },
-      },
-    });
-  });
+    $str(x, y) {
+      return `${x}-${y}`;
+    },
+  };
 
   it('Checks snapshot', () => {
+    const wrapper = shallowMount(Reply, { propsData, mocks });
+    expect(wrapper.element).toMatchSnapshot();
+  });
+
+  it('Checks snapshot without thumbs up', () => {
+    const wrapper = shallowMount(Reply, {
+      propsData: Object.assign({}, propsData, { showLikeButton: false }),
+      mocks,
+    });
     expect(wrapper.element).toMatchSnapshot();
   });
 });

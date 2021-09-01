@@ -10,6 +10,29 @@ exports[`totara_comment/components/box/CommentBox.vue Checks snapshot 1`] = `
     component="totara_comment"
     editor="[object Object]"
     instanceid="15"
+    showlikebutton="true"
+    size="small"
+  />
+   
+  <commentform-stub
+    class="tui-commentBox__commentForm"
+    editor="[object Object]"
+    size="small"
+    submitbuttontext="post-totara_comment"
+  />
+</div>
+`;
+
+exports[`totara_comment/components/box/CommentBox.vue Checks snapshot without thumbs up 1`] = `
+<div
+  class="tui-commentBox"
+>
+  <commentthread-stub
+    area="comment"
+    class="tui-commentBox__comments"
+    component="totara_comment"
+    editor="[object Object]"
+    instanceid="15"
     size="small"
   />
    
