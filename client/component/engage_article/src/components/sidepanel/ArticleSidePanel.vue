@@ -105,7 +105,7 @@
         editor-variant="engage_article-comment"
         :instance-id="resourceId"
         :editor-context-id="article.resource.context_id"
-        :interactor="interactor"
+        :show-comment="interactor.can_comment"
       />
     </template>
 

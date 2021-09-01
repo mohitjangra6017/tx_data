@@ -34,7 +34,7 @@
         contextId: editorContextId,
       }"
       :show-comment-form="showCommentForm"
-      :comment-able="interactor.can_comment"
+      :comment-able="reallyCommentAble"
       class="tui-sidePanelCommentBox__box"
       @update-total-comments="totalComments = $event"
       @update-submitting="submitting = $event"
@@ -83,15 +83,18 @@ export default {
       default: true,
     },
 
+    showComment: {
+      type: Boolean,
+      default: true,
+    },
+
+    /**
+     * Deprecated - use commentAble instead
+     *
+     * @deprecated since 14.4
+     */
     interactor: {
       type: Object,
-      default: () => ({
-        user_id: 0,
-        can_bookmark: false,
-        can_comment: false,
-        can_react: false,
-        can_share: false,
-      }),
     },
   },
 
@@ -101,6 +104,14 @@ export default {
       totalComments: 0,
       submitting: false,
     };
+  },
+
+  computed: {
+    reallyCommentAble() {
+      return Boolean(
+        this.interactor ? this.interactor.can_comment : this.showComment
+      );
+    },
   },
 };
 </script>

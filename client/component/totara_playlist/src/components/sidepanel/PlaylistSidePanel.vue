@@ -113,7 +113,7 @@
         :instance-id="playlist.id"
         :editor-context-id="playlist.contextid"
         class="tui-playlistSidePanel__commentBox"
-        :interactor="interactor"
+        :show-comment="interactor.can_comment"
       />
     </template>
     <template
