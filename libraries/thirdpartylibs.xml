@@ -102,4 +102,12 @@
     <licenseversion></licenseversion>
     <repository>https://github.com/Nyholm/psr7</repository>
   </library>
+  <library>
+    <location>required/matthiasmullie/minify</location>
+    <name>Minify</name>
+    <license>MIT</license>
+    <version>1.3.63</version>
+    <licenseversion></licenseversion>
+    <repository>https://github.com/matthiasmullie/minify</repository>
+  </library>
 </libraries>

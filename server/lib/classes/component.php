@@ -89,8 +89,6 @@ class core_component {
         'GeoIp2' => 'lib/maxmind/GeoIp2',
         'MoodleHQ\\RTLCSS' => 'lib/rtlcss',
         'ScssPhp\\ScssPhp' => 'lib/scssphp',
-        'MatthiasMullie\\Minify' => 'lib/minify/matthiasmullie-minify/src/',
-        'MatthiasMullie\\PathConverter' => 'lib/minify/matthiasmullie-pathconverter/src/',
         'IMSGlobal\LTI' => 'lib/ltiprovider/src',
         // Totara: extra libraries
         'RedeyeVentures\\GeoPattern' => 'lib/geopattern-php/GeoPattern',
