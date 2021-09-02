@@ -199,6 +199,10 @@ class enrol_self_plugin extends enrol_plugin {
             if ($instance->id == $instanceid) {
                 if ($data = $form->get_data()) {
                     $this->enrol_self($instance, $data);
+                    \core\notification::add(
+                        get_string('enrol_success_message', 'enrol_self'),
+                        \core\notification::SUCCESS
+                    );
                 }
             }
         } else {

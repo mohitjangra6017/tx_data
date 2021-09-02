@@ -25,6 +25,7 @@ namespace mod_contentmarketplace\model;
 use container_course\module\course_module;
 use context_module;
 use core\entity\course;
+use core\entity\enrol;
 use core\orm\entity\model;
 use core_component;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
@@ -49,6 +50,9 @@ use coding_exception;
  * @property-read moodle_url      $view_url
  * @property-read string          $activity_module_marketplace_component
  *
+ * @property-read bool            $self_enrol_enabled
+ * @property-read bool            $guest_enrol_enabled
+ * @property-read array           $self_enrol_enabled_with_required_key
  */
 class content_marketplace extends model {
 
@@ -90,6 +94,9 @@ class content_marketplace extends model {
         'activity_module_marketplace_component',
         'course',
         'course_id',
+        'self_enrol_enabled',
+        'guest_enrol_enabled',
+        'self_enrol_enabled_with_required_key'
     ];
 
     /**
@@ -254,5 +261,79 @@ class content_marketplace extends model {
         }
 
         return 'contentmarketplaceactivity_' . $plugin_name;
+    }
+
+    /**
+     * @param bool $with_required_key
+     * @return bool
+     */
+    public function get_self_enrol_enabled(bool $with_required_key = false): bool {
+        $enrol = $this->get_enrol_instance('self');
+        if (is_null($enrol)) {
+            return false;
+        }
+
+        if (!($enrol->status == ENROL_INSTANCE_ENABLED)) {
+            return false;
+        }
+
+        if ($with_required_key) {
+            return !empty($enrol->password);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param bool $with_required_key
+     * @return bool
+     */
+    public function get_guest_enrol_enabled(bool $with_required_key = false): bool {
+        $enrol = $this->get_enrol_instance('guest');
+        if (is_null($enrol)) {
+            return false;
+        }
+
+        if (!($enrol->status == ENROL_INSTANCE_ENABLED)) {
+            return false;
+        }
+
+        if ($with_required_key) {
+            return !empty($enrol->password);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_self_enrol_enabled_with_required_key(): array {
+        $payload = [
+            'redirect_url' => '',
+            'enabled' => false,
+        ];
+        if ($this->get_self_enrol_enabled(true)) {
+            $url = new moodle_url('/enrol/index.php', ['id' => $this->course_id]);
+            $payload = [
+                'redirect_url' => $url->out(),
+                'enabled' => true,
+            ];
+        }
+
+        return $payload;
+    }
+
+    /**
+     * @param string $enrol_name
+     * @return enrol|null
+     */
+    private function get_enrol_instance(string $enrol_name): ?enrol {
+        if (!enrol_is_enabled($enrol_name)) {
+            return null;
+        }
+
+        $repository = enrol::repository();
+        return $repository->find_enrol($enrol_name, $this->course_id, true);
     }
 }

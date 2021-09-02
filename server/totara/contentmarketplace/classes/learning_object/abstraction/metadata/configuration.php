@@ -18,28 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package mod_contentmarketplace
+ * @package totara_contentmarketplace
  */
 
-namespace mod_contentmarketplace\formatter;
+namespace totara_contentmarketplace\learning_object\abstraction\metadata;
 
-use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
 
-class content_marketplace extends entity_model_formatter {
+interface configuration {
     /**
-     * @inheritDoc
+     * Return guest access config for each learning object that is imported from content marketplace
+     *
+     * @return int
      */
-    protected function get_map(): array {
-        return [
-            'id' => null,
-            'name' => string_field_formatter::class,
-            'course' => null,
-            'cm_id' => null,
-            'completion_condition' => null,
-            'self_enrol_enabled' => null,
-            'guest_enrol_enabled' => null,
-            'self_enrol_enabled_with_required_key' => null
-        ];
-    }
+    public function get_guest_access_config(): int;
 }

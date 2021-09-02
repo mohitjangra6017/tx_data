@@ -36,18 +36,18 @@
 
     <!-- Notification banner (Guest/enrolment message) -->
     <template v-slot:feedback-banner>
-      <NotificationBanner v-if="guest && canEnrol" type="info">
+      <NotificationBanner v-if="canEnrolActivity" type="info">
         <template v-slot:body>
           <ActionCard :no-border="true">
             <template v-slot:card-body>
-              {{
-                $str('viewing_as_enrollable_guest', 'mod_contentmarketplace')
-              }}
+              {{ displayBannerInfo }}
             </template>
             <template v-slot:card-action>
               <Button
+                v-if="displayEnrolButton"
                 :styleclass="{ primary: 'true' }"
                 :text="$str('enrol', 'mod_contentmarketplace')"
+                @click="requestSelfEnrol"
               />
             </template>
           </ActionCard>
@@ -55,7 +55,7 @@
       </NotificationBanner>
 
       <NotificationBanner
-        v-else-if="guest"
+        v-else-if="interactor.isSiteGuest"
         :message="$str('viewing_as_guest', 'mod_contentmarketplace')"
         type="info"
       />
@@ -64,7 +64,7 @@
     <template v-slot:main-content>
       <div class="tui-linkedinActivity__body">
         <Button
-          :disabled="guest"
+          :disabled="launchInNewWindowDisabled"
           :styleclass="{ primary: 'true' }"
           :text="$str('launch_in_new_window', 'mod_contentmarketplace')"
         />
@@ -146,7 +146,8 @@ import { notify } from 'tui/notifications';
 
 // GraphQL
 import LinkedinActivityQuery from 'contentmarketplaceactivity_linkedin/graphql/linkedin_activity';
-import toggleSelfCompletionMutation from 'mod_contentmarketplace/graphql/set_self_completion';
+import setSelfCompletionMutation from 'mod_contentmarketplace/graphql/set_self_completion';
+import requestSelfEnrol from 'mod_contentmarketplace/graphql/request_self_enrol';
 
 export default {
   components: {
@@ -172,14 +173,344 @@ export default {
 
   data() {
     return {
-      // Can self enrol in activity
-      canEnrol: true,
-      // Viewing activity as guest (not enrolled in activity)
-      guest: true,
+      adminTree: [
+        {
+          id: 'marketplaceModuleAdministration',
+          label: 'Content marketplace module administration',
+          children: [
+            {
+              id: 'editSettings',
+              label: 'Edit settings',
+              linkUrl: '#editSettings',
+            },
+            {
+              id: 'locallyAssignedRoles',
+              label: 'Locally assigned roles',
+              linkUrl: '#locallyAssignedRoles',
+            },
+            {
+              id: 'Permissions',
+              label: 'Permissions',
+              linkUrl: '#Permissions',
+            },
+            {
+              id: 'checkPermissions',
+              label: 'Check permissions',
+              linkUrl: '#checkPermissions',
+            },
+            {
+              id: 'Filters',
+              label: 'Filters',
+              linkUrl: '#Filters',
+            },
+            {
+              id: 'Logs',
+              label: 'Logs',
+              linkUrl: '#Logs',
+            },
+          ],
+        },
+        {
+          id: 'courseAdministration',
+          label: 'Course administration',
+          children: [
+            {
+              id: 'editSettings',
+              label: 'Edit settings',
+              linkUrl: '#editSettings',
+            },
+            {
+              id: 'turnEditingOn',
+              label: 'Turn editing on',
+              linkUrl: '#turnEditingOn',
+            },
+            {
+              id: 'courseCompletion',
+              label: 'Course completion',
+              linkUrl: '#courseCompletion',
+            },
+            {
+              id: 'completionsArchive',
+              label: 'Completions archive',
+              linkUrl: '#completionsArchive',
+            },
+            {
+              id: 'completionEditor',
+              label: 'Completion editor',
+              linkUrl: '#completionEditor',
+            },
+            {
+              id: 'reminders',
+              label: 'Reminders',
+              linkUrl: '#reminders',
+            },
+            {
+              id: 'courseAdministrationUsers',
+              label: 'Users',
+              children: [
+                {
+                  id: 'EnrolledUsers',
+                  label: 'Enrolled users',
+                  linkUrl: '#EnrolledUsers',
+                },
+                {
+                  id: 'courseAdministrationUserEnrolmentMethods',
+                  label: 'Enrolment methods',
+                  children: [
+                    {
+                      id: 'ManualEnrolments',
+                      label: 'Manual enrolments',
+                      linkUrl: '#ManualEnrolments',
+                    },
+                    {
+                      id: 'GuestAccess',
+                      label: 'Guest access',
+                      linkUrl: '#GuestAccess',
+                    },
+                    {
+                      id: 'SelfEnrolmentLearner',
+                      label: 'Self enrolment (Learner)',
+                      linkUrl: '#SelfEnrolmentLearner',
+                    },
+                  ],
+                },
+                {
+                  id: 'Groups',
+                  label: 'Groups',
+                  linkUrl: '#Groups',
+                },
+                {
+                  id: 'courseAdministrationUserPermissions',
+                  label: 'Permissions',
+                  linkUrl: '#Permissions',
+                  children: [
+                    {
+                      id: 'CheckPermissions',
+                      label: 'Check permissions',
+                      linkUrl: '#CheckPermissions',
+                    },
+                  ],
+                },
+                {
+                  id: 'OtherUsers',
+                  label: 'Other users',
+                  linkUrl: '#OtherUsers',
+                },
+              ],
+            },
+            {
+              id: 'enrolmentOptions',
+              label: 'Enrolment options',
+              linkUrl: '#enrolmentOptions',
+            },
+            {
+              id: 'filters',
+              label: 'Filters',
+              linkUrl: '#Filters',
+            },
+            {
+              id: 'courseAdministrationReports',
+              label: 'Reports',
+              children: [
+                {
+                  id: 'Logs',
+                  label: 'Logs',
+                  linkUrl: '#Logs',
+                },
+                {
+                  id: 'LiveLogs',
+                  label: 'Live logs',
+                  linkUrl: '#LiveLogs',
+                },
+                {
+                  id: 'ActivityReport',
+                  label: 'Activity report',
+                  linkUrl: '#ActivityReport',
+                },
+                {
+                  id: 'CourseParticipation',
+                  label: 'Course participation',
+                  linkUrl: '#CourseParticipation',
+                },
+                {
+                  id: 'ActivityCompletion',
+                  label: 'Activity completion',
+                  linkUrl: '#ActivityCompletion',
+                },
+              ],
+            },
+            {
+              id: 'grades',
+              label: 'Grades',
+              linkUrl: '#Grades',
+            },
+            {
+              id: 'GradebookSetup',
+              label: 'Gradebook setup',
+              linkUrl: '#GradebookSetup',
+            },
+            {
+              id: 'courseAdministrationBadges',
+              label: 'Badges',
+              children: [
+                {
+                  id: 'ManageBadges',
+                  label: 'Manage badges',
+                  linkUrl: '#ManageBadges',
+                },
+                {
+                  id: 'AddANewBadge',
+                  label: 'Add a new badge',
+                  linkUrl: '#AddANewBadge',
+                },
+              ],
+            },
+            {
+              id: 'Backup',
+              label: 'Backup',
+              linkUrl: '#Backup',
+            },
+            {
+              id: 'Restore',
+              label: 'Restore',
+              linkUrl: '#Restore',
+            },
+            {
+              id: 'Import',
+              label: 'Import',
+              linkUrl: '#Import',
+            },
+            {
+              id: 'Reset',
+              label: 'Reset',
+              linkUrl: '#Reset',
+            },
+            {
+              id: 'courseAdministrationQuestionBank',
+              label: 'Question bank',
+              linkUrl: '#questionBank',
+              children: [
+                {
+                  id: 'Questions',
+                  label: 'Questions',
+                  linkUrl: '#Questions',
+                },
+                {
+                  id: 'Categories',
+                  label: 'Categories',
+                  linkUrl: '#Categories',
+                },
+                {
+                  id: 'Import',
+                  label: 'Import',
+                  linkUrl: '#Import',
+                },
+                {
+                  id: 'Export',
+                  label: 'Export',
+                  linkUrl: '#Export',
+                },
+              ],
+            },
+            {
+              id: 'courseAdministrationSwitchRoles',
+              label: 'Switch role to...',
+              linkUrl: '#roles',
+              children: [
+                {
+                  id: 'siteManager',
+                  label: 'Site Manager',
+                  linkUrl: '#siteManager',
+                },
+                {
+                  id: 'courseCreator',
+                  label: 'Course creator',
+                  linkUrl: '#courseCreator',
+                },
+                {
+                  id: 'Trainer',
+                  label: 'Trainer',
+                  linkUrl: '#Trainer',
+                },
+                {
+                  id: 'Learner',
+                  label: 'Learner',
+                  linkUrl: '#Learner',
+                },
+                {
+                  id: 'Guest',
+                  label: 'Guest',
+                  linkUrl: '#Guest',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      interactor: {
+        // Can self enrol in activity
+        canEnrol: false,
+        // Viewing activity as guest (not enrolled in activity)
+        canLaunch: false,
+        isAdmin: false,
+        isSiteGuest: false,
+      },
       setCompletion: false,
       // Open nodes of contents tree
       openContents: [],
+      selfEnrolEnabled: false,
+      guestEnrolEnabled: false,
+      selfEnrolEnabledWithRequiredKey: {
+        redirectUrl: '',
+        enabled: false,
+      },
     };
+  },
+
+  computed: {
+    canEnrolActivity() {
+      const { canEnrol, isSiteGuest } = this.interactor;
+      return canEnrol && !isSiteGuest;
+    },
+
+    launchInNewWindowDisabled() {
+      const { canEnrol, isSiteGuest, canLaunch } = this.interactor;
+      if (!canLaunch) {
+        return true;
+      }
+
+      if (isSiteGuest) {
+        return true;
+      }
+
+      return canEnrol;
+    },
+
+    displayBannerInfo() {
+      const { isAdmin, isSiteGuest } = this.interactor;
+
+      if (isAdmin) {
+        return this.selfEnrolEnabled
+          ? this.$str('viewing_as_enrollable_admin', 'mod_contentmarketplace')
+          : this.$str(
+              'viewing_as_enrollable_admin_self_enrol_disabled',
+              'mod_contentmarketplace'
+            );
+      }
+
+      return this.guestEnrolEnabled && this.selfEnrolEnabled && !isSiteGuest
+        ? this.$str('viewing_as_enrollable_guest', 'mod_contentmarketplace')
+        : this.$str('viewing_as_guest', 'mod_contentmarketplace');
+    },
+
+    displayEnrolButton() {
+      const { canEnrol, isSiteGuest } = this.interactor;
+      if (!this.selfEnrolEnabled || isSiteGuest) {
+        return false;
+      }
+
+      return canEnrol;
+    },
   },
 
   apollo: {
@@ -217,17 +548,31 @@ export default {
         this.setCompletion = module.completion_condition || false;
         this.openContents = getAllNodeKeys(contentsTree);
 
+        const { interactor } = module;
+        this.interactor.canEnrol = interactor.can_enrol;
+        this.interactor.isAdmin = interactor.is_admin;
+        this.interactor.isSiteGuest = interactor.is_site_guest;
+        this.interactor.canLaunch = interactor.can_launch;
+
+        this.selfEnrolEnabled = module.self_enrol_enabled;
+        this.guestEnrolEnabled = module.guest_enrol_enabled;
+        this.selfEnrolEnabledWithRequiredKey.redirectUrl =
+          module.self_enrol_enabled_with_required_key.redirect_url || '';
+        this.selfEnrolEnabledWithRequiredKey.enabled =
+          module.self_enrol_enabled_with_required_key.enabled;
+
         return learningObject;
       },
     },
   },
+
   methods: {
     async setCompletionHandler() {
       try {
         let {
           data: { result },
         } = await this.$apollo.mutate({
-          mutation: toggleSelfCompletionMutation,
+          mutation: setSelfCompletionMutation,
           refetchAll: false,
           variables: {
             cm_id: this.cmId,
@@ -237,11 +582,45 @@ export default {
 
         this.setCompletion = result;
       } catch (e) {
-        notify({
+        await notify({
           message: this.$str(
             this.setCompletion ? 'toggle_on_error' : 'toggle_off_error',
             'mod_contentmarketplace'
           ),
+          type: 'error',
+        });
+      }
+    },
+
+    async requestSelfEnrol() {
+      if (this.selfEnrolEnabledWithRequiredKey.enabled) {
+        window.location.href = this.selfEnrolEnabledWithRequiredKey.redirectUrl;
+        return;
+      }
+
+      try {
+        const variables = { cm_id: this.cmId };
+
+        let {
+          data: { result },
+        } = await this.$apollo.mutate({
+          mutation: requestSelfEnrol,
+          variables,
+          refetchAll: true,
+        });
+
+        if (result) {
+          await notify({
+            message: this.$str(
+              'enrol_success_message',
+              'mod_contentmarketplace'
+            ),
+            type: 'success',
+          });
+        }
+      } catch (e) {
+        await notify({
+          message: this.$str('internal_error', 'mod_contentmarketplace'),
           type: 'error',
         });
       }
@@ -262,12 +641,16 @@ export default {
       "activity_status_not_started",
       "course_details",
       "enrol",
+      "enrol_success_message",
+      "internal_error",
       "launch_in_new_window",
       "toggle_off_error",
       "toggle_on_error",
       "updated_at",
-      "viewing_as_guest",
-      "viewing_as_enrollable_guest"
+      "viewing_as_enrollable_admin",
+      "viewing_as_enrollable_admin_self_enrol_disabled",
+      "viewing_as_enrollable_guest",
+      "viewing_as_guest"
     ]
   }
 </lang-strings>

@@ -37,6 +37,7 @@ use totara_contentmarketplace\completion_constants;
 use totara_contentmarketplace\event\course_source_created;
 use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
 use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
+use totara_contentmarketplace\learning_object\abstraction\metadata\configuration;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 use totara_contentmarketplace\learning_object\factory;
@@ -126,6 +127,13 @@ class course_builder {
         $this->course_interactor = $interactor;
         $this->course_format = 'singleactivity';
         $this->enrol_names_enable = ['self'];
+
+        if ($this->learning_object instanceof configuration) {
+            if ($this->learning_object->get_guest_access_config()) {
+                array_push($this->enrol_names_enable, 'guest');
+            }
+        }
+
         $this->default_section_number = 0;
         $this->module_completion_tracking = COMPLETION_TRACKING_AUTOMATIC;
         $this->module_completion_condition = completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE;

@@ -28,6 +28,14 @@ defined('MOODLE_INTERNAL') || die();
  */
 if (isset($settings_page)) {
     $settings_page->add(
+        new admin_setting_heading(
+            'contentmarketplace_linkedin/set_up_integration',
+            new lang_string('set_up_integration', 'contentmarketplace_linkedin'),
+            ''
+        )
+    );
+
+    $settings_page->add(
         new admin_setting_configtext(
             'contentmarketplace_linkedin/client_id',
             new lang_string('client_id', 'contentmarketplace_linkedin'),
@@ -45,4 +53,22 @@ if (isset($settings_page)) {
             ''
         ),
     );
+
+    if (enrol_is_enabled('guest')) {
+        $settings_page->add(
+            new admin_setting_heading(
+                'contentmarketplace_linkedin/course_creation',
+                new lang_string('course_creation', 'contentmarketplace_linkedin'),
+                ''
+            )
+        );
+        $settings_page->add(
+            new admin_setting_configcheckbox(
+                'contentmarketplace_linkedin/guest_access',
+                new lang_string('guest_access', 'contentmarketplace_linkedin'),
+                new lang_string('guest_access_help', 'contentmarketplace_linkedin'),
+                '0'
+            )
+        );
+    }
 }

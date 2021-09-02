@@ -26,6 +26,7 @@ namespace contentmarketplace_linkedin\model;
 use Closure;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
+use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\event\learning_object_updated;
 use contentmarketplace_linkedin\learning_object\resolver;
@@ -34,6 +35,7 @@ use core\orm\entity\model;
 use core\orm\collection as orm_collection;
 use core\orm\query\builder;
 use core\entity\course;
+use totara_contentmarketplace\learning_object\abstraction\metadata\configuration;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\text;
 
@@ -66,7 +68,7 @@ use totara_contentmarketplace\learning_object\text;
  *
  * @package contentmarketplace_linkedin\model
  */
-class learning_object extends model implements detailed_model {
+class learning_object extends model implements detailed_model, configuration {
     /**
      * @var learning_object_entity
      */
@@ -280,5 +282,12 @@ class learning_object extends model implements detailed_model {
     public function refresh(): learning_object {
         $this->entity->refresh();
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_guest_access_config(): int {
+        return config::get_guest_access();
     }
 }

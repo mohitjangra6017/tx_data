@@ -23,36 +23,36 @@
 namespace mod_contentmarketplace\webapi\resolver\type;
 
 use coding_exception;
-use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
-use mod_contentmarketplace\interactor\content_marketplace_interactor;
-use mod_contentmarketplace\model\content_marketplace as model;
-use mod_contentmarketplace\formatter\content_marketplace as formatter;
+use mod_contentmarketplace\interactor\content_marketplace_interactor as interactor;
+use moodle_url;
 
-/**
- * Type resolver for content marketplace.
- */
-class content_marketplace implements type_resolver {
+class content_marketplace_interactor implements type_resolver {
     /**
      * @param string $field
-     * @param model $content_marketplace
+     * @param interactor $content_marketplace_interactor
      * @param array $args
      * @param execution_context $ec
      * @return mixed
      */
-    public static function resolve(string $field, $content_marketplace, array $args, execution_context $ec) {
-        if (!($content_marketplace instanceof model)) {
-            throw new coding_exception('Expected content marketplace model');
+    public static function resolve(string $field, $content_marketplace_interactor, array $args, execution_context $ec) {
+        if (!($content_marketplace_interactor instanceof interactor)) {
+            throw new coding_exception('Expected content marketplace interactor');
         }
 
-        if ($field === 'interactor') {
-            return new content_marketplace_interactor($content_marketplace);
+        switch ($field) {
+            case 'is_admin':
+                return $content_marketplace_interactor->is_admin();
+            case 'is_site_guest':
+                return $content_marketplace_interactor->is_site_guest();
+            case 'can_enrol':
+                return $content_marketplace_interactor->can_enrol();
+            case 'can_launch':
+                return $content_marketplace_interactor->can_launch();
+            default:
+                throw new coding_exception("Unexpected field passed {$field}");
         }
-
-        $context = $ec->has_relevant_context() ? $ec->get_relevant_context() : $content_marketplace->get_context();
-        $formatter = new formatter($content_marketplace, $context);
-
-        return $formatter->format($field, $args['format'] ?? format::FORMAT_PLAIN);
     }
+
 }

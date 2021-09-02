@@ -86,7 +86,9 @@ class view extends controller {
 
         $view = new tui_view(
             "{$subplugin}/pages/ActivityView",
-            ['cm-id' => $this->model->get_cm_id(),]
+            [
+                'cm-id' => $this->model->get_cm_id(),
+            ]
         );
 
         $view->set_title(format_string($this->model->name));

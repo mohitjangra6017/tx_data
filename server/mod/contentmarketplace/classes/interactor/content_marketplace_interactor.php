@@ -93,4 +93,44 @@ class content_marketplace_interactor extends base {
             $this->actor_id
         );
     }
+
+    /**
+     * @return bool
+     */
+    public function is_admin(): bool {
+        if (!$this->can_view()) {
+            return false;
+        }
+
+        return has_capability('moodle/course:view', $this->model->get_context(), $this->actor_id);
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_site_guest(): bool {
+        if (!$this->can_view()) {
+            return false;
+        }
+
+        return isguestuser($this->actor_id);
+    }
+
+    /**
+     * @return bool
+     */
+    public function can_enrol(): bool {
+        if (!$this->can_view()) {
+            return false;
+        }
+
+        return !is_enrolled($this->model->get_context(), $this->actor_id);
+    }
+
+    /**
+     * @return int
+     */
+    public function get_course_id(): int {
+        return $this->model->get_course_id();
+    }
 }

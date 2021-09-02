@@ -16,6 +16,18 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
       }
       name
       completion_condition
+      self_enrol_enabled
+      guest_enrol_enabled
+      self_enrol_enabled_with_required_key {
+        redirect_url
+        enabled
+      }
+      interactor {
+        is_admin
+        can_enrol
+        can_launch
+        is_site_guest
+      }
     }
     learning_object {
       id

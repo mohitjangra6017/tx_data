@@ -1,3 +1,30 @@
+type mod_contentmarketplace_content_marketplace_interactor {
+  """
+  Whether the user is a admin or not.
+  """
+  is_admin: Boolean!
+
+  """
+  Whether the user can enroll or not.
+  """
+  can_enrol: Boolean!
+
+  """
+  Whether the user can launch the activity or not.
+  """
+  can_launch: Boolean!
+
+  """
+  Whether the user is a site guest or not
+  """
+  is_site_guest: Boolean!
+}
+
+type mod_contentmarketplace_self_enrol_enabled_with_required_key_payload {
+  enabled: Boolean!
+  redirect_url: String
+}
+
 type mod_contentmarketplace_content_marketplace {
   id: core_id!
   """
@@ -7,6 +34,21 @@ type mod_contentmarketplace_content_marketplace {
   course: core_course!
   name(format: core_format = PLAIN): String!
   completion_condition: Boolean
+  interactor: mod_contentmarketplace_content_marketplace_interactor!
+  """
+  Whether self enrol is enabled or not.
+  """
+  self_enrol_enabled: Boolean!
+
+  """
+  Whether guest enrol is enabled or not.
+  """
+  guest_enrol_enabled: Boolean!
+
+  """
+  Whether self_enrol_enabled_with_required_key if guest or admin is logged in.
+  """
+  self_enrol_enabled_with_required_key: mod_contentmarketplace_self_enrol_enabled_with_required_key_payload!
 }
 
 """
@@ -23,4 +65,6 @@ extend type Mutation {
     cm_id: core_id!
     status: param_boolean!
   ): Boolean!
+
+  mod_contentmarketplace_request_self_enrol(cm_id: core_id!): Boolean!
 }

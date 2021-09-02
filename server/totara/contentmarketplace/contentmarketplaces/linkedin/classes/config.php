@@ -168,4 +168,25 @@ class config extends base_plugin_config {
     public static function save_completed_initial_sync_classification(bool $value): void {
         static::set('completed_initial_sync_classification', $value);
     }
+
+    /**
+     * @param int $value
+     * @return void
+     */
+    public static function set_guest_access(int $value): void {
+        static::set('guest_access', $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function get_guest_access(): bool {
+        $enabled = enrol_is_enabled('guest');
+        if ($enabled) {
+            return static::get('guest_access', '0');
+        }
+
+        return $enabled;
+    }
+
 }

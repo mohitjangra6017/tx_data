@@ -43,4 +43,15 @@ class content_marketplace_repository extends repository {
 
         return $repository->get_lazy();
     }
+
+    /**
+     * @param int $course_id
+     * @return content_marketplace|null
+     */
+    public function find_by_course_id(int $course_id): ?content_marketplace {
+        /** @var content_marketplace $entity */
+        $entity = content_marketplace::repository()->where('course', $course_id)->one();
+
+        return $entity;
+    }
 }

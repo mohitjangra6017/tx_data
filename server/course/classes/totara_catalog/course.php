@@ -187,16 +187,7 @@ class course extends provider {
         }
 
         $canselfenrol = !empty(enrol_selfenrol_available($objectid));
-        if ($canselfenrol) {
-            $link->description = get_string('catalog_can_enrol', 'moodle');
-            $link->button = new \stdClass();
-            $url = new \moodle_url('/enrol/index.php', ['id' => $objectid]);
-            $link->button->url = $url->out();
-            $link->button->label = get_string('catalog_go_to_course', 'moodle');
-            return $link;
-        }
-
-        $link->description = get_string('catalog_not_enrolled', 'moodle');
+        $link->description = $canselfenrol ? get_string('catalog_can_enrol', 'moodle') : get_string('catalog_not_enrolled', 'moodle');
 
         // We still have to include a link to the course in case there is auto-enrolment (e.g. programs, learning plans).
         // There is no easy way to figure that out for all enrolment plugins at this point.

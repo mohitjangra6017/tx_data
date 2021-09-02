@@ -1,0 +1,3 @@
+mutation mod_contentmarketplace_request_self_enrol($cm_id: core_id!) {
+  result: mod_contentmarketplace_request_self_enrol(cm_id: $cm_id)
+}

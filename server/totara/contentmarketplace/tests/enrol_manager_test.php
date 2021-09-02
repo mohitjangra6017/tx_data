@@ -26,6 +26,7 @@ use core\entity\enrol;
 use core\orm\query\builder;
 use core_phpunit\testcase;
 use totara_contentmarketplace\course\enrol_manager;
+use core\entity\user_enrolment;
 
 class totara_contentmarketplace_enrol_manager_testcase extends testcase {
     /**
@@ -163,7 +164,6 @@ class totara_contentmarketplace_enrol_manager_testcase extends testcase {
         self::assertNull($repository->find_enrol('totara_facetoface', $course->id));
     }
 
-
     /**
      * @return void
      */
@@ -186,5 +186,34 @@ class totara_contentmarketplace_enrol_manager_testcase extends testcase {
 
         self::assertTrue($enrol->is_enabled());
         self::assertFalse($enrol->is_disabled());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_self_enrol_as_student(): void {
+        self::setAdminUser();
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $course = course::from_record($course_record);
+        $manager = new enrol_manager($course);
+        $manager->enable_enrol('self');
+
+        // No user enrolment record for a user
+        self::assertFalse(user_enrolment::repository()->join(['enrol', 'e'], 'enrolid', 'id')
+            ->where('e.courseid', $course->id)
+            ->where('e.enrol', 'self')
+            ->where('userid', get_admin()->id)
+            ->exists());
+
+        $manager->self_enrol_as_student();
+
+        // User enrolment record is created
+        self::assertTrue(user_enrolment::repository()->join(['enrol', 'e'], 'enrolid', 'id')
+            ->where('e.courseid', $course->id)
+            ->where('e.enrol', 'self')
+            ->where('userid', get_admin()->id)
+            ->exists());
     }
 }
