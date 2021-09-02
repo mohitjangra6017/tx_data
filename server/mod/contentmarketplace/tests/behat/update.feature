@@ -55,8 +55,14 @@ Feature: Update content marketplace activity within course
     And I should see "Completion condition"
     And I should see "Mark the activity completed on launch"
     And I should see "Show activity as complete when LinkedIn Learning conditions have been met"
-    And the "Mark the activity completed on launch" "field" should be disabled
+    # By default it is with the content marketplace condition.
+    And the "Mark the activity completed on launch" "field" should be enabled
+    And the "Show activity as complete when LinkedIn Learning conditions have been met" "field" should be enabled
+
+    When I set the field "Completion tracking" to "Learners can manually mark the activity as completed"
+    Then the "Mark the activity completed on launch" "field" should be disabled
     And the "Show activity as complete when LinkedIn Learning conditions have been met" "field" should be disabled
+
     When I set the field "Completion tracking" to "Show activity as complete when conditions are met"
     Then the "Mark the activity completed on launch" "field" should be enabled
     And the "Show activity as complete when LinkedIn Learning conditions have been met" "field" should be enabled
