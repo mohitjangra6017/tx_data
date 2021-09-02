@@ -33,7 +33,9 @@ Feature: Check that the course provider column and filter in reports work as exp
 
     # Check the values of the course provider column.
     Then I should see "Internal" in the "course_provider" report column for "Course 1"
+    And I should not see "External content marketplace" in the "course_mods" report column for "Course 1"
     And I should see "LinkedIn Learning" in the "course_provider" report column for "Course 2"
+    And I should see "External content marketplace" in the "course_mods" report column for "Course 2"
 
     # Check the results of the course provider filter.
     When I click on "Internal" "checkbox"

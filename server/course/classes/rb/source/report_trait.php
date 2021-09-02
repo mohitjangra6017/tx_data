@@ -967,7 +967,8 @@ trait report_trait {
 
         foreach ($mods as $mod) {
             if (file_exists($CFG->dirroot . '/mod/' . $mod->name . '/pix/icon.gif') ||
-                file_exists($CFG->dirroot . '/mod/' . $mod->name . '/pix/icon.png')) {
+                file_exists($CFG->dirroot . '/mod/' . $mod->name . '/pix/icon.png') ||
+                \core\output\flex_icon::exists("mod_{$mod->name}|icon")) {
                 $icon = $OUTPUT->pix_icon('icon', $mod->localname, $mod->name) . '&nbsp;';
             } else {
                 $icon = '';

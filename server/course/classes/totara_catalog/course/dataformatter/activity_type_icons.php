@@ -91,7 +91,8 @@ class activity_type_icons extends formatter {
 
         foreach ($mods as $module) {
             if (file_exists($CFG->dirroot . '/mod/' . $module->name . '/pix/icon.gif') ||
-                file_exists($CFG->dirroot . '/mod/' . $module->name . '/pix/icon.png')) {
+                file_exists($CFG->dirroot . '/mod/' . $module->name . '/pix/icon.png') ||
+                \core\output\flex_icon::exists("mod_{$module->name}|icon")) {
                 $icon = new \stdClass();
                 $icon->icon = $OUTPUT->pix_icon('icon', $module->localname, $module->name);
 

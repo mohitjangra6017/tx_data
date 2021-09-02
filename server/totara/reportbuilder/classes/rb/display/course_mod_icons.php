@@ -76,7 +76,8 @@ class course_mod_icons extends base {
             } else {
                 $glue = '';
                 if (file_exists($CFG->dirroot . '/mod/' . $module->name . '/pix/icon.gif') ||
-                    file_exists($CFG->dirroot . '/mod/' . $module->name . '/pix/icon.png')) {
+                    file_exists($CFG->dirroot . '/mod/' . $module->name . '/pix/icon.png') ||
+                    \core\output\flex_icon::exists("mod_{$module->name}|icon")) {
                     $out[] = $OUTPUT->pix_icon('icon', $module->localname, $module->name);
                 } else {
                     $out[] = $module->name;
