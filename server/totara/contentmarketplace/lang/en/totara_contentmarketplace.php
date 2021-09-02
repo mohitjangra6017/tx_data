@@ -43,6 +43,7 @@ $string['contentmarketplace:add'] = 'Add Content Marketplace';
 $string['contentmarketplace:config'] = 'Manage Content Marketplace';
 $string['course_description_label'] = 'About the course';
 $string['course_items_label'] = 'Course structure';
+$string['course_provider'] = 'Course Provider';
 $string['coursesettings'] = 'Course settings';
 $string['createandview'] = 'Create and view course';
 $string['createcourse'] = 'Create course';

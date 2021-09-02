@@ -103,6 +103,7 @@ class rb_source_courses extends rb_base_source {
             'base', 'category');
         $this->add_core_tag_tables('core', 'course', $joinlist, 'base', 'id');
         $this->add_totara_cohort_course_tables($joinlist, 'base', 'id');
+        $this->add_totara_contentmarketplace_tables($joinlist, 'base', 'id');
 
         return $joinlist;
     }

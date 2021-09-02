@@ -115,7 +115,7 @@ class provider {
     }
 
     /**
-     * @param array $enabled_plugins
+     * @param datasearch_filter $filter
      */
     private static function add_source(datasearch_filter $filter): void {
         // Add internal filter.
@@ -128,7 +128,7 @@ class provider {
             ['objectid' => 'course.id', 'objecttype' => "'course'"]
         );
 
-        if (self::enabled_plugin_source()) {
+        if (!empty(contentmarketplace::get_enabled_plugins())) {
             // Add subplugin filter.
             $filter->add_source(
                 'course.component',
@@ -172,37 +172,15 @@ class provider {
      */
     private static function get_options(): array {
         $options[self::INTERNAL] = get_string('provider_internal', 'totara_contentmarketplace');
-        $string_manager = get_string_manager();
         /** @var contentmarketplace[] $plugins */
         $plugins = core_plugin_manager::instance()->get_plugins_of_type('contentmarketplace');
         foreach ($plugins as $plugin) {
             if ($plugin->is_enabled()) {
-                if (!$string_manager->string_exists('provider_' . $plugin->name, $plugin->component)) {
-                    // If plugin do not implement filter option, we just skip
-                    continue;
-                }
-                $options[$plugin->component] = get_string('provider_' . $plugin->name, $plugin->component);
+                $options[$plugin->component] = get_string('pluginname', $plugin->component);
             }
         }
 
         return $options;
     }
 
-    /**
-     * @return bool
-     */
-    private static function enabled_plugin_source(): bool {
-        $plugins = contentmarketplace::get_enabled_plugins();
-        $string_manager = get_string_manager();
-        $result = false;
-        foreach (array_keys($plugins) as $plugin_name) {
-            $result = $string_manager->string_exists('provider_' . $plugin_name, 'contentmarketplace_' . $plugin_name);
-
-            if ($result) {
-                return $result;
-            }
-        }
-
-        return $result;
-    }
 }

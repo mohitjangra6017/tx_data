@@ -31,6 +31,8 @@ defined('MOODLE_INTERNAL') || die();
 
 trait report_trait {
 
+    use \totara_contentmarketplace\rb\source\report_trait;
+
     /**
      * Adds some common course info to the $columnoptions array
      *
@@ -290,6 +292,8 @@ trait report_trait {
             )
         );
 
+        $this->add_totara_contentmarketplace_columns($columnoptions, $join);
+
         return true;
     }
 
@@ -421,6 +425,9 @@ trait report_trait {
                 'simplemode' => true
             )
         );
+
+        $this->add_totara_contentmarketplace_filters($filteroptions);
+
         return true;
     }
 
@@ -457,6 +464,8 @@ trait report_trait {
             REPORT_BUILDER_RELATION_ONE_TO_ONE,
             'course'
         );
+
+        $this->add_totara_contentmarketplace_tables($joinlist, 'course', 'id');
 
         return true;
     }

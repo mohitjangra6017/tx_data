@@ -43,7 +43,7 @@ class create_oauth2_client_provider_task extends adhoc_task {
             $entity->client_id = uniqid();
             $entity->client_secret = uniqid();
             $entity->id_number = "linkedin_learning";
-            $entity->name = get_string("provider_linkedin", "contentmarketplace_linkedin");
+            $entity->name = get_string("pluginname", "contentmarketplace_linkedin");
             $entity->grant_types = grant_type::get_client_credentials();
             $entity->component = "contentmarketplace_linkedin";
 

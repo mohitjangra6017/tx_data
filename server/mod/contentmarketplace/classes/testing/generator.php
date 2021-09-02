@@ -23,10 +23,13 @@
 namespace mod_contentmarketplace\testing;
 
 use coding_exception;
+use container_course\course;
 use core\orm\query\builder;
 use core\testing\mod_generator;
 use core_container\factory;
 use stdClass;
+use totara_contentmarketplace\event\course_source_created;
+use totara_contentmarketplace\model\course_source;
 use totara_contentmarketplace\testing\generator as totara_contentmarketplace_generator;
 
 class generator extends mod_generator {
@@ -93,7 +96,12 @@ class generator extends mod_generator {
         $db = builder::get_db();
 
         $course_record = $db->get_record('course', ['shortname' => $data['course']], '*', MUST_EXIST);
+        /** @var course $course */
         $course = factory::from_record($course_record);
+
+        // Create course source.
+        $model = course_source::create($course, $learning_object);
+        (course_source_created::from_model($model))->trigger();
 
         $module = $this->create_instance([
             'course' => $course->id,
