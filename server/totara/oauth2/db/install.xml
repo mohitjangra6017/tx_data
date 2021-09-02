@@ -15,6 +15,7 @@
         <FIELD NAME="description_format" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="scope" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false" COMMENT="List of scopes supported by the client. A string that contains list of scope, separated by a space."/>
         <FIELD NAME="grant_types" TYPE="char" LENGTH="80" NOTNULL="false" SEQUENCE="false" COMMENT="List of grant types supported by the client. An array imploded by a space."/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Which component is this client provider is being used for."/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>

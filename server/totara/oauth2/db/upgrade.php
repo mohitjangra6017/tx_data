@@ -118,5 +118,32 @@ function xmldb_totara_oauth2_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021081803, 'totara', 'oauth2');
     }
 
+    if ($old_version < 2021090200) {
+        // Define field component to be added to totara_oauth2_client_provider.
+        $table = new xmldb_table('totara_oauth2_client_provider');
+        $field = new xmldb_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'grant_types');
+
+        // Conditionally launch add field component.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        // Slightly a hack to update the current record from linkedin learning.
+        if ($DB->record_exists("totara_oauth2_client_provider", ["id_number" => "linkedin_learning"])) {
+            $record = $DB->get_record(
+                "totara_oauth2_client_provider",
+                ["idnumber" => "linkedin_learning"],
+                "*",
+                MUST_EXIST
+            );
+
+            $record->component = "contentmarketplace_linkedin";
+            $DB->update_record("totara_oauth2_client_provider", $record);
+        }
+
+        // Oauth2 savepoint reached.
+        upgrade_plugin_savepoint(true, 2021090200, 'totara', 'oauth2');
+    }
+
     return true;
 }

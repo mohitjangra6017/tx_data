@@ -38,7 +38,7 @@ use totara_oauth2\repository\client_provider_repository;
  * @property string|null $scope
  * @property string|null $grant_types
  * @property int $time_created
- *
+ * @property string|null $component
  * @method static client_provider_repository repository()
  */
 class client_provider extends entity {

@@ -51,6 +51,7 @@ class totara_oauth2_entity_client_provider_testcase extends testcase {
 
         self::assertNull($record->description);
         self::assertNull($record->description_format);
+        self::assertNull($record->component);
     }
 
     /**
