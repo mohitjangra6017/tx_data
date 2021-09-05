@@ -127,6 +127,10 @@ class mod_contentmarketplace_event_learning_object_updated_observer_testcase ext
     private function run_regular_sync(): void {
         $client = new simple_mock_client();
         $client->mock_queue($this->generator->create_json_response_from_fixture('response_2'));
+
+        // Adding empty queue as the sync will try to push for extra sync.
+        $client->mock_queue($this->generator->create_json_response_from_fixture("empty_response"));
+
         $time_now = time();
         config::save_completed_initial_sync_learning_asset(true);
         config::save_last_time_sync_learning_asset($time_now - DAYSECS);

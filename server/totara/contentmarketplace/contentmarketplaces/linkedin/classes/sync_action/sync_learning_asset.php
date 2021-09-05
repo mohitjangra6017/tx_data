@@ -239,7 +239,7 @@ class sync_learning_asset extends sync_action implements external_sync {
                 $last_modified_at = config::last_time_sync_learning_asset();
 
                 if (null !== $last_modified_at) {
-                    // Converting the last time modified into milli seconds. However, only when it
+                    // Converting the last time modified into milliseconds. However, only when it
                     // is not null. Because we want to treat null as not provided for the API call.
                     // Otherwise, "null * 1000 = 0" which will be included in the API call.
                     $last_modified_at *= timestamp::MILLISECONDS_IN_SECOND;
@@ -258,6 +258,10 @@ class sync_learning_asset extends sync_action implements external_sync {
             // In order to stop requesting, when the threshold number is reached.
             $request_failures = 0;
 
+            // A flag to help identify if we are going to push the sync to another threshold to be
+            // sure that we are not missing anything.
+            $sync_pushed = false;
+
             while (true) {
                 try {
                     /** @var collection $collection */
@@ -265,25 +269,50 @@ class sync_learning_asset extends sync_action implements external_sync {
                     $elements = $collection->get_elements();
 
                     if (empty($elements)) {
-                        $this->trace->output("No learning assets found for type: {$asset_type}");
+                        // No learning assets found anymore. This could be because of the exceeding limitting
+                        // from Linkedin Learning that we are trying.
                         break;
                     }
 
                     foreach ($elements as $element) {
+                        if (!$this->is_initial_run) {
+                            // So on normal sync, we are trying to push fetching data a little further.
+                            // Which we are mutating the offset, and because of that, there will be a different
+                            // types of learning assets included in the response. Therefore, this block of code
+                            // is here to ignore that sync happening.
+                            if ($element->get_type() !== $asset_type) {
+                                continue;
+                            }
+                        }
+
                         $this->do_sync_element($element);
                     }
 
                     $pagination = $collection->get_paging();
                     $total = $pagination->get_total();
-                    $current += $pagination->get_count();
+                    $current += count($elements);
 
-                    $this->trace->output("Syncing {$current}/{$total}");
+                    if (!$sync_pushed) {
+                        $this->trace->output("Syncing {$current}/{$total}");
+                    } else {
+                        $this->trace->output("Syncing extra");
+                    }
 
                     if (!$pagination->has_next()) {
-                        $this->trace->output(
-                            "Finish syncing with the total of records: {$total}"
-                        );
-                        break;
+                        if ($this->is_initial_run) {
+                            // For initial run, we should skip the whole process when there is no next page.
+                            break;
+                        }
+
+                        $sync_pushed = true;
+
+                        // This is a hack to make sure that we are not missing anything from
+                        // Linkedin Learning ends, when syncing the learning assets.
+                        // By using the calculated new offset, base upon the current offset
+                        // and the total of current elements.
+                        $new_start = $pagination->get_start() + count($elements);
+                        $criteria->set_start($new_start);
+                        continue;
                     }
 
                     $next_href = $pagination->get_next_link();
@@ -291,12 +320,12 @@ class sync_learning_asset extends sync_action implements external_sync {
                     $criteria->clear();
                     $criteria->set_parameters_from_paging_url($next_href);
                 } catch (auth_exception $e) {
-                    // We do not care about authentication exception, pass it thru.
+                    // We do not care about authentication exception, bubble it through.
                     throw $e;
                 } catch (http_exception $e) {
-                    // Bad response format response. This can potentially happened because of internal
-                    // server error response from linkedin which were captured and still output it as
-                    // 200 response code.
+                    // Bad response format response. This can potentially happen because of internal
+                    // server error response from Linkedin LEarning which were captured and still output
+                    // it as 200 response code.
                     $request_failures += 1;
                     $this->caught_request_exceptions[] = $e;
                 }
@@ -309,6 +338,7 @@ class sync_learning_asset extends sync_action implements external_sync {
 
             $time_end = microtime(true);
             $total_time_consumes_for_type = round($time_end - $time_start);
+            $this->trace->output("Finish syncing with the total of records: {$current}");
 
             if ($this->performance_debug) {
                 $this->trace->output("Completed sync for type {$asset_type} after {$total_time_consumes_for_type}");
@@ -334,7 +364,7 @@ class sync_learning_asset extends sync_action implements external_sync {
         if ($this->performance_debug) {
             $this->trace->output(
                 sprintf(
-                    "Completed sync after: %d",
+                    "Completed sync after: %d seconds",
                     array_sum($time_consumes)
                 )
             );

@@ -67,6 +67,8 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
             $generator->create_json_response_from_fixture('response_2')
         );
 
+        $client->mock_queue($generator->create_json_response_from_fixture("empty_response"));
+
         $time_now = time();
         config::save_completed_initial_sync_learning_asset(true);
         config::save_last_time_sync_learning_asset($time_now - DAYSECS);
@@ -125,6 +127,7 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
 
         $client = new simple_mock_client();
         $client->mock_queue($generator->create_json_response_from_fixture('response_2'));
+        $client->mock_queue($generator->create_json_response_from_fixture("empty_response"));
 
         config::save_completed_initial_sync_learning_asset(true);
 
@@ -154,6 +157,7 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
 
         $client = new simple_mock_client();
         $client->mock_queue($generator->create_json_response_from_fixture('response_1'));
+        $client->mock_queue($generator->create_json_response_from_fixture("empty_response"));
 
         config::save_completed_initial_sync_learning_asset(false);
         self::assertNull(config::last_time_sync_learning_asset());
@@ -166,5 +170,330 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
         $sync->invoke();
         self::assertEquals(0, $db->count_records(entity::TABLE));
         self::assertNull(config::last_time_sync_learning_asset());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_run_sync_with_extra_fetching(): void {
+        $generator = generator::instance();
+        config::save_completed_initial_sync_learning_asset(true);
+
+        $client = new simple_mock_client();
+        $client->mock_queue(
+            $generator->create_json_response(
+                json_encode([
+                    "paging" => [
+                        "start" => 0,
+                        "count" => 1,
+                        "links" => [],
+                        "total" => 1
+                    ],
+                    "elements" => [
+                        [
+                            "urn" => "urn:li:lyndaCourse:252",
+                            "details" => [
+                                "images" => [
+                                    "primary" => "https://example.com",
+                                ],
+                                "descriptionIncludingHtml" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "lastUpdatedAt" => time(),
+                                "publishedAt" => time(),
+                                "level" => constants::DIFFICULTY_LEVEL_BEGINNER,
+                                "description" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "shortDescription" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "availability" => constants::AVAILABILITY_AVAILABLE,
+                                "availableLocales" => [
+                                    [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ]
+                                ],
+                                "relationships" => [],
+                                "classifications" => [],
+                                "urls" => [
+                                    "webLaunch" => "https://example.com",
+                                    "ssoLaunch" => "",
+                                    "aiccLaunch" => ""
+                                ],
+                                "shortDescriptionIncludingHtml" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "Short description"
+                                ],
+                                "contributors" => [],
+                                "timeToComplete" => [
+                                    "duration" => 60,
+                                    "unit" => "SECOND"
+                                ],
+                            ],
+                            "title" => [
+                                "locale" => [
+                                    "country" => "US",
+                                    "language" => "en"
+                                ],
+                                "value" => "This is title"
+                            ],
+                            "type" => constants::ASSET_TYPE_COURSE,
+                            "contents" => []
+                        ]
+                    ]
+                ]),
+            )
+        );
+
+        // Mock an empty response so that we know that it would stop the process.
+        $client->mock_queue(
+            $generator->create_json_response(
+                json_encode([
+                    "paging" => [
+                        "start" => 0,
+                        "count" => 1,
+                        "links" => [],
+                        "total" => 1
+                    ],
+                    "elements" => []
+                ]),
+            )
+        );
+
+        // 2 current mock responses at the moment, before the execution.
+        self::assertEquals(2, $client->count_mock_responses());
+
+        $sync = new sync_learning_asset(false);
+        $sync->set_api_client($client);
+        $sync->invoke();
+
+        // There is 0 mock response, as we are trying to push for further syncing.
+        self::assertEquals(0, $client->count_mock_responses());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_run_sync_with_extra_fetching_that_ignore_diffrent_type(): void {
+        $generator = generator::instance();
+        config::save_completed_initial_sync_learning_asset(true);
+
+        $client = new simple_mock_client();
+        $client->mock_queue(
+            $generator->create_json_response(
+                json_encode([
+                    "paging" => [
+                        "start" => 0,
+                        "count" => 1,
+                        "links" => [],
+                        "total" => 1
+                    ],
+                    "elements" => [
+                        [
+                            "urn" => "urn:li:lyndaCourse:252",
+                            "details" => [
+                                "images" => [
+                                    "primary" => "https://example.com",
+                                ],
+                                "descriptionIncludingHtml" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "lastUpdatedAt" => time(),
+                                "publishedAt" => time(),
+                                "level" => constants::DIFFICULTY_LEVEL_BEGINNER,
+                                "description" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "shortDescription" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "availability" => constants::AVAILABILITY_AVAILABLE,
+                                "availableLocales" => [
+                                    [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ]
+                                ],
+                                "relationships" => [],
+                                "classifications" => [],
+                                "urls" => [
+                                    "webLaunch" => "https://example.com",
+                                    "ssoLaunch" => "",
+                                    "aiccLaunch" => ""
+                                ],
+                                "shortDescriptionIncludingHtml" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "Short description"
+                                ],
+                                "contributors" => [],
+                                "timeToComplete" => [
+                                    "duration" => 60,
+                                    "unit" => "SECOND"
+                                ],
+                            ],
+                            "title" => [
+                                "locale" => [
+                                    "country" => "US",
+                                    "language" => "en"
+                                ],
+                                "value" => "This is title"
+                            ],
+                            "type" => constants::ASSET_TYPE_COURSE,
+                            "contents" => []
+                        ]
+                    ]
+                ]),
+            )
+        );
+
+        $client->mock_queue(
+            $generator->create_json_response(
+                json_encode([
+                    "paging" => [
+                        "start" => 0,
+                        "count" => 1,
+                        "links" => [],
+                        "total" => 1
+                    ],
+                    "elements" => [
+                        [
+                            "urn" => "urn:li:lyndaCourse:253",
+                            "details" => [
+                                "images" => [
+                                    "primary" => "https://example.com",
+                                ],
+                                "descriptionIncludingHtml" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "lastUpdatedAt" => time(),
+                                "publishedAt" => time(),
+                                "level" => constants::DIFFICULTY_LEVEL_BEGINNER,
+                                "description" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "shortDescription" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "This is description"
+                                ],
+                                "availability" => constants::AVAILABILITY_AVAILABLE,
+                                "availableLocales" => [
+                                    [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ]
+                                ],
+                                "relationships" => [],
+                                "classifications" => [],
+                                "urls" => [
+                                    "webLaunch" => "https://example.com",
+                                    "ssoLaunch" => "",
+                                    "aiccLaunch" => ""
+                                ],
+                                "shortDescriptionIncludingHtml" => [
+                                    "locale" => [
+                                        "country" => "US",
+                                        "language" => "en"
+                                    ],
+                                    "value" => "Short description"
+                                ],
+                                "contributors" => [],
+                                "timeToComplete" => [
+                                    "duration" => 60,
+                                    "unit" => "SECOND"
+                                ],
+                            ],
+                            "title" => [
+                                "locale" => [
+                                    "country" => "US",
+                                    "language" => "en"
+                                ],
+                                "value" => "This is video"
+                            ],
+                            "type" => constants::ASSET_TYPE_VIDEO,
+                            "contents" => []
+                        ]
+                    ]
+                ]),
+            )
+        );
+
+        // Mock an empty response so that we know that it would stop the process.
+        $client->mock_queue(
+            $generator->create_json_response(
+                json_encode([
+                    "paging" => [
+                        "start" => 0,
+                        "count" => 1,
+                        "links" => [],
+                        "total" => 1
+                    ],
+                    "elements" => []
+                ]),
+            )
+        );
+
+        // 3 current mock responses at the moment, before the execution.
+        self::assertEquals(3, $client->count_mock_responses());
+
+        // check the database that no records for video and course existing before the sync.
+        $db = builder::get_db();
+        self::assertEquals(0, $db->count_records(entity::TABLE));
+        self::assertFalse($db->record_exists(entity::TABLE, ["asset_type" => constants::ASSET_TYPE_COURSE]));
+        self::assertFalse($db->record_exists(entity::TABLE, ["asset_type" => constants::ASSET_TYPE_VIDEO]));
+
+        $sync = new sync_learning_asset(false);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
+        $sync->invoke();
+
+        // There is 0 mock response, as we are trying to push for further syncing.
+        self::assertEquals(0, $client->count_mock_responses());
+
+        self::assertEquals(1, $db->count_records(entity::TABLE));
+        self::assertTrue($db->record_exists(entity::TABLE, ["asset_type" => constants::ASSET_TYPE_COURSE]));
+        self::assertFalse($db->record_exists(entity::TABLE, ["asset_type" => constants::ASSET_TYPE_VIDEO]));
     }
 }

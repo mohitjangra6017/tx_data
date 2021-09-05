@@ -255,7 +255,7 @@ class contentmarketplace_linkedin_full_sync_testcase extends testcase {
         $expected_outputs[] = "Cannot find the classification with urn urn:li:lyndaCategory:456";
 
         // Syncing progress
-        $expected_outputs[] = "Syncing 100/1";
+        $expected_outputs[] = "Syncing 1/1";
 
         // Total number from the response file.
         $expected_outputs[] = "Finish syncing with the total of records: 1";

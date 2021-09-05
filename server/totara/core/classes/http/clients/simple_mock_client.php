@@ -71,6 +71,14 @@ class simple_mock_client implements client {
     }
 
     /**
+     * Returns the count of current list of mock responses
+     * @return int
+     */
+    public function count_mock_responses(): int {
+        return count($this->responses);
+    }
+
+    /**
      * @param int $timeout
      * @return client
      */
