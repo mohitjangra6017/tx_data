@@ -132,7 +132,7 @@ function xmldb_totara_oauth2_upgrade(int $old_version): bool {
         if ($DB->record_exists("totara_oauth2_client_provider", ["id_number" => "linkedin_learning"])) {
             $record = $DB->get_record(
                 "totara_oauth2_client_provider",
-                ["idnumber" => "linkedin_learning"],
+                ["id_number" => "linkedin_learning"],
                 "*",
                 MUST_EXIST
             );
