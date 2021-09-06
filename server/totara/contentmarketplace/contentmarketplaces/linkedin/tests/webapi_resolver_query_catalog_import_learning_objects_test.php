@@ -282,8 +282,8 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
     public function test_ids_filter(): void {
         $learning_object_1 = generator::instance()->create_learning_object('1');
-        $learning_object_2 = generator::instance()->create_learning_object('2');
-        $learning_object_3 = generator::instance()->create_learning_object('3');
+        $learning_object_2 = generator::instance()->create_learning_object('2', ["last_updated_at" => time() + DAYSECS]);
+        $learning_object_3 = generator::instance()->create_learning_object('3', ["last_updated_at" => time() + HOURSECS]);
 
         $result_1 = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'ids' => [$learning_object_1->id],
