@@ -2,14 +2,25 @@
 
 exports[`presentation/buttons/Cancel.vue Checks snapshot 1`] = `
 <button
+  aria-disabled="false"
   class="tui-formBtn"
   type="button"
 >
+  <span
+    class="tui-formBtn__text"
+  >
+    
+    fff
   
-  fff
-  
-  <!---->
+  </span>
    
   <!---->
+   
+  <span
+    aria-live="assertive"
+    class="tui-formBtn__loading"
+  >
+    <!---->
+  </span>
 </button>
 `;

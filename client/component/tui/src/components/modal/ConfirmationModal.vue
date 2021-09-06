@@ -30,7 +30,7 @@
           <ButtonGroup>
             <Button
               :styleclass="{ primary: 'true' }"
-              :disabled="loading"
+              :loading="loading"
               :text="confirmButtonText"
               @click="$emit('confirm')"
             />

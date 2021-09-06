@@ -40,16 +40,27 @@ exports[`FilterSidePanel.vue matches snapshot 1`] = `
     </div>
      
     <button
+      aria-disabled="false"
       aria-label="tempstring"
       class="tui-formBtn tui-filterSidePanel__clearBtn tui-formBtn--small tui-formBtn--transparent"
       type="button"
     >
-      
-  tempstring
+      <span
+        class="tui-formBtn__text"
+      >
+        
+    tempstring
   
-      <!---->
+      </span>
        
       <!---->
+       
+      <span
+        aria-live="assertive"
+        class="tui-formBtn__loading"
+      >
+        <!---->
+      </span>
     </button>
   </div>
    

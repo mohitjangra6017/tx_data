@@ -34,8 +34,6 @@
           transparent: transparentStyle,
           reveal: revealStyle,
           stealth: stealthStyle,
-          toolbar: toolbarStyle,
-          selected: selectedStyle,
         }"
       />
 
@@ -54,8 +52,6 @@
               transparent: transparentStyle,
               reveal: revealStyle,
               stealth: stealthStyle,
-              toolbar: toolbarStyle,
-              selected: selectedStyle,
             }"
           />
         </FormRow>
@@ -129,20 +125,6 @@
           <Radio :value="false">False</Radio>
         </RadioGroup>
       </FormRow>
-
-      <FormRow label="Toolbar">
-        <RadioGroup v-model="toolbarStyle" :horizontal="true">
-          <Radio :value="true">True</Radio>
-          <Radio :value="false">False</Radio>
-        </RadioGroup>
-      </FormRow>
-
-      <FormRow label="Selected (for toolbar)">
-        <RadioGroup v-model="selectedStyle" :horizontal="true">
-          <Radio :value="true">True</Radio>
-          <Radio :value="false">False</Radio>
-        </RadioGroup>
-      </FormRow>
     </SamplesPropCtl>
 
     <SamplesCode>
@@ -189,8 +171,6 @@ export default {
       transparentStyle: false,
       revealStyle: false,
       stealthStyle: false,
-      toolbarStyle: false,
-      selectedStyle: false,
       codeTemplate: `<Button
   :text="text"
   :disabled="disabled"
@@ -202,8 +182,6 @@ export default {
     srOnly: screenReaderStyle,
     transparent: transparentStyle,
     reveal: revealStyle,
-    toolbar: toolbarStyle,
-    selected: selectedStyle,
   }"
 />`,
       codeScript: `import Button from 'tui/components/buttons/Button';

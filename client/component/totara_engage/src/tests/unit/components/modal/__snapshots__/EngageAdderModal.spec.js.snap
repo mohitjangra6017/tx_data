@@ -174,28 +174,50 @@ exports[`AdderModal should check snapshot 1`] = `
                 >
                   <button
                     aria-describedby="id-items-added"
+                    aria-disabled="false"
                     class="tui-formBtn tui-formBtn--prim"
                     disabled="disabled"
                     type="button"
                   >
-                    
-  tempString
+                    <span
+                      class="tui-formBtn__text"
+                    >
+                      
+    tempString
   
-                    <!---->
+                    </span>
                      
                     <!---->
+                     
+                    <span
+                      aria-live="assertive"
+                      class="tui-formBtn__loading"
+                    >
+                      <!---->
+                    </span>
                   </button>
                    
                   <button
+                    aria-disabled="false"
                     class="tui-formBtn"
                     type="button"
                   >
-                    
-  tempString
+                    <span
+                      class="tui-formBtn__text"
+                    >
+                      
+    tempString
   
-                    <!---->
+                    </span>
                      
                     <!---->
+                     
+                    <span
+                      aria-live="assertive"
+                      class="tui-formBtn__loading"
+                    >
+                      <!---->
+                    </span>
                   </button>
                 </div>
               </div>

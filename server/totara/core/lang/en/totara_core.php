@@ -85,6 +85,7 @@ $string['bookings'] = 'Bookings';
 $string['bookingsforheading'] = 'Bookings for {$a}';
 $string['browse'] = 'Browse';
 $string['browsecategories'] = 'Browse Categories';
+$string['button_loading_text'] = '{$a} (loading)';
 $string['cachedef_completion_progressinfo'] = 'Completion progressinfo cache';
 $string['cachedef_flex_icons'] = 'Flex icons';
 $string['cachedef_hookwatchers'] = 'Hook watchers';

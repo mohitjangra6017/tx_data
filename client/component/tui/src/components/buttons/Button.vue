@@ -20,7 +20,7 @@
   <button
     class="tui-formBtn"
     :aria-expanded="ariaExpanded"
-    :aria-disabled="ariaDisabled"
+    :aria-disabled="computedAriaDisabled"
     :aria-describedby="ariaDescribedby"
     :aria-haspopup="ariaHaspopup"
     :class="{
@@ -31,6 +31,7 @@
       'tui-formBtn--transparent': styleclass.transparent,
       'tui-formBtn--reveal': styleclass.reveal,
       'tui-formBtn--stealth': styleclass.stealth,
+      'tui-formBtn--loading': loading,
     }"
     :disabled="disabled"
     :formaction="formaction"
@@ -41,15 +42,18 @@
     :name="name"
     :type="type"
     :value="value"
-    @click="$emit('click', $event)"
+    @click="handleClick"
   >
-    {{ text }}
+    <span class="tui-formBtn__text">
+      {{ text }}
+    </span>
     <Caret v-if="caret" class="tui-formBtn__caret" />
-    <Loading
-      v-if="loading"
-      class="tui-formBtn__loading"
-      :alt="'(' + $str('loading', 'core') + ')'"
-    />
+    <span class="tui-formBtn__loading" aria-live="assertive">
+      <Loading
+        v-if="loading"
+        :alt="$str('button_loading_text', 'totara_core', text)"
+      />
+    </span>
   </button>
 </template>
 
@@ -115,6 +119,22 @@ export default {
     },
     value: String,
   },
+
+  computed: {
+    computedAriaDisabled() {
+      if (
+        this.ariaDisabled === true ||
+        this.ariaDisabled === 'true' ||
+        this.loading
+      ) {
+        return 'true';
+      }
+
+      // don't add `aria-disabled="false"` if nothing was ever passed
+      return this.ariaDisabled == null ? null : 'false';
+    },
+  },
+
   mounted() {
     if (this.autofocus && this.$el) {
       // Make the input element to be focused, when the prop autofocus is set.
@@ -125,13 +145,24 @@ export default {
       this.$el.focus();
     }
   },
+
+  methods: {
+    handleClick(e) {
+      if (this.disabled || this.loading) {
+        // prevent from acting as a submit button
+        e.preventDefault();
+        return;
+      }
+      this.$emit('click', e);
+    },
+  },
 };
 </script>
 
 <lang-strings>
 {
-  "core": [
-    "loading"
+  "totara_core": [
+    "button_loading_text"
   ]
 }
 </lang-strings>
@@ -208,7 +239,14 @@ export default {
   }
 
   > .tui-formBtn__loading {
-    margin-left: var(--gap-1);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--btn-loader-color-disabled);
   }
 
@@ -236,7 +274,8 @@ export default {
   }
 
   &:disabled,
-  &[disabled] {
+  &[disabled],
+  &--loading {
     color: var(--btn-text-color-disabled);
     background-color: var(--btn-bg-color-disabled);
     border-color: var(--btn-border-color-disabled);
@@ -276,7 +315,8 @@ export default {
     }
 
     &:disabled,
-    &[disabled] {
+    &[disabled],
+    &.tui-formBtn--loading {
       color: var(--btn-alert-text-color-disabled);
       background: var(--btn-alert-bg-color-disabled);
       border-color: var(--btn-alert-border-color-disabled);
@@ -318,7 +358,8 @@ export default {
     }
 
     &:disabled,
-    &[disabled] {
+    &[disabled],
+    &.tui-formBtn--loading {
       color: var(--btn-prim-text-color-disabled);
       background: var(--btn-prim-bg-color-disabled);
       border-color: var(--btn-prim-border-color-disabled);
@@ -335,10 +376,10 @@ export default {
         border-color: var(--btn-prim-border-color-disabled);
         box-shadow: none;
       }
+    }
 
-      & .tui-formBtn__loading {
-        color: var(--btn-prim-loader-color-disabled);
-      }
+    .tui-formBtn__loading {
+      color: var(--btn-prim-loader-color-disabled);
     }
   }
 
@@ -399,7 +440,8 @@ export default {
       @include tui-focus();
     }
 
-    &:disabled {
+    &:disabled,
+    &.tui-formBtn--loading {
       color: var(--color-state-disabled);
       background: transparent;
       opacity: 1;
@@ -429,7 +471,8 @@ export default {
       border-bottom: 1px dashed var(--color-state);
     }
 
-    &:disabled {
+    &:disabled,
+    &.tui-formBtn--loading {
       color: currentColor;
       border-bottom: 1px dashed var(--color-state);
       opacity: 0.7;
@@ -443,6 +486,10 @@ export default {
         border-bottom: 1px dashed var(--color-state);
       }
     }
+  }
+
+  &--loading &__text {
+    visibility: hidden;
   }
 
   &--srOnly {

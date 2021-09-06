@@ -13,6 +13,7 @@
  * Please contact [licensing@totaralearning.com] for more information.
  *
  * @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
+ * @author Simon Chester <simon.chester@totaralearning.com>
  * @module tui
  */
 
@@ -20,61 +21,42 @@ import { shallowMount } from '@vue/test-utils';
 import component from 'tui/components/buttons/Button.vue';
 import { axe, toHaveNoViolations } from 'jest-axe';
 expect.extend(toHaveNoViolations);
-import Vue from 'vue';
 
-let wrapper;
-const clickFunc = jest.fn();
-const primaryClass = 'tui-formBtn--prim';
-const smallClass = 'tui-formBtn--small';
+describe('Button', () => {
+  it('emits click event on button click', () => {
+    const click = jest.fn();
+    const wrapper = shallowMount(component, {
+      propsData: { text: 'text' },
+      listeners: { click },
+    });
+    wrapper.find('button').trigger('click');
+    expect(click).toHaveBeenCalled();
+  });
 
-describe('presentation/form/Button.vue', () => {
-  beforeAll(() => {
-    wrapper = shallowMount(component, {
+  it('does not emit click event when button is disabled or loading', () => {
+    const click = jest.fn();
+    const wrapper = shallowMount(component, {
       propsData: {
-        text: 'btn text',
-        autofocus: true,
+        text: 'text',
+        loading: true,
       },
-      attachToDocument: true,
-      listeners: {
-        click: clickFunc,
-      },
+      listeners: { click },
     });
+    wrapper.find('button').trigger('click');
+    expect(click).not.toHaveBeenCalled();
   });
 
-  it('Checks button click function is called', () => {
-    wrapper.find('button').vm.$emit('click');
-    expect(clickFunc).toHaveBeenCalled();
-  });
-
-  it('Checks primary button class can be set', async () => {
-    expect(wrapper.find('button').classes(primaryClass)).toBeFalsy();
-
-    wrapper.setData({
-      styleclass: {
-        primary: 'true',
-      },
+  it('matches snapshot', () => {
+    const wrapper = shallowMount(component, {
+      propsData: { text: 'btn text' },
     });
-    await Vue.nextTick();
-    expect(wrapper.find('button').classes()).toContain(primaryClass);
-  });
-
-  it('Checks small button class can be set', async () => {
-    expect(wrapper.find('button').classes(smallClass)).toBeFalsy();
-
-    wrapper.setData({
-      styleclass: {
-        small: 'true',
-      },
-    });
-    await Vue.nextTick();
-    expect(wrapper.find('button').classes()).toContain(smallClass);
-  });
-
-  it('Checks snapshot', () => {
     expect(wrapper.element).toMatchSnapshot();
   });
 
   it('should not have any accessibility violations', async () => {
+    const wrapper = shallowMount(component, {
+      propsData: { text: 'text' },
+    });
     const results = await axe(wrapper.element, {
       rules: {
         region: { enabled: false },
@@ -83,7 +65,14 @@ describe('presentation/form/Button.vue', () => {
     expect(results).toHaveNoViolations();
   });
 
-  it('should be auto focus', () => {
+  it('should support autofocus', () => {
+    const wrapper = shallowMount(component, {
+      propsData: {
+        text: 'btn text',
+        autofocus: true,
+      },
+      attachToDocument: true,
+    });
     expect(wrapper.element).toBe(document.activeElement);
   });
 });

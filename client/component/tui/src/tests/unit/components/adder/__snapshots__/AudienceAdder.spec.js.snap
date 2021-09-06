@@ -168,28 +168,50 @@ exports[`AudienceAdder should check snapshot 1`] = `
                 >
                   <button
                     aria-describedby="id-items-added"
+                    aria-disabled="false"
                     class="tui-formBtn tui-formBtn--prim"
                     disabled="disabled"
                     type="button"
                   >
-                    
-  [[add, totara_core]]
+                    <span
+                      class="tui-formBtn__text"
+                    >
+                      
+    [[add, totara_core]]
   
-                    <!---->
+                    </span>
                      
                     <!---->
+                     
+                    <span
+                      aria-live="assertive"
+                      class="tui-formBtn__loading"
+                    >
+                      <!---->
+                    </span>
                   </button>
                    
                   <button
+                    aria-disabled="false"
                     class="tui-formBtn"
                     type="button"
                   >
-                    
-  [[cancel, core]]
+                    <span
+                      class="tui-formBtn__text"
+                    >
+                      
+    [[cancel, core]]
   
-                    <!---->
+                    </span>
                      
                     <!---->
+                     
+                    <span
+                      aria-live="assertive"
+                      class="tui-formBtn__loading"
+                    >
+                      <!---->
+                    </span>
                   </button>
                 </div>
               </div>
