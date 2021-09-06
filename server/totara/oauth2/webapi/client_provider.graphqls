@@ -1,0 +1,14 @@
+type totara_oauth2_client_provider {
+  client_id: String!
+  client_secret: String!
+  name: String!
+  description: String
+  xapi_url: String!
+  oauth_url: String!
+}
+
+extend type Query {
+  totara_oauth2_client_providers(
+    id: param_integer!
+  ): [totara_oauth2_client_provider]
+}

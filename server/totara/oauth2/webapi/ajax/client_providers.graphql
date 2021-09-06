@@ -1,0 +1,10 @@
+query totara_oauth2_client_providers($id: param_integer!) {
+  providers: totara_oauth2_client_providers(id: $id) {
+    client_id
+    client_secret
+    name
+    description
+    xapi_url
+    oauth_url
+  }
+}

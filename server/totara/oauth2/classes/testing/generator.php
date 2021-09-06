@@ -31,6 +31,7 @@ use totara_oauth2\wrapper\league\client_entity;
 use totara_oauth2\wrapper\league\token_entity;
 use totara_oauth2\wrapper\league\token_repository;
 use DateTimeImmutable;
+use coding_exception;
 
 class generator extends component_generator {
     /**
@@ -164,6 +165,7 @@ class generator extends component_generator {
         }
 
         $entity = new client_provider();
+        $entity->name = $parameters["name"] ?? 'client provider' . rand(0, 100);
         $entity->client_id = $client_id;
         $entity->client_secret = $parameters["client_secret"] ?? uniqid("secret_");
         $entity->description = $parameters["description"] ?? null;
@@ -190,5 +192,25 @@ class generator extends component_generator {
         $entity->refresh();
 
         return $entity;
+    }
+
+    /**
+     * Callback from behat data generator.
+     *
+     * @param array $parameters
+     * @return client_provider
+     */
+    public function create_client_provider_instance(array $parameters = []): client_provider {
+        if (!isset($parameters['name'])) {
+            throw new coding_exception(
+                "Cannot create client_provider from parameters that does not have the name itself"
+            );
+        }
+
+        if (empty($parameters['client_id'])) {
+            $parameters['client_id'] = uniqid("client_");
+        }
+
+        return $this->create_client_provider($parameters['client_id'], $parameters);
     }
 }

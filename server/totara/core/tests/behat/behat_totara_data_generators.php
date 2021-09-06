@@ -631,6 +631,12 @@ class behat_totara_data_generators extends behat_base {
                 'required' => array('component', 'area', 'name', 'username', 'comment'),
             ),
         ),
+        'totara_oauth2' => array(
+            'client provider' => array(
+                'datagenerator' => 'client_provider_instance',
+                'required' => array('name'),
+            )
+        )
     );
 
     /**

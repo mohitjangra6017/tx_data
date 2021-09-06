@@ -29,7 +29,7 @@ require_once($CFG->libdir.'/tablelib.php');
 $PAGE->set_url('/admin/tool/oauth2/issuers.php');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
-$strheading = get_string('pluginname', 'tool_oauth2');
+$strheading = get_string('oauth2consumerdetails', 'tool_oauth2');
 $PAGE->set_title($strheading);
 $PAGE->set_heading($strheading);
 
@@ -192,7 +192,7 @@ if ($mform && $mform->is_cancelled()) {
 
 } else {
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('pluginname', 'tool_oauth2'));
+    echo $OUTPUT->heading(get_string('oauth2consumerdetails', 'tool_oauth2'));
 //    echo $OUTPUT->doc_link('OAuth2_Services', get_string('serviceshelp', 'tool_oauth2'));
     $issuers = core\oauth2\api::get_all_issuers();
     echo $renderer->issuers_table($issuers);

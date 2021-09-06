@@ -5,7 +5,7 @@ Feature: Setup the oauth2 plugin and issuers so that a user can login using a si
     When I log in as "admin"
     And I navigate to "Plugins > Authentication > Manage authentication" in site administration
     And I click on "Enable" "link" in the "OAuth 2" "table_row"
-    And I navigate to "Server > OAuth 2 services" in site administration
+    And I navigate to "Server > OAuth 2 > OAuth 2 consumer details" in site administration
 
   Scenario Outline: Setup services
     When I click on "Create new <type> service" "button"
@@ -55,7 +55,7 @@ Feature: Setup the oauth2 plugin and issuers so that a user can login using a si
     And I use magic for persistent login to open the login page
     Then I should see image with alt text "Microsoft service 1"
     When I log in as "admin"
-    And I navigate to "Server > OAuth 2 services" in site administration
+    And I navigate to "Server > OAuth 2 > OAuth 2 consumer details" in site administration
     And I click on "Edit" "link" in the "Microsoft service 1" "table_row"
     And I click on "Help with Name" "link"
     Then I should see "Name of the identity issuer. This will be displayed on the log in page unless the default Microsoft branding is enabled."

@@ -17,17 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_oauth2
  */
-defined('MOODLE_INTERNAL') || die();
 
-$string['client_id'] = 'Client ID';
-$string['client_provider_description'] = 'Description';
-$string['client_provider_name'] = 'Name';
-$string['client_secret'] = 'Client secret';
-$string['no_record_found'] = 'No OAuth 2 providers have been created. A provider for LinkedIn Learning reporting will be created by a scheduled task on the next cron run.';
-$string['oauth_url'] = 'OAuth server URL';
-$string['oauth2providerdetails'] = 'OAuth 2 provider details';
-$string["pluginname"] = "Totara OAuth2 provider";
-$string['xapi_url'] = 'xAPI server URL';
+use totara_oauth2\controller\oauth2_provider_controller;
+
+require_once(__DIR__ . '/../../config.php');
+
+(new oauth2_provider_controller())->process();
