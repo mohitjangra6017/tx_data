@@ -104,9 +104,10 @@ class totara_core_webapi_resolver_type_course_module_testcase extends advanced_t
         ]);
 
         $specialgroup = $this->getDataGenerator()->create_group(['courseid' => $courses[1]->id]);
-        $availability = json_encode(\core_availability\tree::get_root_json(
-            [\availability_group\condition::get_json($specialgroup->id)]
-        ));
+        $availability = json_encode(\core_availability\tree::get_root_json([
+                \availability_group\condition::get_json($specialgroup->id)
+            ])
+        );
         $mods[3] = $quiz_generator->create_instance([
             'name' => 'impossible',
             'course' => $courses[1]->id,
@@ -355,9 +356,9 @@ class totara_core_webapi_resolver_type_course_module_testcase extends advanced_t
     }
 
     /**
-     * Test the course module type resolver for the availablereason field
+     * Test the course module type resolver for the availablereason field with a single basic restriction
      */
-    public function test_resolve_availablereason() {
+    public function test_resolve_availablereason_basic() {
         list($users, $courses) = $this->create_dataset();
         $this->setUser($users[0]);
         $mods = $this->fetch_course_modules($courses[1]->id);
@@ -380,6 +381,72 @@ class totara_core_webapi_resolver_type_course_module_testcase extends advanced_t
             // Check with regex to handle changing group ids.
             $this->assertMatchesRegularExpression('/Not available unless: You belong to group-[0-9]*/', $reason);
         }
+    }
+
+    /**
+     * Test the course module type resolver for the available field with multiple more complicated restrictions
+     */
+    public function test_resolve_availablereason_complex() {
+        global $DB, $USER;
+
+        list($users, $courses) = $this->create_dataset();
+        $this->setUser($users[0]);
+        $course = $courses[0];
+
+        // Set up some modules to use as restrictions.
+        $mods = [];
+        $quiz_generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
+        $mods[0] = $quiz_generator->create_instance([
+            'name' => 'RestrictionQuiz1',
+            'course' => $course->id,
+            'intro' => 'QuizDesc1'
+        ]);
+        $mods[1] = $quiz_generator->create_instance([
+            'name' => 'RestrictionQuiz2',
+            'course' => $course->id,
+            'intro' => 'QuizDesc2'
+        ]);
+        $mods[2] = $quiz_generator->create_instance([
+            'name' => 'RestrictionQuiz3',
+            'course' => $course->id,
+            'intro' => 'QuizDesc3'
+        ]);
+
+        $availability = json_encode(\core_availability\tree::get_root_json([
+                \availability_completion\condition::get_json($mods[0]->cmid, COMPLETION_COMPLETE),
+                \core_availability\tree::get_root_json([
+                    \availability_completion\condition::get_json($mods[1]->cmid, COMPLETION_COMPLETE),
+                    \availability_completion\condition::get_json($mods[2]->cmid, COMPLETION_COMPLETE),
+                ])
+            ])
+        );
+
+        // Now set up the test module
+        $mods[3] = $quiz_generator->create_instance([
+            'name' => 'RestrictedAccess',
+            'course' => $course->id,
+            'completion' => 2,
+            'completionview' => 1,
+            'availability' => $availability,
+            'showdescription' => 1,
+            'intro' => '<p>A great description<br />for the ages</p>'
+        ]);
+
+        $this->context = \context_module::instance($mods[3]->cmid);
+        $modinfo = \course_modinfo::instance($course->id, $USER->id);
+        $mod = $modinfo->get_cm($mods[3]->cmid);
+
+        $value = $this->resolve('availablereason', $mod, ['format' => format::FORMAT_HTML]);
+        $this->assertIsArray($value);
+        $this->assertCount(2, $value);
+
+        $reason = array_shift($value);
+        $expected = "The activity RestrictionQuiz1 is marked complete";
+        $this->assertSame($expected, $reason);
+
+        $reason = array_shift($value);
+        $expected = "The activity RestrictionQuiz2 is marked complete and The activity RestrictionQuiz3 is marked complete";
+        $this->assertSame($expected, $reason);
     }
 
     /**

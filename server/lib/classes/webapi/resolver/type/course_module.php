@@ -68,36 +68,17 @@ class course_module implements type_resolver {
         $course = $cminfo->get_course();
         if ($field == 'availablereason') {
             $info->availablereason = [];
+
             if (!$available) {
-                if (!empty($cminfo->availableinfo)) {
-                    if (is_string($cminfo->availableinfo)) {
-                        $info->availablereason = [$cminfo->availableinfo];
-                    } else {
-                        $modinfo = get_fast_modinfo($course->id, $USER->id);
-                        $coursecontext = \context_course::instance($course->id);
+                $availableinfo = $cminfo->availableinfo;
 
-                        // Mimic half of core_availability::format_info() to get the cm names.
-                        foreach ($cminfo->availableinfo->items as $item) {
-                            // Don't waste time if there are no special tags.
-                            if (strpos($item, '<AVAILABILITY_') === false) {
-                                $cminfo->availablereason[] = $item;
-                                continue;
-                            }
+                if (!empty($availableinfo)) {
+                    // Pre-load the module and context information.
+                    $modinfo = get_fast_modinfo($course->id, $USER->id);
+                    $coursecontext = \context_course::instance($course->id);
+                    $reason = \core_availability\info::webapi_parse_available_info($availableinfo, $coursecontext, $modinfo);
 
-                            $reason = preg_replace_callback('~<AVAILABILITY_CMNAME_([0-9]+)/>~',
-                                        function($matches) use($modinfo, $coursecontext) {
-                                            $cm = $modinfo->get_cm($matches[1]);
-                                            if ($cm->has_view() and $cm->uservisible) {
-                                                // Help student by providing a link to the module which is preventing availability.
-                                                return \html_writer::link($cm->url, format_string($cm->name, true, array('context' => $coursecontext)));
-                                            } else {
-                                                return format_string($cm->name, true, array('context' => $coursecontext));
-                                            }
-                                        }, $item
-                                    );
-                            $info->availablereason[] = $reason;
-                        }
-                    }
+                    $info->availablereason = $reason;
                 }
             }
         }

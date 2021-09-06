@@ -736,18 +736,80 @@ abstract class info {
         // Handle CMNAME tags.
         $modinfo = get_fast_modinfo($courseorid);
         $context = \context_course::instance($modinfo->courseid);
-        $info = preg_replace_callback('~<AVAILABILITY_CMNAME_([0-9]+)/>~',
-                function($matches) use($modinfo, $context) {
-                    $cm = $modinfo->get_cm($matches[1]);
-                    if ($cm->has_view() and $cm->uservisible) {
-                        // Help student by providing a link to the module which is preventing availability.
-                        return \html_writer::link($cm->url, format_string($cm->name, true, array('context' => $context)));
-                    } else {
-                        return format_string($cm->name, true, array('context' => $context));
-                    }
-                }, $info);
+        $info = preg_replace_callback(
+            '~<AVAILABILITY_CMNAME_([0-9]+)/>~',
+            function ($matches) use ($modinfo, $context) {
+                $cm = $modinfo->get_cm($matches[1]);
+                if ($cm->has_view() and $cm->uservisible) {
+                    // Help student by providing a link to the module which is preventing availability.
+                    return \html_writer::link($cm->url, format_string($cm->name, true, array('context' => $context)));
+                } else {
+                    return format_string($cm->name, true, array('context' => $context));
+                }
+            },
+            $info
+        );
 
         return $info;
+    }
+
+    /**
+     * A recursive function to pre-format the available info into an array of readable strings for webapi calls,
+     * for examples of how to use this refer to the course_module and course_section type resolvers.
+     *
+     * Note: This mimics half of format_info() function above to get the cm names, without using $PAGE renderers.
+     *
+     * @param string|array $info
+     * @param context $context - the context of the course
+     * @param object $modinfo - preloaded module information
+     * @param bool $is_root - Whether this is the first call or not, should be left as defaults.
+     *
+     * @return array|string - recursive calls can return strings but the final return should always be an array
+     */
+    public static function webapi_parse_available_info($info, $context, $modinfo, $is_root = true) {
+
+        if (is_string($info)) {
+            // If it is a string just do any parsing required.
+            if (strpos($info, '<AVAILABILITY_') === false) {
+                $reason = $info;
+            } else {
+                $reason = preg_replace_callback(
+                    '~<AVAILABILITY_CMNAME_([0-9]+)/>~',
+                    function($matches) use($modinfo, $context) {
+                        $cm = $modinfo->get_cm($matches[1]);
+                        if ($cm->has_view() and $cm->uservisible) {
+                            // Help student by providing a link to the module which is preventing availability.
+                            return \html_writer::link($cm->url, format_string($cm->name, true, array('context' => $context)));
+                        } else {
+                            return format_string($cm->name, true, array('context' => $context));
+                        }
+                    },
+                    $info
+                );
+            }
+
+            // Just quickly handle return type expectations by wrapping this in an array.
+            if ($is_root && is_string($reason)) {
+                $reason = [$reason];
+            }
+        } else {
+            // Otherwise loop through sub-items and recursively parse them.
+            $reason = [];
+            foreach ($info->items as $item) {
+                $reason[] = self::webapi_parse_available_info($item, $context, $modinfo, false);
+            }
+
+            // We don't handle nesting very well, graphql expects an array of strings not an array of arrays of strings.
+            // So for now implode any sub-groups into a single string, would be nice to handle this better in the future.
+            if (!$is_root) {
+                $strkey = empty($info->andoperator) ? 'or' : 'and';
+                $seperator = " " . get_string($strkey, 'core_availability') . " ";
+
+                $reason = implode($seperator, $reason);
+            }
+        }
+
+        return $reason;
     }
 
     /**

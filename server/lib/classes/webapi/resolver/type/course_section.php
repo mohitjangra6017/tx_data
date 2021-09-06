@@ -61,35 +61,16 @@ class course_section implements type_resolver {
 
         if ($field == 'availablereason') {
             $secinfo->availablereason = [];
+
             if (!$available) {
-                if (!empty($section->availableinfo)) {
-                    if (is_string($section->availableinfo)) {
-                        $secinfo->availablereason[] = $section->availableinfo;
-                    } else {
-                        $modinfo = $section->modinfo;
+                $availableinfo = $section->availableinfo;
 
-                        // Mimic half of core_availability::format_info() to get the cm names.
-                        foreach ($section->availableinfo->items as $item) {
-                            // Don't waste time if there are no special tags.
-                            if (strpos($item, '<AVAILABILITY_') === false) {
-                                $secinfo->availablereason[] = $item;
-                                continue;
-                            }
+                if (!empty($availableinfo)) {
+                    // Pre-load the module and context information.
+                    $modinfo = get_fast_modinfo($course, $USER->id);
+                    $reason = \core_availability\info::webapi_parse_available_info($availableinfo, $context, $modinfo);
 
-                            $info = preg_replace_callback('~<AVAILABILITY_CMNAME_([0-9]+)/>~',
-                                        function($matches) use($modinfo, $context) {
-                                            $cm = $modinfo->get_cm($matches[1]);
-                                            if ($cm->has_view() and $cm->uservisible) {
-                                                // Help student by providing a link to the module which is preventing availability.
-                                                return \html_writer::link($cm->url, format_string($cm->name, true, array('context' => $context)));
-                                            } else {
-                                                return format_string($cm->name, true, array('context' => $context));
-                                            }
-                                        }, $item
-                                    );
-                            $secinfo->availablereason[] = $info;
-                        }
-                    }
+                    $secinfo->availablereason = $reason;
                 }
             }
         }

@@ -510,4 +510,88 @@ class info_testcase extends advanced_testcase {
         sort($result);
         $this->assertEquals($expected, $result);
     }
+
+    /**
+     * Tests the core_availability\info::webapi_parse_available_info() function,
+     * for displaying availability information via webapi
+     */
+    public function test_webapi_parse_available_info() {
+        global $CFG;
+
+        $CFG->enableavailability = true;
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $course = $this->getDataGenerator()->create_course([
+            'shortname' => 'avail',
+            'fullname' => 'Availability Course',
+            'format' => 'topics',
+            'summary' => 'A course to test availability'
+        ]);
+
+        $completion_generator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $completion_generator->enable_completion_tracking($course);
+
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student', 'manual');
+
+        // Set up some modules to use as restrictions.
+        $mods = [];
+        $quiz_generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
+        $mods[0] = $quiz_generator->create_instance([
+            'name' => 'RestrictionQuiz1',
+            'course' => $course->id,
+            'intro' => 'QuizDesc1'
+        ]);
+        $mods[1] = $quiz_generator->create_instance([
+            'name' => 'RestrictionQuiz2',
+            'course' => $course->id,
+            'intro' => 'QuizDesc2'
+        ]);
+        $mods[2] = $quiz_generator->create_instance([
+            'name' => 'RestrictionQuiz3',
+            'course' => $course->id,
+            'intro' => 'QuizDesc3'
+        ]);
+
+        $availability = json_encode(\core_availability\tree::get_root_json([
+                \availability_completion\condition::get_json($mods[0]->cmid, COMPLETION_COMPLETE),
+                \core_availability\tree::get_root_json([
+                    \availability_completion\condition::get_json($mods[1]->cmid, COMPLETION_COMPLETE),
+                    \availability_completion\condition::get_json($mods[2]->cmid, COMPLETION_COMPLETE),
+                ])
+            ])
+        );
+
+        // Now set up the test module
+        $mods[3] = $quiz_generator->create_instance([
+            'name' => 'RestrictedAccess',
+            'course' => $course->id,
+            'completion' => 2,
+            'completionview' => 1,
+            'availability' => $availability,
+            'showdescription' => 1,
+            'intro' => '<p>A great description<br />for the ages</p>'
+        ]);
+
+        $course_context = \context_course::instance($course->id);
+        $this->context = \context_module::instance($mods[3]->cmid);
+
+        $mod_info = \course_modinfo::instance($course->id, $user->id);
+        $cm_info = $mod_info->get_cm($mods[3]->cmid);
+
+        $value = \core_availability\info::webapi_parse_available_info($cm_info->availableinfo, $course_context, $mod_info);
+        $this->assertIsArray($value);
+        $this->assertCount(2, $value);
+
+        $reason = array_shift($value);
+        $expected = 'The activity <strong><a href="https://www.example.com/moodle/mod/quiz/view.php?id=' . $mods[0]->cmid . '">RestrictionQuiz1</a></strong> is marked complete';
+        $this->assertSame($expected, $reason);
+
+        $reason = array_shift($value);
+        $expected = 'The activity <strong><a href="https://www.example.com/moodle/mod/quiz/view.php?id=' . $mods[1]->cmid . '">RestrictionQuiz2</a></strong> is marked complete';
+        $expected .= ' and ';
+        $expected .= 'The activity <strong><a href="https://www.example.com/moodle/mod/quiz/view.php?id=' . $mods[2]->cmid . '">RestrictionQuiz3</a></strong> is marked complete';
+        $this->assertSame($expected, $reason);
+    }
 }
