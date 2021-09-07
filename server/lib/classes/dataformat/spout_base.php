@@ -87,7 +87,7 @@ abstract class spout_base extends \core\dataformat\base {
      * @param array $columns
      */
     public function start_sheet($columns) {
-        if ($this->sheettitle && $this->writer instanceof \Box\Spout\Writer\WriterAbstract) {
+        if ($this->sheettitle && $this->writer instanceof \Box\Spout\Writer\WriterMultiSheetsAbstract) {
             if ($this->renamecurrentsheet) {
                 $sheet = $this->writer->getCurrentSheet();
                 $this->renamecurrentsheet = false;
