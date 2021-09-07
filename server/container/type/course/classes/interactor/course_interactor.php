@@ -108,4 +108,17 @@ class course_interactor {
         $course_record = $this->course->to_record();
         return can_access_course($course_record, $this->actor_id);
     }
+
+    /**
+     * Checks if the current user actor is enrolled into the course or not.
+     *
+     * @return bool
+     */
+    public function is_enrolled(): bool {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/enrollib.php");
+
+        $context = $this->course->get_context();
+        return is_enrolled($context, $this->actor_id);
+    }
 }

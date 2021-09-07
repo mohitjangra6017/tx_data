@@ -36,7 +36,9 @@ use stdClass;
 
 /**
  * Container for course
+ *
  * @method static course from_record(stdClass $record)
+ * @method static course from_id(int $id)
  */
 class course extends container {
     /**

@@ -18,6 +18,11 @@ type mod_contentmarketplace_content_marketplace_interactor {
   Whether the user is a site guest or not
   """
   is_site_guest: Boolean!
+
+  """
+  Whether user is enrolled to the course or not.
+  """
+  is_enrolled: Boolean!
 }
 
 type mod_contentmarketplace_self_enrol_enabled_with_required_key_payload {

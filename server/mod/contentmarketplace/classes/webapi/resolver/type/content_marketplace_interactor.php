@@ -50,6 +50,8 @@ class content_marketplace_interactor implements type_resolver {
                 return $content_marketplace_interactor->can_enrol();
             case 'can_launch':
                 return $content_marketplace_interactor->can_launch();
+            case "is_enrolled":
+                return $content_marketplace_interactor->is_enrolled();
             default:
                 throw new coding_exception("Unexpected field passed {$field}");
         }

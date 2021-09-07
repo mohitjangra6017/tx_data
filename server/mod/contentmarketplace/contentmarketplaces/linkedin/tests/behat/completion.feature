@@ -59,3 +59,31 @@ Feature: Content marketplace activity completion feature
     When I click on "I have completed this activity" "button"
     Then I should see "Completed"
     And I should not see "Not started"
+
+  Scenario: Should not see the completion when not enrolled
+    Given I am on a totara site
+    And I log in as "admin"
+    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I toggle the selection of row "1" of the tui select table
+    And I set the field "Select category" to "Category A"
+    And I click on "Next: Review" "button"
+    When I click on "Create course(s)" "button"
+    Then I should see "Course A"
+    And I am on "Course A" course homepage
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Guest access" "table_row"
+    And the following "users" exist:
+      | username | firstname | lastname | email           |
+      | user_one | User      | One      | one@example.com |
+    And I log out
+    And I log in as "user_one"
+    When I am on "Course A" course homepage
+    Then I should not see "Not started"
+    And I should see "You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded."
+    When I click on "Enrol" "button"
+    And I wait for the next second
+    Then I should see "Not started"
+    And I should not see "You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded."

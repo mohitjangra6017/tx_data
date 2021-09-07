@@ -23,6 +23,7 @@
 namespace mod_contentmarketplace\interactor;
 
 use container_course\interactor\course_interactor;
+use core_container\factory;
 use mod_contentmarketplace\model\content_marketplace;
 use totara_contentmarketplace\interactor\base;
 
@@ -109,14 +110,12 @@ class content_marketplace_interactor extends base {
      * @return bool
      */
     public function is_site_guest(): bool {
-        if (!$this->can_view()) {
-            return false;
-        }
-
         return isguestuser($this->actor_id);
     }
 
     /**
+     * Checks whether user is able to enrol to the course or not.
+     *
      * @return bool
      */
     public function can_enrol(): bool {
@@ -124,7 +123,15 @@ class content_marketplace_interactor extends base {
             return false;
         }
 
-        return !is_enrolled($this->model->get_context(), $this->actor_id);
+        return !$this->is_enrolled();
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_enrolled(): bool {
+        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
+        return $course_interactor->is_enrolled();
     }
 
     /**

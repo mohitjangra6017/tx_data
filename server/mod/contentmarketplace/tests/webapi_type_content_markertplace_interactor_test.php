@@ -152,6 +152,7 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
             $guest_user->id
         );
 
+        self::assertTrue($interactor->is_site_guest());
         self::assertEquals(
             $interactor->is_site_guest(),
             $this->resolve_graphql_type(

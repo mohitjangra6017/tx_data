@@ -72,7 +72,7 @@
 
         <!-- Current status and self completion -->
         <div
-          v-if="activity.completionEnabled"
+          v-if="activity.completionEnabled && interactor.isEnrolled"
           class="tui-linkedinActivity__status"
         >
           <div class="tui-linkedinActivity__status-completion">
@@ -185,6 +185,7 @@ export default {
         // Viewing activity as guest (not enrolled in activity)
         canLaunch: false,
         isAdmin: false,
+        isEnrolled: false,
         isSiteGuest: false,
       },
       setCompletion: false,
@@ -292,6 +293,7 @@ export default {
         this.interactor.isAdmin = interactor.is_admin;
         this.interactor.isSiteGuest = interactor.is_site_guest;
         this.interactor.canLaunch = interactor.can_launch;
+        this.interactor.isEnrolled = interactor.is_enrolled;
 
         this.selfEnrolEnabled = module.self_enrol_enabled;
         this.guestEnrolEnabled = module.guest_enrol_enabled;

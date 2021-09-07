@@ -30,6 +30,7 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
         can_enrol
         can_launch
         is_site_guest
+        is_enrolled
       }
     }
     learning_object {
