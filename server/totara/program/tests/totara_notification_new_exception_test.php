@@ -91,6 +91,7 @@ class totara_program_totara_notification_new_exception_testcase extends totara_p
         $program_messages_task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
+        self::assertEquals(1, (int)$DB->get_field('prog', 'exceptionssent', ['id' => $data->program1->id]));
         self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -121,5 +122,16 @@ class totara_program_totara_notification_new_exception_testcase extends totara_p
         self::assertStringContainsString('Admin User', $message->fullmessage);
         self::assertStringContainsString('My program1 full name', $message->fullmessage);
         self::assertEquals(get_admin()->id, $message->userto->id);
+
+        // If the whole cycle is repeated, then there shouldn't be an additional
+        // exception messages sent.
+        $program_messages_task = new send_messages_task();
+        ob_start(); // Start a buffer to catch all the mtraces in the task.
+        $program_messages_task->execute();
+        ob_end_clean(); // Throw away the buffer content.
+
+        self::assertEquals(1, (int)$DB->get_field('prog', 'exceptionssent', ['id' => $data->program1->id]));
+        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
     }
 }

@@ -660,6 +660,10 @@ class send_messages_task extends \core\task\scheduled_task {
                 ? new certification_new_exception_resolver($notifiable_event_data)
                 : new program_new_exception_resolver($notifiable_event_data);
             external_helper::create_notifiable_event_queue($resolver);
+
+            $DB->update_record(
+                'prog', (object)['id' => $progfound->id, 'exceptionssent' => 1]
+            );
         }
     }
 }
