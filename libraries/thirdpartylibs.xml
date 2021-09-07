@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <libraries>
   <library>
+    <location>adodb</location>
+    <name>AdoDB</name>
+    <license>LGPL</license>
+    <version>5.21.2</version>
+    <licenseversion>2.1+</licenseversion>
+    <repository>https://github.com/ADOdb/ADOdb</repository>
+  </library>
+  <library>
     <location>required/box/spout</location>
     <name>Spout</name>
     <license>Apache</license>

@@ -401,22 +401,6 @@ class auth_db_db_testcase extends advanced_testcase {
     }
 
     /**
-     * Testing the function _colonscope() from ADOdb.
-     */
-    public function test_adodb_colonscope() {
-        global $CFG;
-        require_once($CFG->libdir.'/adodb/adodb.inc.php');
-        require_once($CFG->libdir.'/adodb/drivers/adodb-odbc.inc.php');
-        require_once($CFG->libdir.'/adodb/drivers/adodb-db2ora.inc.php');
-
-        $sql = "select * from table WHERE column=:1 AND anothercolumn > :0";
-        $arr = array('b', 1);
-        list($sqlout, $arrout) = _colonscope($sql,$arr);
-        $this->assertEquals("select * from table WHERE column=? AND anothercolumn > ?", $sqlout);
-        $this->assertEquals(array(1, 'b'), $arrout);
-    }
-
-    /**
      * Testing the clean_data() method.
      */
     public function test_clean_data() {

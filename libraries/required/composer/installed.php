@@ -1,15 +1,24 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-WP02',
-        'version' => 'dev-WP02',
+        'pretty_version' => 'dev-TL-28211/15',
+        'version' => 'dev-TL-28211/15',
         'type' => 'metapackage',
         'install_path' => __DIR__ . '/../',
         'aliases' => array(),
-        'reference' => '491aa47a4ba912310b6c6d0609564b6021fde334',
+        'reference' => 'e4bd594fe4a113e5056a7703974443f5dcd682d1',
         'name' => 'totara/totara_require',
         'dev' => true,
     ),
     'versions' => array(
+        'adodb/adodb-php' => array(
+            'pretty_version' => 'v5.21.2',
+            'version' => '5.21.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../adodb/adodb-php',
+            'aliases' => array(),
+            'reference' => 'aa161c28dfffcab13a3cb9bd407917573987f0f6',
+            'dev_requirement' => false,
+        ),
         'box/spout' => array(
             'pretty_version' => 'v3.1.0',
             'version' => '3.1.0.0',
@@ -296,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'totara/totara_require' => array(
-            'pretty_version' => 'dev-WP02',
-            'version' => 'dev-WP02',
+            'pretty_version' => 'dev-TL-28211/15',
+            'version' => 'dev-TL-28211/15',
             'type' => 'metapackage',
             'install_path' => __DIR__ . '/../',
             'aliases' => array(),
-            'reference' => '491aa47a4ba912310b6c6d0609564b6021fde334',
+            'reference' => 'e4bd594fe4a113e5056a7703974443f5dcd682d1',
             'dev_requirement' => false,
         ),
         'webonyx/graphql-php' => array(
