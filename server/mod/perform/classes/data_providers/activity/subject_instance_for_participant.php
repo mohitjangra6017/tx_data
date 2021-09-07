@@ -45,7 +45,6 @@ use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\entity\activity\subject_instance_repository;
 use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_user_assignment as track_user_assignment_entity;
-use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\models\response\subject_sections;
 use mod_perform\state\participant_instance\complete;
@@ -368,9 +367,9 @@ class subject_instance_for_participant extends provider {
      */
     public function get_completed_count(): int {
         $query = $this->build_query(false);
-        // Only apply the about filter, ignore the rest
-        if (isset($this->filters['about'])) {
-            $this->filter_query_by_about($query, $this->filters['about']);
+        // Only apply the about role filter, ignore the rest
+        if (isset($this->filters['about_role'])) {
+            $this->filter_query_by_about_role($query, $this->filters['about_role']);
         }
         return $query->join([participant_instance::TABLE, 'pi'], 'si.id', 'pi.subject_instance_id')
             ->where('pi.participant_source', $this->participant_source)
@@ -386,9 +385,9 @@ class subject_instance_for_participant extends provider {
      */
     public function get_overdue_count(): int {
         $query = $this->build_query(false);
-        // Only apply the about filter, ignore the rest
-        if (isset($this->filters['about'])) {
-            $this->filter_query_by_about($query, $this->filters['about']);
+        // Only apply the about role filter, ignore the rest
+        if (isset($this->filters['about_role'])) {
+            $this->filter_query_by_about_role($query, $this->filters['about_role']);
         }
         $this->filter_query_by_overdue($query, 1);
 

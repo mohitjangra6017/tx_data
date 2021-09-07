@@ -767,13 +767,16 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         $actual_count = $provider->get_overdue_count();
         $this->assertSame(2, $actual_count);
 
+        $generator = generator::instance();
+        $subject_role = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
         $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
-        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_SELF]);
+        $provider->add_filters(['about_role' => $subject_role->id]);
         $actual_count = $provider->get_overdue_count();
         $this->assertSame(2, $actual_count);
 
+        $manager_role = $generator->get_core_relationship(constants::RELATIONSHIP_MANAGER);
         $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
-        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_OTHERS]);
+        $provider->add_filters(['about_role' => $manager_role->id]);
         $actual_count = $provider->get_overdue_count();
         $this->assertSame(0, $actual_count);
     }
@@ -798,13 +801,16 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         $actual_count = $provider->get_completed_count();
         $this->assertSame(2, $actual_count);
 
+        $generator = generator::instance();
+        $subject_role = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
         $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
-        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_SELF]);
+        $provider->add_filters(['about_role' => $subject_role->id]);
         $actual_count = $provider->get_completed_count();
         $this->assertSame(0, $actual_count);
 
+        $manager_role = $generator->get_core_relationship(constants::RELATIONSHIP_MANAGER);
         $provider = new subject_instance_for_participant(self::$user->id, participant_source::INTERNAL);
-        $provider->add_filters(['about' => subject_instances_about::VALUE_ABOUT_OTHERS]);
+        $provider->add_filters(['about_role' => $manager_role->id]);
         $actual_count = $provider->get_completed_count();
         $this->assertSame(2, $actual_count);
     }
