@@ -18,6 +18,7 @@ return array(
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Opis\\JsonSchema\\' => array($vendorDir . '/opis/json-schema/src'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
+    'Michelf\\' => array($vendorDir . '/michelf/php-markdown/Michelf'),
     'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'GraphQL\\' => array($vendorDir . '/webonyx/graphql-php/src'),
     'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src/FontLib'),

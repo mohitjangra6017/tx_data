@@ -98,6 +98,7 @@ class ComposerStaticInit27c32784c862a73de29fe9871b7223ab
         'M' => 
         array (
             'MyCLabs\\Enum\\' => 13,
+            'Michelf\\' => 8,
             'Matrix\\' => 7,
         ),
         'G' => 
@@ -171,6 +172,10 @@ class ComposerStaticInit27c32784c862a73de29fe9871b7223ab
         'MyCLabs\\Enum\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
+        'Michelf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/michelf/php-markdown/Michelf',
         ),
         'Matrix\\' => 
         array (

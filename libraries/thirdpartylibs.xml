@@ -70,4 +70,12 @@
     <licenseversion>2.0</licenseversion>
     <repository>https://github.com/opis/json-schema</repository>
   </library>
+  <library>
+    <location>required/michelf/php-markdown</location>
+    <name>PHP Markdown</name>
+    <license>BSD</license>
+    <version>1.9.0</version>
+    <licenseversion></licenseversion>
+    <repository>https://github.com/michelf/php-markdown</repository>
+  </library>
 </libraries>

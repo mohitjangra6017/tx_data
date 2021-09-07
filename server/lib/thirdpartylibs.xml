@@ -151,14 +151,6 @@
     <repository>https://github.com/mtibben/html2text</repository>
   </library>
   <library>
-    <location>markdown</location>
-    <name>Markdown original+extra</name>
-    <license>BSD</license>
-    <version>1.9.0</version>
-    <licenseversion></licenseversion>
-    <repository>https://github.com/michelf/php-markdown</repository>
-  </library>
-  <library>
     <location>xhprof</location>
     <name>XHProf</name>
     <license>Apache</license>

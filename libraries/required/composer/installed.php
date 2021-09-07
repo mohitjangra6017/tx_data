@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-TL-28246/15',
-        'version' => 'dev-TL-28246/15',
+        'pretty_version' => 'dev-TL-28226/15',
+        'version' => 'dev-TL-28226/15',
         'type' => 'metapackage',
         'install_path' => __DIR__ . '/../',
         'aliases' => array(),
-        'reference' => 'fd7e3a7628d5d00e8be0676623af5467a4916846',
+        'reference' => 'f02631d1d7530709f692246bfc078ae29fa9e6ee',
         'name' => 'totara/totara_require',
         'dev' => true,
     ),
@@ -62,6 +62,15 @@
             'install_path' => __DIR__ . '/../markbaker/matrix',
             'aliases' => array(),
             'reference' => '174395a901b5ba0925f1d790fa91bab531074b61',
+            'dev_requirement' => false,
+        ),
+        'michelf/php-markdown' => array(
+            'pretty_version' => '1.9.0',
+            'version' => '1.9.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../michelf/php-markdown',
+            'aliases' => array(),
+            'reference' => 'c83178d49e372ca967d1a8c77ae4e051b3a3c75c',
             'dev_requirement' => false,
         ),
         'myclabs/php-enum' => array(
@@ -200,12 +209,12 @@
             'dev_requirement' => false,
         ),
         'totara/totara_require' => array(
-            'pretty_version' => 'dev-TL-28246/15',
-            'version' => 'dev-TL-28246/15',
+            'pretty_version' => 'dev-TL-28226/15',
+            'version' => 'dev-TL-28226/15',
             'type' => 'metapackage',
             'install_path' => __DIR__ . '/../',
             'aliases' => array(),
-            'reference' => 'fd7e3a7628d5d00e8be0676623af5467a4916846',
+            'reference' => 'f02631d1d7530709f692246bfc078ae29fa9e6ee',
             'dev_requirement' => false,
         ),
         'webonyx/graphql-php' => array(
