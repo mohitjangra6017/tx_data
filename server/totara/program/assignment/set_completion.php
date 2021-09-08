@@ -36,9 +36,10 @@ $data = new stdClass();
 if ($assignmentid !== 0) {
     $assignment = $DB->get_record('prog_assignment', ['id' => $assignmentid], '*', MUST_EXIST);
     // Get data for populating form when reopening
-    if ($assignment->completionevent == 0) {
+    if ($assignment->completionevent == COMPLETION_EVENT_NONE) {
         // Set due date
-        $notset = (int)$assignment->completiontime === 0 || (int)$assignment->completiontime === -1;
+        $notset = (int)$assignment->completiontime === COMPLETION_TIME_UNKNOWN ||
+                  (int)$assignment->completiontime === COMPLETION_TIME_NOT_SET;
         if ($notset) {
             $hour = 0;
             $minute = 0;
@@ -55,10 +56,8 @@ if ($assignmentid !== 0) {
         $data->date = $completiontime;
     } else {
         // Relative due date
-        $relative = \totara_program\utils::duration_explode($assignment->completiontime);
-
-        $data->num = $relative->num;
-        $data->period = $relative->period;
+        $data->num = $assignment->completionoffsetamount;
+        $data->period = $assignment->completionoffsetunit;
         $data->event = $assignment->completionevent;
         $data->instance = $assignment->completioninstance;
 

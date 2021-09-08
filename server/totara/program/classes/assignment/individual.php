@@ -41,7 +41,8 @@ class individual extends base {
             $sql =
                 "SELECT prog_assignment.assignmenttypeid AS id, prog_assignment.programid AS programid,
                         prog_assignment.includechildren, prog_assignment.completiontime,
-                        prog_assignment.completionevent, prog_assignment.completioninstance
+                        prog_assignment.completionevent, prog_assignment.completioninstance,
+                        prog_assignment.completionoffsetamount, prog_assignment.completionoffsetunit
                    FROM {prog_assignment} prog_assignment
                   WHERE prog_assignment.id = :assignmentid";
 
@@ -52,6 +53,8 @@ class individual extends base {
             $this->programid = $record->programid;
             $this->includechildren = $record->includechildren;
             $this->completiontime = $record->completiontime;
+            $this->completionoffsetamount = $record->completionoffsetamount;
+            $this->completionoffsetunit = $record->completionoffsetunit;
             $this->completionevent = $record->completionevent;
             $this->completioninstance = $record->completioninstance;
 

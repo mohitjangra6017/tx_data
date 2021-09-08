@@ -22,6 +22,7 @@
  */
 
 use totara_program\assignment\external;
+use totara_program\utils;
 
 class totara_program_assignment_external_testcase extends advanced_testcase {
 
@@ -258,7 +259,6 @@ class totara_program_assignment_external_testcase extends advanced_testcase {
         $setup = $this->basic_setup();
 
         $datagenerator = $this->getDataGenerator();
-        $completion_generator = $datagenerator->get_plugin_generator('core_completion');
 
         // Create course
         $coursedefaults = [
@@ -269,7 +269,6 @@ class totara_program_assignment_external_testcase extends advanced_testcase {
 
         $course1 = $datagenerator->create_course($coursedefaults);
         $datagenerator->enrol_user($setup->users[1]->id, $course1->id);
-        //$completion_generator->complete_course($course1, $setup->users[1]);
 
         $num = 5; // Number of weeks
         $period = 3; // TIME_SELECTOR_WEEKS
@@ -294,8 +293,9 @@ class totara_program_assignment_external_testcase extends advanced_testcase {
         $actual = $DB->get_record('prog_assignment', ['id' => $setup->assignments[1]->id]);
         $this->assertEquals($event, $actual->completionevent);
         $this->assertEquals($eventinstanceid, $actual->completioninstance);
-        $expectedcompletiontime = (DAYSECS * 7) * 5;
-        $this->assertEquals($expectedcompletiontime, $actual->completiontime);
+        $this->assertEquals(5, $actual->completionoffsetamount);
+        $this->assertEquals(utils::TIME_SELECTOR_WEEKS, $actual->completionoffsetunit);
+        $this->assertNull($actual->completiontime);
     }
 
     public function test_set_includechildren() {
@@ -330,7 +330,7 @@ class totara_program_assignment_external_testcase extends advanced_testcase {
         $this->assertEquals(2, count($assignments));
 
         $result = external::search_assignments($assignments, 'smi');
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
 
         $assignment = reset($result);
         $this->assertEquals('Bob Smith', $assignment->get_name());

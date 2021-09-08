@@ -80,6 +80,16 @@ $data->completioninstance = array(
     )
 );
 
+if ($completionevent != COMPLETION_EVENT_NONE) {
+    // For relative dates $completiontime comes in the form '1 2' where 1 is the num and 2 is the unit.
+    [$num, $unit] = explode(' ', $completiontime);
+    if (!empty($num) && !empty($unit)) {
+        $data->completionoffsetamount = [ASSIGNTYPE_COHORT => [$cohortid => $num]];
+        $data->completionoffsetunit = [ASSIGNTYPE_COHORT => [$cohortid => $unit]];
+        $data->completiontime = [ASSIGNTYPE_COHORT => [$cohortid => null]];
+    }
+}
+
 $cat = new cohorts_category();
 $cat->update_assignments($data, false);
 

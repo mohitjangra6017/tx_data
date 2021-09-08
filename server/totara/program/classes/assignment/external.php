@@ -389,10 +389,8 @@ final class external extends \external_api {
             throw new \moodle_exception('error:cannotupdateassignment', 'totara_program');
         }
 
-        $duration = \totara_program\utils::duration_implode($num, $period);
-
-        // For relative due dates the duration is set in the completiontime field
-        $assignment->set_duedate($duration, $event, $eventinstanceid);
+        // For relative due dates the duration is set in the offset amount and offset unit fields.
+        $assignment->set_duedate(0, $event, $eventinstanceid, $num, $period);
         $duedate = $assignment->get_duedate();
 
         $return = [];

@@ -707,6 +707,8 @@ final class generator extends \core\testing\component_generator {
 
         // Set completion values.
         $completiontime = (isset($record['completiontime'])) ? $record['completiontime'] : COMPLETION_TIME_NOT_SET;
+        $completionoffsetamount = (isset($record['completionoffsetamount'])) ? $record['completionoffsetamount'] : null;
+        $completionoffsetunit = (isset($record['completionoffsetunit'])) ? $record['completionoffsetunit'] : null;
         $completionevent = (isset($record['completionevent'])) ? $record['completionevent'] : COMPLETION_EVENT_NONE;
         $completioninstance = (isset($record['completioninstance'])) ? $record['completioninstance'] : 0;
         $includechildren = (isset($record['includechildren'])) ? $record['includechildren'] : null;
@@ -716,6 +718,8 @@ final class generator extends \core\testing\component_generator {
         $data->id = $programid;
         $data->item = array($assignmenttype => array($itemid => 1));
         $data->completiontime = array($assignmenttype => array($itemid => $completiontime));
+        $data->completionoffsetamount = array($assignmenttype => array($itemid => $completionoffsetamount));
+        $data->completionoffsetunit = array($assignmenttype => array($itemid => $completionoffsetunit));
         $data->completionevent = array($assignmenttype => array($itemid => $completionevent));
         $data->completioninstance = array($assignmenttype => array($itemid => $completioninstance));
         $data->includechildren = array ($assignmenttype => array($itemid => $includechildren));

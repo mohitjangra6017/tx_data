@@ -26,6 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 use totara_program\totara_notification\recipient\manager;
 use totara_program\totara_notification\recipient\site_admin;
 use totara_program\totara_notification\recipient\subject;
+use totara_program\utils;
 
 /**
  * Shortcut to do all the program and certification migration steps.
@@ -302,4 +303,58 @@ function totara_program_upgrade_convert_placeholders(string $text, bool $is_for_
     }
 
     return $text;
+}
+
+/**
+ * Reads data from 'prog_assignment' table and migrates 'completiontime' data based on events to use
+ * the new completionoffsetamount and completionoffsetunit fields.
+ */
+function totara_program_upgrade_migrate_relative_dates_data(): void {
+    global $DB;
+
+    // Migrate the data in batch
+    $offset = 0;
+    $limit = 10000;
+    $has_items = true;
+    while ($has_items) {
+        $assignments = $DB->get_recordset_select(
+            'prog_assignment',
+            'completionevent > 0',
+            null,
+            '',
+            '*',
+            $offset,
+            $limit
+        );
+        $has_items = $assignments->valid();
+        $offset = $offset + $limit;
+
+        foreach ($assignments as $assignment) {
+            // Check that completiontime has a value and is not COMPLETION_TIME_NOT_SET
+            if ($assignment->completiontime != COMPLETION_TIME_NOT_SET) {
+                if ($assignment->completiontime % utils::DURATION_YEAR == 0) {
+                    $assignment->completionoffsetamount = $assignment->completiontime / utils::DURATION_YEAR;
+                    $assignment->completionoffsetunit = utils::TIME_SELECTOR_YEARS;
+                } else if ($assignment->completiontime % utils::DURATION_MONTH == 0) {
+                    $assignment->completionoffsetamount = $assignment->completiontime / utils::DURATION_MONTH;
+                    $assignment->completionoffsetunit = utils::TIME_SELECTOR_MONTHS;
+                } else if ($assignment->completiontime % utils::DURATION_WEEK == 0) {
+                    $assignment->completionoffsetamount = $assignment->completiontime / utils::DURATION_WEEK;
+                    $assignment->completionoffsetunit = utils::TIME_SELECTOR_WEEKS;
+                } else {
+                    $assignment->completionoffsetamount = floor($assignment->completiontime / utils::DURATION_DAY);
+                    $assignment->completionoffsetunit = utils::TIME_SELECTOR_DAYS;
+                }
+
+                // For 0 we do want days
+                if ($assignment->completionoffsetamount == 0) {
+                    $assignment->completionoffsetunit = utils::TIME_SELECTOR_DAYS;
+                }
+
+                $assignment->completiontime = null;
+
+                $DB->update_record('prog_assignment', $assignment);
+            }
+        }
+    }
 }

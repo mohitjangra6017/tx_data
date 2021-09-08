@@ -23,6 +23,9 @@
 
 namespace totara_program\assignment;
 
+// Needed for COMPLETION_* constants.
+require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
+
 class base {
 
     protected $id = 0;
@@ -31,9 +34,11 @@ class base {
     protected $instanceid;
 
     protected $name = '';
-    protected $completionevent = 0;
+    protected $completionevent = COMPLETION_EVENT_NONE;
     protected $completioninstance = 0;
-    protected $completiontime = -1;
+    protected $completiontime = COMPLETION_TIME_NOT_SET;
+    protected $completionoffsetamount = null;
+    protected $completionoffsetunit = null;
     protected $includechildren = 0;
 
     protected $program = null;
@@ -51,6 +56,8 @@ class base {
             $this->programid = $record->programid;
             $this->includechildren = $record->includechildren;
             $this->completiontime = $record->completiontime;
+            $this->completionoffsetamount = $record->completionoffsetamount;
+            $this->completionoffsetunit = $record->completionoffsetunit;
             $this->completionevent = $record->completionevent;
             $this->completioninstance = $record->completioninstance;
 
@@ -215,9 +222,9 @@ class base {
 
         if ($this->includechildren == 1) {
             $this->create_user_assignment_records();
-            if ($this->completiontime !== -1) {
+            if ($this->completiontime !== COMPLETION_TIME_NOT_SET || !empty($this->completionoffsetamount)) {
                 // If a completion time has been set then all new users need to be updated.
-                $this->set_duedate($this->completiontime, $this->completionevent, $this->completioninstance);
+                $this->set_duedate($this->completiontime, $this->completionevent, $this->completioninstance, $this->completionoffsetamount, $this->completionoffsetunit);
             }
         } else {
             $this->ensure_program_loaded();
@@ -277,11 +284,19 @@ class base {
         }
 
         if (!isset($this->completionevent)) {
-            $this->completionevent = 0;
+            $this->completionevent = COMPLETION_EVENT_NONE;
         }
 
         if (!isset($this->completioninstance)) {
             $this->completioninstance = 0;
+        }
+
+        if (!isset($this->completionoffsetamount)) {
+            $this->completionoffsetamount = null;
+        }
+
+        if (!isset($this->completionoffsetunit)) {
+            $this->completionoffsetunit = null;
         }
 
         if ($this->completionevent == COMPLETION_EVENT_NONE) {
@@ -370,6 +385,8 @@ class base {
             $data->completionevent = $this->completionevent;
             $data->completioninstance = $this->completioninstance;
             $data->completiontime = $this->completiontime;
+            $data->completionoffsetamount = $this->completionoffsetamount;
+            $data->completionoffsetunit = $this->completionoffsetunit;
 
             $assignmentid = $DB->insert_record('prog_assignment', $data);
 
@@ -388,6 +405,8 @@ class base {
             $data->completionevent = $this->completionevent;
             $data->completioninstance = $this->completioninstance;
             $data->completiontime = $this->completiontime;
+            $data->completionoffsetamount = $this->completionoffsetamount;
+            $data->completionoffsetunit = $this->completionoffsetunit;
 
             $DB->update_record('prog_assignment', $data);
         }
@@ -446,15 +465,18 @@ class base {
         return true;
     }
 
-
     /**
      * Set the due date for the assignment
      *
-     * @param int $duedate
-     * @param int $completionevent
-     * @param int $completioninstance
+     * @param int      $duedate
+     * @param int      $completionevent
+     * @param int      $completioninstance
+     * @param int|null $offsetamount
+     * @param int|null $offsetunit
+     *
+     * @return false|void
      */
-    public function set_duedate(int $duedate, int $completionevent = 0, int $completioninstance = 0) {
+    public function set_duedate(int $duedate = 0, int $completionevent = COMPLETION_EVENT_NONE, int $completioninstance = 0, int $offsetamount = null, int $offsetunit = null) {
         global $DB, $CFG;
 
         $canupdate = helper::can_update($this->programid, $this->get_type());
@@ -464,7 +486,9 @@ class base {
 
         require_once($CFG->dirroot . '/totara/program/lib.php');
 
-        $this->completiontime = $duedate;
+        $this->completiontime = $duedate == 0 ? null : $duedate;
+        $this->completionoffsetamount = $offsetamount;
+        $this->completionoffsetunit = $offsetunit;
         $this->completionevent = $completionevent;
         $this->completioninstance = $completioninstance;
 
@@ -482,6 +506,8 @@ class base {
         $assignment->assignmenttypeid = $this->instanceid;
         $assignment->completionevent = $this->completionevent;
         $assignment->completiontime = $this->completiontime;
+        $assignment->completionoffsetamount = $this->completionoffsetamount;
+        $assignment->completionoffsetunit = $this->completionoffsetunit;
         $assignment->completioninstance = $this->completioninstance;
 
         $users = $this->category->get_affected_users_by_assignment($assignment);
@@ -674,9 +700,9 @@ class base {
     /**
      * Get date string given the event
      *
-     * @return String
+     * @return string
      */
-    private function get_completion_string() {
+    private function get_completion_string(): string {
         global $CFG;
 
         require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
@@ -690,14 +716,10 @@ class base {
 
             $eventobject = new $class;
 
-            if ($this->completiontime > 0) {
-                $relative_completion = \totara_program\utils::get_duration_num_and_period($this->completiontime);
-            }
-
             $a = new \stdClass();
-            $a->num = $relative_completion->num;
-            if (isset($relative_completion->periodkey)) {
-                $a->period = get_string($relative_completion->periodkey, 'totara_program');
+            if ($this->completionoffsetamount !== null) {
+                $a->num = $this->completionoffsetamount;
+                $a->period = get_string(\totara_program\utils::$timeallowancestrings[$this->completionoffsetunit], 'totara_program');
             } else {
                 return '';
             }
@@ -714,7 +736,7 @@ class base {
                 $date_string = '';
             } else {
                 $timestamp = $this->completiontime;
-                $completiontimestring = userdate($timestamp, get_string('strfdateattime', 'langconfig'), 99);
+                $completiontimestring = userdate($timestamp, get_string('strfdateattime', 'langconfig'));
 
                 $date_string = get_string('completebytime', 'totara_program', $completiontimestring);
             }
@@ -739,6 +761,8 @@ class base {
         $progassignment->assignmenttypeid = $this->instanceid;
         $progassignment->completionevent = $this->completionevent;
         $progassignment->completiontime = $this->completiontime;
+        $progassignment->completionoffsetamount = $this->completionoffsetamount;
+        $progassignment->completionoffsetunit = $this->completionoffsetunit;
         $progassignment->includechildren = $this->includechildren;
         $progassignment->timedue = -1; // No due time for new records
 
@@ -761,7 +785,6 @@ class base {
 
         // Find out if users already have a completion record for this
         // program (via another assignment type)
-        list($insql, $params) = $DB->get_in_or_equal($affecteduserids, SQL_PARAMS_NAMED, 'param', false);
         $sql = "SELECT userid FROM {prog_completion} WHERE programid = :programid AND coursesetid = 0";
         $params = ['programid' => $this->programid];
         $existingcompletion = $DB->get_records_sql($sql, $params);

@@ -121,5 +121,40 @@ function xmldb_totara_program_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021041100, 'totara', 'program');
     }
 
+    if ($oldversion < 2021091500) {
+        $table = new xmldb_table('prog_assignment');
+
+        // Define field completionoffsetamount to be added to prog_assignment.
+        $field = new xmldb_field('completionoffsetamount', XMLDB_TYPE_INTEGER, '4', null, null, null, null, 'completiontime');
+
+        // Conditionally launch add field completionoffsetamount.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field completionoffsetunit to be added to prog_assignment.
+        $field = new xmldb_field('completionoffsetunit', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'completionoffsetamount');
+
+        // Conditionally launch add field completionoffsetunit.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Changing nullability and the default of field completiontime on table prog_assignment.
+        $field = new xmldb_field('completiontime', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'includechildren');
+
+        // Launch change of nullability for field completiontime.
+        $dbman->change_field_notnull($table, $field);
+
+        // Launch change of default for field completiontime.
+        $dbman->change_field_default($table, $field);
+
+        // Migrate data to the new column.
+        totara_program_upgrade_migrate_relative_dates_data();
+
+        // Program savepoint reached.
+        upgrade_plugin_savepoint(true, 2021091500, 'totara', 'program');
+    }
+
     return true;
 }

@@ -161,6 +161,8 @@ class assignment extends single_emptiable_placeholder {
         }
 
         $time = $this->record->completiontime;
+        $offsetamount = $this->record->completionoffsetamount;
+        $offsetunit = $this->record->completionoffsetunit;
         $event = $this->record->completionevent;
         $instance = $this->record->completioninstance;
 
@@ -174,12 +176,10 @@ class assignment extends single_emptiable_placeholder {
                     99, // Use current user's timezone which should be the notification recipient's one.
                     false
                 ));
-                $criteria = prog_assignment_category::build_completion_string($formatted_time, $event, $instance);
+                $criteria = prog_assignment_category::build_completion_string($formatted_time);
             }
         } else {
-            $parts = utils::duration_explode($time);
-            $formatted_time = $parts->num . ' ' . $parts->period;
-            $criteria = prog_assignment_category::build_completion_string($formatted_time, $event, $instance);
+            $criteria = prog_assignment_category::build_relative_completion_string($offsetamount, $offsetunit, $event, $instance);
         }
         return $criteria;
     }

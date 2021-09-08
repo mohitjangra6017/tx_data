@@ -140,7 +140,9 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
         builder::table('prog_assignment')
             ->where('id', $user_assignment->assignmentid)
             ->update([
-                'completiontime' => utils::DURATION_MONTH,
+                'completiontime' => null,
+                'completionoffsetamount' => 1,
+                'completionoffsetunit' => utils::DURATION_MONTH,
                 'completionevent' => COMPLETION_EVENT_PROGRAM_COMPLETION,
             ]);
         assignment::clear_instance_cache();

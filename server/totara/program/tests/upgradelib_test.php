@@ -26,6 +26,7 @@ use totara_program\testing\generator;
 use totara_program\totara_notification\recipient\manager;
 use totara_program\totara_notification\recipient\subject;
 use core_phpunit\testcase;
+use totara_program\utils;
 
 /**
  * @group totara_notification
@@ -356,5 +357,98 @@ class totara_program_upgradelib_testcase extends testcase {
         // Add id to the expected record.
         $expected_content = array_merge(['id' => (string)$message_id], $expected_content);
         self::assertEqualsCanonicalizing($expected_content, $json_decoded);
+    }
+
+    public function test_totara_program_upgrade_migrate_relative_dates_data(): void {
+        global $DB;
+
+        $program_generator = generator::instance();
+        $pid = $program_generator->create_program()->id;
+        $cid = $program_generator->create_certification()->id;
+
+        $records = [
+            ['programid' => $pid, 'assignmenttype' => ASSIGNTYPE_COHORT, 'assignmenttypeid' => 1, 'completiontime' => 1632913200, 'completionevent' => COMPLETION_EVENT_NONE],
+            ['programid' => $cid, 'assignmenttype' => ASSIGNTYPE_COHORT, 'assignmenttypeid' => 1, 'completiontime' => DAYSECS * 7 * 5, 'completionevent' => COMPLETION_EVENT_FIRST_LOGIN],
+            ['programid' => $pid, 'assignmenttype' => ASSIGNTYPE_INDIVIDUAL, 'assignmenttypeid' => 5, 'completiontime' => 1632913200, 'completionevent' => COMPLETION_EVENT_NONE],
+            ['programid' => $cid, 'assignmenttype' => ASSIGNTYPE_INDIVIDUAL, 'assignmenttypeid' => 5, 'completiontime' => DAYSECS * 25, 'completionevent' => COMPLETION_EVENT_PROGRAM_COMPLETION],
+            ['programid' => $pid, 'assignmenttype' => ASSIGNTYPE_ORGANISATION, 'assignmenttypeid' => 2, 'completiontime' => 1632913200, 'completionevent' => COMPLETION_EVENT_NONE],
+            ['programid' => $cid, 'assignmenttype' => ASSIGNTYPE_ORGANISATION, 'assignmenttypeid' => 2, 'completiontime' => DAYSECS * 10, 'completionevent' => COMPLETION_EVENT_COURSE_COMPLETION],
+            ['programid' => $pid, 'assignmenttype' => ASSIGNTYPE_POSITION, 'assignmenttypeid' => 4, 'completiontime' => 1632913200, 'completionevent' => COMPLETION_EVENT_NONE],
+            ['programid' => $cid, 'assignmenttype' => ASSIGNTYPE_POSITION, 'assignmenttypeid' => 4, 'completiontime' => DAYSECS * 30 * 4, 'completionevent' => COMPLETION_EVENT_POSITION_START_DATE],
+            ['programid' => $pid, 'assignmenttype' => ASSIGNTYPE_MANAGERJA, 'assignmenttypeid' => 3, 'completiontime' => 1632913200, 'completionevent' => COMPLETION_EVENT_NONE],
+            ['programid' => $cid, 'assignmenttype' => ASSIGNTYPE_MANAGERJA, 'assignmenttypeid' => 3, 'completiontime' => DAYSECS * 365 * 2, 'completionevent' => COMPLETION_EVENT_ENROLLMENT_DATE],
+            ['programid' => $pid, 'assignmenttype' => ASSIGNTYPE_INDIVIDUAL, 'assignmenttypeid' => 3, 'completiontime' => 0, 'completionevent' => COMPLETION_EVENT_FIRST_LOGIN],
+        ];
+
+        $DB->insert_records('prog_assignment', $records);
+
+        self::assertCount(11, $DB->get_records('prog_assignment'));
+        self::assertEmpty($DB->get_records_select('prog_assignment', 'completionoffsetamount IS NOT NULL AND completionoffsetunit IS NOT NULL'));
+
+        totara_program_upgrade_migrate_relative_dates_data();
+
+        self::assertCount(11, $DB->get_records('prog_assignment'));
+        self::assertCount(6, $DB->get_records_select('prog_assignment', 'completionoffsetamount IS NOT NULL AND completionoffsetunit IS NOT NULL'));
+        self::assertCount(5, $DB->get_records_select('prog_assignment', 'completiontime IS NOT NULL'));
+
+        $conditions1 = [
+            'programid'        => $cid,
+            'assignmenttype'   => ASSIGNTYPE_COHORT,
+            'assignmenttypeid' => 1,
+            'completionevent'  => COMPLETION_EVENT_FIRST_LOGIN,
+        ];
+        self::assertEquals(5, $DB->get_field('prog_assignment', 'completionoffsetamount', $conditions1));
+        self::assertEquals(utils::TIME_SELECTOR_WEEKS, $DB->get_field('prog_assignment', 'completionoffsetunit', $conditions1));
+        self::assertEmpty($DB->get_field('prog_assignment', 'completiontime', $conditions1));
+
+        $conditions2 = [
+            'programid'        => $cid,
+            'assignmenttype'   => ASSIGNTYPE_INDIVIDUAL,
+            'assignmenttypeid' => 5,
+            'completionevent'  => COMPLETION_EVENT_PROGRAM_COMPLETION,
+        ];
+        self::assertEquals(25, $DB->get_field('prog_assignment', 'completionoffsetamount', $conditions2));
+        self::assertEquals(utils::TIME_SELECTOR_DAYS, $DB->get_field('prog_assignment', 'completionoffsetunit', $conditions2));
+        self::assertEmpty($DB->get_field('prog_assignment', 'completiontime', $conditions2));
+
+        $conditions3 = [
+            'programid'        => $cid,
+            'assignmenttype'   => ASSIGNTYPE_ORGANISATION,
+            'assignmenttypeid' => 2,
+            'completionevent'  => COMPLETION_EVENT_COURSE_COMPLETION,
+        ];
+        self::assertEquals(10, $DB->get_field('prog_assignment', 'completionoffsetamount', $conditions3));
+        self::assertEquals(utils::TIME_SELECTOR_DAYS, $DB->get_field('prog_assignment', 'completionoffsetunit', $conditions3));
+        self::assertEmpty($DB->get_field('prog_assignment', 'completiontime', $conditions3));
+
+        $conditions4 = [
+            'programid'        => $cid,
+            'assignmenttype'   => ASSIGNTYPE_POSITION,
+            'assignmenttypeid' => 4,
+            'completionevent'  => COMPLETION_EVENT_POSITION_START_DATE,
+        ];
+        self::assertEquals(4, $DB->get_field('prog_assignment', 'completionoffsetamount', $conditions4));
+        self::assertEquals(utils::TIME_SELECTOR_MONTHS, $DB->get_field('prog_assignment', 'completionoffsetunit', $conditions4));
+        self::assertEmpty($DB->get_field('prog_assignment', 'completiontime', $conditions4));
+
+        $conditions5 = [
+            'programid'        => $cid,
+            'assignmenttype'   => ASSIGNTYPE_MANAGERJA,
+            'assignmenttypeid' => 3,
+            'completionevent'  => COMPLETION_EVENT_ENROLLMENT_DATE,
+        ];
+        self::assertEquals(2, $DB->get_field('prog_assignment', 'completionoffsetamount', $conditions5));
+        self::assertEquals(utils::TIME_SELECTOR_YEARS, $DB->get_field('prog_assignment', 'completionoffsetunit', $conditions5));
+        self::assertEmpty($DB->get_field('prog_assignment', 'completiontime', $conditions5));
+
+        $conditions6 = [
+            'programid'        => $pid,
+            'assignmenttype'   => ASSIGNTYPE_INDIVIDUAL,
+            'assignmenttypeid' => 3,
+            'completionevent'  => COMPLETION_EVENT_FIRST_LOGIN,
+        ];
+        self::assertEquals(0, $DB->get_field('prog_assignment', 'completionoffsetamount', $conditions6));
+        self::assertEquals(utils::TIME_SELECTOR_DAYS, $DB->get_field('prog_assignment', 'completionoffsetunit', $conditions6));
+        self::assertEmpty($DB->get_field('prog_assignment', 'completiontime', $conditions6));
     }
 }

@@ -35,7 +35,16 @@ $completiontimeminute = optional_param('completiontimeminute', 0, PARAM_INT);
 if ($completiontime == COMPLETION_TIME_NOT_SET && $completionevent == COMPLETION_EVENT_NONE && $completioninstance == 0) {
     echo get_string('setcompletion', 'totara_program');
 } else {
-    $string = prog_assignment_category::build_completion_string($completiontime, $completionevent, $completioninstance, $completiontimehour, $completiontimeminute);
+    $string = '';
+    if ($completionevent != COMPLETION_EVENT_NONE) {
+        // $completiontime comes in the form '1 2' where 1 is the num and 2 is the unit.
+        [$num, $unit] = explode(' ', $completiontime);
+        if (!empty($num) && !empty($unit)) {
+            $string = prog_assignment_category::build_relative_completion_string($num, $unit, $completionevent, $completioninstance);
+        }
+    } else {
+        $string = prog_assignment_category::build_completion_string($completiontime, null, null, $completiontimehour, $completiontimeminute);
+    }
     if (trim($string) == '') {
         echo 'error';
     } else {

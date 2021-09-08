@@ -35,7 +35,8 @@ class plan extends base {
         if ($id !== 0) {
             $sql = "SELECT pa.assignmenttypeid AS id, pa.programid AS programid,
                            pa.includechildren, pa.completiontime,
-                           pa.completionevent, pa.completioninstance
+                           pa.completionevent, pa.completioninstance,
+                           pa.completionoffsetamount, pa.completionoffsetunit
                      FROM {prog_assignment} pa
                     WHERE pa.id = :assignmentid";
 
@@ -46,6 +47,8 @@ class plan extends base {
             $this->programid = $record->programid;
             $this->includechildren = $record->includechildren;
             $this->completiontime = $record->completiontime;
+            $this->completionoffsetamount = $record->completionoffsetamount;
+            $this->completionoffsetunit = $record->completionoffsetunit;
             $this->completionevent = $record->completionevent;
             $this->completioninstance = $record->completioninstance;
 

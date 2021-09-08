@@ -1210,7 +1210,7 @@ class program {
             $event_object = $this->completion_object_cache[$assignment_record->completionevent];
         }
         else {
-            // Else make it it and add to the cache for future use.
+            // Else make it and add to the cache for future use.
             $event_object = new $COMPLETION_EVENTS_CLASSNAMES[$assignment_record->completionevent]();
             $this->completion_object_cache[$assignment_record->completionevent] = $event_object;
         }
@@ -1221,9 +1221,14 @@ class program {
             return false;
         }
 
-        $timedue = $basetime + $assignment_record->completiontime;
+        // Calculate timedue based on date offset.
+        if (is_null($assignment_record->completionoffsetamount) || is_null($assignment_record->completionoffsetunit)) {
+            return $basetime;
+        }
 
-        return $timedue;
+        $timestring = '+' . $assignment_record->completionoffsetamount  . ' ' . utils::$timeallowancestrings[$assignment_record->completionoffsetunit];
+
+        return strtotime($timestring, $basetime);
     }
     private $completion_object_cache = array();
 

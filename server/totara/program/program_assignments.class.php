@@ -508,6 +508,14 @@ abstract class prog_assignment_category {
                 $object->completionevent = isset($data->completionevent[$this->id][$itemid]) ?
                     $data->completionevent[$this->id][$itemid] : COMPLETION_EVENT_NONE;
 
+                // Get the completion time offset amount.
+                $object->completionoffsetamount = !empty($data->completionoffsetamount[$this->id][$itemid]) ?
+                    $data->completionoffsetamount[$this->id][$itemid] : null;
+
+                // Get the completion time offset unit.
+                $object->completionoffsetunit = !empty($data->completionoffsetunit[$this->id][$itemid]) ?
+                    $data->completionoffsetunit[$this->id][$itemid] : null;
+
                 // Get the completion instance.
                 $object->completioninstance = !empty($data->completioninstance[$this->id][$itemid]) ?
                     $data->completioninstance[$this->id][$itemid] : 0;
@@ -520,13 +528,18 @@ abstract class prog_assignment_category {
                         $object->completiontime = totara_date_parse_from_format(get_string('datepickerlongyearparseformat', 'totara_core').' H:i', $object->completiontime.' '.$hour.':'.$minute);
                     } else {
                         // Convert relative dates.
-                        $parts = explode(' ', $object->completiontime);
-                        if (!isset($parts[0]) || !isset($parts[1])) {
+                        [$num, $period] = explode(' ', $object->completiontime);
+                        if (!isset($num) || !isset($period)) {
                             continue;
                         }
-                        $num = $parts[0];
-                        $period = $parts[1];
-                        $object->completiontime = \totara_program\utils::duration_implode($num, $period);
+                        $object->completiontime = null;
+                        $object->completionoffsetamount = $num;
+                        $object->completionoffsetunit = $period;
+                    }
+                } else {
+                    if ($object->completionevent != COMPLETION_EVENT_NONE && !empty($object->completionoffsetamount)) {
+                        // Else it's a relative date and completiontime should be ignored.
+                        $object->completiontime = null;
                     }
                 }
 
@@ -534,6 +547,8 @@ abstract class prog_assignment_category {
                     // Check if we actually need an update..
                     if ($original_object->includechildren != $object->includechildren ||
                         $original_object->completiontime != $object->completiontime ||
+                        $original_object->completionoffsetamount != $object->completionoffsetamount ||
+                        $original_object->completionoffsetunit != $object->completionoffsetunit ||
                         $original_object->completionevent != $object->completionevent ||
                         $original_object->completioninstance != $object->completioninstance) {
 
@@ -543,15 +558,27 @@ abstract class prog_assignment_category {
                     }
                 } else {
                     // Create new assignment
-                    $insertssql[] = "(?, ?, ?, ?, ?, ?, ?)";
-                    $insertsparams[] = array($object->programid, $object->assignmenttype, $object->assignmenttypeid, $object->includechildren, $object->completiontime, $object->completionevent, $object->completioninstance);
+                    $insertssql[] = "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $insertsparams[] = [
+                        $object->programid,
+                        $object->assignmenttype,
+                        $object->assignmenttypeid,
+                        $object->includechildren,
+                        $object->completiontime,
+                        $object->completionoffsetamount,
+                        $object->completionoffsetunit,
+                        $object->completionevent,
+                        $object->completioninstance,
+                    ];
                     $this->_add_assignment_hook($object);
                 }
             }
 
             // Execute inserts
             if (count($insertssql) > 0) {
-                $sql = "INSERT INTO {prog_assignment} (programid, assignmenttype, assignmenttypeid, includechildren, completiontime, completionevent, completioninstance) VALUES " . implode(', ', $insertssql);
+                $sql = "INSERT INTO {prog_assignment} (programid, assignmenttype, assignmenttypeid, includechildren,
+                            completiontime, completionoffsetamount, completionoffsetunit, completionevent, completioninstance)
+                            VALUES " . implode(', ', $insertssql);
                 $params = array();
                 foreach ($insertsparams as $p) {
                     $params = array_merge($params, $p);
@@ -695,6 +722,14 @@ abstract class prog_assignment_category {
             $item->completioninstance = 0;
         }
 
+        if (empty($item->completionoffsetamount)) {
+            $item->completionoffsetamount = null;
+        }
+
+        if (empty($item->completionoffsetunit)) {
+            $item->completionoffsetunit = null;
+        }
+
         if ($item->completionevent == COMPLETION_EVENT_NONE) {
             // Completiontime must be a timestamp.
             if ($item->completiontime != COMPLETION_TIME_NOT_SET) {
@@ -703,14 +738,16 @@ abstract class prog_assignment_category {
                 // Print a date.
                 $item->completiontime = trim(userdate($item->completiontime,
                     get_string('datepickerlongyearphpuserdate', 'totara_core'), 99, false));
-                $completion_string = self::build_completion_string($item->completiontime, $item->completionevent, $item->completioninstance, $hour, $minute);
+                $completion_string = self::build_completion_string($item->completiontime, null, null, $hour, $minute);
                 $show_deletecompletionlink = true;
             }
         } else {
-            $parts = \totara_program\utils::duration_explode($item->completiontime);
-            $item->completiontime = $parts->num . ' ' . $parts->period;
-            $completion_string = self::build_completion_string(
-                $item->completiontime, $item->completionevent, $item->completioninstance);
+            $completion_string = self::build_relative_completion_string(
+                $item->completionoffsetamount,
+                $item->completionoffsetunit,
+                $item->completionevent,
+                $item->completioninstance
+            );
             $show_deletecompletionlink = true;
         }
 
@@ -769,29 +806,71 @@ abstract class prog_assignment_category {
         return $output;
     }
 
-    public static function build_completion_string($completiontime, $completionevent, $completioninstance,
-                                                   $completiontimehour = 0, $completiontimeminute = 0) {
+    /**
+     * Creates completion string for a fixed completion date/time.
+     *
+     * @param      $completiontime
+     * @param null $unused1 This argument is no longer used. Used to be $completionevent
+     * @param null $unused2 This argument is no longer used. Used to be $completioninstance
+     * @param int  $completiontime_hour
+     * @param int  $completiontime_minute
+     *
+     * @return string
+     */
+    public static function build_completion_string(
+        $completiontime,
+        $unused1 = null,
+        $unused2 = null,
+        $completiontime_hour = 0,
+        $completiontime_minute = 0
+    ) {
+        $date_pattern = get_string('datepickerlongyearregexphp', 'totara_core');
+        if (preg_match($date_pattern, $completiontime, $matches) == 0) {
+            return '';
+        } else {
+            $completiontime_hour = sprintf("%02d", $completiontime_hour);
+            $completiontime_minute = sprintf("%02d", $completiontime_minute);
+            // To ensure multi-language compatibility, we must work out the timestamp and then convert that
+            // to a string in the user's language.
+            $timestamp = totara_date_parse_from_format(
+                get_string('datepickerlongyearparseformat', 'totara_core') . ' H:i',
+                $completiontime . ' ' . $completiontime_hour . ':' . $completiontime_minute
+            );
+            $completiontimestring = userdate($timestamp, get_string('strfdateattime', 'langconfig'));
+
+            return get_string('completebytime', 'totara_program', $completiontimestring);
+        }
+    }
+
+    /**
+     * Creates completion string for a relative completion date.
+     *
+     * @param int|null $offset_amount
+     * @param int|null $offset_unit
+     * @param int $completion_event
+     * @param int $completion_instance
+     *
+     * @return string
+     */
+    public static function build_relative_completion_string(
+        ?int $offset_amount,
+        ?int $offset_unit,
+        int $completion_event,
+        int $completion_instance
+    ): string {
         global $COMPLETION_EVENTS_CLASSNAMES;
-        if (isset($COMPLETION_EVENTS_CLASSNAMES[$completionevent])) {
-            $eventobject = new $COMPLETION_EVENTS_CLASSNAMES[$completionevent];
+        if (isset($COMPLETION_EVENTS_CLASSNAMES[$completion_event])) {
+            $eventobject = new $COMPLETION_EVENTS_CLASSNAMES[$completion_event];
 
-            // $completiontime comes in the form '1 2' where 1 is the num and 2 is the period
-
-            $parts = explode(' ',$completiontime);
-
-            if (!isset($parts[0]) || !isset($parts[1])) {
+            if (empty($offset_amount) || empty($offset_unit)) {
                 return '';
             }
 
             $a = new stdClass();
-            $a->num = $parts[0];
-            if (isset(\totara_program\utils::$timeallowancestrings[$parts[1]])) {
-                $a->period = get_string(\totara_program\utils::$timeallowancestrings[$parts[1]], 'totara_program');
-            } else {
-                return '';
-            }
+            $a->num = $offset_amount;
+            $a->period = get_string(\totara_program\utils::$timeallowancestrings[$offset_unit], 'totara_program');
             $a->event = $eventobject->get_completion_string();
-            $a->instance = $eventobject->get_item_name($completioninstance);
+            $a->instance = $eventobject->get_item_name($completion_instance);
 
             if (!empty($a->instance)) {
                 $a->instance = "'$a->instance'";
@@ -799,22 +878,7 @@ abstract class prog_assignment_category {
 
             return get_string('completewithinevent', 'totara_program', $a);
         }
-        else {
-            $datepattern = get_string('datepickerlongyearregexphp', 'totara_core');
-            if (preg_match($datepattern, $completiontime, $matches) == 0) {
-                return '';
-            } else {
-                $completiontimehour = sprintf("%02d", $completiontimehour);
-                $completiontimeminute = sprintf("%02d", $completiontimeminute);
-                // To ensure multi-language compatibility, we must work out the timestamp and then convert that
-                // to a string in the user's language.
-                $timestamp = totara_date_parse_from_format(get_string('datepickerlongyearparseformat', 'totara_core').' H:i',
-                    $completiontime.' '.$completiontimehour.':'.$completiontimeminute);
-                $completiontimestring = userdate($timestamp, get_string('strfdateattime', 'langconfig'), 99);
-
-                return get_string('completebytime', 'totara_program', $completiontimestring);
-            }
-        }
+        return '';
     }
 
     /**
@@ -896,7 +960,8 @@ class organisations_category extends prog_assignment_category {
             "SELECT org.id, org.fullname, org.path,
                     prog_assignment.programid, prog_assignment.id AS assignmentid,
                     prog_assignment.includechildren, prog_assignment.completiontime,
-                    prog_assignment.completionevent, prog_assignment.completioninstance
+                    prog_assignment.completionevent, prog_assignment.completioninstance,
+                    prog_assignment.completionoffsetamount, prog_assignment.completionoffsetunit
         FROM {prog_assignment} prog_assignment
         INNER JOIN {org} org on org.id = prog_assignment.assignmenttypeid
         WHERE prog_assignment.programid = ?
@@ -1018,7 +1083,7 @@ class organisations_category extends prog_assignment_category {
     function get_affected_users_by_assignment($assignment, $userid = 0) {
         global $DB;
 
-        // Query to retrieves the data required to determine the number of users
+        // Query to retrieve the data required to determine the number of users
         //affected by an assignment
         $sql = "SELECT org.id,
                         org.fullname,
@@ -1026,7 +1091,9 @@ class organisations_category extends prog_assignment_category {
                         prog_assignment.includechildren,
                         prog_assignment.completiontime,
                         prog_assignment.completionevent,
-                        prog_assignment.completioninstance
+                        prog_assignment.completioninstance,
+                        prog_assignment.completionoffsetamount,
+                        prog_assignment.completionoffsetunit
                 FROM {prog_assignment} prog_assignment
                 INNER JOIN {org} org ON org.id = prog_assignment.assignmenttypeid
                 WHERE prog_assignment.id = ?";
@@ -1221,7 +1288,7 @@ class positions_category extends prog_assignment_category {
     function get_affected_users_by_assignment($assignment, $userid = 0) {
         global $DB;
 
-        // Query to retrieves the data required to determine the number of users
+        // Query to retrieve the data required to determine the number of users
         // affected by an assignment.
         $sql = "SELECT pos.id,
                         pos.fullname,
@@ -1229,7 +1296,9 @@ class positions_category extends prog_assignment_category {
                         prog_assignment.includechildren,
                         prog_assignment.completiontime,
                         prog_assignment.completionevent,
-                        prog_assignment.completioninstance
+                        prog_assignment.completioninstance,
+                        prog_assignment.completionoffsetamount,
+                        prog_assignment.completionoffsetunit
                 FROM {prog_assignment} prog_assignment
                 INNER JOIN {pos} pos on pos.id = prog_assignment.assignmenttypeid
                 WHERE prog_assignment.id = ?";
@@ -1239,7 +1308,6 @@ class positions_category extends prog_assignment_category {
         } else {
             return array();
         }
-
     }
 
     /**
@@ -1305,7 +1373,9 @@ class cohorts_category extends prog_assignment_category {
         $items = $DB->get_records_sql(
             "SELECT cohort.id, cohort.name as fullname, cohort.cohorttype,
                     prog_assignment.programid, prog_assignment.id AS assignmentid,
-                    prog_assignment.completiontime, prog_assignment.completionevent, prog_assignment.completioninstance
+                    prog_assignment.completiontime, prog_assignment.completionevent,
+                    prog_assignment.completioninstance, prog_assignment.completionoffsetamount,
+                    prog_assignment.completionoffsetunit
             FROM {prog_assignment} prog_assignment
             INNER JOIN {cohort} cohort ON cohort.id = prog_assignment.assignmenttypeid
             WHERE prog_assignment.programid = ?
@@ -1467,7 +1537,8 @@ class managers_category extends prog_assignment_category {
             SELECT ja.id, " . $usernamefields . ", ja.managerjapath AS path, ja.fullname AS jobname, ja.idnumber, u.id AS userid,
                    prog_assignment.programid, prog_assignment.id AS assignmentid,
                    prog_assignment.includechildren, prog_assignment.completiontime,
-                   prog_assignment.completionevent, prog_assignment.completioninstance
+                   prog_assignment.completionevent, prog_assignment.completioninstance,
+                   prog_assignment.completionoffsetamount, prog_assignment.completionoffsetunit
               FROM {prog_assignment} prog_assignment
         INNER JOIN {job_assignment} ja ON ja.id = prog_assignment.assignmenttypeid
          LEFT JOIN {user} u ON u.id = ja.userid
@@ -1679,7 +1750,8 @@ class individuals_category extends prog_assignment_category {
         $items = $DB->get_records_sql(
             "SELECT individual.id, " . $usernamefields . ", prog.id AS progid, prog.certifid, pc.timedue, pc.status AS progstatus,
                     cc.certifpath, cc.renewalstatus,
-                    prog_assignment.completiontime, prog_assignment.completionevent, prog_assignment.completioninstance
+                    prog_assignment.completiontime, prog_assignment.completionevent, prog_assignment.completioninstance,
+                    prog_assignment.completionoffsetamount, prog_assignment.completionoffsetunit
                FROM {prog_assignment} prog_assignment
                JOIN {user} individual
                  ON individual.id = prog_assignment.assignmenttypeid

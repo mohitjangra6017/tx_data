@@ -21,6 +21,8 @@
  * @package totara_program
  */
 
+use totara_program\utils;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -150,17 +152,29 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
     /**
      * Set individual assignments in a program.
      */
-    private function set_individual_assignments(program $program, $users, $completiontime = -1, $completionevent = 0, $completioninstance = 0) {
+    private function set_individual_assignments(
+        program $program,
+        $users,
+        $completiontime = COMPLETION_TIME_NOT_SET,
+        $completionevent = COMPLETION_EVENT_NONE,
+        $completioninstance = 0,
+        $completionoffsetamount = null,
+        $completionoffsetunit = null
+    ) {
         $data = new stdClass();
         $data->id = $program->id;
         $data->item = array(ASSIGNTYPE_INDIVIDUAL => array());
         $data->completiontime = array(ASSIGNTYPE_INDIVIDUAL => array());
+        $data->completionoffsetamount = array(ASSIGNTYPE_INDIVIDUAL => array());
+        $data->completionoffsetunit = array(ASSIGNTYPE_INDIVIDUAL => array());
         $data->completionevent = array(ASSIGNTYPE_INDIVIDUAL => array());
         $data->completioninstance = array(ASSIGNTYPE_INDIVIDUAL => array());
 
         foreach ($users as $user) {
             $data->item[ASSIGNTYPE_INDIVIDUAL][$user->id] = 1;
             $data->completiontime[ASSIGNTYPE_INDIVIDUAL][$user->id] = $completiontime;
+            $data->completionoffsetamount[ASSIGNTYPE_INDIVIDUAL][$user->id] = $completionoffsetamount;
+            $data->completionoffsetunit[ASSIGNTYPE_INDIVIDUAL][$user->id] = $completionoffsetunit;
             $data->completionevent[ASSIGNTYPE_INDIVIDUAL][$user->id] = $completionevent;
             $data->completioninstance[ASSIGNTYPE_INDIVIDUAL][$user->id] = $completioninstance;
         }
@@ -174,17 +188,35 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
 
     /**
      * Set audience assignment to a program.
+     *
+     * @param program $program
+     * @param $audience
+     * @param int $completiontime
+     * @param int $completionevent
+     * @param null $completionoffsetamount
+     * @param null $completionoffsetunit
      */
-    private function set_audience_assignment(program $program, $audience, $completiontime = -1, $completionevent = 0) {
+    private function set_audience_assignment(
+        program $program,
+        $audience,
+        $completiontime = COMPLETION_TIME_NOT_SET,
+        $completionevent = COMPLETION_EVENT_NONE,
+        $completionoffsetamount = null,
+        $completionoffsetunit = null
+    ) {
         $data = new stdClass();
         $data->id = $program->id;
         $data->item = array(ASSIGNTYPE_COHORT => array());
         $data->completiontime = array(ASSIGNTYPE_COHORT => array());
+        $data->completionoffsetamount = array(ASSIGNTYPE_COHORT => array());
+        $data->completionoffsetunit = array(ASSIGNTYPE_COHORT => array());
         $data->completionevent = array(ASSIGNTYPE_COHORT => array());
         $data->completioninstance = array(ASSIGNTYPE_COHORT => array());
         // The lines below could be moved into the above arrays.
         $data->item[ASSIGNTYPE_COHORT][$audience->id] = 1;
         $data->completiontime[ASSIGNTYPE_COHORT][$audience->id] = $completiontime;
+        $data->completionoffsetamount[ASSIGNTYPE_COHORT][$audience->id] = $completionoffsetamount;
+        $data->completionoffsetunit[ASSIGNTYPE_COHORT][$audience->id] = $completionoffsetunit;
         $data->completionevent[ASSIGNTYPE_COHORT][$audience->id] = $completionevent;
         $data->completioninstance[ASSIGNTYPE_COHORT][$audience->id] = 0;
 
@@ -1206,15 +1238,19 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         global $DB;
 
         $timebefore = time();
-        $originaldurationstring = "20 " . \totara_program\utils::TIME_SELECTOR_DAYS;
         $originalduration = DAYSECS * 20;
-        $newdurationstring = "10 " . \totara_program\utils::TIME_SELECTOR_DAYS;
-        $newduration = DAYSECS * 10;
 
         // Add audience assignment.
         $audience = $this->audiences[0];
         $audienceusers = $this->audienceusers[0];
-        $this->set_audience_assignment($this->program, $audience, $originaldurationstring, COMPLETION_EVENT_ENROLLMENT_DATE);
+        $this->set_audience_assignment(
+            $this->program,
+            $audience,
+            COMPLETION_TIME_NOT_SET,
+            COMPLETION_EVENT_ENROLLMENT_DATE,
+            20,
+            utils::TIME_SELECTOR_DAYS
+        );
 
         // Check that records exist.
         $this->assertEquals(1, $DB->count_records('prog_assignment',
@@ -1238,12 +1274,20 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
             array('programid' => $this->program->id)));
 
         // Check prog_assignment record.
-        $progassignment = $DB->get_record('prog_assignment',
-            array('programid' => $this->program->id, 'assignmenttype' => ASSIGNTYPE_COHORT, 'assignmenttypeid' => $audience->id));
+        $progassignment = $DB->get_record(
+            'prog_assignment',
+            array(
+                'programid' => $this->program->id,
+                'assignmenttype' => ASSIGNTYPE_COHORT,
+                'assignmenttypeid' => $audience->id
+            )
+        );
         $this->assertNotEmpty($progassignment);
 
         $this->assertEquals(0, $progassignment->includechildren);
-        $this->assertEquals($originalduration, $progassignment->completiontime); // Original.
+        $this->assertEquals(20, $progassignment->completionoffsetamount); // Original.
+        $this->assertEquals(utils::TIME_SELECTOR_DAYS, $progassignment->completionoffsetunit); // Original.
+        $this->assertNull($progassignment->completiontime);
         $this->assertEquals(COMPLETION_EVENT_ENROLLMENT_DATE, $progassignment->completionevent);
         $this->assertEquals(0, $progassignment->completioninstance);
 
@@ -1279,7 +1323,14 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         }
 
         // Change audience assignment's completion time.
-        $this->set_audience_assignment($this->program, $audience, $newdurationstring, COMPLETION_EVENT_ENROLLMENT_DATE);
+        $this->set_audience_assignment(
+            $this->program,
+            $audience,
+            COMPLETION_TIME_NOT_SET,
+            COMPLETION_EVENT_ENROLLMENT_DATE,
+            10,
+            utils::TIME_SELECTOR_DAYS
+        );
 
         // Apply assignment changes.
         $this->program->update_learner_assignments(true);
@@ -1293,12 +1344,20 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
             array('programid' => $this->program->id)));
 
         // Check prog_assignment record.
-        $progassignment = $DB->get_record('prog_assignment',
-            array('programid' => $this->program->id, 'assignmenttype' => ASSIGNTYPE_COHORT, 'assignmenttypeid' => $audience->id));
+        $progassignment = $DB->get_record(
+            'prog_assignment',
+            array(
+                'programid' => $this->program->id,
+                'assignmenttype' => ASSIGNTYPE_COHORT,
+                'assignmenttypeid' => $audience->id
+            )
+        );
         $this->assertNotEmpty($progassignment);
 
         $this->assertEquals(0, $progassignment->includechildren);
-        $this->assertEquals($newduration, $progassignment->completiontime); // New!
+        $this->assertEquals(10, $progassignment->completionoffsetamount); // New!
+        $this->assertEquals(utils::TIME_SELECTOR_DAYS, $progassignment->completionoffsetunit); // New!
+        $this->assertNull($progassignment->completiontime);
         $this->assertEquals(COMPLETION_EVENT_ENROLLMENT_DATE, $progassignment->completionevent);
         $this->assertEquals(0, $progassignment->completioninstance);
 
@@ -1564,7 +1623,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $originalcompletiontime = date($this->updateassignmentsdateformat, $timebefore + DAYSECS * 100);
         $originalduedate = totara_date_parse_from_format($this->updateassignmentsdateformat, $originalcompletiontime);
         // Give the audience the smaller date, and we will make sure that it is not being applied.
-        $newdurationstring = "10 " . \totara_program\utils::TIME_SELECTOR_DAYS;
+        $newdurationstring = "10 " . utils::TIME_SELECTOR_DAYS;
         $newduration = DAYSECS * 10;
 
         // Add audience assignment.
@@ -1593,6 +1652,8 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
 
         $this->assertEquals(0, $audienceprogassignment->includechildren);
         $this->assertEquals($originalduedate, $audienceprogassignment->completiontime);
+        $this->assertNull($audienceprogassignment->completionoffsetamount);
+        $this->assertNull($audienceprogassignment->completionoffsetunit);
         $this->assertEquals(0, $audienceprogassignment->completionevent);
         $this->assertEquals(0, $audienceprogassignment->completioninstance);
 
@@ -1601,8 +1662,13 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
             // Skip prog_user_assignment records (they aren't interesting).
 
             // Check prog_completion records.
-            $progcompletion = $DB->get_record('prog_completion',
-                array('programid' => $this->program->id, 'userid' => $user->id));
+            $progcompletion = $DB->get_record(
+                'prog_completion',
+                array(
+                    'programid' => $this->program->id,
+                    'userid' => $user->id
+                )
+            );
             $this->assertNotEmpty($progcompletion);
 
             $this->assertEquals(0, $progcompletion->coursesetid);
@@ -1625,7 +1691,15 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
 
         // Add individual assignment.
         $user = $this->users[0]; // Also included in audience.
-        $this->set_individual_assignments($this->program, array($user),  $newdurationstring, COMPLETION_EVENT_ENROLLMENT_DATE);
+        $this->set_individual_assignments(
+            $this->program,
+            array($user),
+            COMPLETION_TIME_NOT_SET,
+            COMPLETION_EVENT_ENROLLMENT_DATE,
+            0,
+            10,
+            utils::TIME_SELECTOR_DAYS
+        );
 
         // Apply assignment changes.
         $this->program->update_learner_assignments(true);
@@ -1646,6 +1720,8 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
 
         $this->assertEquals(0, $audienceprogassignment->includechildren);
         $this->assertEquals($originalduedate, $audienceprogassignment->completiontime);
+        $this->assertNull($audienceprogassignment->completionoffsetamount);
+        $this->assertNull($audienceprogassignment->completionoffsetunit);
         $this->assertEquals(0, $audienceprogassignment->completionevent);
         $this->assertEquals(0, $audienceprogassignment->completioninstance);
 
@@ -1656,7 +1732,9 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $this->assertNotEmpty($individualprogassignment);
 
         $this->assertEquals(0, $individualprogassignment->includechildren);
-        $this->assertEquals($newduration, $individualprogassignment->completiontime);
+        $this->assertEquals(10, $individualprogassignment->completionoffsetamount); // Switched to a relative date now.
+        $this->assertEquals(utils::TIME_SELECTOR_DAYS, $individualprogassignment->completionoffsetunit); // Switched to a relative date now.
+        $this->assertNull($individualprogassignment->completiontime);
         $this->assertEquals(COMPLETION_EVENT_ENROLLMENT_DATE, $individualprogassignment->completionevent);
         $this->assertEquals(0, $individualprogassignment->completioninstance);
 
@@ -2751,7 +2829,15 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         // Assign a user with a completion time relative to a program that they are not in, which should result in an exception.
         $user = $this->getDataGenerator()->create_user();
         $otherprogid = -1;
-        $this->set_individual_assignments($this->program, array($user), '1 day', COMPLETION_EVENT_PROGRAM_COMPLETION, $otherprogid);
+        $this->set_individual_assignments(
+            $this->program,
+            array($user),
+            COMPLETION_TIME_NOT_SET,
+            COMPLETION_EVENT_PROGRAM_COMPLETION,
+            $otherprogid,
+            1,
+            utils::TIME_SELECTOR_DAYS
+        );
 
         // Apply assignment changes.
         $this->program->update_learner_assignments(true);

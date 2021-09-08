@@ -41,21 +41,24 @@ class rb_source_cohort_associations extends rb_base_source {
     public function __construct() {
         $this->base = "(SELECT e.id, e.customint1 AS cohortid, e.courseid AS instanceid,
                 c.fullname AS name, c.icon, " . COHORT_ASSN_ITEMTYPE_COURSE . " AS instancetype,
-                0 AS duedate, 0 AS completionevent, 0 AS completioninstance
+                0 AS duedate, 0 AS completionevent, 0 AS completioninstance,
+                0 AS completionoffsetamount, 0 AS completionoffsetunit
             FROM {enrol} e
             JOIN {course} c ON e.courseid = c.id
             WHERE e.enrol = 'cohort'
             UNION ALL
             SELECT pa.id, pa.assignmenttypeid AS cohortid, p.id AS instanceid,
                 p.fullname AS name, p.icon, " . COHORT_ASSN_ITEMTYPE_PROGRAM . " AS instancetype,
-                pa.completiontime AS duedate, pa.completionevent AS completionevent, pa.completioninstance AS completioninstance
+                pa.completiontime AS duedate, pa.completionevent AS completionevent, pa.completioninstance AS completioninstance,
+                pa.completionoffsetamount AS completionoffsetamount, pa.completionoffsetunit AS completionoffsetunit
             FROM {prog_assignment} pa
             JOIN {prog} p ON pa.programid = p.id
             WHERE pa.assignmenttype = " . ASSIGNTYPE_COHORT . " AND p.certifid IS NULL
             UNION ALL
             SELECT pa.id, pa.assignmenttypeid AS cohortid, p.id AS instanceid,
                 p.fullname AS name, p.icon, " . COHORT_ASSN_ITEMTYPE_CERTIF . " AS instancetype,
-                pa.completiontime AS duedate, pa.completionevent AS completionevent, pa.completioninstance AS completioninstance
+                pa.completiontime AS duedate, pa.completionevent AS completionevent, pa.completioninstance AS completioninstance,
+                pa.completionoffsetamount AS completionoffsetamount, pa.completionoffsetunit AS completionoffsetunit
             FROM {prog_assignment} pa
             JOIN {prog} p ON pa.programid = p.id
             WHERE pa.assignmenttype = " . ASSIGNTYPE_COHORT . " AND p.certifid IS NOT NULL)";
@@ -199,6 +202,8 @@ class rb_source_cohort_associations extends rb_base_source {
                     'programid' => 'base.instanceid',
                     'completionevent' => 'base.completionevent',
                     'completioninstance' => 'base.completioninstance',
+                    'completionoffsetamount' => 'base.completionoffsetamount',
+                    'completionoffsetunit' => 'base.completionoffsetunit',
                     'type' => 'base.instancetype',
                     'cohortid' => 'base.cohortid'
                 ]

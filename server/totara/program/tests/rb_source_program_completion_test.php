@@ -178,18 +178,21 @@ class totara_program_rb_source_program_completion_testcase extends advanced_test
         $data->id = $programs[0]->id;
 
         $data->item[ASSIGNTYPE_INDIVIDUAL][$users[0]->id] = 1;
-        $data->completiontime[ASSIGNTYPE_INDIVIDUAL][$users[0]->id] = '5 day';
+        $data->completionoffsetamount[ASSIGNTYPE_INDIVIDUAL][$users[0]->id] = 5;
+        $data->completionoffsetunit[ASSIGNTYPE_INDIVIDUAL][$users[0]->id] = \totara_program\utils::TIME_SELECTOR_DAYS;
         $data->completionevent[ASSIGNTYPE_INDIVIDUAL][$users[0]->id] = COMPLETION_EVENT_FIRST_LOGIN;
 
         // Exception (no program with id -1).
         $data->item[ASSIGNTYPE_INDIVIDUAL][$users[2]->id] = 1;
-        $data->completiontime[ASSIGNTYPE_INDIVIDUAL][$users[2]->id] = '1 day';
+        $data->completionoffsetamount[ASSIGNTYPE_INDIVIDUAL][$users[2]->id] = 1;
+        $data->completionoffsetunit[ASSIGNTYPE_INDIVIDUAL][$users[2]->id] = \totara_program\utils::TIME_SELECTOR_DAYS;
         $data->completionevent[ASSIGNTYPE_INDIVIDUAL][$users[2]->id] = COMPLETION_EVENT_PROGRAM_COMPLETION;
         $data->completioninstance[ASSIGNTYPE_INDIVIDUAL][$users[2]->id] = -1;
 
         // Exception (no course with id -1).
         $data->item[ASSIGNTYPE_INDIVIDUAL][$users[4]->id] = 1;
-        $data->completiontime[ASSIGNTYPE_INDIVIDUAL][$users[4]->id] = '1 day';
+        $data->completionoffsetamount[ASSIGNTYPE_INDIVIDUAL][$users[4]->id] = 1;
+        $data->completionoffsetunit[ASSIGNTYPE_INDIVIDUAL][$users[4]->id] = \totara_program\utils::TIME_SELECTOR_DAYS;
         $data->completionevent[ASSIGNTYPE_INDIVIDUAL][$users[4]->id] = COMPLETION_EVENT_COURSE_COMPLETION;
         $data->completioninstance[ASSIGNTYPE_INDIVIDUAL][$users[4]->id] = -1;
 

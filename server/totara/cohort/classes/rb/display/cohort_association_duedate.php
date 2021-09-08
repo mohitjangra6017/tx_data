@@ -70,6 +70,8 @@ class cohort_association_duedate extends \totara_reportbuilder\rb\display\base {
             "completiontime" => $value,
             "completionevent" => empty($extrafields->completionevent) ? null : $extrafields->completionevent,
             "completioninstance" => empty($extrafields->completioninstance) ? null : $extrafields->completioninstance,
+            "completionoffsetamount" => empty($extrafields->completionoffsetamount) ? null : $extrafields->completionoffsetamount,
+            "completionoffsetunit" => empty($extrafields->completionoffsetunit) ? null : $extrafields->completionoffsetunit,
             "id" => empty($extrafields->cohortid) ? null : $extrafields->cohortid
         ];
 

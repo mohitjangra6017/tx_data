@@ -21,6 +21,8 @@
  * @package totara_program
  */
 
+use totara_program\utils;
+
 class totara_program_assignment_individuals_test extends advanced_testcase {
 
     private $generator = null;
@@ -287,8 +289,7 @@ class totara_program_assignment_individuals_test extends advanced_testcase {
 
         $individualtype = 5;
         $completionevent = COMPLETION_EVENT_FIRST_LOGIN;
-        // This format is totally crazy but means 14 days;
-        $completiontime = '14 ' . \totara_program\utils::TIME_SELECTOR_DAYS;
+        $completiontime = '2 ' . \totara_program\utils::TIME_SELECTOR_WEEKS;
 
         $data = new stdClass();
         $data->id = $this->programs[1]->id;
@@ -455,7 +456,8 @@ class totara_program_assignment_individuals_test extends advanced_testcase {
 
         $this->programgenerator->assign_to_program($this->programs[1]->id, ASSIGNTYPE_INDIVIDUAL, $this->users[1]->id, null, true);
 
-        $completionperiod = 86400; // Duration of 2 weeks
+        $completionperiod_amount = 1;
+        $completionperiod_unit = utils::TIME_SELECTOR_DAYS;
         $completionevent = COMPLETION_EVENT_ENROLLMENT_DATE;
 
         $assignment_record = $DB->get_record('prog_assignment', ['programid' => $this->programs[1]->id, 'assignmenttype' => ASSIGNTYPE_INDIVIDUAL, 'assignmenttypeid' => $this->users[1]->id]);
@@ -483,7 +485,7 @@ class totara_program_assignment_individuals_test extends advanced_testcase {
 
         $user_assignment_record = $DB->get_record('prog_user_assignment', ['programid' => $this->programs[1]->id, 'userid' => $this->users[1]->id, 'assignmentid' => $assignment->get_id()]);
 
-        $assignment->set_duedate($completionperiod, $completionevent);
+        $assignment->set_duedate(0, $completionevent, 0, $completionperiod_amount, $completionperiod_unit);
 
         $assignment_record = $DB->get_record('prog_assignment', ['programid' => $this->programs[1]->id, 'assignmenttype' => ASSIGNTYPE_INDIVIDUAL, 'assignmenttypeid' => $this->users[1]->id]);
         $user_assignment_record = $DB->get_record('prog_user_assignment', ['programid' => $this->programs[1]->id, 'userid' => $this->users[1]->id, 'assignmentid' => $assignment_record->id]);

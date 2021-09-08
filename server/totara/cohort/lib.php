@@ -1462,7 +1462,8 @@ function totara_cohort_navlinks($cohortid=false, $cohortname=false, $subpagetitl
  */
 function totara_cohort_program_completion_link($cohortid, $programid){
     global $DB;
-    $item = $DB->get_record('prog_assignment', array('assignmenttypeid' => $cohortid, 'programid' => $programid, 'assignmenttype' => ASSIGNTYPE_COHORT), 'assignmenttypeid as id, completiontime, completionevent, completioninstance');
+    $item = $DB->get_record('prog_assignment', array('assignmenttypeid' => $cohortid, 'programid' => $programid, 'assignmenttype' => ASSIGNTYPE_COHORT),
+                            'assignmenttypeid as id, completiontime, completionevent, completioninstance, completionoffsetamount, completionoffsetunit');
     $cat = new cohorts_category();
     if (!$item) {
         $item = $cat->get_item($cohortid);

@@ -302,6 +302,8 @@ abstract class prog_message {
 
                     if ($progassignment) {
                         $time = $progassignment->completiontime;
+                        $offsetamount = $progassignment->completionoffsetamount;
+                        $offsetunit = $progassignment->completionoffsetunit;
                         $event = $progassignment->completionevent;
                         $instance = $progassignment->completioninstance;
 
@@ -310,12 +312,10 @@ abstract class prog_message {
                             $ccriteria = get_string('completioncriterianotdefined', 'totara_program');
                             if ($time != COMPLETION_TIME_NOT_SET) {
                                 $formatedtime = trim(userdate($time, get_string('strftimedatefulllong', 'langconfig'), core_date::get_user_timezone($recipient), false));
-                                $ccriteria = prog_assignment_category::build_completion_string($formatedtime, $event, $instance);
+                                $ccriteria = prog_assignment_category::build_completion_string($formatedtime);
                             }
                         } else {
-                            $parts = \totara_program\utils::duration_explode($time);
-                            $formatedtime = $parts->num . ' ' . $parts->period;
-                            $ccriteria = prog_assignment_category::build_completion_string($formatedtime, $event, $instance);
+                            $ccriteria = prog_assignment_category::build_relative_completion_string($offsetamount, $offsetunit, $event, $instance);
                         }
 
                     } else {
