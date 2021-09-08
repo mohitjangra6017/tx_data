@@ -5129,4 +5129,92 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $progress2 = facetoface_get_completion_progress($cm, $students[1]->id);
         self::assertEqualsCanonicalizing(['Partially attended', 'Event has been over for 1 day(s)'], $progress2);
     }
+
+
+    public function test_facetoface_waitlist_randomly_confirm_users(): void {
+        self::setAdminUser();
+
+        // Setup
+        set_config("facetoface_allowwaitlisteveryone", 1);
+        $generator = self::getDataGenerator();
+
+        $course = $generator->create_course();
+        $facetofacedata = [
+            'name' => 'facetoface1',
+            'course' => $course->id,
+        ];
+        $facetoface = $this->facetoface_generator->create_instance($facetofacedata);
+
+        // Set up session.
+        $sessiondate = new stdClass();
+        $sessiondate->timestart = time() + DAYSECS;
+        $sessiondate->timefinish = time() + DAYSECS + 60;
+        $sessiondate->sessiontimezone = 'Pacific/Auckland';
+        $sessiondata = [
+            'facetoface' => $facetoface->id,
+            'sessiondates' => [$sessiondate],
+            'capacity' => 3,
+            'waitlisteveryone' => 1,
+        ];
+        $sessionid = $this->facetoface_generator->add_session($sessiondata);
+        $seminarevent = new seminar_event($sessionid);
+        $attendees_helper = new attendees_helper($seminarevent);
+
+        $users = [];
+        $signups = [];
+
+        $expected_booked = [];
+        $expected_waitlisted = [];
+
+        for ($i = 1; $i <= 5; $i++) {
+            $users[$i] = $generator->create_user();
+            $orig_waitlisted_user_ids[] = $users[$i]->id;
+            $generator->enrol_user($users[$i]->id, $course->id);
+            $signups[$i] = signup::create($users[$i]->id, $seminarevent);
+            signup_helper::signup($signups[$i]);
+        }
+
+        // All should now be waitlisted
+        $now_booked = $attendees_helper->get_attendees_with_codes([booked::get_code()]);
+        $now_waitlisted = $attendees_helper->get_attendees_with_codes([waitlisted::get_code()]);
+        $waitlisted_user_ids = array_keys($now_waitlisted);
+        self::assertEmpty($now_booked);
+        self::assertEqualsCanonicalizing($orig_waitlisted_user_ids, $waitlisted_user_ids);
+
+        // Randomly assign passing only 1
+        $in_the_draw = [array_shift($waitlisted_user_ids)];
+        $result = signup_helper::confirm_waitlist_randomly($seminarevent, $in_the_draw);
+        self::assertSame('success', $result['result'] ?? '');
+
+        $expected_booked = $in_the_draw;
+        $expected_waitlisted = $waitlisted_user_ids;
+        $now_booked = $attendees_helper->get_attendees_with_codes([booked::get_code()]);
+        $now_waitlisted = $attendees_helper->get_attendees_with_codes([waitlisted::get_code()]);
+        $booked_user_ids = array_keys($now_booked);
+        $waitlisted_user_ids = array_keys($now_waitlisted);
+        self::assertEqualsCanonicalizing($expected_booked, $booked_user_ids);
+        self::assertEqualsCanonicalizing($expected_waitlisted, $waitlisted_user_ids);
+
+        // Now randomly assign rest
+        $result = signup_helper::confirm_waitlist_randomly($seminarevent, $waitlisted_user_ids);
+        self::assertSame('success', $result['result'] ?? '');
+        $now_booked = $attendees_helper->get_attendees_with_codes([booked::get_code()]);
+        $now_waitlisted = $attendees_helper->get_attendees_with_codes([waitlisted::get_code()]);
+        self::assertCount(3, $now_booked);
+        $booked_user_ids = array_keys($now_booked);
+        $expected_waitlisted = array_diff($orig_waitlisted_user_ids, $booked_user_ids);
+        $waitlisted_user_ids = array_keys($now_waitlisted);
+        self::assertEqualsCanonicalizing($expected_waitlisted, $waitlisted_user_ids);
+
+        // Now try the lottery again after fully booked
+        $expected_booked = $booked_user_ids;
+        $result = signup_helper::confirm_waitlist_randomly($seminarevent, $waitlisted_user_ids);
+        self::assertSame('failure', $result['result'] ?? '');
+        $now_booked = $attendees_helper->get_attendees_with_codes([booked::get_code()]);
+        $now_waitlisted = $attendees_helper->get_attendees_with_codes([waitlisted::get_code()]);
+        $booked_user_ids = array_keys($now_booked);
+        $waitlisted_user_ids = array_keys($now_waitlisted);
+        self::assertEqualsCanonicalizing($expected_booked, $booked_user_ids);
+        self::assertEqualsCanonicalizing($expected_waitlisted, $waitlisted_user_ids);
+    }
 }

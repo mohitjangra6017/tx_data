@@ -69,6 +69,15 @@ switch($action) {
         echo json_encode($result);
         die();
         break;
+    case 'hascapacity':
+        if ($seminarevent->get_free_capacity() > 0) {
+            $result['result'] = 'hascapacity';
+        } else {
+            $result['result'] = 'nocapacity';
+        }
+        echo json_encode($result);
+        die();
+        break;
 }
 
 $attendees = $helper->get_attendees_with_codes(

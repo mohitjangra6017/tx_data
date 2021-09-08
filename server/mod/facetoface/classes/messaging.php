@@ -339,7 +339,7 @@ final class messaging {
                 'addattendeesviaidlist', 'submitcsvtext', 'bulkaddattendeesresults', 'addattendeesviafileupload',
                 'bulkaddattendeesresults', 'wait-list', 'cancellations', 'approvalreqd', 'takeattendance',
                 'updateattendeessuccessful', 'updateattendeesunsuccessful', 'waitlistselectoneormoreusers',
-                'confirmlotteryheader', 'confirmlotterybody', 'updatewaitlist', 'close'
+                'confirmlotteryheader', 'confirmlotterybody', 'error:lotterynocapacity', 'updatewaitlist', 'close'
             ),
             'facetoface'
         );

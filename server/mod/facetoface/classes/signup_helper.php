@@ -520,7 +520,15 @@ final class signup_helper {
         $signupcount = $helper->count_attendees();
         $numtoconfirm = $seminarevent->get_capacity() - $signupcount;
 
-        if (count($userids) <= $seminarevent->get_capacity()) {
+        if ($numtoconfirm < 1) {
+            $errormsgs = [get_string('error:lotterynocapacity', 'mod_facetoface')];
+            return [
+                'result' => 'failure',
+                'content' => \html_writer::alist($errormsgs),
+            ];
+        }
+
+        if (count($userids) <= $numtoconfirm) {
             $winners = $userids;
         } else {
             $winners = array_rand(array_flip($userids), $numtoconfirm);

@@ -409,9 +409,14 @@ M.totara_f2f_attendees = M.totara_f2f_attendees || {
 
         function update_waitlist(action, updateusers, checked) {
             var nextaction = null;
-            if (checked == false && action == 'confirmattendees') {
+            if (checked == false) {
+              if (action == 'confirmattendees') {
                 nextaction = action;
                 action = 'checkcapacity';
+              } else if (action == 'playlottery') {
+                nextaction = action;
+                action = 'hascapacity';
+              }
             }
 
             function do_post() {
@@ -433,6 +438,11 @@ M.totara_f2f_attendees = M.totara_f2f_attendees || {
                             }
                             catch (e) {
                                 alert("JSON Parse failed!");
+                            }
+
+                            if (nextaction == 'playlottery') {
+                                playLottery.call(this, parsedResponse.result == 'hascapacity');
+                                return;
                             }
 
                             if (parsedResponse.result == 'overcapacity') {
@@ -478,24 +488,30 @@ M.totara_f2f_attendees = M.totara_f2f_attendees || {
                 });
             }
 
-            if (action == 'playlottery') {
+            function playLottery(hasCapacity) {
+                var bodyKey = 'confirmlotterybody';
+                if (!hasCapacity) {
+                  bodyKey = 'error:lotterynocapacity';
+                }
                 Y.use('panel', function (Y) {
                     var config = {
                         headerContent: M.util.get_string('confirmlotteryheader', 'facetoface'),
-                        bodyContent: M.util.get_string('confirmlotterybody','facetoface'),
+                        bodyContent: M.util.get_string(bodyKey,'facetoface'),
                         draggable: true,
                         modal: true,
                     };
                     var dialogue = new M.core.dialogue(config);
-                    dialogue.addButton({
-                        label: M.util.get_string('ok', 'moodle'),
-                        section: Y.WidgetStdMod.FOOTER,
-                        action: function() {
-                            do_post.call(this);
-                            dialogue.destroy(true);
-                            return false;
-                        }
-                    });
+                    if (hasCapacity) {
+                        dialogue.addButton({
+                            label: M.util.get_string('ok', 'moodle'),
+                            section: Y.WidgetStdMod.FOOTER,
+                            action: function () {
+                                update_waitlist(nextaction, updateusers, true);
+                                dialogue.destroy(true);
+                                return false;
+                            }
+                        });
+                    }
                     dialogue.addButton({
                         label: M.util.get_string('cancel', 'moodle'),
                         section: Y.WidgetStdMod.FOOTER,
@@ -507,9 +523,9 @@ M.totara_f2f_attendees = M.totara_f2f_attendees || {
 
                     dialogue.show();
                 });
-            } else {
-                do_post.call(this);
             }
+
+            do_post.call(this);
         }
 
         $(document).on('focus', '#removeselect', function() {
