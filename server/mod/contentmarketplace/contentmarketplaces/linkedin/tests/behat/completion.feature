@@ -48,6 +48,9 @@ Feature: Content marketplace activity completion feature
     Then I should see "Course A"
     And I am on "Course A" course homepage
     And I should not see "I have completed this activity"
+    And I should see "Enrol"
+    And I click on "Enrol to course Course A" "button"
+    And I should not see "I have completed this activity"
     And I click on "Administration" "button"
     And I click on "Edit settings" "link"
     And I follow "Activity completion"
@@ -56,9 +59,12 @@ Feature: Content marketplace activity completion feature
     Then I should see "I have completed this activity"
     And I should see "Not started"
     And I should not see "Completed"
-    When I click on "I have completed this activity" "button"
+    And the "I have completed this activity" tui toggle switch should be "off"
+    When I click on the "I have completed this activity" tui toggle button
     Then I should see "Completed"
     And I should not see "Not started"
+    When I reload the page
+    Then the "I have completed this activity" tui toggle switch should be "on"
 
   Scenario: Should not see the completion when not enrolled
     Given I am on a totara site

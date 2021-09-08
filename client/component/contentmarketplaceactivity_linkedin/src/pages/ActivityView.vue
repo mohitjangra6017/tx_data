@@ -43,10 +43,22 @@
               {{ displayBannerInfo }}
             </template>
             <template v-slot:card-action>
+              <!--
+                Using title for button, to allow Selenium finding this button.
+                This is happening for admin user, because admin user can see more
+                than one enrol button.
+              -->
               <Button
                 v-if="displayEnrolButton"
                 :styleclass="{ primary: 'true' }"
-                :text="$str('enrol', 'mod_contentmarketplace')"
+                :title="
+                  $str(
+                    'enrol_to_course',
+                    'mod_contentmarketplace',
+                    activity.course.name
+                  )
+                "
+                :text="$str('enrol', 'core_enrol')"
                 @click="requestSelfEnrol"
               />
             </template>
@@ -285,7 +297,10 @@ export default {
 
         this.webLaunchUrl = learning_object.web_launch_url;
         this.ssoLaunchUrl = learning_object.sso_launch_url;
-        this.setCompletion = module.completion_condition || false;
+
+        // When the field completion_status is null, meaning that user is not yet started,
+        // hence setCompletion should be False.
+        this.setCompletion = module.completion_status || false;
         this.openContents = getAllNodeKeys(contentsTree);
 
         const { interactor } = module;
@@ -431,7 +446,7 @@ export default {
       "activity_status_in_progress",
       "activity_status_not_started",
       "course_details",
-      "enrol",
+      "enrol_to_course",
       "enrol_success_message",
       "internal_error",
       "launch_in_new_window",
@@ -442,6 +457,9 @@ export default {
       "viewing_as_enrollable_admin_self_enrol_disabled",
       "viewing_as_enrollable_guest",
       "viewing_as_guest"
+    ],
+    "core_enrol": [
+      "enrol"
     ]
   }
 </lang-strings>
