@@ -1,6 +1,10 @@
 This files describes API changes in Totara Hierarchies,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* Defaults added for 'evidencecount' and 'proficiencyexpected' in comp table.
+
 === 14.0 ===
 
 * totara_hierarchy\entities\hierarchy_framework has been moved to totara_hierarchy\entity\hierarchy_framework

@@ -229,10 +229,6 @@ abstract class totara_sync_source_comp extends totara_sync_source {
         $table->add_field('aggregationmethod', XMLDB_TYPE_INTEGER, '10');
         $table->add_field('assignavailability', XMLDB_TYPE_TEXT, 'medium');
 
-        // These values are set via hidden fields when creating or editing competencies. They are essentially fixed values.
-        $table->add_field('proficiencyexpected', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 1);
-        $table->add_field('evidencecount', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
-
         if (!empty($this->config->import_deleted)) {
             $table->add_field('deleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
         }
