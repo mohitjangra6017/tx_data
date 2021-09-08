@@ -1242,7 +1242,7 @@ $string['printversionid'] = 'Print version: without name';
 $string['printversionname'] = 'Print version: with name';
 $string['really'] = 'Do you really want to delete all results for this seminar?';
 $string['recipients'] = 'Recipients';
-$string['recipients_allbooked'] = 'All events (past, present and future)';
+$string['recipients_allbooked'] = 'All events (present and future)';
 $string['recipients_attendedonly'] = 'Attended only';
 $string['recipients_noshowsonly'] = 'No shows only';
 $string['registeredon'] = 'Registered On';
@@ -2303,7 +2303,7 @@ Event times and virtual meeting details:
 [session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
 Duration: [session:duration]
 Room: [session:room:name]
-[seminareventdetailslink] 
+[seminareventdetailslink]
 [/sessions]';
 $string['setting:defaultwaitlistautocleansubjectdefault'] = 'Waitlisted signup expired';
 $string['setting:defaultwaitlistautocleanmessagedefault'] = 'This is to advise you that your waitlisted signup for the following course has been cancelled due to the event starting:
