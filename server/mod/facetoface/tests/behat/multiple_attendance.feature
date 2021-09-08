@@ -270,10 +270,11 @@ Feature: Take attendance for a seminar with multiple sessions
     And I log in as "user1"
     And I am on "course1" course homepage
     And I click on "More details" "link"
-    Then I should see "Not completed"
+    Then "Activity completion" row "5" column of "criteriastatus" table should contain "No"
     When I run the "\core\task\completion_regular_task" task
     And I follow "course1"
     And I click on "More details" "link"
+    And "Activity completion" row "5" column of "criteriastatus" table should contain "Yes"
     And I should see date "-10 day" formatted "%d %B %Y"
 
   Scenario: Complete older, complete newer, see older completion date, reset activity completion, see newer completion date
@@ -336,10 +337,11 @@ Feature: Take attendance for a seminar with multiple sessions
     And I log in as "user1"
     And I am on "course1" course homepage
     And I click on "More details" "link"
-    Then I should see "Not completed"
+    Then "Activity completion" row "5" column of "criteriastatus" table should contain "No"
     When I run the "\core\task\completion_regular_task" task
     And I follow "course1"
     And I click on "More details" "link"
+    And "Activity completion" row "5" column of "criteriastatus" table should contain "Yes"
     And I should see date "-10 day" formatted "%d %B %Y"
 
   Scenario: Take attendance with minimum permissions
