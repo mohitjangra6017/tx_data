@@ -53,6 +53,18 @@ class filter_handler extends core_handler {
         return self::$instance;
     }
 
+    /**
+     * Reset the singleton's internal cache, so that the values will be loaded again next time they are accessed.
+     *
+     * This function should be used after data relating to filters has changed, including during testing.
+     */
+    public function reset_cache() {
+        $this->activefilters = null;
+        $this->fulltextsearchfilter = null;
+
+        parent::reset_cache();
+    }
+
     private function __construct() {
     }
 

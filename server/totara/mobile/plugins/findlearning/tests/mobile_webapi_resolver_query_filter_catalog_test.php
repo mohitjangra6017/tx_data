@@ -34,6 +34,11 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
 
     use webapi_phpunit_helper;
 
+    protected function tearDown(): void {
+        // Make sure to clear the filter caches when we're done.
+        \mobile_findlearning\filter_handler::phpunit_reset();
+    }
+
     /**
      * Create some users and various learning items to be fetched in the catalog.
      * @return []
