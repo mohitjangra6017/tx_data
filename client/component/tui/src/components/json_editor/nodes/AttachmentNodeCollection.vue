@@ -92,7 +92,7 @@ export default {
   border-top: var(--border-width-thin) solid var(--color-neutral-5);
   border-bottom: var(--border-width-thin) solid var(--color-neutral-5);
 
-  > .tui-attachmentNode {
+  > .tui-fileCard {
     // Doing the margin for the single attachment.
     margin-top: var(--gap-1);
     margin-right: var(--gap-1);

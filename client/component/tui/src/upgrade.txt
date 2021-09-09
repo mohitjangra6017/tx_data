@@ -34,6 +34,8 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Improved select all label usage in SelectVisibleRowsCell.vue to be clickable when displayed
   * Template and SCSS changes
+* Converted AttachmentNode to a thin wrapper over the new FileCard component
+  * Template changes
 
 === 14.0 ===
 
