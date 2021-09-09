@@ -172,8 +172,23 @@ class course_module implements type_resolver {
 
         $modvaluefields = ['description', 'descriptionformat'];
         if (in_array($field, $modvaluefields)) {
-            // Note: The get_coursemodule_info functions do too much pre-formatting, thisi s the easiest way to handle it.
-            $modvalues = $DB->get_record($cminfo->modname, ['id' => $cminfo->instance], 'name, intro, introformat');
+            // Note: The get_coursemodule_info functions do too much pre-formatting, this is the easiest way to handle it.
+            //       However, first we would need to make sure that if course module supports the intro or not in order
+            //       to include the appropriate fields.
+            $fetch_fields = ["name"];
+            $support_intro = plugin_supports("mod", $cminfo->modname, FEATURE_MOD_INTRO, false);
+
+            if ($support_intro) {
+                $fetch_fields[] = "intro";
+                $fetch_fields[] = "introformat";
+            }
+
+            $modvalues = $DB->get_record($cminfo->modname, ['id' => $cminfo->instance], implode(", ", $fetch_fields));
+            if (!$support_intro) {
+                // Default intro to null and FORMAT HTML if intro is not supported by course module.
+                $modvalues->intro = null;
+                $modvalues->introformat = FORMAT_HTML;
+            }
 
             if ($field == 'description') {
                 $info->description = $modvalues->intro;

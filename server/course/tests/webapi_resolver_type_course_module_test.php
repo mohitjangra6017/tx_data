@@ -529,4 +529,25 @@ class totara_core_webapi_resolver_type_course_module_testcase extends advanced_t
         $value = $this->resolve('gradepercentage', $mod);
         $this->assertEquals(0.0, $value);
     }
+
+    /**
+     * This is to check that the content marketplace is being fetched correctly.
+     * @return void
+     */
+    public function test_resolve_description_of_module_does_not_support_intro(): void {
+        global $USER;
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $content_marketplace = $generator->create_module("contentmarketplace", ["course" => $course->id]);
+        self::setAdminUser();
+
+        // Start resolving description of this content marketplace module.
+        $mod_info = get_fast_modinfo($course->id, $USER->id);
+        $cm_info = $mod_info->get_cm($content_marketplace->cmid);
+
+        self::assertNull(
+            $this->resolve("description", $cm_info, ["format" => format::FORMAT_HTML])
+        );
+    }
 }
