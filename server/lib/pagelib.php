@@ -1855,6 +1855,10 @@ class moodle_page {
         if (defined('BEHAT_SITE_RUNNING')) {
             $this->add_body_class('behat-site');
         }
+
+        // Trigger the hook for plugins to inject their own classes.
+        $hook = new \core\hook\page_initialize_body_classes($this);
+        $hook->execute();
     }
 
     /**

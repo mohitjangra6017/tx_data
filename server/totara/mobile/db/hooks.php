@@ -49,5 +49,9 @@ $watchers = [
     [
         'hookname' => '\core\hook\renderer_standard_footer_html_complete',
         'callback' => '\totara_mobile\watcher\renderer_watcher::add_mobile_banner'
+    ],
+    [
+        'hookname' => '\core\hook\page_initialize_body_classes',
+        'callback' => '\totara_mobile\watcher\page_initialization_watcher::inject_mobile_classes'
     ]
 ];
