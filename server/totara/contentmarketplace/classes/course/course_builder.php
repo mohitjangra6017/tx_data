@@ -327,7 +327,6 @@ class course_builder {
         $record->format = $this->course_format;
         $record->containertype = course::get_type();
         $record->enablecompletion = $this->enable_course_completion;
-        $record->lang = $this->learning_object->get_language();
 
         if ('singleactivity' === $this->course_format) {
             $record->activitytype = 'contentmarketplace';
