@@ -73,7 +73,6 @@
             class="tui-linkedinActivityAdminMenu__tree"
             label-type="link"
             :tree-data="treeData"
-            no-padding
             @input="$emit('input', $event)"
           />
         </ModalContent>
@@ -163,7 +162,7 @@ export default {
   }
 
   &__tree {
-    @include tui-wordbreak--hard();
+    hyphens: none;
 
     &-topBranch {
       padding-bottom: var(--gap-2);
