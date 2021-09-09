@@ -227,4 +227,90 @@ class contentmarketplace_linkedin_provider_learning_objects_testcase extends tes
         self::assertNotEquals($course_1->id, $last->id);
         self::assertEquals($course_2->id, $last->id);
     }
+
+    /**
+     * @return void
+     */
+    public function test_search_for_partial_keyword_case_one(): void {
+        $generator = generator::instance();
+        $unique_keyword = uniqid();
+
+        $learning_item_1 = $generator->create_learning_object(
+            "urn:li:lyndaCourse:252",
+            [
+                "title" => "Totara course: How to setup engage",
+                "description" => "A unique keyword: {$unique_keyword}",
+                "last_updated_at" => time() + DAYSECS
+            ]
+        );
+
+        $learning_item_2 = $generator->create_learning_object(
+            "urn:li:lyndaCourse:253",
+            [
+                "title" => "Random course: How to delete Moodle from this world?",
+                "description" => "Bad code that can enter this world with unique code: {$unique_keyword}",
+                "last_updated_at" => time() + HOURSECS
+            ]
+        );
+
+        $db = builder::get_db();
+        self::assertEquals(2, $db->count_records(learning_object::TABLE));
+
+        $provider = new learning_objects();
+        $provider->add_filters(["search" => "totara engage"]);
+
+        $first_result = $provider->fetch()->get();
+        self::assertEquals(1, $first_result->count());
+        $first_item_first_result = $first_result->first();
+
+        self::assertInstanceOf(model::class, $first_item_first_result);
+        self::assertNotEquals($learning_item_2->urn, $first_item_first_result->urn);
+        self::assertEquals($learning_item_1->urn, $first_item_first_result->urn);
+
+        $provider->add_filters(["search" => $unique_keyword]);
+        $second_result = $provider->fetch()->get();
+
+        self::assertNotEquals(1, $second_result->count());
+        self::assertEquals(2, $second_result->count());
+
+        $first_item_second_result = $second_result->first();
+        $second_item_second_result = $second_result->last();
+
+        self::assertInstanceOf(model::class, $first_item_second_result);
+        self::assertInstanceOf(model::class, $second_item_second_result);
+
+        self::assertEquals($learning_item_1->urn, $first_item_second_result->urn);
+        self::assertEquals($learning_item_2->urn, $second_item_second_result->urn);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_search_for_partial_keyword_case_two(): void {
+        $generator = generator::instance();
+        $learning_item_one = $generator->create_learning_object(
+            "urn:li:lyndaCourse:1",
+            ["title" => "Totara: how to use engage"]
+        );
+
+        $learning_item_two = $generator->create_learning_object(
+            "urn:li:lyndaCourse:2",
+            ["title" => "Totara: how to use course"]
+        );
+
+        $db = builder::get_db();
+        self::assertEquals(2, $db->count_records(learning_object::TABLE));
+
+        $provider = new learning_objects();
+        $provider->add_filters(["search" => "totara engage"]);
+
+        $result =$provider->fetch()->get();
+        self::assertEquals(1, $result->count());
+
+        $first_item = $result->first();
+        self::assertInstanceOf(model::class, $first_item);
+
+        self::assertNotEquals($learning_item_two->urn, $first_item->urn);
+        self::assertEquals($learning_item_one->urn, $first_item->urn);
+    }
 }

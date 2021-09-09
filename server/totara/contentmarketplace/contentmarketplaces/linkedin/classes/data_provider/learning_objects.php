@@ -72,24 +72,25 @@ class learning_objects extends paginated_provider {
     /**
      * @param learning_object_repository $repository
      * @param string $text
+     *
+     * @return void
      */
     protected function filter_query_by_search(repository $repository, string $text): void {
+        global $CFG;
         $text = trim($text);
+
         if ($text === '') {
             return;
         }
 
-        $repository->where(function (builder $builder) use ($text) {
-            $builder
-                ->where('title', 'ILIKE', $text)
-                ->or_where('description', 'ILIKE', $text)
-                ->or_where('short_description', 'ILIKE', $text);
-        });
+        $repository->filter_text_like($text);
     }
 
     /**
      * @param repository $repository
      * @param int[] $subject_ids
+     *
+     * @return void
      */
     protected function filter_query_by_subjects(repository $repository, array $subject_ids): void {
         if (empty($subject_ids)) {
@@ -104,6 +105,8 @@ class learning_objects extends paginated_provider {
     /**
      * @param learning_object_repository $repository
      * @param string[] $asset_types
+     *
+     * @return void
      */
     protected function filter_query_by_asset_type(repository $repository, array $asset_types): void {
         $repository->where(function (builder $builder) use ($asset_types) {
@@ -117,6 +120,8 @@ class learning_objects extends paginated_provider {
     /**
      * @param learning_object_repository $repository
      * @param string[] $ranges Array of JSON objects with keys 'min' and 'max', e.g: ['{"min": 60, "max": 120}', '{"min": 3600}']
+     *
+     * @return void
      */
     protected function filter_query_by_time_to_complete(repository $repository, array $ranges): void {
         $repository->where(function (builder $builder) use ($ranges) {
@@ -141,6 +146,8 @@ class learning_objects extends paginated_provider {
     /**
      * @param learning_object_repository $repository
      * @param bool $is_retired
+     *
+     * @return void
      */
     protected function filter_query_by_is_retired(repository $repository, bool $is_retired): void {
         $repository->where('retired_at', $is_retired ? '!=' : '=', null);
@@ -158,6 +165,8 @@ class learning_objects extends paginated_provider {
     /**
      * @param learning_object_repository $repository
      * @param string $language
+     *
+     * @return void
      */
     protected function filter_query_by_language(repository $repository, string $language): void {
         $repository->where('locale_language', $language);
@@ -166,6 +175,8 @@ class learning_objects extends paginated_provider {
     /**
      * @param learning_object_repository $repository
      * @param int[] $ids
+     *
+     * @return void
      */
     protected function filter_query_by_ids(repository $repository, array $ids): void {
         if (!empty($ids)) {
@@ -175,6 +186,8 @@ class learning_objects extends paginated_provider {
 
     /**
      * @param learning_object_repository $repository
+     *
+     * @return void
      */
     protected function sort_query_by_alphabetical(repository $repository): void {
         $repository->order_by('title');
@@ -182,6 +195,8 @@ class learning_objects extends paginated_provider {
 
     /**
      * @param learning_object_repository $repository
+     *
+     * @return void
      */
     protected function sort_query_by_latest(repository $repository): void {
         $repository->order_by('last_updated_at', 'DESC');

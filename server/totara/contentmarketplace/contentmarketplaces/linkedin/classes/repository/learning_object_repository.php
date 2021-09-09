@@ -25,6 +25,7 @@ namespace contentmarketplace_linkedin\repository;
 
 use contentmarketplace_linkedin\entity\learning_object;
 use core\orm\collection;
+use core\orm\entity\filter\keywords;
 use core\orm\entity\repository;
 use core\orm\lazy_collection;
 
@@ -38,6 +39,26 @@ use core\orm\lazy_collection;
  * @package contentmarketplace_linkedin\entity
  */
 class learning_object_repository extends repository {
+    /**
+     * @return array
+     */
+    protected function get_default_filters(): array {
+        return [
+            "text" => new keywords(["title", "description", "short_description"])
+        ];
+    }
+
+    /**
+     * Apply search filter keywords for the text.
+     *
+     * @param string $text
+     * @return learning_object_repository
+     */
+    public function filter_text_like(string $text): learning_object_repository {
+        $this->set_filter("text", $text);
+        return $this;
+    }
+
     /**
      * @param string $urn
      * @return learning_object|null
