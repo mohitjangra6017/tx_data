@@ -34,3 +34,17 @@ Feature: Configure linkedin settings
     And I click on "Disable" "link" in the "Guest access" "table_row"
     When I navigate to "Plugins > Content Marketplace > LinkedIn Learning settings" in site administration
     Then I should not see "Guest access"
+
+  Scenario: System user assigned on site manager can manage plugin
+    Given I am on a totara site
+    And the following "users" exist:
+      | username | firstname | lastname | email             |
+      | user1    | user      | one      | user1@example.com |
+    And the following "system role assigns" exist:
+      | user     | role    |
+      | user1    | manager |
+    And I log in as "user1"
+    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I follow "Enable LinkedIn Learning"
+    When I click on "Enable" "button"
+    Then I should see "LinkedIn Learning settings"

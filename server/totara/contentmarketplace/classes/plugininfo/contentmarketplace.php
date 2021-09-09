@@ -186,7 +186,7 @@ class contentmarketplace extends base {
             $settings_page = new admin_settingpage(
                 $this->get_settings_section_name(),
                 $display_name,
-                'moodle/site:config',
+                ['moodle/site:config', 'totara/contentmarketplace:config'],
                 !$this->is_enabled(),
             );
 
