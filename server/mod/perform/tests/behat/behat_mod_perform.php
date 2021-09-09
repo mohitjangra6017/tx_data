@@ -105,6 +105,8 @@ class behat_mod_perform extends behat_base {
     public const FORM_BUILDER_RAW_TITLE_NAME = 'rawTitle';
     public const TUI_NOTEPAD_LINES = '.tui-notepadLines';
     public const TUI_PARTICIPANT_CONTENT_PRINT_PRINTED_TODO = '.tui-performElementParticipantHeader__printedTodo';
+    public const ADMIN_CUSTOM_ELEMENT_SUMMARY_SECTION_TITLE = '.tui-performAdminCustomElementSummary__section-title';
+    public const ADMIN_CUSTOM_ELEMENT_SUMMARY_SECTION_VALUE = '.tui-performAdminCustomElementSummary__section-value';
 
     /**
      * Navigate to the specified page and wait for JS.
@@ -988,13 +990,40 @@ class behat_mod_perform extends behat_base {
     ): void {
         $question = $this->find_admin_question_from_text($element_title);
 
+        $this->i_should_see_in_element($expected_text, $locator, $selector, $element_title, $question);
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the "([^"]*)" "([^"]*)" of perform element participant form for "([^"]*)"$/
+     * @param string $expected_text
+     * @param string $selector
+     * @param string $locator
+     * @param string $element_title
+     */
+    public function i_should_see_in_the_of_perform_element_participation_form_for(
+        string $expected_text,
+        string $locator,
+        string $selector,
+        string $element_title
+    ): void {
+        $question = $this->find_question_from_text($element_title);
+
+        $this->i_should_see_in_element($expected_text, $locator, $selector, $element_title, $question);
+    }
+
+    private function i_should_see_in_element(
+        string $expected_text,
+        string $locator,
+        string $selector,
+        string $element_title,
+        NodeElement $question
+    ): void {
         /** @var behat_general $behat_general */
         $behat_general = behat_context_helper::get('behat_general');
 
         [$selector, $locator] = $behat_general->transform_selector($selector, $locator);
 
         $element = $question->find($selector, $locator);
-
 
         if ($element === null) {
             $this->fail(sprintf("\"%s\" element \"%s\" not found in perform element: \"%s\"", $selector, $locator, $element_title));
@@ -1889,6 +1918,54 @@ class behat_mod_perform extends behat_base {
         $this->navigate_to_page($url);
     }
 
+
+    /**
+     * @When /^I manually activate the perform activity "([^"]*)"$/
+     * @param string $activity_name
+     */
+    public function i_manually_activate_the_perform_activity(string $activity_name): void {
+        $activity = $this->get_activity_by_name($activity_name);
+        $activity->status = \mod_perform\state\activity\active::get_code();
+        $activity->save();
+    }
+
+    /**
+     * @Then /^the perform element summary should contain:$/
+     */
+    public function the_perform_element_summary_should_contain(TableNode $table) {
+        foreach ($table->getRows() as $i => $row) {
+            $this->i_should_see_in_perform_element_summary_item($row[0], $row[1], $i + 1);
+        }
+    }
+
+    private function i_should_see_in_perform_element_summary_item(
+        $expected_title,
+        $expected_value,
+        $in_position
+    ): void {
+        $parts = [
+            [
+                'name' => 'title',
+                'locator' => self::ADMIN_CUSTOM_ELEMENT_SUMMARY_SECTION_TITLE,
+                'expected' => $expected_title
+            ],
+            [
+                'name' => 'value',
+                'locator' => self::ADMIN_CUSTOM_ELEMENT_SUMMARY_SECTION_VALUE,
+                'expected' => $expected_value
+            ],
+        ];
+
+        foreach ($parts as $part) {
+            $part_element = $this->find_all('css', $part['locator'])[$in_position - 1];
+            $actual_text = trim($part_element->getText());
+
+            if ($actual_text !== $part['expected']) {
+                $this->fail("Summary part {$part['name']} {$in_position} did not contain text \"{$part['expected']}\", instead found \"{$actual_text}\"");
+            }
+        }
+    }
+
     /**
      * Convenience method to fail from an ExpectationException.
      *
@@ -1898,7 +1975,8 @@ class behat_mod_perform extends behat_base {
         throw new ExpectationException($error, $this->getSession());
     }
 
-    private function get_activity_by_name(string $activity_name): entity {
+    private function get_activity_by_name(string $activity_name): activity {
+        /** @var activity $activity */
         $activity = activity::repository()
             ->where('name', $activity_name)
             ->one();

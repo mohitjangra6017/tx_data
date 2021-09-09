@@ -29,6 +29,9 @@ export const isEmpty = val =>
   val === undefined ||
   (typeof val === 'number' && isNaN(val)) ||
   (typeof val === 'string' && val.trim().length === 0) ||
+  (typeof val === 'object' &&
+    typeof val.__isEmpty === 'function' &&
+    val.__isEmpty()) ||
   (Array.isArray(val) && val.length === 0);
 
 // built-in validations

@@ -25,7 +25,9 @@ namespace performelement_numeric_rating_scale;
 
 use coding_exception;
 use core\collection;
+use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\element_weka_helper;
 use mod_perform\models\activity\respondable_element_plugin;
 
 class numeric_rating_scale extends respondable_element_plugin {
@@ -86,6 +88,17 @@ class numeric_rating_scale extends respondable_element_plugin {
         if (!is_null($answer_value) && ($answer_value < $low || $answer_value > $high)) {
             $errors->append(new answer_invalid_error());
         }
+    }
+
+    /**
+     * @inheridDoc
+     */
+    public function process_data(element_entity $element): ?string {
+        return element_weka_helper::add_weka_html_to_data(
+            $element,
+            'descriptionWekaDoc',
+            'descriptionHtml'
+        );
     }
 
     /**

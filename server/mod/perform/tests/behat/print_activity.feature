@@ -35,16 +35,17 @@ Feature: Print view of a single-section user activity
       | track_description | assignment_type | assignment_name |
       | track 1           | cohort          | aud1            |
     And the following "section elements" exist in "mod_perform" plugin:
-      | section_name   | element_name         | title                         | data                                                                                                                                                                          |
-      | Single section | short_text           | Short text question           | {}                                                                                                                                                                            |
-      | Single section | long_text            | Long text question            | {}                                                                                                                                                                            |
-      | Single section | date_picker          | Date picker question          | {}                                                                                                                                                                            |
-      | Single section | multi_choice_single  | Multi choice single question  | {"options":[{"name":"option_1","value":"A"},{"name":"option_2","value":"B"}]}                                                                                                 |
-      | Single section | multi_choice_multi   | Multi choice multi question   | {"max":"2","min":"0","options":[{"name":"option_1","value":"A"},{"name":"option_2","value":"B"},{"name":"option_3","value":"C"}]}                                             |
-      | Single section | custom_rating_scale  | Custom rating scale question  | {"options":[{"name":"option_1","value":{"text":"A","score":"1"}},{"name":"option_2","value":{"text":"B","score":"5"}},{"name":"option_3","value":{"text":"C","score":"10"}}]} |
-      | Single section | numeric_rating_scale | Numeric rating scale question | {"defaultValue":"3","highValue":"5","lowValue":"1"}                                                                                                                           |
+      | section_name   | element_name         | title                                | data                                                                                                                                                                                                                    |
+      | Single section | short_text           | Short text question                  | {}                                                                                                                                                                                                                      |
+      | Single section | long_text            | Long text question                   | {}                                                                                                                                                                                                                      |
+      | Single section | date_picker          | Date picker question                 | {}                                                                                                                                                                                                                      |
+      | Single section | multi_choice_single  | Multi choice single question         | {"options":[{"name":"option_1","value":"A"},{"name":"option_2","value":"B"}]}                                                                                                                                           |
+      | Single section | multi_choice_multi   | Multi choice multi question          | {"max":"2","min":"0","options":[{"name":"option_1","value":"A"},{"name":"option_2","value":"B"},{"name":"option_3","value":"C"}]}                                                                                       |
+      | Single section | custom_rating_scale  | Custom rating scale question         | {"options":[{"name":"option_1","value":{"text":"A","score":"1"}},{"name":"option_2","value":{"text":"B","score":"5"}},{"name":"option_3","value":{"text":"C","score":"10"}}]}                                           |
+      | Single section | numeric_rating_scale | Numeric rating scale question no description  | {"defaultValue":"3","highValue":"5","lowValue":"1","descriptionEnabled":false,"descriptionWekaDoc":{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Unused description"}]}]}}             |
+      | Single section | numeric_rating_scale | Numeric rating scale question has description | {"defaultValue":"3","highValue":"5","lowValue":"1","descriptionEnabled":true,"descriptionWekaDoc":{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Choose the number you like best"}]}]}} |
 
-    Given the following "section relationships" exist in "mod_perform" plugin:
+    And the following "section relationships" exist in "mod_perform" plugin:
       | section_name   | relationship | can_view | can_answer |
       | Single section | subject      | yes      | yes        |
       | Single section | manager      | no       | yes        |
@@ -78,7 +79,8 @@ Feature: Print view of a single-section user activity
     And I should see perform "multi choice single" question "Multi choice single question" is unanswered in print view
     And I should see perform "multi choice multi" question "Multi choice multi question" is unanswered in print view
     And I should see perform "custom rating scale" question "Custom rating scale question" is unanswered in print view
-    And I should see perform "numeric rating scale" question "Numeric rating scale question" is unanswered in print view
+    And I should see perform "numeric rating scale" question "Numeric rating scale question no description" is unanswered in print view
+    And I should see perform "numeric rating scale" question "Numeric rating scale question has description" is unanswered in print view
     And I should see "Manager response"
     And I should see "John One"
     And I should see "No response submitted"
@@ -94,7 +96,8 @@ Feature: Print view of a single-section user activity
     And I answer "multi choice single" question "Multi choice single question" with "B"
     And I answer "multi choice multi" question "Multi choice multi question" with "C"
     And I answer "custom rating scale" question "Custom rating scale question" with "A (score: 1)"
-    And I answer "numeric rating scale" question "Numeric rating scale question" with "5"
+    And I answer "numeric rating scale" question "Numeric rating scale question has description" with "5"
+    And I answer "numeric rating scale" question "Numeric rating scale question no description" with "5"
 
     When I click on "Save as draft" "button"
     Then I should see "Draft saved" in the tui success notification toast
@@ -121,7 +124,12 @@ Feature: Print view of a single-section user activity
     And I should see perform "multi choice single" question "Multi choice single question" is answered with "B" in print view
     And I should see perform "multi choice multi" question "Multi choice multi question" is answered with "C" in print view
     And I should see perform "custom rating scale" question "Custom rating scale question" is answered with "A (score: 1)" in print view
-    And I should see perform "numeric rating scale" question "Numeric rating scale question" is answered with "5" in print view
+    And I should see perform "numeric rating scale" question "Numeric rating scale question no description" is answered with "5" in print view
+    And I should see perform "numeric rating scale" question "Numeric rating scale question has description" is answered with "5" in print view
+
+    # The enabled numeric scale descriptions should be visible on draft on the activity
+    And I should not see "Unused description"
+    And I should see "Choose the number you like best"
 
     When I navigate to the outstanding perform activities list page
     And I click on "Single section activity" "link"
@@ -156,6 +164,10 @@ Feature: Print view of a single-section user activity
     And ".tui-participantFormResponseDisplay" "css_element" should exist in the ".tui-participantContentPrint" "css_element"
     And ".tui-participantFormHtmlResponseDisplay" "css_element" should exist in the ".tui-participantContentPrint" "css_element"
 
+    # No numeric scale descriptions should be visible on the closed activity
+    And I should not see "Unused description"
+    And I should not see "Choose the number you like best"
+
     And I should see "David short text answer one"
     And I should see "David long text answer one"
     And I should see "1 January 2020"
@@ -182,7 +194,12 @@ Feature: Print view of a single-section user activity
     And I should see perform "multi choice single" question "Multi choice multi question" is unanswered in print view
     And I should see perform "multi choice multi" question "Multi choice single question" is unanswered in print view
     And I should see perform "custom rating scale" question "Custom rating scale question" is unanswered in print view
-    And I should see perform "numeric rating scale" question "Numeric rating scale question" is unanswered in print view
+    And I should see perform "numeric rating scale" question "Numeric rating scale question no description" is unanswered in print view
+    And I should see perform "numeric rating scale" question "Numeric rating scale question has description" is unanswered in print view
+
+    # No numeric scale descriptions should be visible on view-only activity
+    And I should not see "Unused description"
+    And I should see "Choose the number you like best"
 
     And I should not see "Appraiser Four"
 
@@ -206,6 +223,10 @@ Feature: Print view of a single-section user activity
     And I should see "C"
     # Custom rating
     And I should see "A (score: 1)"
+
+    # The enabled numeric scale descriptions should be visible on the draft activity
+    And I should not see "Unused description"
+    And I should not see "Choose the number you like best"
 
   Scenario: Print view for single section with user having multiple relationships
     # Add a response as the subject.

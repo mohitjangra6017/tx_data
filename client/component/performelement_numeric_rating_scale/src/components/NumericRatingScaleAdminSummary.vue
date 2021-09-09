@@ -48,31 +48,39 @@ export default {
   },
 
   data() {
-    return {
-      extraFields: [
-        {
-          title: this.$str(
-            'low_value_label',
-            'performelement_numeric_rating_scale'
-          ),
-          value: this.data.lowValue,
-        },
-        {
-          title: this.$str(
-            'high_value_label',
-            'performelement_numeric_rating_scale'
-          ),
-          value: this.data.highValue,
-        },
-        {
-          title: this.$str(
-            'default_number_label',
-            'performelement_numeric_rating_scale'
-          ),
-          value: this.data.defaultValue,
-        },
-      ],
-    };
+    const extraFields = [
+      {
+        title: this.$str(
+          'low_value_label',
+          'performelement_numeric_rating_scale'
+        ),
+        value: this.data.lowValue,
+      },
+      {
+        title: this.$str(
+          'high_value_label',
+          'performelement_numeric_rating_scale'
+        ),
+        value: this.data.highValue,
+      },
+      {
+        title: this.$str(
+          'default_number_label',
+          'performelement_numeric_rating_scale'
+        ),
+        value: this.data.defaultValue,
+      },
+    ];
+
+    if (this.data.descriptionEnabled) {
+      extraFields.push({
+        title: this.$str('element_description', 'mod_perform'),
+        value: this.data.descriptionHtml,
+        htmlContent: true,
+      });
+    }
+
+    return { extraFields };
   },
 };
 </script>
@@ -83,6 +91,9 @@ export default {
     "low_value_label",
     "high_value_label",
     "default_number_label"
+  ],
+  "mod_perform": [
+    "element_description"
   ]
 }
 </lang-strings>

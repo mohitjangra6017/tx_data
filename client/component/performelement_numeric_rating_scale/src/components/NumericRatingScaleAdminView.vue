@@ -20,13 +20,33 @@
   <div class="tui-numericRatingScaleAdminView">
     <Form input-width="full" :vertical="true">
       <FormRow>
-        <Range
-          :char-length="30"
-          :default-value="data.defaultValue"
-          :disabled="true"
-          :max="data.highValue"
-          :min="data.lowValue"
-          :show-labels="false"
+        <div class="tui-numericRatingScaleAdminView__input">
+          <Range
+            :char-length="30"
+            :default-value="data.defaultValue"
+            :disabled="true"
+            :max="data.highValue"
+            :min="data.lowValue"
+            :show-labels="false"
+            aria-hiden="true"
+          />
+          <div>
+            <InputNumber
+              name="response"
+              :min="Number(data.lowValue)"
+              :max="Number(data.highValue)"
+              char-length="5"
+            />
+          </div>
+        </div>
+      </FormRow>
+      <FormRow>
+        <ElementDescription
+          v-if="data.descriptionEnabled"
+          :aria-region-label="
+            $str('scale_description', 'performelement_numeric_rating_scale')
+          "
+          :content-html="data.descriptionHtml"
         />
       </FormRow>
     </Form>
@@ -34,19 +54,44 @@
 </template>
 
 <script>
+import ElementDescription from 'mod_perform/components/element/participant_form/ElementDescription';
 import Form from 'tui/components/form/Form';
 import FormRow from 'tui/components/form/FormRow';
 import Range from 'tui/components/form/Range';
+import InputNumber from 'tui/components/form/InputNumber';
 
 export default {
   components: {
+    ElementDescription,
     Form,
     FormRow,
+    InputNumber,
     Range,
   },
-
   props: {
     data: Object,
   },
 };
 </script>
+
+<style lang="scss">
+.tui-numericRatingScaleAdminView {
+  &__input {
+    display: flex;
+    align-items: flex-end;
+    justify-content: start;
+
+    & > * + * {
+      margin-left: var(--gap-4);
+    }
+  }
+}
+</style>
+
+<lang-strings>
+{
+  "performelement_numeric_rating_scale": [
+    "scale_description"
+  ]
+}
+</lang-strings>

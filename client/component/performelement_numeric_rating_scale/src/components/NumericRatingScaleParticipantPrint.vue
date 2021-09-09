@@ -16,7 +16,13 @@
   @package performelement_numeric_rating_scale
 -->
 <template>
-  <div class="tui-numericRatingScaleParticipantPrint">
+  <div
+    class="tui-numericRatingScaleParticipantPrint"
+    :class="{
+      'tui-numericRatingScaleParticipantPrint--withDescription':
+        element.data.descriptionEnabled,
+    }"
+  >
     <Range
       :value="formattedResponse"
       :no-thumb="!hasBeenAnswered"
@@ -25,7 +31,11 @@
       :min="min"
       :max="max"
     />
-
+    <RenderedContent
+      v-if="element.data.descriptionEnabled"
+      class="tui-numericRatingScaleParticipantPrint__description"
+      :content-html="element.data.descriptionHtml"
+    />
     <div
       v-if="hasBeenAnswered"
       class="tui-numericRatingScaleParticipantPrint__formattedResponse"
@@ -42,11 +52,13 @@
 
 <script>
 import Range from 'tui/components/form/Range';
+import RenderedContent from 'tui/components/editor/RenderedContent';
 import NotepadLines from 'tui/components/form/NotepadLines';
 
 export default {
   components: {
     Range,
+    RenderedContent,
     NotepadLines,
   },
   props: {
@@ -101,12 +113,28 @@ export default {
 
 <style lang="scss">
 .tui-numericRatingScaleParticipantPrint {
+  &__description {
+    margin-top: var(--gap-2);
+  }
+
   &__formattedResponse {
     margin-top: var(--gap-8);
   }
 
   &__notepadLines {
     margin-top: var(--gap-4);
+  }
+
+  &--withDescription {
+    .tui-numericRatingScaleParticipantPrint {
+      &__formattedResponse {
+        margin-top: var(--gap-12);
+      }
+
+      &__notepadLines {
+        margin-top: var(--gap-8);
+      }
+    }
   }
 }
 </style>

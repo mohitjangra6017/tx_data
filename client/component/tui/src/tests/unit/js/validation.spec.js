@@ -18,6 +18,7 @@
 
 import { isEmpty, v, fieldValidator } from 'tui/validation';
 import { langString } from 'tui/i18n';
+import WekaValue from 'editor_weka/WekaValue';
 
 describe('isEmpty', () => {
   it('returns true if a value is considered empty', () => {
@@ -34,6 +35,28 @@ describe('isEmpty', () => {
     expect(isEmpty('    ')).toBe(true);
     expect(isEmpty([1])).toBe(false);
     expect(isEmpty([])).toBe(true);
+  });
+
+  it('can check classes and objects __isEmpty method', () => {
+    expect(WekaValue.empty().isEmpty).toBeTrue();
+    expect(isEmpty(WekaValue.empty())).toBeTrue();
+    expect(isEmpty({ __isEmpty: () => true })).toBeTrue();
+
+    const nonEmptyWekaDocument = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: 'Some content' }],
+        },
+      ],
+    };
+
+    const wekaValue = WekaValue.fromDoc(nonEmptyWekaDocument);
+
+    expect(wekaValue.isEmpty).toBeFalse();
+    expect(isEmpty(wekaValue)).toBeFalse();
+    expect(isEmpty({ __isEmpty: () => false })).toBeFalse();
   });
 });
 

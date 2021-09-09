@@ -757,14 +757,14 @@ class behat_totara_tui extends behat_base {
             }
         }
 
-        $checkbox_label = $parent_element->find('css', $locator);
+        $checkbox = $parent_element->find('css', $locator);
 
-        if ($checkbox_label === null) {
+        if ($checkbox === null) {
             $this->fail("No tui check box found with name {$name}");
         }
 
-        $checkbox_input = $checkbox_label->getParent()->find('css', 'input');
-        $this->click_hidden_element($checkbox_input);
+        $checkbox_label = $checkbox->getParent()->find('css', 'label');
+        $checkbox_label->click();
     }
 
     /**
@@ -882,8 +882,6 @@ class behat_totara_tui extends behat_base {
      * In some cases with custom tui form elements the actual <input> HTML element is hidden, so behat can't interact with it.
      * This function is a workaround for this, instead we manually click the element via running some JS in the browser.
      * This isn't ideal, but it works. Replace if there is a better solution.
-     *
-     * The proper solution is to just click the label (like you do in a real web browser)...
      *
      * @param NodeElement $input_element
      */
@@ -1579,6 +1577,34 @@ class behat_totara_tui extends behat_base {
         $select_filter = $this->find_select_filter_by_label($label_text);
 
         $select_filter->find('css', 'select')->selectOption($choice);
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" form field has the tui validation error "([^"]*)"$/
+     */
+    public function i_should_see_form_field_has_the_tui_validation_error(string $field_name, string $expected_error): void
+    {
+        $element = $this->find('css', "[name='{$field_name}'], [aria-label='{$field_name}']");
+        $parent = $element->getParent();
+
+        while (!$parent->hasClass('tui-formField')) {
+            $parent = $parent->getParent();
+        }
+
+
+        $errors = $parent->findAll('css', '.tui-formFieldError');
+
+        $found = false;
+        foreach ($errors as $error) {
+            $actual_error = trim($error->getText());
+            if ($expected_error === $actual_error) {
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            $this->fail("Validation error \"{$expected_error}\" not found for the form field \"{$field_name}\"");
+        }
     }
 
     private function find_select_filter_by_label(string $label_text): NodeElement {

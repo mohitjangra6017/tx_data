@@ -27,39 +27,46 @@
     <template v-slot:content="{ labelId }">
       <FormScope :path="path" :process="process">
         <div class="tui-elementEditNumericRatingScaleParticipantForm">
-          <FieldGroup :aria-labelledby="labelId">
-            <FormRange
-              name="response"
-              :default-value="element.data.defaultValue"
-              :show-labels="false"
-              :min="min"
-              :max="max"
-              :validations="validations"
-            />
-          </FieldGroup>
-          <FieldGroup
-            class="tui-elementEditNumericRatingScaleParticipantForm__input"
+          <FormRange
+            name="response"
+            :default-value="element.data.defaultValue"
+            :show-labels="false"
+            :min="min"
+            :max="max"
+            :validations="validations"
+            aria-hiden="true"
+          />
+          <FormNumber
+            name="response"
+            :min="min"
+            :max="max"
+            char-length="5"
             :aria-labelledby="labelId"
-          >
-            <FormNumber name="response" :min="min" :max="max" char-length="5" />
-          </FieldGroup>
+          />
         </div>
       </FormScope>
+      <ElementDescription
+        v-if="element.data.descriptionEnabled"
+        :aria-region-label="
+          $str('scale_description', 'performelement_numeric_rating_scale')
+        "
+        :content-html="element.data.descriptionHtml"
+      />
     </template>
   </ElementParticipantFormContent>
 </template>
 
 <script>
+import ElementDescription from 'mod_perform/components/element/participant_form/ElementDescription';
 import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
-import FieldGroup from 'tui/components/form/FieldGroup';
 import FormScope from 'tui/components/reform/FormScope';
 import { FormRange, FormNumber } from 'tui/components/uniform';
 import { v as validation } from 'tui/validation';
 
 export default {
   components: {
+    ElementDescription,
     ElementParticipantFormContent,
-    FieldGroup,
     FormScope,
     FormRange,
     FormNumber,
@@ -132,8 +139,20 @@ export default {
 
 <style lang="scss">
 .tui-elementEditNumericRatingScaleParticipantForm {
-  &__input {
-    margin-top: var(--gap-2);
+  display: flex;
+  align-items: flex-end;
+  justify-content: start;
+
+  & > * + * {
+    margin-left: var(--gap-4);
   }
 }
 </style>
+
+<lang-strings>
+{
+  "performelement_numeric_rating_scale": [
+    "scale_description"
+  ]
+}
+</lang-strings>

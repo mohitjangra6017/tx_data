@@ -22,7 +22,7 @@
       :initial-values="initialValues"
       :settings="settings"
       @cancel="$emit('display')"
-      @change="updateRangeValues"
+      @change="updateValues"
       @update="$emit('update', $event)"
     >
       <!-- Min value -->
@@ -73,19 +73,62 @@
           char-length="10"
         />
       </FormRow>
+
+      <!-- Enable description -->
+      <FormRow>
+        <FormCheckbox name="descriptionEnabled">
+          {{ $str('element_enable_description', 'mod_perform') }}
+        </FormCheckbox>
+      </FormRow>
+
+      <!-- Description weka, use v-show rather than v-if to pre-boot weka -->
+      <FormRow
+        v-show="descriptionEnabled"
+        v-slot="{ id }"
+        :label="$str('element_description', 'mod_perform')"
+        :required="descriptionEnabled"
+      >
+        <FormField
+          v-slot="{ value, update }"
+          name="descriptionWekaDoc"
+          :validations="v => (descriptionEnabled ? [v.required()] : [])"
+        >
+          <Weka
+            :id="id"
+            :context-id="activityContextId"
+            :value="value"
+            :usage-identifier="{
+              component: 'performelement_numeric_rating_scale',
+              area: 'content',
+            }"
+            variant="description"
+            @input="update"
+          />
+        </FormField>
+      </FormRow>
     </PerformAdminCustomElementEdit>
   </div>
 </template>
 
 <script>
-import { FormRow, FormNumber } from 'tui/components/uniform';
+import {
+  FormCheckbox,
+  FormField,
+  FormRow,
+  FormNumber,
+} from 'tui/components/uniform';
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
+import Weka from 'editor_weka/components/Weka';
+import WekaValue from 'editor_weka/WekaValue';
 
 export default {
   components: {
+    FormCheckbox,
+    FormField,
     FormRow,
     FormNumber,
     PerformAdminCustomElementEdit,
+    Weka,
   },
 
   inheritAttrs: false,
@@ -96,6 +139,7 @@ export default {
     isRequired: Boolean,
     rawTitle: String,
     settings: Object,
+    activityContextId: [Number, String],
   },
 
   data() {
@@ -107,12 +151,18 @@ export default {
           this.data && this.data.highValue ? this.data.highValue : null,
         identifier: this.identifier,
         lowValue: this.data && this.data.lowValue ? this.data.lowValue : null,
+        descriptionEnabled:
+          (this.data && this.data.descriptionEnabled) || false,
+        descriptionWekaDoc: this.data.descriptionWekaDoc
+          ? WekaValue.fromDoc(this.data.descriptionWekaDoc)
+          : WekaValue.empty(),
         rawTitle: this.rawTitle,
         responseRequired: this.isRequired,
       },
 
       lowValue: this.data && this.data.lowValue ? this.data.lowValue : '0',
       highValue: this.data && this.data.highValue ? this.data.highValue : '0',
+      descriptionEnabled: (this.data && this.data.descriptionEnabled) || false,
     };
   },
 
@@ -124,13 +174,14 @@ export default {
 
   methods: {
     /**
-     * Update range values based on user input for validation
+     * Update values based on user input for validation and weka show/hide.
      *
      * @param {Object} values
      */
-    updateRangeValues(values) {
-      this.lowValue = values.lowValue;
-      this.highValue = values.highValue;
+    updateValues({ lowValue, highValue, descriptionEnabled }) {
+      this.lowValue = lowValue;
+      this.highValue = highValue;
+      this.descriptionEnabled = descriptionEnabled;
     },
   },
 };
@@ -145,6 +196,10 @@ export default {
     "numeric_max_value_help",
     "numeric_min_value_help",
     "scale_numeric_values"
+  ],
+  "mod_perform": [
+    "element_description",
+    "element_enable_description"
   ]
 }
 </lang-strings>

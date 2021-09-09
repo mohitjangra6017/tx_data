@@ -29,6 +29,7 @@ $string['low_value_label'] = 'Minimum numeric value';
 $string['name'] = 'Rating scale: Numeric';
 $string['no_response_submitted'] = 'No response submitted';
 $string['pluginname'] = 'Rating scale element';
+$string['scale_description'] = 'Scale description';
 $string['scale_numeric_values'] = 'Numeric values';
 
 // Help messages

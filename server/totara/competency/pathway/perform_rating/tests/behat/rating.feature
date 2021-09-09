@@ -79,10 +79,12 @@ Feature: Rating competencies via performance activities.
     Then I should see "Only one performance activity rating will be collected" in the tui popover
     When I close the tui popover
     And I click on "Element settings: review1" "button"
-    Then I should see "Enable Performance activity rating" in the ".tui-performAdminCustomElementSummary__section:nth-child(4)" "css_element"
-    And I should see "Yes" in the ".tui-performAdminCustomElementSummary__section:nth-child(4)" "css_element"
-    And I should see "Rating participant" in the ".tui-performAdminCustomElementSummary__section:nth-child(5)" "css_element"
-    And I should see "Manager" in the ".tui-performAdminCustomElementSummary__section:nth-child(5)" "css_element"
+    Then the perform element summary should contain:
+      | Question text                      | review1      |
+      | Review type                        | Competencies |
+      | Selection participant              | Subject      |
+      | Enable Performance activity rating | Yes          |
+      | Rating participant                 | Manager      |
 
     # Make a rating in the activity
     # Ratings haven't been made yet - view activity as subject

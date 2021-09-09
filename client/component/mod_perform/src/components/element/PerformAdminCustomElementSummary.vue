@@ -64,6 +64,11 @@
             {{ option.value }}
           </div>
         </template>
+        <div
+          v-else-if="field.htmlContent"
+          class="tui-performAdminCustomElementSummary__section-htmlValue"
+          v-html="field.value"
+        />
         <template v-else>
           {{ field.value }}
         </template>
@@ -193,6 +198,10 @@ export default {
     &-title {
       margin: 0;
       @include tui-font-heading-label();
+    }
+
+    &-htmlValue {
+      margin: var(--gap-4);
     }
   }
 }

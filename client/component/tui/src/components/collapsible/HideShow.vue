@@ -65,31 +65,27 @@
 export default {
   props: {
     // String describing the region content
-    ariaRegionLabel: {
-      type: String,
-      required: true,
-    },
+    ariaRegionLabel: String,
     // String displayed for hiding content
-    hideContentText: {
-      type: String,
-      required: true,
-    },
+    hideContentText: String,
     // Collapsible is for mobile viewports only
     mobileOnly: Boolean,
-    // String displayed for showing content
-    showContentText: {
-      type: String,
-      required: true,
-    },
+    // Optional string displayed for showing content
+    showContentText: String,
     // Makes the toggle sticky to window (not supported in IE)
     sticky: Boolean,
     // Display the toggle after the content
     contentBeforeToggle: Boolean,
+    // Start with content showing.
+    initiallyExpanded: {
+      default: false,
+      type: Boolean,
+    },
   },
 
   data() {
     return {
-      expanded: false,
+      expanded: this.initiallyExpanded,
     };
   },
 

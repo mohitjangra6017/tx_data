@@ -133,6 +133,14 @@ export default class WekaValue {
   }
 
   /**
+   * Convert to JSON doc format (for automatic stringify from when using JSON.stringify()).
+   * @return {Object}
+   */
+  toJSON() {
+    return this.getDoc(true);
+  }
+
+  /**
    * Convert to JSON doc format.
    * @param {Boolean} applyFormatter
    */
@@ -186,6 +194,16 @@ export default class WekaValue {
    */
   getHtml() {
     return this._html;
+  }
+
+  /**
+   * Empty check to be called from validation library.
+   *
+   * @return {boolean}
+   * @private
+   */
+  __isEmpty() {
+    return this.isEmpty;
   }
 
   /**

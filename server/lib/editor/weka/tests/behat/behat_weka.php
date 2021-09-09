@@ -147,6 +147,7 @@ function wekaNodeClickTarget(domNode, type) {
         $this->current_weka = $this->find_weka_editor_by_css($selector);
         $this->ensure_node_is_visible($this->current_weka);
         $this->current_weka_field = $this->find('css', '.tui-weka-editor', false, $this->current_weka);
+        $this->current_weka_field->click(); // Focus by its self does not work when another field is already focused,
         $this->current_weka_field->focus();
     }
 
