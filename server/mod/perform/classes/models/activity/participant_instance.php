@@ -104,7 +104,8 @@ class participant_instance extends model {
     ];
 
     /**
-     * Returns the participant roles the specified user across all activities.
+     * Returns the participant roles for the specified internal user across all
+     * activities.
      *
      * @param @int $user_id the user to look up.
      *
@@ -114,6 +115,7 @@ class participant_instance extends model {
         return builder::table(participant_instance_entity::TABLE)
             ->select_raw('distinct(core_relationship_id) as role_id')
             ->where('participant_id', $user_id)
+            ->where('participant_source', participant_source::INTERNAL)
             ->group_by('core_relationship_id')
             ->get()
             ->map(
