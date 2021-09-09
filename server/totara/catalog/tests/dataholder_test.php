@@ -202,10 +202,8 @@ class totara_catalog_dataholder_testcase extends advanced_testcase {
         foreach ($dataholder->formatters as $formatter_type => $formatter) {
             $this->assertInstanceOf(formatter::class, $formatter);
         }
-        $this->assertCount(1, $dataholder->datajoins);
-        $this->assertArrayHasKey($dataholder_key, $dataholder->datajoins);
-        $this->assertCount(1, $dataholder->dataparams);
-        $this->assertArrayHasKey($dataholder_key . '_data', $dataholder->dataparams);
+        $this->assertCount(0, $dataholder->datajoins);
+        $this->assertCount(0, $dataholder->dataparams);
         $this->assertEquals(get_string('customfields', 'totara_customfield'), $dataholder->category);
     }
 

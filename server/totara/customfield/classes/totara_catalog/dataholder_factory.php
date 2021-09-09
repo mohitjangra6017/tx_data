@@ -143,12 +143,8 @@ class dataholder_factory {
                 $tablealias,
                 format_string($customfield->fullname, true, ['context' => $systemcontent]),
                 $formatters,
-                [
-                    $tablealias => "LEFT JOIN {{$tableprefix}_info_data} {$tablealias}
-                                           ON {$tablealias}.{$prefix}id = base.id
-                                          AND {$tablealias}.fieldid = :{$tablealias}_data",
-                ],
-                [$tablealias . '_data' => $customfield->id],
+                [],
+                [],
                 new \lang_string('customfields', 'totara_customfield')
             );
         }
