@@ -428,7 +428,7 @@ class subject_instance_for_participant extends provider {
         $far_in_the_future = 9999999999;
         $repository
             ->order_by_raw("COALESCE(si.due_date, {$far_in_the_future})")
-            ->order_by('id', 'DESC');
+            ->order_by('id'); // For those without due date we want oldest generated first.
     }
 
     /**

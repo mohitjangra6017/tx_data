@@ -669,8 +669,8 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
             ->sort_by('due_date')
             ->fetch()
             ->get();
-        // Due date is not set for any instance, so it will be sorted by creation time.
-        $this->assert_order($sorted_by_creation_date, $returned_subject_instances);
+        // Due date is not set for any instance, so it will be sorted by creation time, oldest first.
+        $this->assert_order(array_reverse($sorted_by_creation_date), $returned_subject_instances);
         // Adjust some due dates to have a different expected order.
         self::set_subject_instance_due_date($instances['check-in']['about_user_and_participating'], strtotime("-1 day"));
         self::set_subject_instance_due_date($instances['appraisal']['about_someone_else_and_participating'], strtotime("-1 week"));
@@ -681,10 +681,10 @@ class mod_perform_data_provider_subject_instances_testcase extends mod_perform_s
         $this->assert_order([
             'appraisal activity about someone else and participating',
             'check-in activity about target user',
-            'feedback activity about someone else and participating',
-            'feedback activity about target user',
-            'check-in activity about someone else and participating',
             'appraisal activity about target user',
+            'check-in activity about someone else and participating',
+            'feedback activity about target user',
+            'feedback activity about someone else and participating',
         ], $returned_subject_instances);
 
         // Sort by job assignment
