@@ -548,7 +548,11 @@ function prog_get_programs($categoryid="all", $sort="p.sortorder ASC",
  *
  */
 function prog_get_category_breadcrumbs($categoryid, $viewtype = 'program') {
-    global $DB;
+    global $DB, $CFG;
+
+    if (empty($CFG->navshowcategories)) {
+        return array();
+    }
 
     $category = $DB->get_record('course_categories', array('id' => $categoryid));
 
