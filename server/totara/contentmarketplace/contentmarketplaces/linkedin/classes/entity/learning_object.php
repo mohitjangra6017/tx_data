@@ -53,6 +53,7 @@ use mod_contentmarketplace\entity\content_marketplace;
  * @property int|null $time_to_complete
  * @property string|null $web_launch_url
  * @property string|null $sso_launch_url
+ * @property string|null $availability
  *
  * @property-read classification[]|collection $subjects
  * @property-read classification[]|collection $classifications

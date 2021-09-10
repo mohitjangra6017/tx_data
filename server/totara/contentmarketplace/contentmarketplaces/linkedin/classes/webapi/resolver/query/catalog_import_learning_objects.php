@@ -23,6 +23,7 @@
 
 namespace contentmarketplace_linkedin\webapi\resolver\query;
 
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\data_provider\learning_objects;
 use contentmarketplace_linkedin\data_provider\learning_objects_selected_filters;
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
@@ -44,7 +45,7 @@ final class catalog_import_learning_objects implements query_resolver, has_middl
 
         $provider = new learning_objects();
         $provider_filters = $input_params['filters'];
-        $provider_filters['is_retired'] = false; // Hard-coded to only return non-retired (i.e. active) learning.
+        $provider_filters['availability'] = constants::AVAILABILITY_AVAILABLE; // Hard-coded to only return availability (i.e. active) learning.
 
         // The list of ids are provided, then it is most likely about fetching the list of selelcted
         // learning object items. Therefore we need to ignore all the other filters.

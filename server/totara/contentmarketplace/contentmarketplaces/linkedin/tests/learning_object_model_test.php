@@ -66,7 +66,8 @@ class contentmarketplace_linkedin_learning_object_model_testcase extends testcas
             'level' => 'BEGINNER',
             'image_url' => 'https://cdn.lynda.com/course/260/260-636456652549313738-16x9.jpg',
             'time_to_complete' => 32153,
-            'web_launch_url' => 'https://www.linkedin.com/learning/visio-2007-essential-training'
+            'web_launch_url' => 'https://www.linkedin.com/learning/visio-2007-essential-training',
+            'availability' => 'AVAILABLE'
         ];
 
         foreach ($expected_values as $attribute => $expected_value) {
@@ -104,6 +105,7 @@ class contentmarketplace_linkedin_learning_object_model_testcase extends testcas
                 'level' => 'BEGINNER',
                 'image_url' => 'https://cdn.lynda.com/course/252/252-636282989834935258-16x9.jpg',
                 'time_to_complete' => 18790,
+                'availability' => 'AVAILABLE'
             ], [
                 'urn' => 'urn:li:lyndaCourse:260',
                 'title' => 'Visio 2007 Essential Training',
@@ -115,6 +117,7 @@ class contentmarketplace_linkedin_learning_object_model_testcase extends testcas
                 'level' => 'BEGINNER',
                 'image_url' => 'https://cdn.lynda.com/course/260/260-636456652549313738-16x9.jpg',
                 'time_to_complete' => 32153,
+                'availability' => 'AVAILABLE'
             ],
         ];
         foreach ($expected_values as $index => $values) {

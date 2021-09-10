@@ -221,6 +221,10 @@ class generator extends component_generator implements learning_object_generator
             $record['web_launch_url'] = "{$CFG->wwwroot}/totara/contentmarketplace/tests/fixtures/learning_object.html";
         }
 
+        if (!array_key_exists('availability', $record)) {
+            $record['availability'] = constants::AVAILABILITY_AVAILABLE;
+        }
+
         $entity = new learning_object();
         $entity->urn = $urn;
 

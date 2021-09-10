@@ -22,6 +22,7 @@
  */
 
 use contentmarketplace_linkedin\task\create_oauth2_client_provider_task;
+use core\orm\query\builder;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -84,6 +85,27 @@ function xmldb_contentmarketplace_linkedin_upgrade($old_version): bool {
 
         // Linkedin savepoint reached.
         upgrade_plugin_savepoint(true, 2021090200, 'contentmarketplace', 'linkedin');
+    }
+
+    if ($old_version < 2021090201) {
+        // Define field availability to be added to marketplace_linkedin_learning_object.
+        $table = new xmldb_table('marketplace_linkedin_learning_object');
+        $field = new xmldb_field('availability', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'asset_type');
+
+        // Conditionally launch add field availability.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        $db = builder::get_db();
+        $records = $db->get_records('marketplace_linkedin_learning_object');
+
+        foreach ($records as $record) {
+            $record->availability = 'AVAILABLE';
+            $db->update_record('marketplace_linkedin_learning_object', $record);
+        }
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021090201, 'contentmarketplace', 'linkedin');
     }
 
     return true;

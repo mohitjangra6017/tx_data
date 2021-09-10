@@ -55,6 +55,7 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read string|null       $web_launch_url
  * @property-read string|null       $sso_launch_url
  * @property-read string            $asset_type
+ * @property-read string|null       $availability
  *
  * Summary provider properties:
  * @property-read string      $name      Alias for 'title'
@@ -94,7 +95,8 @@ class learning_object extends model implements detailed_model, configuration {
         'time_to_complete',
         'asset_type',
         'web_launch_url',
-        'sso_launch_url'
+        'sso_launch_url',
+        'availability'
     ];
 
     protected $model_accessor_whitelist = [
@@ -194,6 +196,7 @@ class learning_object extends model implements detailed_model, configuration {
             'web_launch_url' => $element->get_web_launch_url(),
             'sso_launch_url' => $element->get_sso_launch_url(),
             'asset_type' => $element->get_type(),
+            'availability' => $element->get_availability(),
         ];
     }
 

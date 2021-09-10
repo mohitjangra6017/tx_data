@@ -251,6 +251,16 @@ class element extends base_element {
     }
 
     /**
+     * @return string|null
+     */
+    public function get_availability(): ?string {
+        $details = $this->get_asset_details();
+        $availability = $details->availability;
+
+        return isset($availability) ? $availability : null;
+    }
+
+    /**
      * @return classification_with_path[]
      */
     public function get_classifications(): array {

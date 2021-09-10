@@ -148,6 +148,15 @@ class learning_objects extends paginated_provider {
 
     /**
      * @param learning_object_repository $repository
+     * @param bool $avalibity
+     */
+    protected function filter_query_by_availability(repository $repository, string $avalibity = constants::AVAILABILITY_AVAILABLE): void {
+        $repository->where('availability', $avalibity);
+    }
+
+
+    /**
+     * @param learning_object_repository $repository
      * @param string $language
      */
     protected function filter_query_by_language(repository $repository, string $language): void {
