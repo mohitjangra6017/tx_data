@@ -87,7 +87,7 @@ Feature: Filtering user activities list
   Scenario: Can see completed filter in activities I have multiple roles in
     Given I log in as "manager-appraiser"
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     Then I should see the tui datatable contains:
       | Activity                                               | Type      | Name     | Your progress | Overall progress |
       | Appraiser Manager combined activity (##today##j F Y##) | Appraisal | John One | Not started   | Not started      |
@@ -102,7 +102,7 @@ Feature: Filtering user activities list
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
     Then I should see "Performance activities"
-    When I click on "As a Manager" "link"
+    When I click on "As Manager" "link"
     Then I should see "Exclude completed activities"
     And I should not see "Overdue activities only"
     When I click on "Exclude completed activities" tui "toggle_switch"
@@ -111,7 +111,7 @@ Feature: Filtering user activities list
     And I set the field "Your progress" to "Complete"
     Then I should see "1" rows in the tui datatable
 
-    When I click on "As a Appraiser" "link"
+    When I click on "As Appraiser" "link"
     Then I should not see "Exclude completed activities"
     And I should not see "Overdue activities only"
     When I set the field "Your progress" to "Complete"
@@ -122,7 +122,7 @@ Feature: Filtering user activities list
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
     Then I should see "Performance activities"
-    When I click on "As a Appraiser" "link"
+    When I click on "As Appraiser" "link"
     Then I should see "Exclude completed activities"
     And I should not see "Overdue activities only"
     When I click on "Exclude completed activities" tui "toggle_switch"
@@ -134,7 +134,7 @@ Feature: Filtering user activities list
     When Subject instances for "combined" track are due "##yesterday##"
     And I navigate to the outstanding perform activities list page
     Then I should not see "Overdue activities only"
-    When I click on "As a Manager" "link"
+    When I click on "As Manager" "link"
     Then I should see "Overdue activities only"
-    When I click on "As a Appraiser" "link"
+    When I click on "As Appraiser" "link"
     Then I should see "Overdue activities only"

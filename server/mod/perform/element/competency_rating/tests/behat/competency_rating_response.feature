@@ -85,7 +85,7 @@ Feature: Responding to competency rating sub-question in a linked review perform
     When I log out
     And I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "activity1" "link"
     And I click show others responses
     Then I should see "Subject response" in the 1st selected content item for the "review1" linked review element

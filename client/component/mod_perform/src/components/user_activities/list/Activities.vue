@@ -18,261 +18,327 @@
 -->
 <template>
   <div class="tui-performUserActivityList">
-    <ActivitiesFilter
-      v-model="userFilters"
-      :about-others="isAboutOthers"
-      :filter-options="filterOptions"
-      :has-completed="hasCompleted"
-      :has-overdue="hasOverdue"
-      @filter-change="filterChange"
-    />
+    <!-- Priority list of activities -->
+    <div
+      v-if="totalPrioritisedActivities"
+      class="tui-performUserActivityList__priority"
+    >
+      <h3 class="tui-performUserActivityList__priority-heading">
+        {{
+          $str(
+            'user_activities_priority_heading',
+            'mod_perform',
+            totalPrioritisedActivities
+          )
+        }}
+      </h3>
 
-    <ActivitiesCount
-      v-model="sortByFilter"
-      :about-others="isAboutOthers"
-      :displayed-count="subjectInstances.length"
-      :loading="$apollo.loading"
-      :sort-by-options="sortByOptions"
-      :total="totalActivities"
-    />
-
-    <Loader :loading="$apollo.loading">
-      <Table
-        v-if="!$apollo.loading"
-        ref="activity-table"
-        :data="subjectInstances"
-        :expandable-rows="true"
-        :no-items-text="emptyListText"
-        :stack-at="850"
+      <OverflowContainer
+        :items="prioritisedInstances"
+        :total="totalPrioritisedActivities"
+        :view-all-link="$url(priorityUrl, { relationship_id: aboutRole })"
       >
-        <template v-slot:header-row>
-          <ExpandCell :header="true" />
-
-          <!-- Activity name header -->
-          <HeaderCell :size="isAboutOthers ? '4' : '6'">
-            {{ $str('user_activities_title_header', 'mod_perform') }}
-          </HeaderCell>
-
-          <!-- User name header -->
-          <HeaderCell v-if="isAboutOthers" size="2">
-            {{ $str('user_activities_subject_header', 'mod_perform') }}
-          </HeaderCell>
-
-          <!-- Job assignment header -->
-          <HeaderCell size="2">
-            {{ $str('user_activities_job_assignment_header', 'mod_perform') }}
-          </HeaderCell>
-
-          <!-- Due date header -->
-          <HeaderCell size="2">
-            {{ $str('user_activities_due_date_header', 'mod_perform') }}
-          </HeaderCell>
-
-          <!-- Activity type header -->
-          <HeaderCell size="2">
-            {{ $str('user_activities_type_header', 'mod_perform') }}
-          </HeaderCell>
-
-          <!-- Your progress header -->
-          <HeaderCell size="2">
-            {{
-              $str('user_activities_status_header_participation', 'mod_perform')
-            }}
-          </HeaderCell>
-
-          <!-- Overall progress header -->
-          <HeaderCell size="2">
-            {{ $str('user_activities_status_header_activity', 'mod_perform') }}
-          </HeaderCell>
-        </template>
-
-        <!-- Row expandable -->
-        <template v-slot:row="{ expand, expandState, row }">
-          <ExpandCell
-            :aria-label="getExpandLabel(row)"
-            :expand-state="expandState"
-            @click="expand()"
+        <template v-slot:default="{ item }">
+          <ActivitiesPriorityCard
+            :due-date="item.subject.due_on"
+            :job-assignment="
+              getJobAssignmentDescription(item.subject.job_assignment)
+            "
+            :overdue="item.subject.due_on && item.subject.due_on.is_overdue"
+            :status="getProgressStatus(item.subject.participant_instances)"
+            :subject-user="item.subject.subject_user"
+            :title="getActivityTitle(item.subject)"
+            :url="getViewActivityUrl(item)"
           />
-
-          <!-- Activity name -->
-          <Cell
-            :column-header="$str('user_activities_title_header', 'mod_perform')"
-            :size="isAboutOthers ? '4' : '6'"
-            valign="center"
-          >
-            <a :href="getViewActivityUrl(row)">
-              {{ getActivityTitle(row.subject) }}
-            </a>
-          </Cell>
-
-          <!-- User name (removed for own activities) -->
-          <Cell
-            v-if="isAboutOthers"
-            :column-header="
-              $str('user_activities_subject_header', 'mod_perform')
-            "
-            size="2"
-            valign="center"
-          >
-            {{ row.subject.subject_user.fullname }}
-          </Cell>
-
-          <!-- Job assignment -->
-          <Cell
-            :column-header="
-              $str('user_activities_job_assignment_header', 'mod_perform')
-            "
-            size="2"
-            valign="center"
-          >
-            {{ getJobAssignmentDescription(row.subject.job_assignment) }}
-          </Cell>
-
-          <!-- Due date -->
-          <Cell
-            :column-header="
-              $str('user_activities_due_date_header', 'mod_perform')
-            "
-            size="2"
-            valign="center"
-          >
-            <template v-if="row.subject.due_on">
-              {{ row.subject.due_on.due_date }}
-            </template>
-          </Cell>
-
-          <!-- Activity type -->
-          <Cell
-            :column-header="$str('user_activities_type_header', 'mod_perform')"
-            size="2"
-            valign="center"
-          >
-            {{ row.subject.activity.type.display_name }}
-          </Cell>
-
-          <!-- Your progress -->
-          <Cell
-            :column-header="
-              $str('user_activities_status_header_participation', 'mod_perform')
-            "
-            size="2"
-            valign="center"
-          >
-            {{ getYourProgressText(row.subject.participant_instances) }}
-
-            <OverdueLozenge
-              v-if="
-                allYourInstancesAreOverdue(row.subject.participant_instances)
-              "
-            />
-
-            <Lock
-              v-if="
-                allYourInstancesAreClosed(row.subject.participant_instances)
-              "
-              :alt="$str('user_activities_closed', 'mod_perform')"
-            />
-          </Cell>
-
-          <!-- Overall progress -->
-          <Cell
-            :column-header="
-              $str('user_activities_status_header_activity', 'mod_perform')
-            "
-            size="2"
-            valign="center"
-          >
-            {{ getStatusText(row.subject.progress_status) }}
-
-            <OverdueLozenge
-              v-if="row.subject.due_on && row.subject.due_on.is_overdue"
-            />
-
-            <Lock
-              v-if="row.subject.availability_status === 'CLOSED'"
-              :alt="$str('user_activities_closed', 'mod_perform')"
-            />
-          </Cell>
         </template>
+      </OverflowContainer>
+    </div>
 
-        <!-- Expanded row content -->
-        <template v-slot:expand-content="{ row }">
-          <div class="tui-performUserActivityList__expandedRow">
-            <p class="tui-performUserActivityList__expandedRow-dateSummary">
+    <div class="tui-performUserActivityList__content">
+      <h3 class="tui-performUserActivityList__heading">
+        {{
+          $str('user_activities_header', 'mod_perform', subjectInstances.length)
+        }}
+      </h3>
+
+      <ActivitiesFilter
+        v-model="userFilters"
+        :about-others="isAboutOthers"
+        :filter-options="filterOptions"
+        :has-completed="hasCompleted"
+        :has-overdue="hasOverdue"
+        @filter-change="filterChange"
+      />
+
+      <ActivitiesCount
+        v-model="sortByFilter"
+        :about-others="isAboutOthers"
+        :displayed-count="subjectInstances.length"
+        :loading="$apollo.loading"
+        :sort-by-options="sortByOptions"
+        :total="totalActivities"
+      />
+
+      <Loader :loading="$apollo.loading">
+        <Table
+          v-if="!$apollo.loading"
+          ref="activity-table"
+          :data="subjectInstances"
+          :expandable-rows="true"
+          :no-items-text="emptyListText"
+          :stack-at="850"
+        >
+          <template v-slot:header-row>
+            <ExpandCell :header="true" />
+
+            <!-- Activity name header -->
+            <HeaderCell :size="isAboutOthers ? '4' : '6'">
+              {{ $str('user_activities_title_header', 'mod_perform') }}
+            </HeaderCell>
+
+            <!-- User name header -->
+            <HeaderCell v-if="isAboutOthers" size="2">
+              {{ $str('user_activities_subject_header', 'mod_perform') }}
+            </HeaderCell>
+
+            <!-- Job assignment header -->
+            <HeaderCell size="2">
+              {{ $str('user_activities_job_assignment_header', 'mod_perform') }}
+            </HeaderCell>
+
+            <!-- Due date header -->
+            <HeaderCell size="2">
+              {{ $str('user_activities_due_date_header', 'mod_perform') }}
+            </HeaderCell>
+
+            <!-- Activity type header -->
+            <HeaderCell size="2">
+              {{ $str('user_activities_type_header', 'mod_perform') }}
+            </HeaderCell>
+
+            <!-- Your progress header -->
+            <HeaderCell size="2">
               {{
                 $str(
-                  'user_activities_created_at',
-                  'mod_perform',
-                  row.subject.created_at
+                  'user_activities_status_header_participation',
+                  'mod_perform'
                 )
               }}
+            </HeaderCell>
 
-              <span v-if="row.subject.due_on">
-                {{
-                  $str(
-                    'user_activities_complete_before',
-                    'mod_perform',
-                    row.subject.due_on.due_date
-                  )
-                }}
-              </span>
+            <!-- Overall progress header -->
+            <HeaderCell size="2">
+              {{
+                $str('user_activities_status_header_activity', 'mod_perform')
+              }}
+            </HeaderCell>
+          </template>
 
-              <span v-if="isSingleSectionViewOnly(row.subject.activity.id)">
-                {{
-                  $str(
-                    'user_activities_single_section_view_only_activity',
-                    'mod_perform'
-                  )
-                }}
-              </span>
-            </p>
+          <!-- Row expandable -->
+          <template v-slot:row="{ expand, expandState, row }">
+            <ExpandCell
+              :aria-label="getExpandLabel(row)"
+              :expand-state="expandState"
+              @click="expand()"
+            />
 
-            <SectionsList
-              :about-role="aboutRole"
-              :activity-id="row.subject.activity.id"
-              :anonymous-responses="row.subject.activity.anonymous_responses"
-              :is-multi-section-active="
-                row.subject.activity.settings.multisection
+            <!-- Activity name -->
+            <Cell
+              :column-header="
+                $str('user_activities_title_header', 'mod_perform')
               "
-              :subject-sections="row.sections"
-              :view-url="viewUrl"
-              @single-section-view-only="flagActivitySingleSectionViewOnly"
-            />
+              :size="isAboutOthers ? '4' : '6'"
+              valign="center"
+            >
+              <a :href="getViewActivityUrl(row)">
+                {{ getActivityTitle(row.subject) }}
+              </a>
+            </Cell>
 
-            <ActionLink
-              :href="getPrintActivityLink(row)"
-              :styleclass="{ small: true }"
-              :text="$str('print_activity', 'mod_perform')"
-            />
-          </div>
-        </template>
-      </Table>
-      <div class="tui-performUserActivityList__paging">
-        <Paging
-          v-if="totalActivities"
-          :items-per-page="paginationLimit"
-          :page="paginationPage"
-          :total-items="totalActivities"
-          @count-change="setItemsPerPage"
-          @page-change="setPaginationPage"
-        />
-      </div>
-    </Loader>
+            <!-- User name (removed for own activities) -->
+            <Cell
+              v-if="isAboutOthers"
+              :column-header="
+                $str('user_activities_subject_header', 'mod_perform')
+              "
+              size="2"
+              valign="center"
+            >
+              {{ row.subject.subject_user.fullname }}
+            </Cell>
+
+            <!-- Job assignment -->
+            <Cell
+              :column-header="
+                $str('user_activities_job_assignment_header', 'mod_perform')
+              "
+              size="2"
+              valign="center"
+            >
+              {{ getJobAssignmentDescription(row.subject.job_assignment) }}
+            </Cell>
+
+            <!-- Due date -->
+            <Cell
+              :column-header="
+                $str('user_activities_due_date_header', 'mod_perform')
+              "
+              size="2"
+              valign="center"
+            >
+              <template v-if="row.subject.due_on">
+                {{ row.subject.due_on.due_date }}
+              </template>
+            </Cell>
+
+            <!-- Activity type -->
+            <Cell
+              :column-header="
+                $str('user_activities_type_header', 'mod_perform')
+              "
+              size="2"
+              valign="center"
+            >
+              {{ row.subject.activity.type.display_name }}
+            </Cell>
+
+            <!-- Your progress -->
+            <Cell
+              :column-header="
+                $str(
+                  'user_activities_status_header_participation',
+                  'mod_perform'
+                )
+              "
+              size="2"
+              valign="center"
+            >
+              {{ getYourProgressText(row.subject.participant_instances) }}
+
+              <OverdueLozenge
+                v-if="
+                  isCurrentRoleInstanceOverdue(
+                    row.subject.participant_instances
+                  )
+                "
+              />
+
+              <Lock
+                v-if="
+                  isCurrentRoleInstanceClosed(row.subject.participant_instances)
+                "
+                :alt="$str('user_activities_closed', 'mod_perform')"
+              />
+            </Cell>
+
+            <!-- Overall progress -->
+            <Cell
+              :column-header="
+                $str('user_activities_status_header_activity', 'mod_perform')
+              "
+              size="2"
+              valign="center"
+            >
+              {{ getStatusText(row.subject.progress_status) }}
+
+              <OverdueLozenge
+                v-if="row.subject.due_on && row.subject.due_on.is_overdue"
+              />
+
+              <Lock
+                v-if="row.subject.availability_status === 'CLOSED'"
+                :alt="$str('user_activities_closed', 'mod_perform')"
+              />
+            </Cell>
+          </template>
+
+          <!-- Expanded row content -->
+          <template v-slot:expand-content="{ row }">
+            <div class="tui-performUserActivityList__expandedRow">
+              <p class="tui-performUserActivityList__expandedRow-dateSummary">
+                {{
+                  $str(
+                    'user_activities_created_at',
+                    'mod_perform',
+                    row.subject.created_at
+                  )
+                }}
+
+                <span v-if="row.subject.due_on">
+                  {{
+                    $str(
+                      'user_activities_complete_before',
+                      'mod_perform',
+                      row.subject.due_on.due_date
+                    )
+                  }}
+                </span>
+
+                <span v-if="isSingleSectionViewOnly(row.subject.activity.id)">
+                  {{
+                    $str(
+                      'user_activities_single_section_view_only_activity',
+                      'mod_perform'
+                    )
+                  }}
+                </span>
+              </p>
+
+              <SectionsList
+                :about-role="aboutRole"
+                :activity-id="row.subject.activity.id"
+                :anonymous-responses="row.subject.activity.anonymous_responses"
+                :is-multi-section-active="
+                  row.subject.activity.settings.multisection
+                "
+                :subject-sections="row.sections"
+                :view-url="viewUrl"
+                @single-section-view-only="flagActivitySingleSectionViewOnly"
+              />
+
+              <ActionLink
+                :href="getPrintActivityLink(row)"
+                :styleclass="{ small: true }"
+                :text="$str('print_activity', 'mod_perform')"
+              />
+            </div>
+          </template>
+        </Table>
+        <div class="tui-performUserActivityList__paging">
+          <Paging
+            v-if="totalActivities"
+            :items-per-page="paginationLimit"
+            :page="paginationPage"
+            :total-items="totalActivities"
+            @count-change="setItemsPerPage"
+            @page-change="setPaginationPage"
+          />
+        </div>
+      </Loader>
+    </div>
   </div>
 </template>
 <script>
 import ActionLink from 'tui/components/links/ActionLink';
 import ActivitiesCount from 'mod_perform/components/user_activities/list/ActivitiesCount';
 import ActivitiesFilter from 'mod_perform/components/user_activities/list/ActivitiesFilter';
+import ActivitiesPriorityCard from 'mod_perform/components/user_activities/list/ActivitiesPriorityCard';
 import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Loader from 'tui/components/loading/Loader';
 import Lock from 'tui/components/icons/Lock';
 import OverdueLozenge from 'mod_perform/components/user_activities/list/ActivityOverdue';
+import OverflowContainer from 'tui/components/overflow_container/OverflowContainer';
 import Paging from 'tui/components/paging/Paging';
 import SectionsList from 'mod_perform/components/user_activities/list/Sections';
 import Table from 'tui/components/datatable/Table';
+import {
+  getFirstSectionToParticipate,
+  getYourProgressStatusValue,
+  isRoleInstanceClosed,
+  isRoleInstanceOverdue,
+} from 'mod_perform/activities_util';
 // Query
 import subjectInstancesQuery from 'mod_perform/graphql/my_subject_instances';
 
@@ -281,12 +347,14 @@ export default {
     ActionLink,
     ActivitiesCount,
     ActivitiesFilter,
+    ActivitiesPriorityCard,
     Cell,
     ExpandCell,
     HeaderCell,
     Loader,
     Lock,
     OverdueLozenge,
+    OverflowContainer,
     Paging,
     SectionsList,
     Table,
@@ -309,6 +377,10 @@ export default {
       required: true,
       type: String,
     },
+    priorityUrl: {
+      required: true,
+      type: String,
+    },
     // An Array of sort options
     sortByOptions: Array,
     viewUrl: {
@@ -324,11 +396,15 @@ export default {
       paginationLimit: 20,
       // Current pagination page
       paginationPage: 1,
+      // Prioritised subject instances
+      prioritisedInstances: [],
       singleSectionViewOnlyActivities: [],
       sortByFilter: 'created_at',
       subjectInstances: [],
       // Count of activities across all pages
       totalActivities: 0,
+      // Count of prioritised activities
+      totalPrioritisedActivities: 0,
       userFilters: {
         activityType: null,
         excludeCompleted: false,
@@ -372,6 +448,34 @@ export default {
   },
 
   apollo: {
+    // Query for prioritised subject instances
+    prioritisedInstances: {
+      query: subjectInstancesQuery,
+      variables() {
+        return {
+          filters: {
+            about_role: this.aboutRole,
+            activity_type: null,
+            exclude_complete: true,
+            overdue: false,
+            participant_progress: null,
+            search_term: null,
+          },
+          options: {
+            sort_by: 'due_date',
+          },
+          pagination: {
+            limit: 8,
+            page: 1,
+          },
+        };
+      },
+      update: data => data['mod_perform_my_subject_instances'].items,
+      result({ data: { mod_perform_my_subject_instances: data } }) {
+        this.totalPrioritisedActivities = data.total;
+      },
+    },
+
     subjectInstances: {
       query: subjectInstancesQuery,
       variables() {
@@ -403,8 +507,9 @@ export default {
      * @returns {string}
      */
     getViewActivityUrl(subjectInstance) {
-      const participantSection = this.getFirstSectionToParticipate(
-        subjectInstance.sections
+      const participantSection = getFirstSectionToParticipate(
+        subjectInstance.sections,
+        this.aboutRole
       );
       if (participantSection) {
         return this.$url(this.viewUrl, {
@@ -441,32 +546,6 @@ export default {
     },
 
     /**
-     * Get the first section, if relationship id is supplied it will get the first section
-     * for the user with the given relationship
-     *
-     * @param {Array} subjectSections
-     * @return {Object|Null} returns a participant_section object
-     */
-    getFirstSectionToParticipate(subjectSections) {
-      let foundSection = null;
-
-      subjectSections.forEach(subjectSection => {
-        // Check participant instance is for this user and that the role is for the current tab
-        let found = subjectSection.participant_sections.find(
-          item =>
-            item.participant_instance.is_for_current_user &&
-            item.participant_instance.core_relationship.id ===
-              this.aboutRole.toString()
-        );
-        if (found && foundSection === null) {
-          foundSection = found;
-        }
-      });
-
-      return foundSection;
-    },
-
-    /**
      * Get the localized status text for a particular user activity.
      *
      * @param status {String}
@@ -496,23 +575,24 @@ export default {
     },
 
     /**
-     * Get the current users progress on a particular subject instance.
+     * Get users progress status value
+     * @param {Object} participantInstances
+     * @returns {string}
+     */
+    getProgressStatus(participantInstances) {
+      return getYourProgressStatusValue(participantInstances, this.aboutRole);
+    },
+
+    /**
+     * Get the string value for current users progress on a particular subject instance.
      *
      * @param {Object[]} participantInstances - The participant instances from the subject instance we are getting the progress text for
      * @returns {string}
      */
     getYourProgressText(participantInstances) {
-      let relationships = participantInstances
-        .filter(
-          pi =>
-            pi.is_for_current_user &&
-            pi.core_relationship.id === this.aboutRole.toString()
-        )
-        .map(instance =>
-          this.getParticipantStatusText(instance.progress_status)
-        );
-
-      return relationships.join(', ');
+      return this.getParticipantStatusText(
+        this.getProgressStatus(participantInstances)
+      );
     },
 
     /**
@@ -554,32 +634,23 @@ export default {
     },
 
     /**
-     * Checks if all participant instances are closed.
+     * Checks if participant instance for current role is closed.
      *
      * @param {Array} participantInstances
      * @return {Boolean}
      */
-    allYourInstancesAreClosed(participantInstances) {
-      return !participantInstances.find(pi => {
-        return (
-          parseInt(pi.participant_id) === this.currentUserId &&
-          pi.availability_status &&
-          pi.availability_status !== 'CLOSED'
-        );
-      });
+    isCurrentRoleInstanceClosed(participantInstances) {
+      return isRoleInstanceClosed(participantInstances, this.aboutRole);
     },
 
     /**
-     * Checks if all participant instances are overdue.
+     * Checks if participant instance for current role is overdue.
      *
      * @param {Array} participantInstances
      * @return {Boolean}
      */
-    allYourInstancesAreOverdue(participantInstances) {
-      return !participantInstances.find(
-        pi =>
-          parseInt(pi.participant_id) === this.currentUserId && !pi.is_overdue
-      );
+    isCurrentRoleInstanceOverdue(participantInstances) {
+      return isRoleInstanceOverdue(participantInstances, this.aboutRole);
     },
 
     /**
@@ -629,8 +700,9 @@ export default {
      * @param subjectInstance
      */
     getPrintActivityLink(subjectInstance) {
-      const participantSection = this.getFirstSectionToParticipate(
-        subjectInstance.sections
+      const participantSection = getFirstSectionToParticipate(
+        subjectInstance.sections,
+        this.aboutRole
       );
 
       if (participantSection) {
@@ -715,9 +787,11 @@ export default {
       "user_activities_complete_before",
       "user_activities_created_at",
       "user_activities_due_date_header",
+      "user_activities_header",
       "user_activities_job_assignment_header",
       "user_activities_list_none_about_self",
       "user_activities_list_none_filtered",
+      "user_activities_priority_heading",
       "user_activities_single_section_view_only_activity",
       "user_activities_status_complete",
       "user_activities_status_header_activity",
@@ -735,10 +809,33 @@ export default {
 
 <style lang="scss">
 .tui-performUserActivityList {
-  min-height: 500px;
+  margin-top: var(--gap-2);
 
   & > * + * {
-    margin-top: var(--gap-4);
+    margin-top: var(--gap-8);
+  }
+
+  &__priority {
+    & > * + * {
+      margin-top: var(--gap-4);
+    }
+
+    &-heading {
+      margin: 0;
+      @include tui-font-heading-small();
+    }
+  }
+
+  &__content {
+    min-height: 500px;
+    & > * + * {
+      margin-top: var(--gap-4);
+    }
+  }
+
+  &__heading {
+    margin: 0;
+    @include tui-font-heading-small();
   }
 
   &__expandedRow {

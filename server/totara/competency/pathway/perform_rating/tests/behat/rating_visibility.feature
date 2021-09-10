@@ -52,7 +52,7 @@ Feature: Competency ratings from performance activity.
     # Accessing final rating as manager
     When I log in as "manager1"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "activity1" "link"
     Then I should see "Rating by: User One" in the 1st selected content item for the "review1" linked review element
     And I should see "Final rating: No rating" in the 1st selected content item for the "review1" linked review element
@@ -62,7 +62,7 @@ Feature: Competency ratings from performance activity.
     # Accessing final rating as appraiser
     When I log in as "appraiser1"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link_or_button"
+    And I click on "As Appraiser" "link_or_button"
     And I click on "activity1" "link"
     Then I should not see "Rating by: User One" in the 1st selected content item for the "review1" linked review element
     And I should not see "Final rating: No rating" in the 1st selected content item for the "review1" linked review element
@@ -101,7 +101,7 @@ Feature: Competency ratings from performance activity.
     # Accessing final rating as manager
     When I log in as "manager1"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "activity1" "link"
     And I wait for the next second
     Then I should not see "Rating by: User One" in the 1st selected content item for the "review1" linked review element
@@ -111,7 +111,7 @@ Feature: Competency ratings from performance activity.
     And I confirm the tui confirmation modal
 
     # Final rating should be visible after submission.
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "activity1" "link"
     Then I should see "Rating by: User One" in the 1st selected content item for the "review1" linked review element
     And I should see "Final rating: No rating" in the 1st selected content item for the "review1" linked review element
@@ -121,7 +121,7 @@ Feature: Competency ratings from performance activity.
     # Accessing final rating as appraiser.
     When I log in as "appraiser1"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link_or_button"
+    And I click on "As Appraiser" "link_or_button"
     And I click on "activity1" "link"
     Then I should not see "Rating by: User One" in the 1st selected content item for the "review1" linked review element
     And I should not see "Final rating: No rating" in the 1st selected content item for the "review1" linked review element
@@ -130,7 +130,7 @@ Feature: Competency ratings from performance activity.
     And I confirm the tui confirmation modal
 
     # Final rating should not be visible after submission as well.
-    And I click on "As a Appraiser" "link_or_button"
+    And I click on "As Appraiser" "link_or_button"
     And I click on "activity1" "link"
     Then I should not see "Rating by: User One" in the 1st selected content item for the "review1" linked review element
     And I should not see "Final rating: No rating" in the 1st selected content item for the "review1" linked review element

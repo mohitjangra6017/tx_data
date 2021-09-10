@@ -53,7 +53,7 @@ Feature: Manually add participants as a manager
 
     # Admin user can now participate in the activity
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     Then I should see the tui datatable contains:
       | Activity                               | Type      | Your progress | Overall progress |
       | Subject and manager (##today##j F Y##) | Appraisal | Not started   | Not started      |

@@ -83,7 +83,7 @@ Feature: Respond to sources and view aggregate responses
 
     When I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     And I click on "Aggregation Activity" "link"
     And I click on "Display aggregation here" "link_or_button"
     # The appraiser is not in any source sections, so they should not get the "Your response" line.

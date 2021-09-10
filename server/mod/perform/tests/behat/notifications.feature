@@ -582,7 +582,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "हैलो"
     And I click on "Submit" "button"
@@ -592,7 +592,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link_or_button"
+    And I click on "As Appraiser" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "שלום"
     And I click on "Submit" "button"
@@ -681,7 +681,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "再见"
     And I click on "Submit" "button"
@@ -691,7 +691,7 @@ Feature: Perform activity notifications - core relationships
 
     And I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link_or_button"
+    And I click on "As Appraiser" "link_or_button"
     And I click on "Activity test" "link"
     And I set the field "Your response" to "Прощай"
     And I click on "Submit" "button"

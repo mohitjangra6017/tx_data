@@ -78,7 +78,7 @@ Feature: Job assignment column on user activities list.
       | Another Subject assignment (##today##j F Y##) | Appraisal | Not started   | Not started      |
       | Subject assignment (##today##j F Y##)         | Appraisal | Not started   | Not started      |
 
-    When I click on "As a Manager" "link"
+    When I click on "As Manager" "link"
 
     # Tests job assignment column is shown when any of the subject instances are created per job assignment
     Then I should see the tui datatable contains:
@@ -86,7 +86,7 @@ Feature: Job assignment column on user activities list.
       | Another Subject assignment (##today##j F Y##) | Edward Eiger | Appraisal | Mark man       | Not started   | Not started      |
       | All job assignments (##today##j F Y##)        | Edward Eiger | Appraisal |                | Not started   | Not started      |
 
-    When I click on "As a Appraiser" "link"
+    When I click on "As Appraiser" "link"
 
     # Tests job assignment column is shown when any of the subject instances are created per job assignment
     Then I should see the tui datatable contains:

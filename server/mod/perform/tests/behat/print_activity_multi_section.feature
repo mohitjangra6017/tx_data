@@ -95,7 +95,7 @@ Feature: Print view of a multi-section user activity
     And I log in as "manager"
     # Respond as manager
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I click on "Multi section activity" "link"
     And I click on "Next section" "button"
     And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
@@ -126,7 +126,7 @@ Feature: Print view of a multi-section user activity
   Scenario: Print view for multiple section with user having multiple relationships
     When I log in as "manager-appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     # Add a response as the manager.
     When I click on "Multi section activity" "link" in the ".tui-dataTableCell__content" "css_element"
     And I click on "Next section" "button"
@@ -137,7 +137,7 @@ Feature: Print view of a multi-section user activity
     Then I should see "Section submitted and closed." in the tui success notification toast
 
     # Check as manager.
-    When I click on "As a Manager" "link"
+    When I click on "As Manager" "link"
     And I toggle expanding row "1" of the tui datatable
     And I click on "Print activity" "link"
     Then I should see perform activity relationship to user "Manager"
@@ -156,7 +156,7 @@ Feature: Print view of a multi-section user activity
 
     # Check as appraiser.
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     When I toggle expanding row "1" of the tui datatable
     And I click on "Print activity" "link"
     Then I should see perform activity relationship to user "Appraiser"

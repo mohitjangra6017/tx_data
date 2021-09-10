@@ -96,7 +96,7 @@ Feature: Perform evidence activity
 
     When I log in as "user2"
     And I click on "Activities" in the totara menu
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "First Activity" "link"
     Then I should see "Test evidence one"
     And I should see "Custom cb11"

@@ -18,8 +18,8 @@ Feature: Selecting competencies linked to a performance review
       | Just Barely Competent  | Is okay at doing it.                   | barely      | 0          | 0       | 2         |
       | Incredibly Incompetent | <em>Is rubbish at doing it.</em>       | incompetent | 0          | 1       | 3         |
     And the following "competency" frameworks exist:
-      | fullname                   | idnumber | description                     | scale  |
-      | Competency Framework       | fw       | Framework for competencies      | scale1 |
+      | fullname             | idnumber | description                | scale  |
+      | Competency Framework | fw       | Framework for competencies | scale1 |
     And the following "competency" hierarchy exists:
       | framework | fullname    | idnumber    | description                                  | assignavailability |
       | fw        | Math        | math        | Adding, subtracting, and other calculations. | any                |
@@ -33,23 +33,23 @@ Feature: Selecting competencies linked to a performance review
     And I run the scheduled task "totara_competency\task\expand_assignments_task"
 
     And the following "activity with section and review element" exist in "performelement_linked_review" plugin:
-      | activity_name | section_title | element_title        | content_type      | selection_relationships | content_type_settings                                                |
-      | activity1     | section1      | Competency review    | totara_competency | perform_peer            | {"enable_rating":true,"rating_relationship":"perform_peer"} |
+      | activity_name | section_title | element_title     | content_type      | selection_relationships | content_type_settings                                       |
+      | activity1     | section1      | Competency review | totara_competency | perform_peer            | {"enable_rating":true,"rating_relationship":"perform_peer"} |
     And the following "section relationships" exist in "mod_perform" plugin:
       | section_name | relationship | can_view | can_answer |
       | section1     | subject      | yes      | yes        |
       | section1     | manager      | yes      | yes        |
       | section1     | peer         | yes      | no         |
     And the following "participants in section" exist in "performelement_linked_review" plugin:
-      | section  | subject_user | user  | relationship     | can_answer |
-      | section1 | user1        | user1 | subject          | true       |
-      | section1 | user1        | user2 | manager          | true       |
-      | section1 | user1        | user3 | perform_peer     | false      |
+      | section  | subject_user | user  | relationship | can_answer |
+      | section1 | user1        | user1 | subject      | true       |
+      | section1 | user1        | user2 | manager      | true       |
+      | section1 | user1        | user3 | perform_peer | false      |
 
   Scenario: Selecting participant can select competencies and give a rating
     When I log in as "user3"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Peer" "link_or_button"
+    And I click on "As Peer" "link_or_button"
     And I click on "activity1" "link"
     And I click on "Add competencies" "link_or_button"
     Then I should not see "No items to display" in the tui modal

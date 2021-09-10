@@ -114,7 +114,7 @@ Feature: Viewing user activities list with view-only access
   Scenario: View-only access is indicated differently for single and multi section activities
     Given I log in as "appraiser"
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     Then I should see the tui datatable contains:
       | Activity                                   | Type      | Your progress   | Overall progress |
       | Multi section activity (##today##j F Y##)  | Feedback  | n/a (view only) | Not started      |
@@ -136,7 +136,7 @@ Feature: Viewing user activities list with view-only access
   Scenario: Participant instance progress for mixed access is aggregated correctly
     Given I log in as "manager-appraiser"
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     Then I should see the tui datatable contains:
       | Activity                                   | Type      | Your progress | Overall progress |
       | Multi section activity (##today##j F Y##)  | Feedback  | Not started   | Not started      |
@@ -149,7 +149,7 @@ Feature: Viewing user activities list with view-only access
       | Subject              | John One | Not started      |
       | Manager              | You      | Not started      |
 
-    Then I click on "As a Appraiser" "link"
+    Then I click on "As Appraiser" "link"
     And I should see the tui datatable contains:
       | Activity                                   | Type      | Your progress   | Overall progress |
       | Multi section activity (##today##j F Y##)  | Feedback  | n/a (view only) | Not started      |

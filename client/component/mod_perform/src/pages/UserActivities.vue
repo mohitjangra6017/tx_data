@@ -32,7 +32,7 @@
     />
 
     <div class="tui-performUserActivities__content">
-      <Tabs :selected="initiallyOpenTab">
+      <Tabs :selected="openTab">
         <Tab
           v-for="tab in activityRoleTabs.tabs"
           :id="tab.id"
@@ -45,6 +45,7 @@
             :filter-options="filterOptions"
             :is-about-others="tab.about_others"
             :print-url="printActivityUrl"
+            :priority-url="priorityUrl"
             :sort-by-options="sortByOptions"
             :view-url="viewActivityUrl"
           />
@@ -127,6 +128,10 @@ export default {
       required: true,
       type: String,
     },
+    priorityUrl: {
+      required: true,
+      type: String,
+    },
     requireManualParticipantsNotification: {
       type: Boolean,
       default: false,
@@ -145,6 +150,26 @@ export default {
   },
 
   computed: {
+    /**
+     * Check the initially open tab ID is available
+     *
+     * @return {Number}
+     */
+    openTab() {
+      let tabExists = this.activityRoleTabs.tabs.find(tab => {
+        return tab.id === this.initiallyOpenTab;
+      });
+
+      // If tab doesn't exist fallback to the users own tab
+      if (!tabExists) {
+        return this.activityRoleTabs.tabs.find(tab => {
+          return !tab.about_others;
+        }).id;
+      }
+
+      return this.initiallyOpenTab;
+    },
+
     sortByOptions() {
       if (!this.sortOptions) {
         return null;

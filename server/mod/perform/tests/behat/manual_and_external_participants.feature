@@ -181,7 +181,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     Then I should see "The participants have been successfully saved." in the tui success notification toast
     When I click on "Back to all performance activities" "link"
     Then I should see "Select participants"
-    And I should not see "As a Manager"
+    And I should not see "As Manager"
     And I should not see "Act1"
     And I log out
 
@@ -202,13 +202,13 @@ Feature: Allow users to select manual (internal and external) participants for a
     Then I should not see "Select participants"
 
     # Appraiser was the last person that needed to make a selection, so participant instances should exist now
-    When I click on "As a Appraiser" "link"
+    When I click on "As Appraiser" "link"
     Then I should see "Act1"
 
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Appraiser"
     When I press the "back" button in the browser
-    And I click on "As a Peer" "link"
+    And I click on "As Peer" "link"
     And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Peer"
     And I log out
@@ -224,7 +224,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Colleague views activity
     When I log in as "colleague"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Mentor" "link"
+    And I click on "As Mentor" "link"
     And I should not see "There are no activities assigned to you yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Mentor"
@@ -233,13 +233,13 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Manager views activity
     When I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I should not see "You have not been added as a participant in someone else's activity yet"
 
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Manager"
     When I press the "back" button in the browser
-    And I click on "As a Reviewer" "link"
+    And I click on "As Reviewer" "link"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Reviewer"
     When I log out
@@ -270,13 +270,13 @@ Feature: Allow users to select manual (internal and external) participants for a
 
     When I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I click on "Act1" "link"
     Then I should see that show others responses is toggled "off"
     And I answer "short text" question "Question 1" with "My Answer one"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I click on "Act1" "link"
     And I wait until ".tui-otherParticipantResponses" "css_element" exists
     Then I should see that show others responses is toggled "off"
@@ -297,7 +297,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Complete as appraiser and peer
     When I log in as "appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Appraiser"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
@@ -305,7 +305,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
     And I close the tui notification toast
-    And I click on "As a Peer" "link"
+    And I click on "As Peer" "link"
     And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Peer"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
@@ -331,7 +331,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Complete as colleague
     When I log in as "colleague"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Mentor" "link"
+    And I click on "As Mentor" "link"
     And I should not see "You have not been added as a participant in someone else's activity yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Mentor"
@@ -345,7 +345,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Complete as the maanager and the reviewer
     When I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I should not see "You have not been added as a participant in someone else's activity yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Manager"
@@ -354,7 +354,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
     And I close the tui notification toast
-    When I click on "As a Reviewer" "link"
+    When I click on "As Reviewer" "link"
     And I click on "Act1" "link"
     Then I should see perform activity relationship to user "Reviewer"
     When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists

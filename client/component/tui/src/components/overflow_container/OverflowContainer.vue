@@ -40,12 +40,31 @@
               :clickable="true"
               :has-hover-shadow="true"
               class="tui-overflowContainer__containerItem-viewAll"
+              :class="{
+                'tui-overflowContainer__containerItem-viewAll--only':
+                  visible === 1,
+              }"
+              :url="viewAllLink"
+              :url-aria-hidden="true"
+              :url-label="$str('viewallx', 'totara_core', total)"
+              :url-tabbable="false"
               @click="$emit('show-all')"
             >
               <GoToAll
+                :aria-hidden="true"
                 class="tui-overflowContainer__containerItem-viewAllIcon"
               />
+
+              <a
+                v-if="viewAllLink"
+                class="tui-overflowContainer__containerItem-viewAllAction tui-overflowContainer__containerItem-link"
+                :href="viewAllLink"
+              >
+                {{ $str('viewallx', 'totara_core', total) }}
+              </a>
+
               <Button
+                v-else
                 class="tui-overflowContainer__containerItem-viewAllAction"
                 :styleclass="{ stealth: true }"
                 :text="$str('viewallx', 'totara_core', total)"
@@ -85,6 +104,7 @@ export default {
       type: Number,
       required: true,
     },
+    viewAllLink: String,
   },
 
   data() {
@@ -159,7 +179,7 @@ export default {
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
-    min-width: 168px;
+    min-width: 198px;
     max-width: 248px;
 
     > * {
@@ -177,6 +197,10 @@ export default {
           margin: auto 0;
           text-align: center;
           background-color: var(--color-neutral-3);
+
+          &--only {
+            min-height: 200px;
+          }
         }
 
         &-viewAllIcon {
@@ -192,6 +216,10 @@ export default {
 
         &-viewAllAction {
           margin: var(--gap-2) 0 auto;
+        }
+
+        &-link {
+          outline: 0;
         }
       }
     }

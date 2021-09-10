@@ -65,6 +65,7 @@ class user_activities extends perform_controller {
             'activity-role-tabs' => ['tabs' => $tabs],
             'view-activity-url' => (string) view_user_activity::get_url(),
             'print-activity-url' => (string) print_user_activity::get_url(),
+            'priority-url' => (string) user_activities_priority::get_url(),
             'completion-save-success' => (bool) $this->get_optional_param('completion_save_success', false, PARAM_BOOL),
             'closed-on-completion' => (bool) $this->get_optional_param('closed_on_completion', false, PARAM_BOOL),
             'require-manual-participants-notification' => manual_participant_helper::for_user($current_user_id)

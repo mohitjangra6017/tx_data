@@ -104,6 +104,9 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
         $actual = $result['items'];
         $this->assertCount(1, $actual, 'wrong subject count');
 
+        $subject_user = new user($subject_instance->subject_user->id);
+        $subject_user_profile_image_url = (new user_picture($subject_user->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+
         $subject = $actual[0];
         $expected_subject = [
             'id' => (string) $subject_instance->id,
@@ -124,7 +127,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                 'id' => $activity->id,
             ],
             'subject_user' => [
-                'fullname' => $subject_instance->subject_user->fullname
+                'fullname' => $subject_instance->subject_user->fullname,
+                'profileimageurlsmall' => $subject_user_profile_image_url,
             ],
             'job_assignment' => null,
             'participant_instances' => [
@@ -354,6 +358,9 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
         $actual = ($this->get_webapi_operation_data($result))['items'];
         $this->assertCount(1, $actual, 'wrong subject count');
 
+        $subject_user = new user($subject_instance->subject_user->id);
+        $subject_user_profile_image_url = (new user_picture($subject_user->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+
         $subject = $actual[0];
         $expected_subject = [
             'id' => (string) $subject_instance->id,
@@ -374,7 +381,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                 'id' => $activity->id,
             ],
             'subject_user' => [
-                'fullname' => $subject_instance->subject_user->fullname
+                'fullname' => $subject_instance->subject_user->fullname,
+                'profileimageurlsmall' => $subject_user_profile_image_url,
             ],
             'job_assignment' => null,
             'participant_instances' => [
@@ -523,6 +531,9 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
         $actual = ($this->get_webapi_operation_data($result))['items'];
         $this->assertCount(1, $actual, 'wrong subject count');
 
+        $subject_user = new user($subject_instance->subject_user->id);
+        $subject_user_profile_image_url = (new user_picture($subject_user->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+
         $subject = $actual[0];
         $expected_subject = [
             'id' => (string) $subject_instance->id,
@@ -543,7 +554,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                 'id' => $activity->id,
             ],
             'subject_user' => [
-                'fullname' => $subject_instance->subject_user->fullname
+                'fullname' => $subject_instance->subject_user->fullname,
+                'profileimageurlsmall' => $subject_user_profile_image_url,
             ],
             'job_assignment' => null,
             'participant_instances' => [
@@ -792,6 +804,9 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
 
             $this->assertEmpty($expected_relationships);
 
+            $subject_user = new user($subject_instance->subject_user->id);
+            $subject_user_profile_image_url = (new user_picture($subject_user->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+
             $expected_subject = [
                 'id' => $subject_instance->id,
                 'progress_status' => subject_instance_in_progress::get_name(),
@@ -811,7 +826,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                     'id' => $subject_instance->activity->id,
                 ],
                 'subject_user' => [
-                    'fullname' => $subject_instance->subject_user->fullname
+                    'fullname' => $subject_instance->subject_user->fullname,
+                    'profileimageurlsmall' => $subject_user_profile_image_url,
                 ],
                 'job_assignment' => null,
                 'participant_instances' => $expected_participant_instances

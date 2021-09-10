@@ -247,7 +247,7 @@ Feature: Print view of a single-section user activity
     # Check manager-appraiser's view.
     When I log in as "manager-appraiser"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I toggle expanding row "1" of the tui datatable
     And I click on "Print activity" "link"
     Then I should see "Your response"
@@ -260,7 +260,7 @@ Feature: Print view of a single-section user activity
 
     # Check as appraiser (view-only).
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     And I toggle expanding row "1" of the tui datatable
     And I click on "Print activity" "link"
     Then I should not see "Your response"

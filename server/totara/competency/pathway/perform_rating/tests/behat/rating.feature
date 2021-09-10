@@ -115,7 +115,7 @@ Feature: Rating competencies via performance activities.
     When I log out
     And I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I click on "activity1" "link"
     Then I should see "Final rating to be submitted for the competency"
     And I should not see "This will be answered by a Manager."

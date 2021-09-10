@@ -37,6 +37,7 @@ query mod_perform_my_subject_instances(
         }
         subject_user {
           fullname
+          profileimageurlsmall
         }
         participant_instances {
           id

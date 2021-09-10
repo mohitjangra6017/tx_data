@@ -262,7 +262,7 @@ Feature: Viewing the section list in the user activities view and navigating to 
     Given I log in as "manager-appraiser"
 
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     Then I should see the tui datatable contains:
       | Activity                                                           | Type      | Name     | Your progress | Overall progress |
       | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started   | Not started      |
@@ -293,7 +293,7 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should see "Question 1"
     And I should see perform activity relationship to user "Appraiser"
     When I click on "Cancel" "button"
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     Then I should see the tui datatable contains:
       | Activity                                                           | Type      | Name     | Your progress | Overall progress |
       | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started   | Not started      |
@@ -302,7 +302,7 @@ Feature: Viewing the section list in the user activities view and navigating to 
   Scenario: List and complete sections as the manager
     Given I log in as "manager-appraiser"
     When I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link"
+    And I click on "As Appraiser" "link"
     Then I should see the tui datatable contains:
       | Activity                                                           | Type      | Name     | Your progress | Overall progress |
       | Multiple section Activity (##today##j F Y##)                       | Appraisal | John One | Not started   | Not started      |
@@ -335,7 +335,7 @@ Feature: Viewing the section list in the user activities view and navigating to 
     And I should see "Question 1"
     And I should see perform activity relationship to user "Appraiser"
     When I click on "Cancel" "button"
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     Then I should see the tui datatable contains:
       | Activity                                                           | Type      | Name     | Your progress | Overall progress |
       | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started   | Not started      |
@@ -364,7 +364,7 @@ Feature: Viewing the section list in the user activities view and navigating to 
     When I click on "Submit" "button"
     And I confirm the tui confirmation modal
     And I close the tui notification toast
-    Then I click on "As a Manager" "link"
+    Then I click on "As Manager" "link"
     Then I should see the tui datatable contains:
       | Activity                                                           | Type      | Name     | Your progress | Overall progress |
       | Single section Activity (##today##j F Y##)                         | Feedback  | John One | Not started   | Not started      |

@@ -21,13 +21,21 @@
     v-focus-within
     class="tui-card"
     :class="[
-      clickable && 'tui-card--clickable',
+      (clickable || url) && 'tui-card--clickable',
       noBorder && 'tui-card--noBorder',
       hasHoverShadow && 'tui-card--hasHoverShadow',
       hasShadow && 'tui-card--hasShadow',
     ]"
     @click="clickCard"
   >
+    <a
+      v-if="url"
+      class="tui-card__link"
+      :aria-label="urlLabel"
+      :aria-hidden="urlAriaHidden"
+      :href="url"
+      :tabindex="!urlTabbable ? -1 : false"
+    />
     <slot />
   </div>
 </template>
@@ -47,6 +55,22 @@ export default {
     noBorder: {
       type: Boolean,
     },
+    // Full card link URL
+    url: {
+      type: String,
+    },
+    // Hidden on screen readers (when link is repeated inside card)
+    urlAriaHidden: {
+      type: Boolean,
+    },
+    // Label displayed to screen readers
+    urlLabel: {
+      type: String,
+    },
+    // The card should only be tabbable when no action included within the card
+    urlTabbable: {
+      type: Boolean,
+    },
   },
   methods: {
     clickCard() {
@@ -59,10 +83,17 @@ export default {
 
 <style lang="scss">
 .tui-card {
+  position: relative;
   display: flex;
   border: 1px solid var(--card-border-color);
   border-radius: var(--card-border-radius);
   outline: none;
+
+  &__link {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 
   &--noBorder {
     border: none;

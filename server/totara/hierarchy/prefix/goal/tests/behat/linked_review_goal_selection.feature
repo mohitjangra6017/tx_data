@@ -53,7 +53,7 @@ Feature: Selecting goals linked to a performance review
   Scenario: Waiting for another user to select the goals
     When I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "activity1" "link"
     Then I should see "Awaiting personal goal selection from a Subject."
     Then I should see "Awaiting company goal selection from a Subject."
@@ -184,7 +184,7 @@ Feature: Selecting goals linked to a performance review
       | user  | manager | appraiser |
       | user4 | user2   | user3     |
     And the following "activity with section and review element" exist in "performelement_linked_review" plugin:
-      | activity_name | section_title | element_title        | content_type  | selection_relationships |content_type_settings                                                |
+      | activity_name | section_title | element_title        | content_type  | selection_relationships | content_type_settings                                                  |
       | activity3     | section3      | Personal goal review | personal_goal | appraiser               | {"enable_status_change":true,"status_change_relationship":"appraiser"} |
       | activity3     | section3      | Company goal review  | company_goal  | appraiser               | {"enable_status_change":true,"status_change_relationship":"appraiser"} |
     And the following "section relationships" exist in "mod_perform" plugin:
@@ -193,10 +193,10 @@ Feature: Selecting goals linked to a performance review
       | section3     | manager      | yes      | yes        |
       | section3     | appraiser    | yes      | no         |
     And the following "participants in section" exist in "performelement_linked_review" plugin:
-      | section  | subject_user | user  | relationship     | can_answer | can_view |
-      | section3 | user4        | user4 | subject          | true       | true     |
-      | section3 | user4        | user2 | manager          | true       | true     |
-      | section3 | user4        | user3 | appraiser        | false      | true     |
+      | section  | subject_user | user  | relationship | can_answer | can_view |
+      | section3 | user4        | user4 | subject      | true       | true     |
+      | section3 | user4        | user2 | manager      | true       | true     |
+      | section3 | user4        | user3 | appraiser    | false      | true     |
     And I log out
 
     And I log in as "user4"
@@ -225,7 +225,7 @@ Feature: Selecting goals linked to a performance review
 
     When I log in as "user3"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Appraiser" "link_or_button"
+    And I click on "As Appraiser" "link_or_button"
     And I click on "activity3" "link"
     And I click on "Add personal goals" "link_or_button"
     Then I should not see "No items to display" in the tui modal

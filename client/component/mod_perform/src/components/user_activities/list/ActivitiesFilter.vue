@@ -20,7 +20,6 @@
   <div class="tui-performUserActivitiesFilter">
     <FilterBar
       v-model="value"
-      :has-top-bar="false"
       :title="$str('user_activities_filter', 'mod_perform')"
       @active-count-changed="filtersUpdated"
     >

@@ -26,7 +26,7 @@ Feature: User activity anonymise responses
   Scenario: manager can submit anonymise responses
     Given I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I click on "Anonymise responses activity" "link"
     And I answer "short text" question "Question one" with "Manager Answer one"
     And I answer "short text" question "Question two" with "Manager Answer two"
@@ -68,7 +68,7 @@ Feature: User activity anonymise responses
   Scenario: manager can submit anonymise responses and view-only subject can view them
     Given I log in as "manager"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link"
+    And I click on "As Manager" "link"
     And I click on "Anonymise responses view-only subject" "link"
     And I answer "short text" question "Question one" with "Manager Answer one"
     And I answer "short text" question "Question two" with "Manager Answer two"

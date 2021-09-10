@@ -32,7 +32,7 @@ Feature: Selecting competency assignments linked to a performance review
   Scenario: Waiting for another user to select the competencies
     When I log in as "user2"
     And I navigate to the outstanding perform activities list page
-    And I click on "As a Manager" "link_or_button"
+    And I click on "As Manager" "link_or_button"
     And I click on "activity1" "link"
     Then I should see "Awaiting competency selection from a Subject."
 
