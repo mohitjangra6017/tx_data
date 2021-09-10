@@ -20,6 +20,9 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
+
+use contentmarketplace_linkedin\local\sync_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -35,24 +38,26 @@ if (isset($settings_page)) {
         )
     );
 
-    $settings_page->add(
-        new admin_setting_configtext(
-            'contentmarketplace_linkedin/client_id',
-            new lang_string('client_id', 'contentmarketplace_linkedin'),
-            new lang_string('client_id_help', 'contentmarketplace_linkedin'),
-            null,
-            PARAM_ALPHANUM
-        )
+    $client_id_setting = new admin_setting_configtext(
+        'contentmarketplace_linkedin/client_id',
+        new lang_string('client_id', 'contentmarketplace_linkedin'),
+        new lang_string('client_id_help', 'contentmarketplace_linkedin'),
+        null,
+        PARAM_ALPHANUM
     );
 
-    $settings_page->add(
-        new admin_setting_configpasswordunmask(
-            'contentmarketplace_linkedin/client_secret',
-            new lang_string('client_secret', 'contentmarketplace_linkedin'),
-            new lang_string('client_secret_help', 'contentmarketplace_linkedin'),
-            ''
-        ),
+    $client_id_setting->set_updatedcallback([sync_helper::class, "settings_update_callback"]);
+    $settings_page->add($client_id_setting);
+
+    $client_secret_setting = new admin_setting_configpasswordunmask(
+        'contentmarketplace_linkedin/client_secret',
+        new lang_string('client_secret', 'contentmarketplace_linkedin'),
+        new lang_string('client_secret_help', 'contentmarketplace_linkedin'),
+        ''
     );
+
+    $client_secret_setting->set_updatedcallback([sync_helper::class, "settings_update_callback"]);
+    $settings_page->add($client_secret_setting);
 
     if (enrol_is_enabled('guest')) {
         $settings_page->add(

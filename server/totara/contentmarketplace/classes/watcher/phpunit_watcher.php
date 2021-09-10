@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,32 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_contentmarketplace
  */
+namespace totara_contentmarketplace\watcher;
 
-use totara_contentmarketplace\task\initial_sync_task;
-use totara_contentmarketplace\task\sync_task;
+use core\hook\phpunit_reset;
+use totara_contentmarketplace\testing\mock\mock_sync_action;
 
-defined('MOODLE_INTERNAL') || die();
-
-$tasks = [
-    [
-        'classname' => initial_sync_task::class,
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '4',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*'
-    ],
-    [
-        'classname' => sync_task::class,
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '4',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*'
-    ]
-];
+class phpunit_watcher {
+    /**
+     * @param phpunit_reset $hook
+     * @return void
+     */
+    public static function phpunit_reset(phpunit_reset $hook): void {
+        // Clear mock sync action.
+        mock_sync_action::clear();
+    }
+}

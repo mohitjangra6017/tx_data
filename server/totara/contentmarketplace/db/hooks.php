@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -17,32 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_contentmarketplace
  */
+defined("MOODLE_INTERNAL") || die();
 
-use totara_contentmarketplace\task\initial_sync_task;
-use totara_contentmarketplace\task\sync_task;
+use core\hook\phpunit_reset;
+use totara_contentmarketplace\watcher\phpunit_watcher;
 
-defined('MOODLE_INTERNAL') || die();
-
-$tasks = [
+$watchers = [
     [
-        'classname' => initial_sync_task::class,
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '4',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*'
-    ],
-    [
-        'classname' => sync_task::class,
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '4',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*'
+        "hookname" => phpunit_reset::class,
+        "callback" => [phpunit_watcher::class, "phpunit_reset"],
     ]
 ];

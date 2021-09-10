@@ -31,6 +31,7 @@ use totara_core\http\client;
 use core_component;
 use core_plugin_manager;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
+use coding_exception;
 
 class sync {
     /**
@@ -101,6 +102,30 @@ class sync {
         }
 
         $this->trace->finished();
+    }
+
+    /**
+     * Allows developer to set the sync action classes which should be
+     * a child of {@see sync_action}. This function will allow developer
+     * to run a custom set of sync action.
+     *
+     * Note that this function will override whatever the logics to load the sync action
+     * classes within this class.
+     *
+     * @param array $sync_classes
+     * @return void
+     */
+    public function set_sync_action_classes(array $sync_classes): void {
+        // Reset the current sync classes.
+        $this->sync_action_classes = [];
+
+        foreach ($sync_classes as $sync_class) {
+            if (!is_subclass_of($sync_class, sync_action::class)) {
+                throw new coding_exception("Invalid sync class {$sync_class}");
+            }
+
+            $this->sync_action_classes[] = $sync_class;
+        }
     }
 
     /**
