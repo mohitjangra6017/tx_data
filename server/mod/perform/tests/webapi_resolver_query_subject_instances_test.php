@@ -26,11 +26,11 @@
 use core\collection;
 use core\date_format;
 use core\entity\user;
+use core_phpunit\testcase;
 use core\webapi\formatter\field\date_field_formatter;
 use mod_perform\constants;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\external_participant;
-use mod_perform\entity\activity\filters\subject_instances_about;
 use mod_perform\entity\activity\participant_instance as participant_instance_entity;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\expand_task;
@@ -63,7 +63,7 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 /**
  * @group perform
  */
-class mod_perform_webapi_resolver_query_subject_instances_testcase extends advanced_testcase {
+class mod_perform_webapi_resolver_query_subject_instances_testcase extends testcase {
 
     private const QUERY = 'mod_perform_my_subject_instances';
 
@@ -111,8 +111,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
             'availability_status' => $subject_instance->get_availability_status(),
             'created_at' => (new date_field_formatter(date_format::FORMAT_DATE, $subject_instance->get_context()))
                 ->format($subject_instance->created_at),
-            'due_date' => null,
-            'is_overdue' => false,
+            'due_on' => null,
             'activity' => [
                 'name' => $activity->name,
                 'settings' => [
@@ -362,8 +361,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
             'availability_status' => $subject_instance->get_availability_status(),
             'created_at' => (new date_field_formatter(date_format::FORMAT_DATE, $subject_instance->get_context()))
                 ->format($subject_instance->created_at),
-            'due_date' => null,
-            'is_overdue' => false,
+            'due_on' => null,
             'activity' => [
                 'name' => $activity->name,
                 'settings' => [
@@ -532,8 +530,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
             'availability_status' => $subject_instance->get_availability_status(),
             'created_at' => (new date_field_formatter(date_format::FORMAT_DATE, $subject_instance->get_context()))
                 ->format($subject_instance->created_at),
-            'due_date' => null,
-            'is_overdue' => false,
+            'due_on' => null,
             'activity' => [
                 'name' => $activity->name,
                 'settings' => [
@@ -801,8 +798,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
                 'availability_status' => subject_instance_open::get_name(),
                 'created_at' => (new date_field_formatter(date_format::FORMAT_DATE, $subject_instance->get_context()))
                     ->format($subject_instance->created_at),
-                'due_date' => null,
-                'is_overdue' => false,
+                'due_on' => null,
                 'activity' => [
                     'name' => $subject_instance->activity->name,
                     'settings' => [
@@ -1257,4 +1253,50 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->assert_webapi_operation_failed($result, 'not logged in');
     }
 
+    public function test_overdue(): void {
+        $this->setAdminUser();
+
+        $subject = self::getDataGenerator()->create_user();
+
+        $generator = perform_generator::instance();
+        $activity = $generator->create_activity_in_container();
+        $entity = $generator->create_subject_instance([
+            'activity_id' => $activity->id,
+            'subject_is_participating' => true,
+            'include_questions' => false,
+            'subject_user_id' => $subject->id
+        ]);
+
+        $entity->due_date = (new DateTimeImmutable('-1 days'))->getTimestamp();
+        $entity->save();
+
+        $beginning_of_due_day = usergetmidnight($entity->due_date);
+        $end_of_due_day = (new DateTimeImmutable("@$beginning_of_due_day"))
+            ->setTime(23, 59, 59)
+            ->getTimestamp();
+
+        self::setUser($subject);
+        $subject_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
+        $args = [
+            'filters' => ['about_role' => $subject_relationship->id]
+        ];
+        $result = $this->parsed_graphql_operation(self::QUERY, $args);
+        $this->assert_webapi_operation_successful($result);
+
+        $items = ($this->get_webapi_operation_data($result))['items'];
+        $this->assertCount(1, $items);
+
+        $due_on = $items[0]['subject']['due_on'] ?? null;
+        $this->assertNotNull($due_on);
+
+        $date_formatter = new date_field_formatter(
+            date_format::FORMAT_DATE,
+            subject_instance_model::load_by_entity($entity)->get_context()
+        );
+        $this->assertEquals($date_formatter->format($end_of_due_day), $due_on['due_date']);
+
+        $this->assertTrue($due_on['is_overdue']);
+        $this->assertEquals(1, $due_on['units_to_due_date']);
+        $this->assertEquals(get_string('day'), $due_on['units_to_due_date_type']);
+    }
 }

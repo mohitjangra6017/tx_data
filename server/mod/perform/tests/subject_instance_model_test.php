@@ -22,15 +22,17 @@
  * @category test
  */
 
+use core_phpunit\testcase;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
+use mod_perform\models\due_date;
 use mod_perform\models\activity\subject_instance;
 
-require_once(__DIR__ . '/state_testcase.php');
+use mod_perform\testing\generator;
 
 /**
  * @group perform
  */
-class mod_perform_subject_instance_model_testcase extends advanced_testcase {
+class mod_perform_subject_instance_model_testcase extends testcase {
 
     /**
      * @param int $extra_instance_count
@@ -40,7 +42,7 @@ class mod_perform_subject_instance_model_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        $perform_generator = generator::instance();
 
         $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
@@ -81,4 +83,61 @@ class mod_perform_subject_instance_model_testcase extends advanced_testcase {
         ];
     }
 
+    public function test_overdue(): void {
+        $this->setAdminUser();
+
+        $generator = generator::instance();
+        $activity = $generator->create_activity_in_container();
+
+        $user_tz = new DateTimeZone(core_date::get_user_timezone());
+        $due_dates = [
+            new DateTimeImmutable('now', $user_tz),
+            new DateTimeImmutable('2 days', $user_tz),
+            new DateTimeImmutable('-3 days', $user_tz),
+            null // ie no due date.
+        ];
+
+        [$due_today, $due_in_future, $overdue, $no_due_date] = array_map(
+            function (?DateTimeImmutable $due_date) use ($activity, $generator): subject_instance {
+                $subject_instance = $generator->create_subject_instance([
+                    'activity_id' => $activity->id,
+                    'subject_is_participating' => true,
+                    'include_questions' => false,
+                    'subject_user_id' => $this->getDataGenerator()->create_user()->id
+                ]);
+
+                if ($due_date) {
+                    $subject_instance->due_date = $due_date->getTimestamp();
+                    $subject_instance->save();
+                }
+
+                return subject_instance::load_by_entity($subject_instance);
+            },
+            $due_dates
+        );
+
+        $testcases = [
+            'no due date' => [$no_due_date, false, null, null],
+            'due today' => [$due_today, true, false, 0],
+            'due in future' => [$due_in_future, true, false, 2],
+            'overdue' => [$overdue, true, true, 3]
+        ];
+
+        foreach ($testcases as $id => $testcase) {
+            [$subject_instance_model, $has_due_date, $is_overdue, $expected_interval] = $testcase;
+
+            $due_date = $subject_instance_model->due_on;
+            if (!$has_due_date) {
+                $this->assertNull($due_date);
+                continue;
+            }
+
+            $this->assertEquals($is_overdue, $due_date->is_overdue(), "[$id] wrong overdue value");
+            $this->assertEquals(
+                [$expected_interval, due_date::INTERVAL_IN_DAYS],
+                $due_date->get_interval_to_or_past_due_date(),
+                "[$id] wrong interval details"
+            );
+        }
+    }
 }

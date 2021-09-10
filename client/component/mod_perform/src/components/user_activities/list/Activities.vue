@@ -136,7 +136,9 @@
             size="2"
             valign="center"
           >
-            {{ row.subject.due_date }}
+            <template v-if="row.subject.due_on">
+              {{ row.subject.due_on.due_date }}
+            </template>
           </Cell>
 
           <!-- Activity type -->
@@ -182,7 +184,9 @@
           >
             {{ getStatusText(row.subject.progress_status) }}
 
-            <OverdueLozenge v-if="row.subject.is_overdue" />
+            <OverdueLozenge
+              v-if="row.subject.due_on && row.subject.due_on.is_overdue"
+            />
 
             <Lock
               v-if="row.subject.availability_status === 'CLOSED'"
@@ -203,12 +207,12 @@
                 )
               }}
 
-              <span v-if="row.subject.due_date">
+              <span v-if="row.subject.due_on">
                 {{
                   $str(
                     'user_activities_complete_before',
                     'mod_perform',
-                    row.subject.due_date
+                    row.subject.due_on.due_date
                   )
                 }}
               </span>
@@ -614,7 +618,7 @@ export default {
      * The label to show for the expand row button.
      *
      * @param {Object} subjectInstance
-     * @returns {string}
+     * @return {string}
      */
     getExpandLabel(subjectInstance) {
       const activityTitle = this.getActivityTitle(subjectInstance.subject);

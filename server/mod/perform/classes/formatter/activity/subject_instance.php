@@ -44,8 +44,7 @@ class subject_instance extends entity_model_formatter {
             'id' => null,
             'activity' => null,
             'created_at' => date_field_formatter::class,
-            'due_date' => date_field_formatter::class,
-            'is_overdue' => null,
+            'due_on' => null,
             'instance_count' => null,
             'subject_user' => null,
             'progress_status' => null,
@@ -53,6 +52,10 @@ class subject_instance extends entity_model_formatter {
             'participant_instances' => null,
             'job_assignment' => null,
             'static_instances' => null,
+
+            // These are deprecated since T15. Use the 'due_on' attribute instead.
+            'due_date' => date_field_formatter::class,
+            'is_overdue' => null,
         ];
     }
 

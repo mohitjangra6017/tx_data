@@ -32,6 +32,7 @@ use core\orm\query\builder;
 use mod_perform\constants;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\event\subject_instance_manual_participants_selected;
+use mod_perform\models\due_date;
 use mod_perform\models\activity\helpers\manual_participant_helper;
 use mod_perform\state\participant_instance\open as participant_instance_open;
 use mod_perform\state\state;
@@ -105,6 +106,7 @@ class subject_instance extends model {
         'subject_user',
         'instance_count',
         'static_instances',
+        'due_on'
     ];
 
     /** @var subject_instance_entity */
@@ -158,14 +160,24 @@ class subject_instance extends model {
     }
 
     /**
+     * Returns due date details.
+     *
+     * @return due_date the due date details or null if there is no due date.
+     */
+    public function get_due_on(): ?due_date {
+        return !$this->is_complete() && !empty($this->entity->due_date)
+            ? new due_date($this->entity->due_date)
+            : null;
+    }
+
+    /**
      * Checks if overdue
      *
      * @return bool
      */
     public function get_is_overdue(): bool {
-        return !$this->is_complete()
-            && !empty($this->entity->due_date)
-            && time() >= (int)$this->entity->due_date;
+        $due_date = $this->get_due_on();
+        return !is_null($due_date) ? $due_date->is_overdue() : false;
     }
 
     /**

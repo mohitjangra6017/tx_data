@@ -42,9 +42,13 @@ class subject_instances_overdue extends filter {
         // Don't apply any extra filter when set to false.
         // We want to see overdue as well as not overdue when this filter isn't active.
         if ($this->value) {
+            // If the due date falls within today, it is technically not overdue
+            // until 00:00:00 tommorrow - in the user's timezone.
+            $beginning_of_today = usergetmidnight(time());
+
             $this->builder->where_not_null("{$this->subject_instance_alias}.due_date");
             $this->builder->where("{$this->subject_instance_alias}.progress", '!=', subject_instance_complete::get_code());
-            $this->builder->where("{$this->subject_instance_alias}.due_date", '<', time());
+            $this->builder->where("{$this->subject_instance_alias}.due_date", '<', $beginning_of_today);
         }
     }
 }

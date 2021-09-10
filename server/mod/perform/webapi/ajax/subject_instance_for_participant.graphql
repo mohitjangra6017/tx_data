@@ -8,7 +8,12 @@ query mod_perform_subject_instance_for_participant(
     progress_status
     created_at
     instance_count
-    due_date
+    due_on {
+      due_date
+      is_overdue
+      units_to_due_date
+      units_to_due_date_type
+    }
     activity {
       id
       name

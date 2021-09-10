@@ -299,6 +299,28 @@ type mod_perform_validation_error {
 }
 
 """
+Details about when an activity is due.
+"""
+type mod_perform_due_date {
+  """
+  Date the activity is expected to be completed by. Used for triggering notifications and displaying overdue notices.
+  """
+  due_date(format: core_date_format = DATE): core_date!
+  """
+  If true the due date has passed and the overall subject instance is not yet closed
+  """
+  is_overdue: Boolean!
+  """
+  Numeric count from now to the due date.
+  """
+  units_to_due_date: Int!
+  """
+  The duration label to use together with units_to_due_date eg 'days'
+  """
+  units_to_due_date_type: String!
+}
+
+"""
 Details about perform activity that a user is involved with (either the subject or an answering participant)
 """
 type mod_perform_subject_instance {
@@ -313,14 +335,6 @@ type mod_perform_subject_instance {
   """
   availability_status: mod_perform_subject_instance_availability_status!
   created_at(format: core_date_format = DATE): core_date!
-  """
-  Date the activity is expected to be completed by. Used for triggering notifications and displaying overdue notices.
-  """
-  due_date(format: core_date_format = DATETIME): core_date
-  """
-  If true the due date has passed and the overall subject instance is not yet closed
-  """
-  is_overdue: Boolean!
   """
   Participant data on the subject of this instance
   """
@@ -341,6 +355,19 @@ type mod_perform_subject_instance {
   Static user metadata stored at the time of subject instance creation, used to provide a permanent record of the subject's details that this activity was about
   """
   static_instances: [totara_job_assignment!]!
+  """
+  Date the activity is expected to be completed by. If this is null, then there is no due date and it is not overdue
+  """
+  due_on: mod_perform_due_date
+  """
+  @deprecated since Totara 15: Use the due_on attribute instead.
+  """
+  due_date(format: core_date_format = DATETIME): core_date
+    @deprecated(reason: "Use the due_on attribute instead.")
+  """
+  @deprecated since Totara 15: Use the due_on attribute instead.
+  """
+  is_overdue: Boolean! @deprecated(reason: "Use the due_on attribute instead.")
 }
 
 """

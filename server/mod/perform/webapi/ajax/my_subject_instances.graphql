@@ -14,8 +14,12 @@ query mod_perform_my_subject_instances(
         progress_status
         availability_status
         created_at
-        due_date
-        is_overdue
+        due_on {
+          due_date
+          is_overdue
+          units_to_due_date
+          units_to_due_date_type
+        }
         job_assignment {
           idnumber
           fullname

@@ -33,7 +33,7 @@
       :subject-instance-id="subjectInstanceId"
       :subject-user="subjectInstance.subject_user"
       :created-at="subjectInstance.created_at"
-      :due-date="subjectInstance.due_date"
+      :due-date="dueDate"
       :job-assignments="jobAssignments"
       :printed-on-date="printedOnDate"
     />
@@ -156,6 +156,17 @@ export default {
       }
 
       return !this.$apollo.loading && this.subjectInstance === null;
+    },
+
+    /**
+     * Returns the activity due date if there is one.
+     *
+     * @return {string} or null
+     */
+    dueDate() {
+      return this.subjectInstance && this.subjectInstance.due_on
+        ? this.subjectInstance.due_on.due_date
+        : null;
     },
   },
 
