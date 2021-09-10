@@ -69,4 +69,28 @@ class totara_reportbuilder_renderer_testcase extends advanced_testcase {
         // Report instance for export must keep parameters.
         $this->assertMatchesRegularExpression('/action=\"[a-z\:\/\.]*course\/find\.php\?courseid=2\"/', $out);
     }
+
+    /**
+     * Test that print_description cleans html data
+     */
+    public function test_print_description() {
+        global $PAGE;
+
+        $this->setAdminUser();
+
+        $PAGE->set_url('/course/find.php');
+
+        $page = new moodle_page();
+        $page->set_context(context_system::instance());
+        $renderer = $page->get_renderer('totara_reportbuilder');
+
+        // Prepare report instance.
+        $report = reportbuilder::create_embedded('findcourses');
+
+        $output = $renderer->print_description('<img src="pic.jpg" onClick="alert(666);" />', $report->_id);
+
+        $this->assertStringContainsString('<img src="pic.jpg" alt="pic.jpg" />', $output);
+        $this->assertStringNotContainsString('onClick', $output);
+        $this->assertStringNotContainsString('alert', $output);
+    }
 }
