@@ -521,6 +521,12 @@ export default {
         margin-top: var(--gap-4);
       }
     }
+
+    &-desc {
+      img {
+        max-width: 100%;
+      }
+    }
   }
 }
 </style>
