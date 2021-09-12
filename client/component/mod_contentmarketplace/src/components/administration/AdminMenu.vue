@@ -124,6 +124,7 @@ export default {
       variables() {
         return {
           context_id: config.context.id,
+          page_url: window.location.href,
         };
       },
       update({ tree: data }) {

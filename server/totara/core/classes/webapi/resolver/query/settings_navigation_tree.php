@@ -23,6 +23,7 @@
 
 namespace totara_core\webapi\resolver\query;
 
+use coding_exception;
 use context;
 use context_system;
 use core\webapi\execution_context;
@@ -69,7 +70,8 @@ class settings_navigation_tree implements query_resolver, has_middleware {
             $ec->set_relevant_context($context);
         }
 
-        $settings_nav = self::initialise_settings_navigation($context);
+        $page_url = new moodle_url($args['page_url']);
+        $settings_nav = self::initialise_settings_navigation($context, $page_url);
 
         return self::load_trees($settings_nav, $context);
     }
@@ -109,15 +111,15 @@ class settings_navigation_tree implements query_resolver, has_middleware {
      * Set up and build the settings navigation tree.
      *
      * @param context $context
+     * @param moodle_url $page_url
      * @return settings_navigation
      */
-    private static function initialise_settings_navigation(context $context): settings_navigation {
-        global $PAGE;
+    private static function initialise_settings_navigation(context $context, moodle_url $page_url): settings_navigation {
+        global $CFG, $PAGE;
 
-        // The page URL is only used for determining what navigation node is currently active,
-        // however we do not use it because it makes caching more difficult.
-        // When we do eventually want to display what navigation node is currently active, then it should be done in the front end.
-        $page_url = new moodle_url('/');
+        if (strpos($page_url->out(false), $CFG->wwwroot) !== 0) {
+            throw new coding_exception('Invalid page_url specified: ' . $page_url->out(false));
+        }
 
         // We have to reuse the existing $PAGE instance rather than using a fresh moodle_page,
         // as many plugins use the global $PAGE when adding their nodes to the navigation structure.

@@ -33,6 +33,8 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
 
     private const QUERY = 'totara_core_settings_navigation_tree';
 
+    private const PAGE_URL = '/index.php?id=4';
+
     /** @var int */
     private $course_context;
 
@@ -82,7 +84,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             ],
         ];
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->category_context->id]);
+        $result = $this->resolve_query($this->category_context);
         $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
     }
 
@@ -124,7 +126,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             ],
         ];
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->course_context->id]);
+        $result = $this->resolve_query($this->course_context);
         $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
     }
 
@@ -176,7 +178,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             ],
         ];
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->module_context->id]);
+        $result = $this->resolve_query($this->module_context);
         $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
     }
 
@@ -191,7 +193,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             ],
         ];
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->module_context->id]);
+        $result = $this->resolve_query($this->module_context);
         $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
     }
 
@@ -201,7 +203,9 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
     public function test_resolve_settings_tree_type_values(): void {
         self::setAdminUser();
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->module_context->id]);
+        $test_page_url = '/lib/womenslib.php?id=1961';
+
+        $result = $this->resolve_query($this->module_context, $test_page_url);
         $resolved_nodes = [];
         foreach ($result as $node) {
             $resolved_nodes[] = $this->resolve_node($node);
@@ -219,7 +223,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             'linkUrl' => null,
         ], $module_root);
 
-        // Module setting - module edit settings
+        // Module setting - edit settings
         $this->assertEquals([
             'id' => 'modulesettings/modedit',
             'label' => get_string('editsettings'),
@@ -237,18 +241,26 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             'linkUrl' => null,
         ], $course_root);
 
-        // Course setting - module edit settings
+        // Course setting - edit settings
         $this->assertEquals([
             'id' => 'courseadmin/editsettings',
             'label' => get_string('editsettings'),
             'linkUrl' => "https://www.example.com/moodle/course/edit.php?id={$this->course_context->instanceid}",
             'children' => [],
         ], $course_children[0]);
+
+        // Course setting - turn editing on
+        $turn_editing_on = $course_children[1];
+        $this->assertEquals('courseadmin/turneditingonoff', $turn_editing_on['id']);
+        $this->assertEquals(get_string('turneditingon'), $turn_editing_on['label']);
+        $this->assertEmpty($turn_editing_on['children']);
+        // The return param of the link for the turn editing on/off button should contain the page_url inputted to the query.
+        $this->assertEquals($test_page_url, (new moodle_url($turn_editing_on['linkUrl']))->get_param('return'));
     }
 
     public function test_resolve_when_not_logged_in(): void {
         $this->expectException(require_login_exception::class);
-        $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->module_context->id]);
+        $this->resolve_query($this->module_context);
     }
 
     public function test_resolve_invalid_context(): void {
@@ -261,7 +273,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
     public function test_tree_for_system_context_is_empty(): void {
         self::setAdminUser();
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->system_context->id]);
+        $result = $this->resolve_query($this->system_context);
         $actual_ids = $this->simplify_tree($result);
         $this->assertEmpty($actual_ids);
     }
@@ -271,7 +283,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         self::setAdminUser();
         $CFG->legacyadminsettingsmenu = true;
 
-        $result = $this->resolve_graphql_query(self::QUERY, ['context_id' => $this->system_context->id]);
+        $result = $this->resolve_query($this->system_context);
         $actual_ids = $this->simplify_tree($result);
         $this->assertNotEmpty($actual_ids);
         $this->assertArrayHasKey('systeminformation', $actual_ids['root']);
@@ -285,10 +297,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         self::getDataGenerator()->enrol_user(get_admin()->id, $course->id);
         $course_context = context_course::instance($course->id);
 
-        $result = $this->resolve_graphql_query(self::QUERY, [
-            'context_id' => $course_context->id,
-            'page_url' => '/',
-        ]);
+        $result = $this->resolve_query($course_context);
 
         /** @var tree_node $root_node */
         $root_node = $result[0];
@@ -329,6 +338,27 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
             "The settings navigation tree node with ID '1/2/3/4/5/6/7' is deeper than the max supported depth of 6, and may not be resolved correctly.",
             DEBUG_DEVELOPER
         );
+    }
+
+    public function test_external_page_url_specified(): void {
+        self::setAdminUser();
+
+        $invalid_page_url = "https://example.com/index.php";
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Invalid page_url specified: $invalid_page_url");
+        $this->resolve_query($this->course_context, $invalid_page_url);
+    }
+
+    /**
+     * @param context $context
+     * @param string|null $url
+     * @return array
+     */
+    private function resolve_query(context $context, string $url = null): array {
+        return $this->resolve_graphql_query(self::QUERY, [
+            'context_id' => $context->id,
+            'page_url' => $url ?? self::PAGE_URL,
+        ]);
     }
 
     /**

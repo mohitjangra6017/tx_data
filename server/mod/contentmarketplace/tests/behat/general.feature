@@ -49,3 +49,20 @@ Feature: General behaviour with mod contentmarketplace
     And I click on "Launch (opens in new window)" "button"
     When I switch to "linkedIn_course_window" window
     Then I should see "Learning object launched from activity page"
+
+  Scenario: Use the admin settings popover
+    Given I am on a totara site
+    And I log in as "admin"
+    When I am on "Course 101" course homepage
+    And I click on "Learning 1" "link"
+    Then I should see "Course 101"
+    When I click on "Administration" "button"
+    Then I should see "Content marketplace activity administration"
+    And I should not see "Turn editing on"
+    When I click on "Course administration" "button"
+    And I click on "Turn editing on" "link"
+    Then I should see "Course 101"
+    When I click on "Administration" "button"
+    And I click on "Course administration" "button"
+    And I click on "Turn editing off" "link"
+    Then I should see "Course 101"

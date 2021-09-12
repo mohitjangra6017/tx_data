@@ -117,6 +117,7 @@ extend type Query {
   """
   totara_core_settings_navigation_tree(
     context_id: core_id!
+    page_url: param_url!
   ): [totara_core_tui_tree_node!]!
 }
 
