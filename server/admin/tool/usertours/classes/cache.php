@@ -91,7 +91,10 @@ EOF;
             }
             $pattern = preg_quote($tour->pathmatch, '@');
             $pattern = str_replace('%', '.*', $pattern);
-            return !!preg_match("@{$pattern}$@", $target);
+            // Totara: matching either end of the line or existence of the next page URL parameter.
+            // This ensures people can set up tours on the pages with the URL parameters not present
+            // in the browser bar (because we add them via $PAGE->set_url()).
+            return !!preg_match("@{$pattern}(&|$)@", $target);
         });
     }
 

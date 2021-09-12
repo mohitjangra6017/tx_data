@@ -264,6 +264,7 @@ class filter_list {
      */
     public function to_url(seminar $seminar, string $baseurl = '/mod/facetoface/view.php'): moodle_url {
         $params = [
+            'id' => $seminar->get_coursemodule()->id,
             self::PARAM_FILTER_F2FID => $seminar->get_id()
         ];
         foreach ($this->filters as $unused => $filter) {
