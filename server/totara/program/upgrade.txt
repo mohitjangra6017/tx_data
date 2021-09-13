@@ -1,7 +1,15 @@
 This files describes API changes in Totara Program,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* Introduced new config setting $CFG->program_message_prevent_resend_on_schedule_change. This is only relevant when
+  custom message types based on the legacy prog_eventbased_message class have been carried over from pre-14 versions.
+  When set to true, it switches off the default behaviour of resending program and certification messages on change of
+  message scheduling.
+
 === 14.0 ===
+
 * DURATION_* globals have been deprecated. Please use the \totara_program\utils::DURATION_* constants instead.
 
 === 13.0 ===

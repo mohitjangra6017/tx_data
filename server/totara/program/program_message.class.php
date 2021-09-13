@@ -807,10 +807,10 @@ abstract class prog_eventbased_message extends prog_message {
     }
 
     public function save_message() {
-        global $DB;
-        // check if the trigger time has changed and delete all message logs for
-        // this message if so
-        if ($this->id > 0) { // if this message already exists in the database
+        global $DB, $CFG;
+        // If this message already exists in the database, check if the trigger time has changed and delete all
+        // message logs for this message unless it is prevented by configuration.
+        if ($this->id > 0 && empty($CFG->program_message_prevent_resend_on_schedule_change)) {
             $triggertime = $DB->get_field('prog_message', 'triggertime', array('id' => $this->id));
             if ($triggertime != $this->triggertime) {
                 $DB->delete_records('prog_messagelog', array('messageid' => $this->id));

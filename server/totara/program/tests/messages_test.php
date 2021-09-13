@@ -23,6 +23,7 @@
  */
 
 use totara_core\advanced_feature;
+use totara_program\task\send_messages_task;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -53,6 +54,9 @@ require_once($CFG->dirroot . '/totara/program/lib.php');
  */
 class totara_program_messages_testcase extends reportcache_advanced_testcase {
 
+    /**
+     * @var totara_program_generator|null
+     */
     private $program_generator = null;
     private $program1, $program2;
     private $user1, $user2, $user3, $user4, $user5, $user6;
@@ -132,7 +136,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -185,7 +189,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -227,7 +231,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -256,7 +260,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -285,7 +289,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -506,7 +510,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -553,7 +557,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -653,7 +657,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -678,7 +682,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -900,7 +904,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -927,7 +931,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1049,7 +1053,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1074,7 +1078,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1142,7 +1146,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1162,7 +1166,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1190,7 +1194,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1247,7 +1251,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Attempt to send any program messages.
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.
         ob_start(); // Start a buffer to catch all the mtraces in the task.
-        $task = new \totara_program\task\send_messages_task();
+        $task = new send_messages_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
 
@@ -1288,5 +1292,93 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
             array('userid' => $this->user1->id, 'messageid' => $enrolmentmessage->id)));
         $this->assertEquals(1, $DB->count_records('prog_messagelog',
             array('userid' => $this->user2->id, 'messageid' => $enrolmentmessage->id)));
+    }
+
+    /**
+     * Check config setting "program_message_prevent_resend_on_schedule_change".
+     */
+    public function test_prevent_resend_on_schedule_change(): void {
+        global $DB, $CFG;
+
+        // Set up the due message for program1.
+        $message_manager = $this->program1->get_messagesmanager();
+        $message_manager->delete();
+        $message_manager->add_message(MESSAGETYPE_PROGRAM_DUE);
+        $message_manager->save_messages();
+
+        // Adjust the message content.
+        $due_message = $DB->get_record('prog_message', ['programid' => $this->program1->id, 'messagetype' => MESSAGETYPE_PROGRAM_DUE]);
+        $due_message->messagesubject = 'Learner ProgDue Message';
+        $due_message->mainmessage = 'Hey dude, do your program';
+        $due_message->notifymanager = 0;
+        $DB->update_record('prog_message', $due_message);
+
+        // Update the message record to be triggered 100 days before due.
+        $message_id = $due_message->id;
+        $triggertime = DAYSECS * 100;
+        $DB->set_field('prog_message', 'triggertime', $triggertime, ['id' => $message_id]);
+        prog_messages_manager::get_program_messages_manager($this->program1->id, true); // Causes static cache to be reset.
+
+        // Assign users to program.
+        $this->program_generator->assign_program($this->program1->id, [$this->user1->id]);
+
+        // Adjust the due date, 10 days from now.
+        $duedate = time() + DAYSECS * 10;
+        $progcompl1 = prog_load_completion($this->program1->id, $this->user1->id);
+        $progcompl1->timedue = $duedate;
+        $this->assertTrue(prog_write_completion($progcompl1));
+
+        // Attempt to send any program messages.
+        $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait for the next second.
+        ob_start(); // Start a buffer to catch all the mtraces in the task.
+        $task = new send_messages_task();
+        $task->execute();
+        ob_end_clean();
+
+        $emails = $this->sink->get_messages();
+        $this->assertCount(1, $emails);
+        $this->sink->clear();
+        $email = reset($emails);
+        $this->assertEquals($email->subject, 'Learner ProgDue Message');
+        $this->assertEquals($email->fullmessage, 'Hey dude, do your program');
+
+        // Check message log.
+        $this->assertEquals(1, $DB->count_records('prog_messagelog', ['userid' => $this->user1->id, 'messageid' => $message_id]));
+
+        // Changing the schedule should remove the message log entry and resend the message.
+        $due_message_obj = new prog_program_due_message($due_message->id, $due_message);
+        $due_message_obj->triggertime = $triggertime - 1;
+        $due_message_obj->save_message();
+
+        $this->assertEquals(0, $DB->count_records('prog_messagelog', ['userid' => $this->user1->id, 'messageid' => $message_id]));
+        ob_start();
+        $task = new send_messages_task();
+        $task->execute();
+        ob_end_clean();
+
+        $emails = $this->sink->get_messages();
+        $this->assertCount(1, $emails);
+        $this->sink->clear();
+        $email = reset($emails);
+        $this->assertEquals($email->subject, 'Learner ProgDue Message');
+        $this->assertEquals($email->fullmessage, 'Hey dude, do your program');
+        $this->assertEquals(1, $DB->count_records('prog_messagelog', ['userid' => $this->user1->id, 'messageid' => $message_id]));
+
+        // Change the schedule again, but this time configure it to prevent resending.
+        $CFG->program_message_prevent_resend_on_schedule_change = true;
+        $due_message_obj = new prog_program_due_message($due_message->id, $due_message);
+        $due_message_obj->triggertime = $triggertime - 2;
+        $due_message_obj->save_message();
+
+        $this->assertEquals(1, $DB->count_records('prog_messagelog', ['userid' => $this->user1->id, 'messageid' => $message_id]));
+        ob_start();
+        $task = new send_messages_task();
+        $task->execute();
+        ob_end_clean();
+
+        $emails = $this->sink->get_messages();
+        $this->assertCount(0, $emails);
+
+        unset($CFG->program_message_prevent_resend_on_schedule_change);
     }
 }

@@ -34,6 +34,7 @@
  * @property string $session_handler_class class name of session handler
  * @property bool $sslproxy enable when using external SSL proxy
  * @property string $xsendfile setting for offloading of file serving to web server
+ * @property bool $program_message_prevent_resend_on_schedule_change Prevent resending legacy program messages on schedule change
  */
 final class core_config extends stdClass {
 
