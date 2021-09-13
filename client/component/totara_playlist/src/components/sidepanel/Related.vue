@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-playlistRelated">
+  <div v-if="playlists.length > 0" class="tui-playlistRelated">
     <article
       v-for="{
         bookmarked,
@@ -44,6 +44,9 @@
       />
     </article>
   </div>
+  <span v-else-if="!$apollo.loading" class="tui-playlistRelated__noResults">
+    {{ $str('noresults', 'core') }}
+  </span>
 </template>
 
 <script>
@@ -65,6 +68,43 @@ export default {
     },
   },
 
+  apollo: {
+    articles: {
+      query: getRecommendation,
+      refetchAll: false,
+      variables() {
+        return {
+          playlist_id: this.playlistId,
+          source: UrlSourceType.article(this.playlistId),
+          theme: config.theme.name,
+        };
+      },
+      update(data) {
+        if (data.playlists.length <= 0) {
+          return [];
+        }
+
+        // Trigger to show related tab on sidepanel only when there are items.
+        this.$emit('show-related');
+
+        let results = data.playlists.map(item => {
+          const { bookmarked, extra, name, instanceid, reactions, url } = item;
+          const { image, timeview } = JSON.parse(extra);
+          return {
+            bookmarked,
+            instanceid,
+            image,
+            name,
+            reactions,
+            timeview,
+            url,
+          };
+        });
+        return results;
+      },
+    },
+  },
+
   data() {
     return {
       playlists: [],
@@ -76,6 +116,9 @@ export default {
   },
 
   methods: {
+    /**
+     * @deprecated since 15.0
+     */
     getRecommendations() {
       this.$apollo
         .query({
@@ -135,3 +178,11 @@ export default {
   }
 }
 </style>
+
+<lang-strings>
+{
+  "core":[
+    "noresults"
+  ]
+}
+</lang-strings>

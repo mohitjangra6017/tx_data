@@ -17,7 +17,11 @@
 -->
 
 <template>
-  <EngageSidePanel v-if="!$apollo.loading" class="tui-engageArticleSidePanel">
+  <EngageSidePanel
+    v-if="!$apollo.loading"
+    class="tui-engageArticleSidePanel"
+    :show-related="featureRecommenders"
+  >
     <MiniProfileCard
       slot="author-profile"
       :display="user.card_display"
@@ -109,15 +113,11 @@
       />
     </template>
 
-    <template
-      v-if="featureRecommenders"
-      v-slot:related="{ triggerShowRelated }"
-    >
+    <template v-if="featureRecommenders" v-slot:related>
       <Related
         component="engage_article"
         area="related"
         :resource-id="resourceId"
-        @show-related="triggerShowRelated()"
       />
     </template>
   </EngageSidePanel>

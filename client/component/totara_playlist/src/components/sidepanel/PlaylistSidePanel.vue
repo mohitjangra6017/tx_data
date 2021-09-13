@@ -16,7 +16,11 @@
   @module totara_playlist
 -->
 <template>
-  <EngageSidePanel v-if="!$apollo.loading" class="tui-playlistSidePanel">
+  <EngageSidePanel
+    v-if="!$apollo.loading"
+    class="tui-playlistSidePanel"
+    :show-related="featureRecommenders"
+  >
     <template v-slot:author-profile>
       <MiniProfileCard
         :display="user.card_display"
@@ -116,15 +120,11 @@
         :show-comment="interactor.can_comment"
       />
     </template>
-    <template
-      v-if="featureRecommenders"
-      v-slot:related="{ triggerShowRelated }"
-    >
+    <template v-if="featureRecommenders" v-slot:related>
       <Related
         component="totara_playlist"
         area="related"
         :playlist-id="playlist.id"
-        @show-related="triggerShowRelated()"
       />
     </template>
   </EngageSidePanel>

@@ -1,6 +1,13 @@
 This files describes API changes in /client/component/totara_playlist,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* Updates in PlaylistSidePanel.vue
+  * Template changes
+* Updates in Related.vue
+  * Templated and JS changes
+  * Deprecated getRecommendations as it is now an apollo query
+
 === 14.0 ===
 * Updates in PlaylistForm.vue:
   * Template changes

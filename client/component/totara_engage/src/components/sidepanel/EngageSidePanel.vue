@@ -49,7 +49,7 @@
         class="tui-engageSidePanel__related"
         :name="$str('related', 'totara_engage')"
       >
-        <slot name="related" :triggerShowRelated="() => (showRelated = true)" />
+        <slot name="related" />
       </Tab>
     </Tabs>
   </div>
@@ -65,10 +65,16 @@ export default {
     Tab,
   },
 
+  props: {
+    showRelated: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   data() {
     return {
       selectedTab: 'overview',
-      showRelated: false,
     };
   },
 };

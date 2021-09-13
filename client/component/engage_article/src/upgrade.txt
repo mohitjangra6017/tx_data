@@ -4,6 +4,12 @@ information provided here is intended especially for developers.
 === 15.0 ===
 * Updated ArticleTitle.vue and ArticleView.vue to not be hard against the viewport edge on mobile, and make main headings smaller
   * SCSS changes
+* Updates in ArticleSidePanel.vue
+  * Template changes
+* Updates in Related.vue
+  * Templated and JS changes
+  * Deprecated getRecommendations as it is now an apollo query
+
 
 === 13.3 ===
 * Updates in ArticleForm.vue:

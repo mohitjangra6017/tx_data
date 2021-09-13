@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-engageArticleRelated">
+  <div v-if="articles.length > 0" class="tui-engageArticleRelated">
     <article
       v-for="{
         bookmarked,
@@ -42,6 +42,12 @@
       />
     </article>
   </div>
+  <span
+    v-else-if="!$apollo.loading"
+    class="tui-engageArticleRelated__noResults"
+  >
+    {{ $str('noresults', 'core') }}
+  </span>
 </template>
 
 <script>
@@ -63,17 +69,53 @@ export default {
     },
   },
 
+  apollo: {
+    articles: {
+      query: getRecommendation,
+      refetchAll: false,
+      variables() {
+        return {
+          article_id: this.resourceId,
+          source: UrlSourceType.article(this.resourceId),
+          theme: config.theme.name,
+        };
+      },
+      update(data) {
+        if (data.articles.length <= 0) {
+          return [];
+        }
+
+        // Trigger to show related tab on sidepanel only when there are items.
+        this.$emit('show-related');
+
+        let results = data.articles.map(item => {
+          const { bookmarked, extra, name, instanceid, reactions, url } = item;
+          const { image, timeview } = JSON.parse(extra);
+          return {
+            bookmarked,
+            instanceid,
+            image,
+            name,
+            reactions,
+            timeview,
+            url,
+          };
+        });
+        return results;
+      },
+    },
+  },
+
   data() {
     return {
       articles: [],
     };
   },
 
-  mounted() {
-    this.getRecommendations();
-  },
-
   methods: {
+    /**
+     * @deprecated since 15.0
+     */
     getRecommendations() {
       this.$apollo
         .query({
@@ -138,3 +180,11 @@ export default {
   }
 }
 </style>
+
+<lang-strings>
+{
+  "core":[
+    "noresults"
+  ]
+}
+</lang-strings>
