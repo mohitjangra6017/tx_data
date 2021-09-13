@@ -104,7 +104,7 @@ class auth_plugin_cas extends auth_plugin_ldap {
         global $SESSION, $OUTPUT, $PAGE;
 
         $site = get_site();
-        $CASform = get_string('CASform', 'auth_cas');
+        $CASform = get_string('casform', 'auth_cas');
         $username = optional_param('username', '', PARAM_RAW);
         $courseid = optional_param('courseid', 0, PARAM_INT);
 

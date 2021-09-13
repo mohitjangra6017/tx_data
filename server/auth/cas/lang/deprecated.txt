@@ -1,0 +1,9 @@
+accesCAS,auth_cas
+accesNOCAS,auth_cas
+CASform,auth_cas
+auth_cas_curl_ssl_version_SSLv2,auth_cas
+auth_cas_curl_ssl_version_SSLv3,auth_cas
+auth_cas_curl_ssl_version_TLSv1x,auth_cas
+auth_cas_curl_ssl_version_TLSv10,auth_cas
+auth_cas_curl_ssl_version_TLSv11,auth_cas
+auth_cas_curl_ssl_version_TLSv12,auth_cas

@@ -117,22 +117,22 @@ if ($ADMIN->fulltree) {
         $sslversions = array();
         $sslversions[''] = get_string('auth_cas_curl_ssl_version_default', 'auth_cas');
         if (defined('CURL_SSLVERSION_TLSv1')) {
-            $sslversions[CURL_SSLVERSION_TLSv1] = get_string('auth_cas_curl_ssl_version_TLSv1x', 'auth_cas');
+            $sslversions[CURL_SSLVERSION_TLSv1] = get_string('auth_cas_curl_ssl_version_tlsv1x', 'auth_cas');
         }
         if (defined('CURL_SSLVERSION_TLSv1_0')) {
-            $sslversions[CURL_SSLVERSION_TLSv1_0] = get_string('auth_cas_curl_ssl_version_TLSv10', 'auth_cas');
+            $sslversions[CURL_SSLVERSION_TLSv1_0] = get_string('auth_cas_curl_ssl_version_tlsv10', 'auth_cas');
         }
         if (defined('CURL_SSLVERSION_TLSv1_1')) {
-            $sslversions[CURL_SSLVERSION_TLSv1_1] = get_string('auth_cas_curl_ssl_version_TLSv11', 'auth_cas');
+            $sslversions[CURL_SSLVERSION_TLSv1_1] = get_string('auth_cas_curl_ssl_version_tlsv11', 'auth_cas');
         }
         if (defined('CURL_SSLVERSION_TLSv1_2')) {
-            $sslversions[CURL_SSLVERSION_TLSv1_2] = get_string('auth_cas_curl_ssl_version_TLSv12', 'auth_cas');
+            $sslversions[CURL_SSLVERSION_TLSv1_2] = get_string('auth_cas_curl_ssl_version_tlsv12', 'auth_cas');
         }
         if (defined('CURL_SSLVERSION_SSLv2')) {
-            $sslversions[CURL_SSLVERSION_SSLv2] = get_string('auth_cas_curl_ssl_version_SSLv2', 'auth_cas');
+            $sslversions[CURL_SSLVERSION_SSLv2] = get_string('auth_cas_curl_ssl_version_sslv2', 'auth_cas');
         }
         if (defined('CURL_SSLVERSION_SSLv3')) {
-            $sslversions[CURL_SSLVERSION_SSLv3] = get_string('auth_cas_curl_ssl_version_SSLv3', 'auth_cas');
+            $sslversions[CURL_SSLVERSION_SSLv3] = get_string('auth_cas_curl_ssl_version_ssl3', 'auth_cas');
         }
         $settings->add(new admin_setting_configselect('auth_cas/curl_ssl_version',
                 new lang_string('auth_cas_curl_ssl_version_key', 'auth_cas'),
