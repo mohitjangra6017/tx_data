@@ -13,6 +13,13 @@ extend type Query {
     limit_from: Int
     filter_data: mobile_findlearning_filter_input!
   ): mobile_findlearning_catalog_page!
+
+  """
+  Check whether the user can access the course as a guest
+  """
+  mobile_findlearning_validate_guest_password(
+    input: mobile_findlearning_guest_password_input!
+  ): mobile_findlearning_guest_access_result!
 }
 
 """
@@ -23,6 +30,24 @@ input mobile_findlearning_filter_input {
   The value for the full text search filter.
   """
   catalog_fts: String
+}
+
+"""
+A generic input schema for attempting an enrolment onto a course
+"""
+input mobile_findlearning_guest_password_input {
+  """
+  The id of the enrolement instance.
+  """
+  instanceid: core_id!
+  """
+  The id of the course
+  """
+  courseid: core_id!
+  """
+  An optional password
+  """
+  password: String
 }
 
 """
@@ -95,4 +120,18 @@ type mobile_findlearning_catalog_item {
   The catalog items description - note that this is not the summary, it is a field designated in the catalog settings.
   """
   description(format: core_format = PLAIN): String
+}
+
+"""
+The return type for the enrol attempt mutation.
+"""
+type mobile_findlearning_guest_access_result {
+  """
+  Return whether the enrolment attempt was successful
+  """
+  success: Boolean!
+  """
+  An optional string key to fetch for more information on unsuccessful attempts
+  """
+  message: String
 }

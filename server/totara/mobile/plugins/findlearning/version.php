@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author David Curry <david.curry@totaralearning.com>
- * @package mobile_currentlearning.
+ * @package mobile_findlearning
  */
 
 defined('MOODLE_INTERNAL') || die();

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
@@ -18,27 +18,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author David Curry <david.curry@totaralearning.com>
- * @package core_enrol
+ * @package mobile_findlearning
  */
 
-namespace core\webapi\resolver\mutation;
+namespace mobile_findlearning\webapi\resolver\query;
 
-use \core\webapi\execution_context;
-use core\webapi\middleware\require_login;
-use core\webapi\mutation_resolver;
+use core\webapi\query_resolver;
+use core\webapi\execution_context;
 use core\webapi\resolver\has_middleware;
+use core\webapi\middleware\require_login;
 
 /**
- * Mutation to move a job assignment to a new position.
+ * Class current_learning extends totara_core_my_current_learning query
+ *
+ * @package totara_mobile\webapi\resolver\query
  */
-final class enrol_attempt_self_enrolment implements mutation_resolver, has_middleware {
+class validate_guest_password implements query_resolver, has_middleware {
 
     /**
-     * Self-completes a course as the current user.
+     * Check whether a valid guest passord has been handed through
      *
      * @param array $args
      * @param execution_context $ec
-     * @return bool
+     * @return stdClass[]
      */
     public static function resolve(array $args, execution_context $ec) {
         global $USER, $DB;
@@ -47,12 +49,17 @@ final class enrol_attempt_self_enrolment implements mutation_resolver, has_middl
 
         // Courseid must be provided
         if (empty($vars['instanceid']) || empty($vars['courseid'])) {
-            throw new \coding_exception('missing arguments for attempt_self_enrolment mutation');
+            throw new \coding_exception('missing arguments for validate_guest_password query');
         }
 
-        $data = new \stdClass();
         $courseid = $vars['courseid'];
         $instanceid = $vars['instanceid'];
+
+        $plugin = enrol_get_plugin('guest');
+        if (empty($plugin)) {
+            // Just in case someone has removed the guest access plugin.
+            throw new \coding_exception('missing guest access plugin');
+        }
 
         // Quickly loop through the courses instances to find the one we're looking for.
         $instance = null;
@@ -65,43 +72,34 @@ final class enrol_attempt_self_enrolment implements mutation_resolver, has_middl
             }
         }
 
-        // Throw a fit if the instance wasn't found, or didn't end up being a self enrolment instance.
-        if (empty($instance) || $instance->enrol != 'self') {
-            throw new \coding_exception('invalid arguments for attempt_self_enrolment mutation');
+        // Throw a fit if the instance wasn't found, or didn't end up being a guest instance.
+        if (empty($instance) || $instance->enrol != 'guest') {
+            throw new \coding_exception('invalid arguments for validate_guest_password query');
         }
 
         // If a password is required, check we have it and that it matches.
+        $password = null;
         if (!empty($instance->password)) {
             if (empty($vars['password'])) {
-                throw new \coding_exception('invalid arguments for attempt_self_enrolment mutation');
+                throw new \coding_exception('missing arguments for validate_guest_password query');
             }
 
             $password = $vars['password'];
             if ($instance->password != $password) {
                 return [
                     'success' => false,
-                    'msg_key' => get_string('passwordinvalid', 'enrol_self')
+                    'message' => get_string('passwordinvalid', 'enrol_guest')
                 ];
             } else {
-                // Set the password into expected format.
-                $data->enrolpassword = $password;
+                // We can't set up guest access, but set this for the checks below.
+                $USER->enrol_guest_passwords[$instance->id] = $password;
             }
         }
 
-        $enrol = enrol_get_plugin('self');
-        if (empty($enrol)) {
-            // Just in case someone has removed the self-enrolment plugin.
-            throw new \coding_exception('missing self enrolment plugin');
-        }
-
         // Attempt to enrol the user in the course.
-        $status = $enrol->can_self_enrol($instance, true);
-        if ($status === true) {
-            $enrol->enrol_self($instance, $data);
-
-            // Seems that function doesn't return what it says it should so double check success.
-            $params = ['userid' => $USER->id, 'enrolid' => $instance->id, 'status' => ENROL_USER_ACTIVE];
-            $enrolled = $DB->record_exists('user_enrolments', $params);
+        $status = $plugin->try_guestaccess($instance);
+        if ($status === true || (is_int($status) && $status > time())) {
+            $enrolled = true;
         } else {
             $enrolled = false;
             if (is_string($status)) {
@@ -111,14 +109,13 @@ final class enrol_attempt_self_enrolment implements mutation_resolver, has_middl
 
         return [
             'success' => $enrolled,
-            'msg_key' => $msgkey ?? null
+            'message' => $msgkey ?? null
         ];
     }
 
     public static function get_middleware(): array {
         return [
-            new require_login()
+            require_login::class
         ];
     }
 }
-
