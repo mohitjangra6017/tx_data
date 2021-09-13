@@ -71,8 +71,8 @@ function xmldb_totara_hierarchy_upgrade($oldversion) {
 
     if ($oldversion < 2021090900) {
         $table = new xmldb_table('comp');
-        $proficiency_expected = new xmldb_field('proficiencyexpected', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 1);
-        $evidence_count = new xmldb_field('evidencecount', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $proficiency_expected = new xmldb_field('proficiencyexpected', XMLDB_TYPE_INTEGER, '18', null, XMLDB_NOTNULL, null, 1);
+        $evidence_count = new xmldb_field('evidencecount', XMLDB_TYPE_INTEGER, '18', null, XMLDB_NOTNULL, null, 0);
 
         if ($dbman->field_exists($table, $proficiency_expected)) {
             $dbman->change_field_default($table, $proficiency_expected);
