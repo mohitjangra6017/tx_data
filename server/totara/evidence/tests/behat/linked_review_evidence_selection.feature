@@ -40,7 +40,7 @@ Feature: Selecting evidence linked to a performance review
   Scenario: Selecting participant can select evidence
     When I log in as "user3"
     And I navigate to the outstanding perform activities list page
-    And I click on "Activities about others" "link_or_button"
+    And I click on "As a Peer" "link_or_button"
     And I click on "activity1" "link"
     And I click on "Add evidence" "link_or_button"
     Then I should not see "No items to display" in the tui modal
