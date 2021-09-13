@@ -335,4 +335,31 @@ class notification {
         return $notifications;
     }
 
+    /**
+     * Remove the first notification from notification session queue if it matches the specified message.
+     *
+     * @param string $message
+     * @return object|null The first notification, or null if there are none.
+     */
+    public static function shift_notification_from_queue(string $message): ?object {
+        global $SESSION;
+
+        if (!isset($SESSION, $SESSION->notifications) || empty($SESSION->notifications)) {
+            return null;
+        }
+
+        $notifications = $SESSION->notifications;
+        // Get the first element
+        $notification = reset($notifications);
+
+        if (!isset($notification->message)) {
+            return null;
+        }
+
+        if ($notification->message === $message) {
+            return array_shift($SESSION->notifications);
+        }
+
+        return null;
+    }
 }

@@ -23,6 +23,7 @@
 namespace mod_contentmarketplace\controllers;
 
 use context;
+use core\notification;
 use core_container\factory;
 use mod_contentmarketplace\event\course_module_viewed;
 use mod_contentmarketplace\interactor\content_marketplace_interactor;
@@ -88,6 +89,7 @@ class view extends controller {
             "{$subplugin}/pages/ActivityView",
             [
                 'cm-id' => $this->model->get_cm_id(),
+                'has-notification' => $this->has_notification()
             ]
         );
 
@@ -100,5 +102,13 @@ class view extends controller {
         $event->trigger();
 
         return $view;
+    }
+
+    /**
+     * @return bool
+     */
+    private function has_notification(): bool {
+        $message = get_string('enrol_success_message', 'enrol_self');
+        return notification::shift_notification_from_queue($message) !== null;
     }
 }

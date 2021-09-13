@@ -416,4 +416,20 @@ return;
         );
     }
 
+    /**
+     * @return void
+     */
+    public function test_shift_notification_from_queue_test(): void {
+        global $SESSION;
+
+        $message_text = 'Foo';
+        \core\notification::add($message_text);
+        self::assertNotEmpty($SESSION->notifications);
+
+        $result = \core\notification::shift_notification_from_queue($message_text);
+        self::assertIsObject($result);
+        self::assertEquals($message_text, $result->message);
+
+        self::assertNull(\core\notification::shift_notification_from_queue($message_text));
+    }
 }

@@ -57,7 +57,7 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         $tui_view = new tui_view(
             "{$plugin}/pages/ActivityView",
-            ['cm-id' => (int) $cm->cmid]
+            ['cm-id' => (int) $cm->cmid, 'has-notification' => false]
         );
 
         $tui_view->set_title($cm->name);
@@ -125,7 +125,7 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         $view = new tui_view(
             "{$plugin}/pages/ActivityView",
-            ['cm-id' => (int) $cm->cmid]
+            ['cm-id' => (int) $cm->cmid, 'has-notification' => false]
         );
 
         $view->set_title($cm->name);
@@ -247,7 +247,7 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         $view = new tui_view(
             "{$plugin}/pages/ActivityView",
-            ['cm-id' => (int) $cm->cmid]
+            ['cm-id' => (int) $cm->cmid, 'has-notification' => false]
         );
 
         $view->set_title($cm->name);

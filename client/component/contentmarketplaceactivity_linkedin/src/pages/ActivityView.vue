@@ -187,6 +187,14 @@ export default {
       type: Number,
       required: true,
     },
+
+    /**
+     * Check it has notification or not.
+     */
+    hasNotification: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
@@ -258,6 +266,15 @@ export default {
 
       return canEnrol;
     },
+  },
+
+  mounted() {
+    if (this.hasNotification) {
+      notify({
+        message: this.$str('enrol_success_message', 'mod_contentmarketplace'),
+        type: 'success',
+      });
+    }
   },
 
   apollo: {
