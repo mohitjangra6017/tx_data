@@ -27,7 +27,7 @@ use coding_exception;
 use core\collection;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
-use mod_perform\models\activity\element_weka_helper;
+use mod_perform\models\activity\helpers\element_weka_helper;
 use mod_perform\models\activity\respondable_element_plugin;
 
 class numeric_rating_scale extends respondable_element_plugin {

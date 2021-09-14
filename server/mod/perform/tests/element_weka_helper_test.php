@@ -21,7 +21,7 @@
  */
 
 use mod_perform\entity\activity\element as element_entity;
-use mod_perform\models\activity\element_weka_helper;
+use mod_perform\models\activity\helpers\element_weka_helper;
 
 
 /**
@@ -59,10 +59,10 @@ class element_weka_helper_testcase extends \core_phpunit\testcase {
         return [
             'JSON encoded null' => [null, null, false],
             'raw null' => [null, null, true],
-            'Missing in weka' => [[], []],
+            'Missing in weka' => [[], ['html' => null]],
             'Null in weka' => [
                 ['wekaDoc' => null],
-                ['wekaDoc' => null]
+                ['wekaDoc' => null, 'html' => null]
             ],
             'Valid in weka' => [
                 [
@@ -74,6 +74,84 @@ class element_weka_helper_testcase extends \core_phpunit\testcase {
                     'html' => '<div class="tui-rendered"><p>hello world</p></div>'
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider add_weka_html_to_data_iterable_provider
+     * @param array|null $option
+     * @param array|null $expected_out_option_data
+     */
+    public function test_add_weka_html_to_data_iterable(
+        ?array $option,
+        ?array $expected_out_option_data
+    ): void {
+        $element = new element_entity();
+
+        $data = ['options' => [$option, $option]];
+
+        $element->data = json_encode($data, JSON_THROW_ON_ERROR);
+        $element_data = element_weka_helper::add_weka_html_to_data_iterable(
+            $element,
+            'options',
+            'wekaDoc',
+            'html'
+        );
+
+
+        $element_data = json_decode($element_data, true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertCount(2, $element_data['options']);
+
+        foreach ($element_data['options'] as $option) {
+            self::assertEquals($expected_out_option_data, $option);
+        }
+    }
+
+    public function add_weka_html_to_data_iterable_provider(): array {
+        return [
+            'null options' => [null, null],
+            'Missing in weka' => [[], ['html' => null]],
+            'Null in weka' => [
+                ['wekaDoc' => null],
+                ['wekaDoc' => null, 'html' => null]
+            ],
+            'Valid in weka' => [
+                [
+                    'wekaDoc' => $this->get_simple_weka_doc('hello world')
+                ],
+                [
+                    'wekaDoc' => $this->get_simple_weka_doc('hello world'),
+                    // It's important the formatter wraps the content in the tui-rendered div, or the styles will be wrong.
+                    'html' => '<div class="tui-rendered"><p>hello world</p></div>'
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param $expected_in_out
+     * @dataProvider  add_weka_html_to_data_iterable_missing_options_array_provider
+     */
+    public function test_add_weka_html_to_data_iterable_missing_options_array($expected_in_out): void {
+        $element = new element_entity();
+
+        $element->data = $expected_in_out;
+        $element_data = element_weka_helper::add_weka_html_to_data_iterable(
+            $element,
+            'options',
+            'wekaDoc',
+            'html'
+        );
+
+        self::assertEquals($expected_in_out, $element_data);
+    }
+
+    public function add_weka_html_to_data_iterable_missing_options_array_provider(): array {
+        return [
+            'Missing options field' => ['[]'],
+            'Raw null data' => [null],
+            'Encoded null data' => ['null'],
         ];
     }
 

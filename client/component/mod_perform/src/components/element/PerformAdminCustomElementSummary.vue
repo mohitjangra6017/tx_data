@@ -59,11 +59,25 @@
 
       <div class="tui-performAdminCustomElementSummary__section-value">
         <!-- Multiple option values -->
-        <template v-if="field.options">
+        <div
+          v-if="field.options"
+          class="tui-performAdminCustomElementSummary__section-options"
+        >
           <div v-for="(option, i) in field.options" :key="'option' + i">
             {{ option.value }}
+            <template v-if="option.descriptionEnabled">
+              <div
+                class="tui-performAdminCustomElementSummary__section-optionSubHeading"
+              >
+                {{ 'Description' }}
+              </div>
+              <div
+                class="tui-performAdminCustomElementSummary__section-valueDescription"
+                v-html="option.descriptionHtml"
+              />
+            </template>
           </div>
-        </template>
+        </div>
         <div
           v-else-if="field.htmlContent"
           class="tui-performAdminCustomElementSummary__section-htmlValue"
@@ -198,6 +212,23 @@ export default {
     &-title {
       margin: 0;
       @include tui-font-heading-label();
+    }
+
+    &-options {
+      & > * + * {
+        margin-top: var(--gap-8);
+      }
+    }
+
+    &-optionSubHeading {
+      margin-top: var(--gap-2);
+      @include tui-font-body-small();
+      color: var(--color-neutral-6);
+    }
+
+    &-valueDescription {
+      max-width: calc(50 * var(--form-input-font-size));
+      margin-top: var(--gap-2);
     }
 
     &-htmlValue {

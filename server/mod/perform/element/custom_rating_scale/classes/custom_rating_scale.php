@@ -24,12 +24,26 @@
 namespace performelement_custom_rating_scale;
 
 use core\collection;
+use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\element_weka_helper;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\single_select_element_plugin_trait;
 
 class custom_rating_scale extends respondable_element_plugin {
     use single_select_element_plugin_trait;
+
+    /**
+     * @inheritDoc
+     */
+    public function process_data(element_entity $element): ?string {
+        return element_weka_helper::add_weka_html_to_data_iterable(
+            $element,
+            'options',
+            'descriptionWekaDoc',
+            'descriptionHtml'
+        );
+    }
 
     /**
      * @inheritDoc

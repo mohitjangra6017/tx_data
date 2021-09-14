@@ -1270,7 +1270,13 @@ class behat_mod_perform extends behat_base {
             if ($found_question === null) {
                 continue;
             }
-            $actual_title = trim(str_replace(['(optional)', '*', 'Required', 'Optional'], ['', '', '', ''], $found_question->getText()));
+
+            $actual_title = trim($found_question->getText());
+
+            foreach ([' optional', ' \(optional\)', ' Required', ' \*'] as $remove_from_end) {
+                $actual_title = preg_replace("/{$remove_from_end}\$/", '', $actual_title);
+            }
+
             if ($actual_title === $question_text) {
                 return $question;
             }

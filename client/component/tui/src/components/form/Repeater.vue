@@ -25,21 +25,25 @@
     role="group"
     aria-live="polite"
   >
-    <div v-if="$scopedSlots.header" class="tui-repeater__headerRow">
-      <slot name="header" />
-      <ButtonIcon
-        v-if="deleteIcon"
-        class="tui-repeater__delete"
-        :style="{ visibility: 'hidden' }"
-        aria-label=""
-        aria-hidden="true"
-        :styleclass="{ small: true, stealth: true }"
-        :disabled="true"
-      >
-        <DeleteIcon />
-      </ButtonIcon>
-    </div>
     <template v-for="(row, index) in rows">
+      <div
+        v-if="$scopedSlots.header && (index === 0 || repeatHeader)"
+        :key="index + '-header'"
+        class="tui-repeater__headerRow"
+      >
+        <slot name="header" />
+        <ButtonIcon
+          v-if="deleteIcon"
+          class="tui-repeater__delete"
+          :style="{ visibility: 'hidden' }"
+          aria-label=""
+          aria-hidden="true"
+          :styleclass="{ small: true, stealth: true }"
+          :disabled="true"
+        >
+          <DeleteIcon />
+        </ButtonIcon>
+      </div>
       <div :key="index" class="tui-repeater__row">
         <slot :row="row" :index="index" />
         <ButtonIcon
@@ -53,6 +57,13 @@
         >
           <DeleteIcon />
         </ButtonIcon>
+      </div>
+      <div
+        v-if="$scopedSlots['after-row']"
+        :key="index + '-after'"
+        class="tui-repeater__afterRow"
+      >
+        <slot name="after-row" :row="row" :index="index" />
       </div>
     </template>
     <slot name="add">
@@ -103,6 +114,10 @@ export default {
       default: true,
     },
     noSpacing: Boolean,
+    repeatHeader: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   methods: {
@@ -146,6 +161,18 @@ export default {
 
   &__headerRow + &__row {
     margin-top: var(--gap-2);
+  }
+
+  &__row + &__afterRow {
+    margin-top: var(--gap-4);
+  }
+
+  &__afterRow + &__row {
+    margin-top: var(--gap-8);
+  }
+
+  &__afterRow + &__headerRow {
+    margin-top: var(--gap-4);
   }
 
   &--noSpacing > * {

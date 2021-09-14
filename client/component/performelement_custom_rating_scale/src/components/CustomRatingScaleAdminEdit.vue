@@ -19,10 +19,10 @@
 <template>
   <div class="tui-customRatingScaleAdminEdit">
     <PerformAdminCustomElementEdit
-      v-if="ready"
       :initial-values="initialValues"
       :settings="settings"
       @cancel="$emit('display')"
+      @change="updateValues"
       @update="$emit('update', $event)"
     >
       <FormRow
@@ -40,6 +40,7 @@
             :rows="items"
             :min-rows="minRows"
             :delete-icon="true"
+            :repeat-header="true"
             :allow-deleting-first-items="false"
             :aria-labelledby="labelId"
             @add="push()"
@@ -97,6 +98,59 @@
                 </InputSetCol>
               </InputSet>
             </template>
+
+            <template v-slot:after-row="{ index }">
+              <FormRowStack>
+                <!-- Enable description -->
+                <FormRow>
+                  <FormCheckbox :name="[index, 'descriptionEnabled']">
+                    <span aria-hidden="true"
+                      >{{ $str('element_enable_description', 'mod_perform') }}
+                    </span>
+                    <span class="sr-only">
+                      {{
+                        $str(
+                          'element_enable_option_description',
+                          'mod_perform',
+                          index + 1
+                        )
+                      }}
+                    </span>
+                  </FormCheckbox>
+                </FormRow>
+
+                <!-- Description weka, use v-show rather than v-if to pre-boot weka -->
+                <FormRow
+                  v-show="descriptionEnabled[index]"
+                  v-slot="{ id }"
+                  :aria-label="
+                    $str('element_option_description', 'mod_perform', index + 1)
+                  "
+                  :label="$str('element_description', 'mod_perform')"
+                  subfield
+                  :required="descriptionEnabled[index]"
+                >
+                  <FormField
+                    v-slot="{ value, update }"
+                    :name="[index, 'descriptionWekaDoc']"
+                    :validations="
+                      v => (descriptionEnabled[index] ? [v.required()] : [])
+                    "
+                  >
+                    <Weka
+                      :id="id"
+                      :value="value"
+                      :usage-identifier="{
+                        component: 'performelement_custom_rating_scale',
+                        area: 'content',
+                      }"
+                      variant="description"
+                      @input="update"
+                    />
+                  </FormField>
+                </FormRow>
+              </FormRowStack>
+            </template>
             <template v-slot:add>
               <ButtonIcon
                 :aria-label="$str('add', 'core')"
@@ -123,25 +177,34 @@ import Label from 'tui/components/form/Label';
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
 import Repeater from 'tui/components/form/Repeater';
 import {
-  FormRow,
   FieldArray,
+  FormCheckbox,
+  FormField,
   FormNumber,
+  FormRow,
+  FormRowStack,
   FormText,
 } from 'tui/components/uniform';
+import Weka from 'editor_weka/components/Weka';
+import WekaValue from 'editor_weka/WekaValue';
 
 export default {
   components: {
     AddIcon,
     ButtonIcon,
     FieldArray,
-    FormRow,
+    FormCheckbox,
+    FormField,
     FormNumber,
+    FormRow,
+    FormRowStack,
     FormText,
     InputSet,
     InputSetCol,
     Label,
     PerformAdminCustomElementEdit,
     Repeater,
+    Weka,
   },
 
   inheritAttrs: false,
@@ -156,30 +219,31 @@ export default {
   },
 
   data() {
+    // Default to two empty options.
+    let options = [this.createField(), this.createField()];
+
+    if (this.rawData.options) {
+      options = this.rawData.options.map(option => {
+        const descriptionWekaDoc = option.descriptionWekaDoc
+          ? WekaValue.fromDoc(option.descriptionWekaDoc)
+          : WekaValue.empty();
+
+        return Object.assign({}, option, { descriptionWekaDoc });
+      });
+    }
+
     return {
       initialValues: {
         identifier: this.identifier,
-        options: [],
+        options,
         rawTitle: this.rawTitle,
         responseRequired: this.isRequired,
       },
       minRows: 2,
-      ready: false,
       responseRequired: this.isRequired,
+      descriptionEnabled: options.map(option => option.descriptionEnabled),
     };
   },
-
-  mounted() {
-    // If no existing data
-    if (!this.rawData.options) {
-      this.initialValues.options.push(this.createField(), this.createField());
-    } else {
-      this.initialValues.options = this.rawData.options;
-    }
-
-    this.ready = 'true';
-  },
-
   methods: {
     /**
      * Provide unique name for new repeater options
@@ -188,11 +252,36 @@ export default {
      */
     createField() {
       const randomInt = Math.floor(Math.random() * Math.floor(10000000));
-      return { name: 'option_' + randomInt, value: { text: '', score: null } };
+      return {
+        name: 'option_' + randomInt,
+        value: {
+          text: '',
+          score: null,
+        },
+        descriptionEnabled: false,
+        descriptionWekaDoc: WekaValue.empty(),
+      };
+    },
+    /**
+     * Keep track of which options have description enabled (outside of uniform).
+     * @param options
+     */
+    updateValues({ options }) {
+      this.descriptionEnabled = options.map(
+        option => option.descriptionEnabled
+      );
     },
   },
 };
 </script>
+
+<style lang="scss">
+.tui-customRatingScaleAdminEdit {
+  &__description {
+    margin-top: var(--gap-4);
+  }
+}
+</style>
 
 <lang-strings>
 {
@@ -204,7 +293,12 @@ export default {
     "score",
     "text"
   ],
-
+  "mod_perform": [
+    "element_description",
+    "element_enable_description",
+    "element_option_description",
+    "element_enable_option_description"
+  ],
   "core": [
     "add"
   ]

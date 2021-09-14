@@ -29,6 +29,8 @@ information provided here is intended especially for developers.
   * SCSS changes
 * Improved Button.vue loading state handling
   * Template and SCSS changes
+* Updated Repeater.vue to allow repeating headers
+  * Template and SCSS changes
 
 === 14.0 ===
 

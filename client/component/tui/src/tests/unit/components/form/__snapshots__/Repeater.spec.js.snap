@@ -25,6 +25,10 @@ exports[`presentation/form/Repeater.vue matches snapshot 1`] = `
       />
     </buttonicon-stub>
   </div>
+   
+  <!---->
+  <!---->
+   
   <div
     class="tui-repeater__row"
   >
@@ -40,6 +44,10 @@ exports[`presentation/form/Repeater.vue matches snapshot 1`] = `
       />
     </buttonicon-stub>
   </div>
+   
+  <!---->
+  <!---->
+   
   <div
     class="tui-repeater__row"
   >
@@ -55,6 +63,8 @@ exports[`presentation/form/Repeater.vue matches snapshot 1`] = `
       />
     </buttonicon-stub>
   </div>
+   
+  <!---->
    
   <buttonicon-stub
     aria-controls="uid-9"

@@ -32,7 +32,7 @@ Feature: Manage performance activity custom rating scale elements
     And I save the activity content element
     And I add a "Rating scale: Custom" activity content element
     And I set the following fields to these values:
-      | rawTitle                 | Question 3 |
+      | rawTitle                 | Question 3  |
       | options[0][value][text]  | Option five |
       | options[0][value][score] | 5           |
       | options[1][value][text]  | Option six  |
@@ -54,20 +54,45 @@ Feature: Manage performance activity custom rating scale elements
     And I navigate to manage perform activity content page
     And I add a "Rating scale: Custom" activity content element
     And I set the following fields to these values:
-      | rawTitle                | Question 1 |
-      | options[0][value][text] | Option one |
-      | options[0][value][score]| 1          |
-      | options[1][value][text] | Option two |
-      | options[1][value][score]| 2          |
+      | rawTitle                 | Question 1 |
+      | options[0][value][text]  | Option one |
+      | options[0][value][score] | 1          |
+      | options[1][value][text]  | Option two |
+      | options[1][value][score] | 2          |
+
+    And I click on the "options[0][descriptionEnabled]" tui checkbox
+    And I activate the weka editor with css "[aria-label='Description 1']"
+    And I set the weka editor to "A description that was disabled"
+    And I click on the "options[0][descriptionEnabled]" tui checkbox
+
+    And I click on the "options[1][descriptionEnabled]" tui checkbox
+    And I activate the weka editor with css "[aria-label='Description 2']"
+    And I click on the "Bold" toolbar button in the weka editor
+    And I type "A strong description" in the weka editor
+
     And I click custom rating scale question add new option
     And I set the following fields to these values:
       | options[2][value][text]  | Option three |
       | options[2][value][score] | 3            |
     And I save the activity content element
-    And I close the tui notification toast
-    And I follow "Content (Activity one)"
-    And I navigate to manage perform activity content page
-    Then I should see perform custom rating scale question "Question 1" is saved with options "Option one (score: 1),Option two (score: 2),Option three (score: 3)"
+    Then I should see "Element saved" in the tui success notification toast
+    And I should see perform custom rating scale question "Question 1" is saved with options "Option one (score: 1),Option two (score: 2),Option three (score: 3)"
+    And I should not see "A description that was disabled"
+    # Make sure we have rendered actual html (bold text) in the summary for description.
+    And I should see "A strong description" in the ".tui-hideShow__content--show p strong" "css_element"
+
+    When I manually activate the perform activity "Activity one"
+    And I reload the page
+    And I click on "Element settings: Question 1" "button"
+    Then the perform element summary should contain:
+      | Question text | Question 1 |
+    And I should not see "A description that was disabled"
+    # Make sure we have rendered actual html (bold text) in the summary for description.
+    And I should see "A strong description" in the ".tui-performAdminCustomElementSummary__section-valueDescription p strong" "css_element"
+    And I should see "Option one (score: 1)" in the ".tui-performAdminCustomElementSummary__section-options" "css_element"
+    And I should see "Option two (score: 2)" in the ".tui-performAdminCustomElementSummary__section-options" "css_element"
+    And I should see "Option three (score: 3)" in the ".tui-performAdminCustomElementSummary__section-options" "css_element"
+
 
   Scenario: Delete custom rating scale elements options
     Given I log in as "admin"
@@ -77,11 +102,11 @@ Feature: Manage performance activity custom rating scale elements
     And I navigate to manage perform activity content page
     And I add a "Rating scale: Custom" activity content element
     And I set the following fields to these values:
-      | rawTitle                | Question 1 |
-      | options[0][value][text] | Option one |
-      | options[0][value][score]| 1          |
-      | options[1][value][text] | Option two |
-      | options[1][value][score]| 2          |
+      | rawTitle                 | Question 1 |
+      | options[0][value][text]  | Option one |
+      | options[0][value][score] | 1          |
+      | options[1][value][text]  | Option two |
+      | options[1][value][score] | 2          |
     And I click custom rating scale question add new option
     And I set the following fields to these values:
       | options[2][value][text]  | Option three |
@@ -100,11 +125,24 @@ Feature: Manage performance activity custom rating scale elements
     When I click on "Activity one" "link"
     And I navigate to manage perform activity content page
     And I add a "Rating scale: Custom" activity content element
-    And I set the following fields to these values:
-      | rawTitle | Question 1 |
+    And I click on the "options[0][descriptionEnabled]" tui checkbox
     And I save the activity content element
-    Then I should see "Required"
-    And I click on "Cancel" "button"
+    Then I should see "rawTitle" form field has the tui validation error "Required"
+    And I should see "options[0][value][text]" form field has the tui validation error "Required"
+    And I should see "options[0][value][score]" form field has the tui validation error "Required"
+    And I should see "options[1][value][text]" form field has the tui validation error "Required"
+    And I should see "options[1][value][score]" form field has the tui validation error "Required"
+    And I should see "Weka editor" form field has the tui validation error "Required"
+
+    When I set the following fields to these values:
+      | rawTitle                 | Question 1 |
+      | options[0][value][text]  | Option one |
+      | options[0][value][score] | 1          |
+      | options[1][value][text]  | Option two |
+      | options[1][value][score] | 2          |
+    And I click on the "options[0][descriptionEnabled]" tui checkbox
+    And I save the activity content element
+    Then I should see "Element saved" in the tui success notification toast
 
   Scenario: Save required and optional custom rating scale elements
     Given I log in as "admin"

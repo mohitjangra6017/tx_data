@@ -28,6 +28,7 @@ $string['answer_score'] = 'Score {$a->index}';
 $string['answer_text'] = 'Text {$a->index}';
 $string['custom_rating_options'] = 'Custom rating options';
 $string['name'] = 'Rating scale: Custom';
+$string['option_description'] = 'Option {$a} description';
 $string['pluginname'] = 'Custom rating scale element';
 $string['score'] = 'Score';
 $string['text'] = 'Text';

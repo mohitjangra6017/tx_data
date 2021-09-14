@@ -49,15 +49,8 @@ export default {
   },
 
   data() {
-    return {
-      extraFields: [],
-    };
-  },
-
-  mounted() {
-    let options = [];
-    this.data.options.forEach(option => {
-      options.push({
+    const options = this.data.options.map(option => {
+      return {
         value: this.$str(
           'answer_output',
           'performelement_custom_rating_scale',
@@ -66,18 +59,22 @@ export default {
             label: option.value.text,
           }
         ),
-      });
+        descriptionEnabled: option.descriptionEnabled,
+        descriptionHtml: option.descriptionHtml,
+      };
     });
 
-    this.extraFields = [
-      {
-        title: this.$str(
-          'custom_rating_options',
-          'performelement_custom_rating_scale'
-        ),
-        options: options,
-      },
-    ];
+    return {
+      extraFields: [
+        {
+          title: this.$str(
+            'custom_rating_options',
+            'performelement_custom_rating_scale'
+          ),
+          options,
+        },
+      ],
+    };
   },
 };
 </script>
