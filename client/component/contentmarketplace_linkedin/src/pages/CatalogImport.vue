@@ -93,7 +93,7 @@
       >
         <template v-slot:row="{ row }">
           <!-- Learning item -->
-          <LinkedInLearningItem :data="row" :loading="isLoading" />
+          <LinkedInLearningItem :data="row" :loading="isLoading" :logo="logo" />
         </template>
       </SelectionTable>
 
@@ -190,6 +190,10 @@ export default {
   props: {
     canManageContent: {
       type: Boolean,
+      required: true,
+    },
+    logo: {
+      type: Object,
       required: true,
     },
   },

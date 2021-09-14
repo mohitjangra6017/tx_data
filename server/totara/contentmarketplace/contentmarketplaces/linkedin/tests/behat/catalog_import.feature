@@ -167,6 +167,8 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | Course B |
       | Course C |
 
+    And ".tui-linkedInImportLearningItem__logoContainer img" "css_element" should exist
+
     # Course A
     And I should see "Hibernate is way better than active record" on row "1" of the tui select table
     And I should see "Content difficulty level Beginner" on row "1" of the tui select table

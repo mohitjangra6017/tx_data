@@ -31,9 +31,18 @@ final class catalog_import extends base_catalog_import {
      * @inheritDoc
      */
     public function action(): tui_view {
-        return $this->create_tui_view(
-            'contentmarketplace_linkedin/pages/CatalogImport',
-            ['canManageContent' => $this->can_manage_marketplace_plugins()]
-        )->set_title($this->explorer->get_heading());
+        $marketplace = $this->get_plugin()->contentmarketplace();
+
+        $props = [
+            'canManageContent' => $this->can_manage_marketplace_plugins(),
+            'logo' => [
+                'url' => $marketplace->get_logo_url()->out(false),
+                'alt' => $marketplace->get_logo_alt_text(),
+            ],
+        ];
+
+        $view = $this->create_tui_view('contentmarketplace_linkedin/pages/CatalogImport', $props);
+        $view->set_title($this->explorer->get_heading());
+        return $view;
     }
 }

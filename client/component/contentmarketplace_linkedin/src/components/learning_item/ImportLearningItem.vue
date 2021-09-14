@@ -47,10 +47,20 @@
 
     <template v-else>
       <!-- Course image -->
-      <div
-        class="tui-linkedInImportLearningItem__img"
-        :style="{ 'background-image': cardImage }"
-      />
+      <div class="tui-linkedInImportLearningItem__imgContainer">
+        <div
+          class="tui-linkedInImportLearningItem__img"
+          :style="{ 'background-image': cardImage }"
+        />
+
+        <div v-if="logo" class="tui-linkedInImportLearningItem__logoContainer">
+          <img
+            :src="logo.url"
+            :alt="logo.alt"
+            class="tui-linkedInImportLearningItem__logo"
+          />
+        </div>
+      </div>
 
       <div class="tui-linkedInImportLearningItem__content">
         <!-- Course subject -->
@@ -176,6 +186,7 @@ export default {
     small: Boolean,
     // Unselected item (used of fading on review list)
     unselected: Boolean,
+    logo: Object,
   },
 
   computed: {
@@ -324,6 +335,10 @@ export default {
     margin-top: var(--gap-2);
   }
 
+  &__imgContainer {
+    position: relative;
+  }
+
   &__img {
     height: 120px;
     background: var(--color-neutral-3);
@@ -333,6 +348,19 @@ export default {
     .tui-linkedInImportLearningItem--unselected & {
       opacity: 0.3;
     }
+  }
+
+  &__logoContainer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: var(--gap-2);
+    background-color: var(--color-neutral-1);
+  }
+
+  &__logo {
+    width: 70px;
+    height: 20px;
   }
 
   &__content {
