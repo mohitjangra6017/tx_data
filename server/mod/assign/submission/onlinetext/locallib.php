@@ -525,6 +525,10 @@ class assign_submission_onlinetext extends assign_submission_plugin {
             if (($wordcount = $this->count_words_for_weka($onlinetextsubmission)) === null) {
                 $wordcount = count_words(trim($onlinetextsubmission->onlinetext));
             }
+
+            if ($wordcount == 0 && isset($onlinetextsubmission->onlineformat)) {
+                $wordcount = $this->count_words_for_image_tag($onlinetextsubmission->onlinetext);
+            }
         }
 
         return $wordcount == 0;
@@ -549,6 +553,10 @@ class assign_submission_onlinetext extends assign_submission_plugin {
             // Totara: Look after Weka
             if (($wordcount = $this->count_words_for_weka($data)) === null) {
                 $wordcount = count_words(trim((string)$data->onlinetext_editor['text']));
+            }
+
+            if ($wordcount == 0 && isset($data->onlinetext_editor['format'])) {
+                $wordcount = $this->count_words_for_image_tag($data->onlinetext_editor['text']);
             }
         }
 
@@ -675,10 +683,10 @@ class assign_submission_onlinetext extends assign_submission_plugin {
             if (isset($data->onlinetext_editor) && is_array($data->onlinetext_editor)
                 && isset($data->onlinetext_editor['text']) && isset($data->onlinetext_editor['format'])
                 && $data->onlinetext_editor['format'] == FORMAT_JSON_EDITOR) {
-                    // data = {id, onlinetext_editor: [format, text]}
-                    $id = $data->id;
-                    $onlinetext = (string)$data->onlinetext_editor['text'];
-                    $format = $data->onlinetext_editor['format'];
+                // data = {id, onlinetext_editor: [format, text]}
+                $id = $data->id;
+                $onlinetext = (string)$data->onlinetext_editor['text'];
+                $format = $data->onlinetext_editor['format'];
             }
         }
 
@@ -691,9 +699,38 @@ class assign_submission_onlinetext extends assign_submission_plugin {
                 ASSIGNSUBMISSION_ONLINETEXT_FILEAREA,
                 $id);
             $onlinetext = format_text($onlinetext, $format);
-            return count_words(trim($onlinetext));
+            $count = count_words(trim($onlinetext));
+
+            // Check online text is html image or not.
+            if (core_text::strlen($onlinetext) > 0 && $count == 0) {
+                $count = $this->count_words_for_image_tag($onlinetext);
+            }
+
+            return $count;
         }
 
         return null;
+    }
+
+    /**
+     * Check data input is only image without any text.
+     *
+     * @param string $text
+     * @return int
+     */
+    private function count_words_for_image_tag(string $text): int {
+        if (isset($text)) {
+            if (core_text::strlen($text) > 0) {
+                $doc = new DOMDocument();
+                $doc->loadHTML($text);
+
+                // Check input data is image or not.
+                if ($doc->getElementsByTagName('img')->count() > 0 ) {
+                    return $doc->getElementsByTagName('img')->count();
+                }
+            }
+        }
+
+        return 0;
     }
 }

@@ -59,6 +59,7 @@ class assignsubmission_onlinetext_locallib_testcase extends advanced_testcase {
         $result = $plugin->submission_is_empty((object) [
                 'onlinetext_editor' => [
                     'text' => $submissiontext,
+                    'format' => FORMAT_HTML
                 ],
             ]);
         $this->assertTrue($result === $expected);
@@ -84,6 +85,7 @@ class assignsubmission_onlinetext_locallib_testcase extends advanced_testcase {
         $result = $assign->new_submission_empty((object) [
                 'onlinetext_editor' => [
                     'text' => $submissiontext,
+                    'format' => FORMAT_HTML
                 ],
             ]);
 
@@ -101,7 +103,8 @@ class assignsubmission_onlinetext_locallib_testcase extends advanced_testcase {
             'Empty submission null' => [null, true],
             'Value 0' => [0, false],
             'String 0' => ['0', false],
-            'Text' => ['Ai! laurië lantar lassi súrinen, yéni únótimë ve rámar aldaron!', false]
+            'Text' => ['Ai! laurië lantar lassi súrinen, yéni únótimë ve rámar aldaron!', false],
+            'image' => ['"<p><img class="img-responsive" alt="" src="http://www.example.com/test.png" /><br /></p>"', false]
         ];
     }
 }
