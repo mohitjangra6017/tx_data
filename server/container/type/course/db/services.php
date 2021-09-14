@@ -1,8 +1,8 @@
 <?php
-/*
- * This file is part of Totara LMS
+/**
+ * This file is part of Totara Core
  *
- * Copyright (C) 2019 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package container_course
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-/* NOTE: the following version number must be bumped during each major or minor Totara release. */
-
-$plugin->version  = 2021052505;                 // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021052500;                 // Requires this Totara version.
-$plugin->component = 'container_course';    // To check on upgrade, that module sits in correct place
+$functions = [
+    'container_course_process_non_interactive_enrol' => [
+        'classname'         => 'container_course\external',
+        'methodname'        => 'process_non_interactive_enrol',
+        'classpath'         => 'container/type/course/classes/external.php',
+        'description'       => 'process non interactive enrol for logged users',
+        'type'              => 'write',
+        'loginrequired'     => true,
+        'ajax'              => true,
+        'capabilities'      => ''
+    ]
+];

@@ -1047,13 +1047,6 @@ class core_renderer extends renderer_base {
             // return immediately and do not include /course/lib.php if not necessary
             return $output;
         }
-
-        require_once($CFG->dirroot.'/course/lib.php');
-        $functioncalled = true;
-        $courseformat = course_get_format($this->page->course);
-        if (($obj = $courseformat->course_content_header()) !== null) {
-            $output .= html_writer::div($courseformat->get_renderer($this->page)->render($obj), 'course-content-header');
-        }
         return $output;
     }
 

@@ -43,7 +43,7 @@ class content_marketplace_interactor extends base {
     }
 
     /**
-     * The module is within the course, hence without ability to view the course,
+     * The module is within the course, hence without ability to access the course,
      * user should not be able to view the content marketplace at all.
      *
      * @return bool
@@ -122,7 +122,8 @@ class content_marketplace_interactor extends base {
             return false;
         }
 
-        return !$this->is_enrolled();
+        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
+        return $course_interactor->can_enrol();
     }
 
     /**

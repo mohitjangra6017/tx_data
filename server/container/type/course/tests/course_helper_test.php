@@ -21,7 +21,10 @@
  * @package container_course
  */
 
+use container_course\course;
 use container_course\hook\remove_module_hook;
+use core\entity\enrol;
+use core\orm\query\builder;
 use core_phpunit\testcase;
 use container_course\course_helper;
 
@@ -62,5 +65,277 @@ class container_course_course_helper_testcase extends testcase {
         // We will not be interesting in the first hook, but the last for this test.
         $hook = end($hooks);
         self::assertNotInstanceOf(remove_module_hook::class, $hook);
+    }
+
+    /**
+     * Test to cover the case where user is just a normal user, not a guest
+     *
+     * @return void
+     */
+    public function test_should_not_render_enrolment_banner_for_non_guest_user(): void {
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $user = $generator->create_user();
+        $course = course::from_record($course_record);
+
+        self::assertFalse(course_helper::should_render_enrolment_banner($course, $user->id));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_should_not_render_enrolment_banner_for_enrolled_user(): void {
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $user = $generator->create_user();
+        $generator->enrol_user($user->id, $course_record->id);
+
+        $course = course::from_record($course_record);
+        self::assertFalse(course_helper::should_render_enrolment_banner($course, $user->id));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_should_render_enrolment_banner_for_guest_user(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/enrollib.php");
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+        $user = $generator->create_user();
+        self::setUser($user);
+
+        $plugin = enrol_get_plugin("guest");
+        $instance = enrol::repository()->find_enrol("guest", $course_record->id);
+
+        $update_instance = $instance->to_record(true);
+        $plugin->update_status($update_instance, ENROL_INSTANCE_ENABLED);
+
+        $course = course::from_record($course_record);
+        self::assertTrue(course_helper::should_render_enrolment_banner($course, $user->id));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_should_render_enrolment_banner_for_admin_user(): void {
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $admin = get_admin();
+        $course = course::from_record($course_record);
+
+        self::assertTrue(
+            course_helper::should_render_enrolment_banner($course, $admin->id)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_shouldrender_enrolmentt_for_enrolled_admin_user(): void {
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $admin = get_admin();
+        $generator->enrol_user($admin->id, $course_record->id);
+
+        $course = course::from_record($course_record);
+        self::assertFalse(course_helper::should_render_enrolment_banner($course, $admin->id));
+    }
+
+    /**
+     * Test suite to check if the banner is rendered for user who view a course that does
+     * not have guest access enabled.
+     *
+     * @return void
+     */
+    public function test_render_enrolment_banner_for_non_guest_user(): void {
+        global $OUTPUT;
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $user = $generator->create_user();
+
+        self::assertEmpty(
+            course_helper::render_enrolment_banner(
+                $OUTPUT,
+                $course_record,
+                $user->id
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_enrolment_banner_for_guest_user(): void {
+        global $OUTPUT, $CFG;
+        require_once("{$CFG->dirroot}/lib/enrollib.php");
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+        $user = $generator->create_user();
+
+        $plugin = enrol_get_plugin("guest");
+        $instance = enrol::repository()->find_enrol("guest", $course_record->id);
+
+        $update_instance = $instance->to_record(true);
+        $update_instance->status = ENROL_INSTANCE_ENABLED;
+        unset($update_instance->id);
+
+        $plugin->update_instance($instance->to_record(true), $update_instance);
+
+        // Enrol guest user
+        self::setUser($user);
+
+        $instance->refresh();
+        $plugin->try_guestaccess($instance->to_record(true));
+
+        // Check the status.
+        $db = builder::get_db();
+        self::assertTrue(
+            $db->record_exists(
+                enrol::TABLE,
+                [
+                    "status" => ENROL_INSTANCE_ENABLED,
+                    "enrol" => "guest",
+                    "courseid" => $course_record->id
+                ]
+            )
+        );
+
+        $content = course_helper::render_enrolment_banner($OUTPUT, $course_record, $user->id);
+        self::assertNotEmpty($content);
+        self::assertStringContainsString(
+            get_string("view_course_as_guest", "container_course"),
+            $content
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_enrolment_banner_from_enrolled_user(): void {
+        global $OUTPUT;
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $user = $generator->create_user();
+        $generator->enrol_user($user->id, $course_record->id);
+
+        self::assertEmpty(
+            course_helper::render_enrolment_banner($OUTPUT, $course_record, $user->id)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_enrolment_banner_for_admin_user(): void {
+        global $OUTPUT;
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $admin = get_admin();
+        $content = course_helper::render_enrolment_banner($OUTPUT, $course_record, $admin->id);
+
+        self::assertNotEmpty($content);
+        self::assertStringContainsString(
+            get_string("view_course_as_admin", "container_course"),
+            $content
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_enrolment_banner_for_admin_user_with_enrolled_option(): void {
+        global $OUTPUT, $CFG;
+        require_once("{$CFG->dirroot}/lib/enrollib.php");
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+
+        $plugin = enrol_get_plugin("self");
+        $instance = enrol::repository()->find_enrol("self", $course_record->id);
+
+        $update_instance = $instance->to_record(true);
+        $update_instance->status = ENROL_INSTANCE_ENABLED;
+        unset($update_instance->id);
+
+        $plugin->update_instance($instance->to_record(true), $update_instance);
+
+        $admin = get_admin();
+        $content = course_helper::render_enrolment_banner($OUTPUT, $course_record, $admin->id);
+
+        self::assertNotEmpty($content);
+        self::assertStringContainsString(
+            get_string("view_course_as_admin_with_enrol_options", "container_course"),
+            $content
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_enrrolment_banner_for_guest_user_with_enrolled_options(): void {
+        global $OUTPUT, $CFG;
+        require_once("{$CFG->dirroot}/lib/enrollib.php");
+
+        $generator = self::getDataGenerator();
+        $course_record = $generator->create_course();
+        $user = $generator->create_user();
+
+        $guest_enrol = enrol_get_plugin("guest");
+        $guest_enrol_instance = enrol::repository()->find_enrol("guest", $course_record->id);
+
+        $update_guest_instance = $guest_enrol_instance->to_record(true);
+        $update_guest_instance->status = ENROL_INSTANCE_ENABLED;
+        unset($update_guest_instance->id);
+
+        $guest_enrol->update_instance($guest_enrol_instance->to_record(true), $update_guest_instance);
+
+        // Enrol guest user
+        self::setUser($user);
+
+        $guest_enrol_instance->refresh();
+        $guest_enrol->try_guestaccess($guest_enrol_instance->to_record(true));
+
+        // Enable self enrolment options.
+        $self_enrol = enrol_get_plugin("self");
+        $self_enrol_instance = enrol::repository()->find_enrol("self", $course_record->id);
+
+        $update_self_instance = $self_enrol_instance->to_record(true);
+        $update_self_instance->status = ENROL_INSTANCE_ENABLED;
+        unset($update_self_instance->id);
+
+        $self_enrol->update_instance($self_enrol_instance->to_record(true), $update_self_instance);
+
+        // Check the status.
+        $db = builder::get_db();
+        self::assertTrue(
+            $db->record_exists(
+                enrol::TABLE,
+                [
+                    "status" => ENROL_INSTANCE_ENABLED,
+                    "enrol" => "guest",
+                    "courseid" => $course_record->id
+                ]
+            )
+        );
+
+        $content = course_helper::render_enrolment_banner($OUTPUT, $course_record, $user->id);
+        self::assertNotEmpty($content);
+        self::assertStringContainsString(
+            get_string("view_course_as_guest_with_enrol_options", "container_course"),
+            $content
+        );
     }
 }

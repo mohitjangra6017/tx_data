@@ -26,3 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['error:course_access'] = 'Course is not accessible.';
 $string['error:course_hidden'] = 'This course is currently unavailable to learners';
 $string['pluginname'] = 'Course';
+$string['view_course_as_admin'] = "You’re accessing this course as an administrator.";
+$string['view_course_as_admin_with_enrol_options'] = "You’re accessing this course as an administrator. You must enrol in the course for your learning to be recorded.";
+$string['view_course_as_guest'] = "You are viewing as a ‘Guest’. Your progress will not be recorded.";
+$string['view_course_as_guest_with_enrol_options'] = "You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded.";

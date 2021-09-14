@@ -274,11 +274,19 @@ class enrol_self_plugin extends enrol_plugin {
     /**
      * @param stdClass $instance
      * @param int $user_id
+     * @param bool|null $with_notificaton
      * @return bool
      */
-    public function do_non_interactive_enrol(stdClass $instance, int $user_id): bool {
+    public function do_non_interactive_enrol(stdClass $instance, int $user_id, ?bool $with_notificaton = false): bool {
         if ($this->supports_non_interactive_enrol($instance, $user_id)) {
             $this->enrol_self($instance);
+
+            if ($with_notificaton) {
+                \core\notification::add(
+                    get_string('enrol_success_message', 'enrol_self'),
+                    \core\notification::SUCCESS
+                );
+            }
             return true;
         }
 

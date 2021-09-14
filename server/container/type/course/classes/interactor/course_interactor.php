@@ -22,7 +22,9 @@
  */
 namespace container_course\interactor;
 
+use coding_exception;
 use container_course\course;
+use container_course\non_interactive_enrolment;
 use core_container\factory;
 use moodle_exception;
 
@@ -58,6 +60,13 @@ class course_interactor {
         /** @var course $course */
         $course = factory::from_id($course_id);
         return new static($course, $user_id);
+    }
+
+    /**
+     * @return int
+     */
+    public function get_actor_id(): int {
+        return $this->actor_id;
     }
 
     /**
@@ -99,7 +108,7 @@ class course_interactor {
      * This is different from view. View allow you to view the course item
      * in find learning, or view the course enrol page.
      *
-     * Access means that user is able to access the course after all thet enrolments
+     * Access means that user is able to access the course after all the enrolments
      * are resolved.
      *
      * @return bool
@@ -120,5 +129,80 @@ class course_interactor {
 
         $context = $this->course->get_context();
         return is_enrolled($context, $this->actor_id);
+    }
+
+    /**
+     * Checks if the current user actor is able to enrol into the course or not.
+     *
+     * @return bool
+     */
+    public function can_enrol(): bool {
+        if (!$this->can_access()) {
+            // User is not able to see the course, hence cannot enrol.
+            return false;
+        }
+
+        return !$this->is_enrolled();
+    }
+
+    /**
+     * Checks if the current user actor is a guess of this very course.
+     *
+     * @return bool
+     */
+    public function is_guest(): bool {
+        $context = $this->course->get_context();
+        return is_guest($context, $this->actor_id);
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_site_guest(): bool {
+        return isguestuser($this->actor_id);
+    }
+
+    /**
+     * Checks if the current user actor has the capability moodle/course:view
+     * within the course's context.
+     *
+     * @return bool
+     */
+    public function has_view_capability(): bool {
+        $context = $this->course->get_context();
+        return has_capability(
+            "moodle/course:view",
+            $context,
+            $this->actor_id
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function non_interactive_enrol_instance_enabled(): bool {
+        $results = non_interactive_enrolment::get_non_interactive_enrols($this->get_course_id(), $this->actor_id);
+        return count($results) > 0;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function supports_non_interactive_enrol(): bool {
+        $results = non_interactive_enrolment::get_non_interactive_enrols($this->get_course_id(), $this->actor_id);
+        if (count($results) == 1) {
+            $result = reset($results);
+            return $result;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_course_id(): int {
+        return $this->course->id;
     }
 }

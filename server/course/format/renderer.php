@@ -766,6 +766,9 @@ abstract class format_section_renderer_base extends plugin_renderer_base {
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
 
+        // Totara: Added course's notification banner in order to identify the enrolment.
+        echo container_course\course_helper::render_enrolment_banner($this, $course);
+
         // Can we view the section in question?
         if (!($sectioninfo = $modinfo->get_section_info($displaysection))) {
             // This section doesn't exist
@@ -859,6 +862,9 @@ abstract class format_section_renderer_base extends plugin_renderer_base {
 
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
+
+        // Totara: Added course's notification banner in order to identify the enrolment.
+        echo container_course\course_helper::render_enrolment_banner($this, $course);
 
         $context = context_course::instance($course->id);
         // Title with completion help icon.

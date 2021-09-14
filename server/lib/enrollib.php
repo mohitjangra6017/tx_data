@@ -1798,9 +1798,10 @@ abstract class enrol_plugin {
      *
      * @param stdClass $instance
      * @param int $user_id
+     * @param bool|null $with_notification
      * @return bool
      */
-    public function do_non_interactive_enrol(stdClass $instance, int $user_id): bool {
+    public function do_non_interactive_enrol(stdClass $instance, int $user_id, ?bool $with_notification = false): bool {
         return false;
     }
 

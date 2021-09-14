@@ -23,9 +23,14 @@
 namespace container_course;
 
 use container_course\hook\remove_module_hook;
+use container_course\interactor\course_interactor;
+use container_course\output\enrolment_banner;
 use core_container\factory;
 use totara_core\identifier\component_area;
 use totara_core\identifier\component_area as ca;
+use stdClass;
+use renderer_base;
+use coding_exception;
 
 final class course_helper {
     /**
@@ -224,5 +229,61 @@ final class course_helper {
             true,
             $component_area
         );
+    }
+
+    /**
+     * A helper method that helps to identify that whether we should render enrolment banner or not.
+     *
+     * @param course $course
+     * @param int|null $user_id
+     *
+     * @return bool
+     */
+    public static function should_render_enrolment_banner(course $course, ?int $user_id = null): bool {
+        $interactor = new course_interactor($course, $user_id);
+        if (!$interactor->can_access() || !$interactor->can_view()) {
+            // Nothing to display, because user cannot access nor view it.
+            // Hence, no point to render anything.
+            return false;
+        }
+
+        if ($interactor->is_enrolled()) {
+            // When user actor is already enrolled into a course.
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * A helper function that would help to conditionally render enrolment banner for
+     * the user within a course view.
+     *
+     * @param renderer_base $renderer
+     * @param stdClass      $course
+     * @param int|null      $user_id    The user that we would want to check against. If null, the
+     *                                  the current user in session will be used.
+     *
+     * @return string
+     */
+    public static function render_enrolment_banner(
+        renderer_base $renderer,
+        stdClass $course,
+        ?int $user_id = null
+    ): string {
+        /** @var course $container */
+        $container = factory::from_record($course);
+        if (!$container->is_typeof(course::get_type())) {
+            throw new coding_exception("Expecting an instance of container course");
+        }
+
+        if (!self::should_render_enrolment_banner($container, $user_id)) {
+            // Nope, nothing to render, because the current user does not meet any criteria
+            // to see the enrolment banner.
+            return "";
+        }
+
+        $widget = enrolment_banner::create_from_course($container, $user_id);
+        return $renderer->render($widget);
     }
 }
