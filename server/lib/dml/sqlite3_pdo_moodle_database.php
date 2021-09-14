@@ -162,6 +162,14 @@ class sqlite3_pdo_moodle_database extends pdo_moodle_database {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get_primary_keys(string $table): array {
+        debugging('Getting primary keys on SQLITE is not supported', DEBUG_DEVELOPER);
+        return [];
+    }
+
+    /**
      * Return table indexes - everything lowercased
      * @param string $table The table we want to get indexes from.
      * @return array of arrays

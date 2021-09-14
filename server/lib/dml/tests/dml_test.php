@@ -630,6 +630,79 @@ class core_dml_testcase extends \core_phpunit\database_driver_testcase {
         $this->assertTrue(count($DB->get_tables()) == $original_count);
     }
 
+    public function test_get_primary_keys() {
+        $DB = $this->tdb;
+        $dbman = $this->tdb->get_manager();
+
+        $table = $this->get_test_table();
+        $tablename = $table->getName();
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('course', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_index('course', XMLDB_INDEX_NOTUNIQUE, array('course'));
+        $table->add_index('course-id', XMLDB_INDEX_UNIQUE, array('course', 'id'));
+        $dbman->create_table($table);
+
+        $primary_keys = $DB->get_primary_keys($tablename);
+        $this->assertIsArray($primary_keys);
+        $this->assertCount(1, $primary_keys);
+        $expected = [
+            'id' => [
+                'column_name' => 'id'
+            ]
+        ];
+
+        $this->assertEqualsCanonicalizing($expected, $primary_keys);
+    }
+
+    public function test_get_primary_keys_with_no_keys() {
+        $DB = $this->tdb;
+        $dbman = $this->tdb->get_manager();
+
+        $table = $this->get_test_table();
+        $tablename = $table->getName();
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('course', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_index('course', XMLDB_INDEX_NOTUNIQUE, array('course'));
+        $table->add_index('course-id', XMLDB_INDEX_UNIQUE, array('course', 'id'));
+        $dbman->create_table($table);
+
+        $primary_keys = $DB->get_primary_keys($tablename);
+        $this->assertIsArray($primary_keys);
+        $this->assertEmpty($primary_keys);
+    }
+
+    public function test_get_primary_keys_with_multiple_keys() {
+        $DB = $this->tdb;
+        $dbman = $this->tdb->get_manager();
+
+        $table = $this->get_test_table();
+        $tablename = $table->getName();
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('course', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id', 'course'));
+        $table->add_index('course', XMLDB_INDEX_NOTUNIQUE, array('course'));
+        $table->add_index('course-id', XMLDB_INDEX_UNIQUE, array('course', 'id'));
+        $dbman->create_table($table);
+
+        $primary_keys = $DB->get_primary_keys($tablename);
+        $this->assertIsArray($primary_keys);
+        $this->assertCount(2, $primary_keys);
+        $expected = [
+            'id' => [
+                'column_name' => 'id'
+            ],
+            'course' => [
+                'column_name' => 'course'
+            ]
+        ];
+
+        $this->assertEqualsCanonicalizing($expected, $primary_keys);
+    }
+
     public function test_get_indexes() {
         $DB = $this->tdb;
         $dbman = $this->tdb->get_manager();
@@ -6812,6 +6885,7 @@ class moodle_database_for_testing extends moodle_database {
     protected function allowed_param_types() {}
     public function get_last_error() {}
     public function get_tables($usecache=true) {}
+    public function get_primary_keys($table): array {}
     public function get_indexes($table) {}
     public function get_columns($table, $usecache=true) {}
     protected function normalise_value($column, $value) {}

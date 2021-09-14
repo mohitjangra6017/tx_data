@@ -387,6 +387,31 @@ class pgsql_native_moodle_database extends moodle_database {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get_primary_keys(string $table): array {
+        $keys = [];
+        $table_name = $this->prefix.$table;
+
+        $sql = "SELECT c.column_name, c.data_type
+            FROM information_schema.table_constraints tc
+            JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_name)
+            JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema
+                AND tc.table_name = c.table_name AND ccu.column_name = c.column_name
+            WHERE constraint_type = 'PRIMARY KEY' and tc.table_name = :table_name;";
+
+        $rows = $this->get_records_sql_unkeyed($sql, ['table_name' => $table_name]);
+
+        foreach ($rows as $row) {
+            $keys[$row->column_name] = [
+                'column_name' => $row->column_name
+            ];
+        }
+
+        return $keys;
+    }
+
+    /**
      * Return table indexes - everything lowercased.
      * @param string $table The table we want to get indexes from.
      * @return array of arrays

@@ -495,6 +495,33 @@ class sqlsrv_native_moodle_database extends moodle_database {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get_primary_keys(string $table): array {
+        $keys = [];
+        $table_name = $this->prefix.$table;
+
+        $sql = "SELECT 
+                 ku.COLUMN_NAME as column_name 
+            FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS tc 
+            INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS ku
+                ON tc.CONSTRAINT_TYPE = 'PRIMARY KEY' 
+                AND tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME 
+                AND ku.TABLE_NAME = :table_name 
+            ORDER BY ku.TABLE_NAME, ku.ORDINAL_POSITION";
+
+        $rows = $this->get_records_sql_unkeyed($sql, ['table_name' => $table_name]);
+
+        foreach ($rows as $row) {
+            $keys[$row->column_name] = [
+                'column_name' => $row->column_name
+            ];
+        }
+
+        return $keys;
+    }
+
+    /**
      * Return table indexes - everything lowercased.
      * @param string $table The table we want to get indexes from.
      * @return array of arrays

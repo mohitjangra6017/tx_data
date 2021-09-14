@@ -812,6 +812,25 @@ class mysqli_native_moodle_database extends moodle_database {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get_primary_keys(string $table): array {
+        $keys = [];
+
+        $sql = "SHOW KEYS FROM {{$table}} WHERE Key_name = 'PRIMARY'";
+
+        $rows = $this->get_records_sql_unkeyed($sql);
+
+        foreach ($rows as $row) {
+            $keys[$row->column_name] = [
+                'column_name' => $row->column_name
+            ];
+        }
+
+        return $keys;
+    }
+
+    /**
      * Return table indexes - everything lowercased.
      * @param string $table The table we want to get indexes from.
      * @return array An associative array of indexes containing 'unique' flag and 'columns' being indexed

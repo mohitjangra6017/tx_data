@@ -1194,6 +1194,14 @@ abstract class moodle_database {
     public abstract function get_tables($usecache=true);
 
     /**
+     * Returns the primary_keys for this table
+     *
+     * @param string $table
+     * @return array
+     */
+    public abstract function get_primary_keys(string $table): array;
+
+    /**
      * Return table indexes - everything lowercased.
      * @param string $table The table we want to get indexes from.
      * @return array An associative array of indexes containing 'unique' flag and 'columns' being indexed

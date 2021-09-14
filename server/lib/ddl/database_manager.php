@@ -351,10 +351,16 @@ class database_manager {
         }
 
         if ($xmldb_key->getType() == XMLDB_KEY_PRIMARY) {
+            // NOTE: all tables in Totara should have id as primary key and no other primary keys should exits!
             if ($xmldb_key->getFields() !== ['id']) {
                 debugging('Primary keys should be used for ID columns only', DEBUG_DEVELOPER);
             }
-            // NOTE: all tables in Totara should have id as primary key and no other primary keys should exits!
+            $primary_keys = $this->mdb->get_primary_keys($xmldb_table->getName());
+            foreach ($xmldb_key->getFields() as $field) {
+                if (!array_key_exists($field, $primary_keys)) {
+                    return false;
+                }
+            }
             return true;
         }
 

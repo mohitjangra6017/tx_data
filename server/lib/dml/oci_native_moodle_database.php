@@ -432,6 +432,14 @@ class oci_native_moodle_database extends moodle_database {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get_primary_keys(string $table): array {
+        debugging('Getting primary keys on OCI is not supported', DEBUG_DEVELOPER);
+        return [];
+    }
+
+    /**
      * Return table indexes - everything lowercased.
      * @param string $table The table we want to get indexes from.
      * @return array An associative array of indexes containing 'unique' flag and 'columns' being indexed
