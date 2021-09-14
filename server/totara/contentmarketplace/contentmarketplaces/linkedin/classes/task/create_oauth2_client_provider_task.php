@@ -40,8 +40,8 @@ class create_oauth2_client_provider_task extends adhoc_task {
 
         if (!$repository->exists_for_id_number("linkedin_learning")) {
             $entity = new client_provider();
-            $entity->client_id = uniqid();
-            $entity->client_secret = uniqid();
+            $entity->client_id = random_string(16);
+            $entity->client_secret = random_string(24);
             $entity->id_number = "linkedin_learning";
             $entity->name = get_string("pluginname", "contentmarketplace_linkedin");
             $entity->grant_types = grant_type::get_client_credentials();
