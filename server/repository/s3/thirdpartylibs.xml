@@ -6,5 +6,6 @@
     <license>BSD</license>
     <version>0.5.1</version>
     <licenseversion></licenseversion>
+    <repository>https://github.com/tpyo/amazon-s3-php-class</repository>
   </library>
 </libraries>
