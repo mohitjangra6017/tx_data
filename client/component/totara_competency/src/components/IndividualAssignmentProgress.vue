@@ -341,6 +341,11 @@ export default {
       item => item.competency.fullname
     );
 
+    if (labels.length <= 2) {
+      labels.unshift(['']);
+      labels.push(['']);
+    }
+
     return {
       labels: labels,
     };
@@ -521,34 +526,19 @@ export default {
           // Appending extra empty "bars" to the chart to avoid it being giant when displayed for a single
           // competency.
           if (this.assignmentProgress.items.length <= 2) {
-            for (let i = this.assignmentProgress.items.length; i <= 3; i++) {
-              data.datasets[0].data.push(null);
-              data.datasets[1].data.push(last);
-              data.competencies.push(null);
-
-              if (i === 3) {
-                data.labels.push('   ');
-              } else {
-                data.labels.push(' ');
-              }
-            }
+            data.datasets[0].data.unshift(null);
+            data.datasets[0].rawData.unshift(null);
+            data.datasets[1].data.unshift(first);
+            data.datasets[1].rawData.unshift(null);
+            data.datasets[0].data.push(null);
+            data.datasets[0].rawData.push(null);
+            data.datasets[1].data.push(last);
+            data.datasets[1].rawData.push(null);
+            data.labels.unshift(['']);
+            data.labels.push(['']);
+            data.competencies.unshift(null);
+            data.competencies.push(null);
           }
-
-          data.datasets[0].rawData.push(null);
-          data.datasets[0].rawData.unshift(null);
-          data.datasets[1].rawData.push(null);
-          data.datasets[1].rawData.unshift(null);
-
-          data.datasets[0].data.push(null);
-          data.datasets[0].data.unshift(null);
-          data.datasets[1].data.unshift(first);
-          data.datasets[1].data.push(last);
-
-          data.competencies.push(null);
-          data.competencies.unshift(null);
-
-          data.labels.unshift('');
-          data.labels.push('');
         }
       }
 
@@ -605,6 +595,7 @@ export default {
       let start = 0;
       let end;
 
+      if (!str) return [''];
       if (str.length <= maxLen) return [str.trim()];
 
       for (let line = 0; line < maxLines; line++) {

@@ -52,8 +52,8 @@ describe('individualAssignmentProgress', () => {
       propsData: props,
     });
 
-    expect(wrapper.vm.labels).toHaveLength(1);
-    expect(wrapper.vm.labels[0]).toBe('some name');
+    expect(wrapper.vm.labels).toHaveLength(3);
+    expect(wrapper.vm.labels[1]).toBe('some name');
 
     let name = 'some name repeated'.repeat(50);
     let props2 = Object.assign({}, props);
@@ -76,8 +76,34 @@ describe('individualAssignmentProgress', () => {
       propsData: props2,
     });
 
-    expect(wrapper.vm.labels).toHaveLength(2);
+    expect(wrapper.vm.labels).toHaveLength(4);
+    expect(wrapper.vm.labels[2]).toBe(name);
+
+    let name3 = 'shorter name';
+    let props3 = Object.assign({}, props2);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name3,
+      },
+      my_value: {
+        percentage: 15,
+        name: 'simple',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'junk',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props3,
+    });
+
+    expect(wrapper.vm.labels).toHaveLength(3);
+    expect(wrapper.vm.labels[0]).toBe('some name');
     expect(wrapper.vm.labels[1]).toBe(name);
+    expect(wrapper.vm.labels[2]).toBe(name3);
   });
 
   it('shorten works as expected', () => {
@@ -110,5 +136,84 @@ describe('individualAssignmentProgress', () => {
     expect(long[1]).toBe(
       'consectetur adipiscing elit,' + String.fromCharCode(8230)
     );
+
+    let none = wrapper.vm.shorten(null);
+    expect(none).toHaveLength(1);
+    expect(none[0]).toBe('');
+  });
+
+  it('variables are set up correctly with differing amounts of competencies', () => {
+    // One competency should have 3 items in the arrays
+    let wrapper = shallowMount(IAP, {
+      propsData: props,
+    });
+
+    expect(wrapper.vm.labels).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[0].data).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[0].rawData).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[1].data).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[1].rawData).toHaveLength(3);
+    expect(wrapper.vm.data.labels).toHaveLength(3);
+    expect(wrapper.vm.data.competencies).toHaveLength(3);
+
+    // 2 competencies should have 4 items in the arrays
+    let name = 'some name repeated'.repeat(50);
+    let props2 = Object.assign({}, props);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name,
+      },
+      my_value: {
+        percentage: 5,
+        name: 'simple',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'junk',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props2,
+    });
+
+    expect(wrapper.vm.labels).toHaveLength(4);
+    expect(wrapper.vm.data.datasets[0].data).toHaveLength(4);
+    expect(wrapper.vm.data.datasets[0].rawData).toHaveLength(4);
+    expect(wrapper.vm.data.datasets[1].data).toHaveLength(4);
+    expect(wrapper.vm.data.datasets[1].rawData).toHaveLength(4);
+    expect(wrapper.vm.data.labels).toHaveLength(4);
+    expect(wrapper.vm.data.competencies).toHaveLength(4);
+
+    // 3 or more competencies should have the same amount of items in it's arrays
+    let name3 = 'shorter name';
+    let props3 = Object.assign({}, props2);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name3,
+      },
+      my_value: {
+        percentage: 15,
+        name: 'simple',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'junk',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props3,
+    });
+
+    expect(wrapper.vm.labels).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[0].data).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[0].rawData).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[1].data).toHaveLength(3);
+    expect(wrapper.vm.data.datasets[1].rawData).toHaveLength(3);
+    expect(wrapper.vm.data.labels).toHaveLength(3);
+    expect(wrapper.vm.data.competencies).toHaveLength(3);
   });
 });
