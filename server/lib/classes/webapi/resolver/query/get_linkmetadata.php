@@ -50,6 +50,7 @@ final class get_linkmetadata implements query_resolver, has_middleware {
         }
 
         try {
+            /** @var \core\link\reader $reader */
             $reader = reader_factory::get_reader_classname($url);
             return $reader::get_metadata_info($url);
         } catch (coding_exception $e) {

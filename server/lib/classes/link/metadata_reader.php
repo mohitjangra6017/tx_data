@@ -23,6 +23,7 @@
 namespace core\link;
 
 use core\link\http\request;
+use moodle_url;
 
 final class metadata_reader implements reader {
     /**
@@ -46,7 +47,7 @@ final class metadata_reader implements reader {
     ];
 
     /**
-     * @param string|\moodle_url $url
+     * @param string|moodle_url $url
      * @return metadata_info|null
      */
     public static function get_metadata_info($url): ?metadata_info {
@@ -58,16 +59,22 @@ final class metadata_reader implements reader {
             return null;
         }
 
-        $url_to_validate = new \moodle_url($url);
+        $url = new moodle_url($url);
 
-        $validator = new url_validator($url_to_validate);
+        // Skip this for unit tests, it's covered separately
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            $final_destination = new url_final_destination();
+            $url = $final_destination($url);
+        }
+
+        $validator = new url_validator($url);
         $ip_address = $validator->get_validated_ip();
         if (!$ip_address) {
             return null;
         }
 
         // To prevent DNS rebinding attacks we use the validated IP address to resolve the request
-        $response = request::get($url, 0, $url_to_validate->get_host(), $ip_address);
+        $response = request::get((string) $url, 0, $url->get_host(), $ip_address);
         if (!$response->is_ok() || !$response->is_html()) {
             return null;
         }

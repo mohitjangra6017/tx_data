@@ -28,10 +28,14 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 class core_webapi_resolver_query_get_linkmetadata_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
-    protected function setUp(): void {
+    public static function setUpBeforeClass(): void {
         global $CFG;
         require_once("{$CFG->dirroot}/lib/tests/fixtures/link/http_mock_request.php");
 
+        parent::setUpBeforeClass();
+    }
+
+    protected function setUp(): void {
         // Clear core_link mock url
         \http_mock_request::clear();
     }
