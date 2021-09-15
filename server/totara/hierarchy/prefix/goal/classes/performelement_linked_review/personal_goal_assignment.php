@@ -28,6 +28,7 @@ use context_user;
 use core\collection;
 use core\date_format;
 use core\format;
+use core\webapi\formatter\field\date_field_formatter;
 use goal;
 use hierarchy_goal\data_providers\personal_goals;
 use hierarchy_goal\entity\personal_goal as personal_goal_entity;
@@ -131,6 +132,11 @@ class personal_goal_assignment extends goal_assignment_content_type {
             $personal_goal->id,
             $created_at
         );
+        $target_date = goal_helper::get_goal_target_date_at_timestamp(
+            goal::SCOPE_PERSONAL,
+            $personal_goal->id,
+            $created_at
+        );
         $existing_status_change = $can_view_status
             ? personal_goal_perform_status::get_existing_status($personal_goal->id, $subject_instance->id)
             : null;
@@ -154,8 +160,8 @@ class personal_goal_assignment extends goal_assignment_content_type {
             'scale_values' => $personal_goal->scale
                 ? $this->format_scale_values($personal_goal->scale)
                 : null,
-            'target_date' => ($personal_goal->targetdate > 0)
-                ? $personal_goal_formatter->format('target_date', date_format::FORMAT_DATE)
+            'target_date' => ($target_date > 0)
+                ? (new date_field_formatter(date_format::FORMAT_DATE, $this->context))->format($target_date)
                 : null,
             'can_view_goal_details' => $this->can_view_goal_details($subject_instance),
             'can_change_status' => $can_change_status,

@@ -4,6 +4,8 @@ information provided here is intended especially for developers.
 === 15.0 ===
 
 * Defaults added for 'evidencecount' and 'proficiencyexpected' in comp table.
+* Added a new table 'goal_item_target_date_history' for recording changes to target dates, both for personal and company goals.
+* Added an upgrade step for population with initial values for the 'goal_item_target_date_history' table.
 
 === 14.0 ===
 

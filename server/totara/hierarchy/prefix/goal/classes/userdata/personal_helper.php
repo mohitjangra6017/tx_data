@@ -58,9 +58,10 @@ class personal_helper {
             $transaction = $DB->start_delegated_transaction();
             $fs = get_file_storage();
 
-            // Clear out any historical scale change information and custom fields.
+            // Clear out any historical scale & target date change information and custom fields.
             foreach ($goals as $goal) {
                 $DB->delete_records('goal_item_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]);
+                $DB->delete_records('goal_item_target_date_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]);
 
                 // Check the context exists just in case they were deleted a while ago.
                 if (!empty($user->contextid)) {
@@ -125,6 +126,9 @@ class personal_helper {
             if (!empty($goal->scaleid)) {
                 $itemdata['history'] = $DB->get_records('goal_item_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]);
             }
+
+            // Get target date history for the goal.
+            $itemdata['target_date_history'] = $DB->get_records('goal_item_target_date_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]);
 
             if (!empty($user->contextid)) {
                 // Include any files from the goal description.

@@ -197,12 +197,17 @@ abstract class perform_linked_goals_base_testcase extends testcase {
         $user = $user ?? $generator->create_user();
 
         $scale = $this->create_scale($hierarchy_generator);
-        $goal1 = $hierarchy_generator->create_personal_goal($user->id, [
-            'name' => "goal1",
-            'assigntype' => $type,
-            'scaleid' => $scale->id,
-            'scalevalueid' => scale_value::repository()->where('name', 'Created')->one(true)->id
-        ]);
+        $goal1 = $hierarchy_generator->create_personal_goal(
+            $user->id,
+            [
+                'name' => "goal1",
+                'assigntype' => $type,
+                'scaleid' => $scale->id,
+                'scalevalueid' => scale_value::repository()->where('name', 'Created')->one(true)->id,
+                'targetdate' => time() + (10 * DAYSECS),
+            ],
+            true
+        );
 
         // goal2 doesn't have a scale or target date.
         $goal2 = $hierarchy_generator->create_personal_goal($user->id, [

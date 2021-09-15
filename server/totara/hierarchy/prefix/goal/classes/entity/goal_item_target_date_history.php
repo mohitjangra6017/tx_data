@@ -31,13 +31,17 @@ use core\orm\entity\entity;
  * @property-read int $id record id
  * @property int $scope personal or company goal
  * @property int $itemid personal or company goal id
- * @property int $targetdate associated target date timestamp
+ * @property int|null $targetdate associated target date timestamp
  * @property int $timemodified
  * @property int $usermodified
  *
  * @property-read scale_value $scale_value goal status value
  */
 class goal_item_target_date_history extends entity {
+
     public const TABLE = 'goal_item_target_date_history';
 
+    public const UPDATED_TIMESTAMP = 'timemodified';
+
+    public const SET_UPDATED_WHEN_CREATED = true;
 }

@@ -89,12 +89,12 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
 
         // Create a goal for the first user.
         $data1 = ['fullname' => 'pgoal1', 'frameworkid' => $frame1->id, 'typeid' => $ptype1->id, $cfdatename => 1234567890, $cfcheckname => 1, $cftextname => 'abc123'];
-        $pgoal1 = $hierarchygen->create_personal_goal($user1->id, $data1);
+        $pgoal1 = $hierarchygen->create_personal_goal($user1->id, $data1, true);
         $retdata->pgoal1 = $pgoal1;
 
         // Create a control goal for the second user.
         $data2 = ['fullname' => 'pgoal2', 'frameworkid' => $frame1->id, 'typeid' => $ptype1->id, $cfdatename => 1231231230, $cfcheckname => 0, $cftextname => 'xyz321'];
-        $pgoal2 = $hierarchygen->create_personal_goal($user2->id, $data2);
+        $pgoal2 = $hierarchygen->create_personal_goal($user2->id, $data2, true);
         $retdata->pgoal2 = $pgoal2;
 
         // Create a personal goal type and add some fields to it.
@@ -113,12 +113,12 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
 
         // Create a second goal for the first user, to make sure this works across all goal frameworks.
         $data3 = ['fullname' => 'pgoal3', 'frameworkid' => $frame2->id, 'typeid' => $ptype2->id, $cfdatename => 1234567890, $cfcheckname => 1, $cftextname => 'abc123'];
-        $pgoal3 = $hierarchygen->create_personal_goal($user1->id, $data3);
+        $pgoal3 = $hierarchygen->create_personal_goal($user1->id, $data3, true);
         $retdata->pgoal3 = $pgoal3;
 
         // Create something for the deleted user.
         $data4 = ['fullname' => 'pgoal3', 'frameworkid' => $frame2->id, 'typeid' => $ptype2->id, $cfdatename => 1325467890, $cfcheckname => 1, $cftextname => '321cba'];
-        $pgoal4 = $hierarchygen->create_personal_goal($user3->id, $data4);
+        $pgoal4 = $hierarchygen->create_personal_goal($user3->id, $data4, true);
         $retdata->pgoal4 = $pgoal4;
 
         return $retdata;
@@ -194,6 +194,12 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
         // Get the personal goals before purging.
         $goals = $DB->get_records('goal_personal', ['userid' => $data->user1->id]);
 
+        // Verify target date history records are as expected.
+        $this->assertEquals(4, $DB->count_records('goal_item_target_date_history', ['scope' => \goal::SCOPE_PERSONAL]));
+        foreach ($goals as $goal) {
+            $this->assertEquals(1, $DB->count_records('goal_item_target_date_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]));
+        }
+
         $this->assertTrue(has_capability('totara/hierarchy:viewownpersonalgoal', $syscontext, $data->user1->id));
         $this->assertTrue(has_capability('totara/hierarchy:viewownpersonalgoal', $syscontext, $data->user2->id));
 
@@ -208,6 +214,7 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
         foreach ($goals as $goal) {
             $this->assertEquals(0, $DB->count_records('goal_user_info_data', ['goal_userid' => $goal->id]));
             $this->assertEquals(0, $DB->count_records('goal_item_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]));
+            $this->assertEquals(0, $DB->count_records('goal_item_target_date_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $goal->id]));
         }
 
         // Double check that user 2s data has not been touched.
@@ -220,6 +227,7 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
         $pgoal2 = array_pop($pgoals2);
         $pgoal2data = $DB->get_records('goal_user_info_data', ['goal_userid' => $pgoal2->id]);
         $this->assertEquals(3, count($pgoal2data));
+        $this->assertEquals(1, $DB->count_records('goal_item_target_date_history', ['scope' => \goal::SCOPE_PERSONAL, 'itemid' => $pgoal2->id]));
 
         // Repurge user 1 to make sure it's fine to run multiple times
         $result = personal_purge::execute_purge($targetuser1, $syscontext);
@@ -270,6 +278,7 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
 
         foreach ($result->data as $goal) {
             $this->assertEquals($data->user1->id, $goal['userid']);
+            $this->assertNotEmpty($goal['target_date_history']);
 
             // Check the custom fields, note: only text, datetime, and checkbox are set by the generator at the moment.
             if (!empty($goal['typeid'])) {
@@ -322,6 +331,7 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
 
         foreach ($result->data as $goal) {
             $this->assertEquals($data->user1->id, $goal['userid']);
+            $this->assertNotEmpty($goal['target_date_history']);
 
             // Check the custom fields, note: only text, datetime, and checkbox are set by the generator at the moment.
             if (!empty($goal['typeid'])) {

@@ -25,6 +25,7 @@
 
 namespace totara_hierarchy\testing;
 
+use hierarchy_goal\event\personal_created;
 use stdClass, coding_exception;
 use goal, hierarchy, competency, totara_generator_util;
 
@@ -352,12 +353,13 @@ final class generator extends \core\testing\component_generator {
     /**
      * Create a personal goal for a user
      *
-     * @param int $userid       The id of the user to create the goal for
-     * @param array $goaldata   The data for the goal, anything not provided will use default data
-     *                          NOTE: Customfields can be passed through goaldata with the key 'cf_<fieldshortname>'
-     * @return stdClass         The database record for the created personal goal
+     * @param int $userid         The id of the user to create the goal for
+     * @param array $goaldata     The data for the goal, anything not provided will use default data
+     *                            NOTE: Customfields can be passed through goaldata with the key 'cf_<fieldshortname>'
+     * @param bool $trigger_event Whether to trigger a personal_created event or not.
+     * @return stdClass           The database record for the created personal goal
      */
-    public function create_personal_goal($userid, $goaldata = array()) {
+    public function create_personal_goal($userid, $goaldata = array(), bool $trigger_event = false) {
         global $USER, $DB;
 
         $now = time();
@@ -404,6 +406,10 @@ final class generator extends \core\testing\component_generator {
                 'timemodified' => time(),
                 'usermodified' => $USER->id,
             ]);
+        }
+
+        if ($trigger_event) {
+            personal_created::create_from_instance($goal)->trigger();
         }
 
         return $goal;
@@ -638,8 +644,8 @@ final class generator extends \core\testing\component_generator {
         return $this->create_hierarchy($data['frameworkid'], 'competency', $data);
     }
 
-    public function create_goal($data) {
-        return $this->create_hierarchy($data['frameworkid'], 'goal', $data);
+    public function create_goal($data, bool $trigger_event = true) {
+        return $this->create_hierarchy($data['frameworkid'], 'goal', $data, $trigger_event);
     }
 
     /**

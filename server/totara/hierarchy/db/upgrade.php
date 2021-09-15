@@ -30,6 +30,7 @@
  */
 function xmldb_totara_hierarchy_upgrade($oldversion) {
     global $CFG, $DB;
+    require_once("{$CFG->dirroot}/totara/hierarchy/db/upgradelib.php");
 
     $dbman = $DB->get_manager();
 
@@ -112,6 +113,14 @@ function xmldb_totara_hierarchy_upgrade($oldversion) {
 
         // Hierarchy savepoint reached.
         upgrade_plugin_savepoint(true, 2021092000, 'totara', 'hierarchy');
+    }
+
+    if ($oldversion < 2021092200) {
+        // Initial population of table goal_item_target_date_history.
+        totara_hierarchy_upgrade_init_goal_target_date_history();
+
+        // Hierarchy savepoint reached.
+        upgrade_plugin_savepoint(true, 2021092200, 'totara', 'hierarchy');
     }
 
     return true;

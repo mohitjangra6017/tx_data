@@ -29,6 +29,7 @@ use context_user;
 use core\collection;
 use core\date_format;
 use core\format;
+use core\webapi\formatter\field\date_field_formatter;
 use goal;
 use hierarchy_goal\data_providers\assigned_company_goals;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
@@ -132,6 +133,11 @@ class company_goal_assignment extends goal_assignment_content_type {
             $company_goal_assignment->id,
             $created_at
         );
+        $target_date = goal_helper::get_goal_target_date_at_timestamp(
+            goal::SCOPE_COMPANY,
+            $company_goal_assignment->goalid,
+            $created_at
+        );
         if (!$goal_status_scale_value) {
             throw new coding_exception("Scale could not be found for company goal assignment {$company_goal_assignment->id}");
         }
@@ -151,8 +157,8 @@ class company_goal_assignment extends goal_assignment_content_type {
             ],
             'status' => $this->format_scale_value($goal_status_scale_value),
             'scale_values' => $this->format_scale_values($goal_status_scale_value->scale),
-            'target_date' => ($company_goal_assignment->goal->targetdate > 0)
-                ? $company_goal_formatter->format('target_date', date_format::FORMAT_DATE)
+            'target_date' => ($target_date > 0)
+                ? (new date_field_formatter(date_format::FORMAT_DATE, $this->context))->format($target_date)
                 : null,
             'can_view_goal_details' => $this->can_view_goal_details(),
             'can_change_status' => $can_change_status,

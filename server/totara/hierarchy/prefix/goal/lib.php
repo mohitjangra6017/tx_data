@@ -166,6 +166,12 @@ class goal extends hierarchy {
                    AND scope = ?";
         $DB->execute($sql, array_merge($items_params, array(self::SCOPE_COMPANY)));
 
+        // Delete rows from target date history table.
+        $sql = "DELETE FROM {goal_item_target_date_history}
+                 WHERE itemid " . $items_sql . "
+                   AND scope = ?";
+        $DB->execute($sql, array_merge($items_params, [self::SCOPE_COMPANY]));
+
         // Delete rows from all these other tables.
         $db_data = array(
             $this->shortprefix.'_grp_pos' => 'goalid',
