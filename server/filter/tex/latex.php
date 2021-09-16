@@ -47,23 +47,23 @@
          * @param int $fontsize the font size
          * @return string the latex document
          */
-        function construct_latex_document( $formula, $fontsize=12 ) {
-            global $CFG;
-
-            $formula = filter_tex_sanitize_formula($formula);
-
+        function construct_latex_document($formula, $fontsize = 12) {
             // $fontsize don't affects to formula's size. $density can change size
-            $doc =  "\\documentclass[{$fontsize}pt]{article}\n";
+            $doc = "\\documentclass[{$fontsize}pt]{article}\n";
             $doc .= get_config('filter_tex', 'latexpreamble');
             $doc .= "\\pagestyle{empty}\n";
             $doc .= "\\begin{document}\n";
-//dlnsk            $doc .= "$ {$formula} $\n";
-            if (preg_match("/^[[:space:]]*\\\\begin\\{(gather|align|alignat|multline).?\\}/i",$formula)) {
-               $doc .= "$formula\n";
+            if (preg_match("/^[[:space:]]*\\\\begin\\{(gather|align|alignat|multline).?\\}/i", $formula)) {
+                $doc .= "$formula\n";
             } else {
-               $doc .= "$ {$formula} $\n";
+                $doc .= "$ {$formula} $\n";
             }
             $doc .= "\\end{document}\n";
+
+            // Sanitize the whole document (rather than just the formula) to make sure no one can bypass sanitization
+            // by using \newcommand in preamble to give an alias to a blocked command.
+            $doc = filter_tex_sanitize_formula($doc);
+
             return $doc;
         }
 
@@ -95,19 +95,19 @@
                 $convertformat = 'png';
             }
             $filename = str_replace(".{$convertformat}", '', $filename);
-            $tex = "{$this->temp_dir}/$filename.tex";
+            $tex = "$filename.tex"; // Absolute paths won't work with openin_any = p setting.
             $dvi = "{$this->temp_dir}/$filename.dvi";
             $ps  = "{$this->temp_dir}/$filename.ps";
             $img = "{$this->temp_dir}/$filename.{$convertformat}";
+
+            // Some other temp files are generated in the current directory when the commands below are run.
+            // Let's change to the temp directory so they are generated there.
+            chdir( $this->temp_dir );
 
             // turn the latex doc into a .tex file in the temp area
             $fh = fopen( $tex, 'w' );
             fputs( $fh, $doc );
             fclose( $fh );
-
-            // Some other temp files are generated in the current directory when the commands below are run.
-            // Let's change to the temp directory so they are generated there.
-            chdir( $this->temp_dir );
 
             // run latex on document
             $latex = new \core\command\executable($pathlatex);
