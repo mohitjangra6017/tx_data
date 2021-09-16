@@ -25,6 +25,9 @@ use contentmarketplace_linkedin\api\response\pagination;
 use contentmarketplace_linkedin\exception\json_validation_exception;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_response_pagination_testcase extends testcase {
     /**
      * @return void

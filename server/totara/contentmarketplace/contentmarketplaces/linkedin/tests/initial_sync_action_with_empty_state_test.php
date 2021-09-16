@@ -29,6 +29,9 @@ use core_phpunit\testcase;
 use totara_contentmarketplace\token\token;
 use totara_core\http\clients\simple_mock_client;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_initial_sync_action_with_empty_state_testcase extends testcase {
 
     /**

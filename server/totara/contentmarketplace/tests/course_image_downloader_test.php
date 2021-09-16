@@ -24,6 +24,9 @@
 use core_phpunit\testcase;
 use totara_contentmarketplace\course\course_image_downloader;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_course_image_downloader_testcase extends testcase {
     /**
      * @return void

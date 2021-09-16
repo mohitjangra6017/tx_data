@@ -24,6 +24,9 @@
 use contentmarketplace_linkedin\core_json\data_format\time_unit;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_json_data_format_time_unit_testcase extends testcase {
     /**
      * @return void

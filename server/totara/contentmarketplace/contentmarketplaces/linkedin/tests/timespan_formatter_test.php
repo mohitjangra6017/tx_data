@@ -26,6 +26,7 @@ use core_phpunit\testcase;
 
 /**
  * @covers \contentmarketplace_linkedin\formatter\timespan_field_formatter
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_timespan_formatter_testcase extends testcase {
 

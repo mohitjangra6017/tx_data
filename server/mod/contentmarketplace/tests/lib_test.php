@@ -33,6 +33,9 @@ use mod_contentmarketplace\exception\learning_object_not_found;
 use mod_contentmarketplace\output\content_marketplace_logo;
 use totara_contentmarketplace\testing\generator as totara_content_marketplace_generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_lib_testcase extends testcase {
     /**
      * @return void

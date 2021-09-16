@@ -25,6 +25,9 @@ use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\core_json\data_format\contribution_type;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_json_data_format_contribution_type_testcase extends testcase {
     /**
      * @return void

@@ -30,6 +30,9 @@ use contentmarketplace_linkedin\testing\generator;
 use totara_core\http\exception\auth_exception;
 use totara_contentmarketplace\exception\cannot_obtain_token;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_obtain_token_testcase extends testcase {
     /**
      * @return void

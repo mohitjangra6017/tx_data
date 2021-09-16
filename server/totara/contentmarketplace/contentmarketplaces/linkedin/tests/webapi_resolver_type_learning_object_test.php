@@ -31,6 +31,9 @@ use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\webapi\resolver\type\learning_object as type_learning_object;
 use contentmarketplace_linkedin\entity\learning_object as entity;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_resolver_type_learning_object_testcase extends testcase {
     use webapi_phpunit_helper;
 

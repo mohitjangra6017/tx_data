@@ -27,6 +27,9 @@ use mod_contentmarketplace\interactor\content_marketplace_interactor;
 use mod_contentmarketplace\model\content_marketplace;
 use core\entity\user_enrolment;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_webapi_resolver_mutation_request_self_enrol_testcase extends testcase {
     use webapi_phpunit_helper;
 

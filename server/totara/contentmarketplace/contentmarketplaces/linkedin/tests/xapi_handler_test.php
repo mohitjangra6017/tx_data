@@ -33,6 +33,9 @@ use totara_xapi\entity\xapi_statement;
 use totara_xapi\request\request;
 use totara_xapi\response\json_result;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
     /**
      * @var int|null

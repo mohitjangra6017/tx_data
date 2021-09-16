@@ -26,6 +26,9 @@ use mod_contentmarketplace\event\course_module_instance_list_viewed;
 use totara_mvc\tui_view;
 use mod_contentmarketplace\testing\generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_index_controller_testcase extends testcase {
     /**
      * @return void

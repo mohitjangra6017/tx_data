@@ -25,6 +25,9 @@ use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\entity\content_marketplace;
 use core\orm\query\builder;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_entity_content_marketplace_testcase extends testcase {
     /**
      * @return void

@@ -31,6 +31,9 @@ use totara_contentmarketplace\testing\mock\create_course_interactor;
 use totara_contentmarketplace\testing\helper;
 use totara_contentmarketplace\totara_catalog\provider as provider_filer;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_catalog_provider_testcase extends testcase {
     /**
      * @var array

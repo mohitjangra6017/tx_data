@@ -33,6 +33,9 @@ use totara_notification\entity\notification_queue;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\manager\notification_queue_manager;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_totara_notification_import_course_testcase extends testcase {
     /**
      * The user's actor

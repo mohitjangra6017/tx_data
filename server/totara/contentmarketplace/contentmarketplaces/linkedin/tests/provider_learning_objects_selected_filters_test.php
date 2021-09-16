@@ -27,6 +27,9 @@ use contentmarketplace_linkedin\dto\timespan;
 use contentmarketplace_linkedin\testing\generator;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_provider_learning_objects_selected_filters_testcase extends testcase {
     /**
      * @return void

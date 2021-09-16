@@ -32,6 +32,7 @@ use contentmarketplace_linkedin\testing\generator;
 
 /**
  * @covers \contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_objects_filter_options
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_objects_filter_options_testcase extends testcase {
 

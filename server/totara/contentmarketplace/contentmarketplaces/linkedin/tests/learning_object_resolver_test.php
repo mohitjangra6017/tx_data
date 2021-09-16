@@ -24,6 +24,9 @@ use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\learning_object\resolver;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_learning_object_resolver_testcase extends testcase {
     /**
      * @return void

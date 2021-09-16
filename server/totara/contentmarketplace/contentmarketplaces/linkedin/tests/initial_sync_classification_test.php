@@ -36,6 +36,9 @@ use totara_core\http\response;
 use totara_core\http\response_code;
 use contentmarketplace_linkedin\dto\locale;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_sync_classification_testcase extends testcase {
     /**
      * @return void

@@ -27,6 +27,9 @@ use contentmarketplace_linkedin\exception\json_validation_exception;
 use core_phpunit\testcase;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_response_element_testcase extends testcase {
     /**
      * @return void

@@ -27,6 +27,9 @@ use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugin;
 use totara_contentmarketplace\testing\helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_lil_workflow_testcase extends testcase {
     /**
      * @return void

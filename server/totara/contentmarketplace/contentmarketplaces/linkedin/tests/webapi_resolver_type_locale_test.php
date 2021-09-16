@@ -25,6 +25,9 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 use contentmarketplace_linkedin\dto\locale;
 use contentmarketplace_linkedin\webapi\resolver\type\locale as type_locale;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_resolver_type_locale_testcase extends testcase {
     use webapi_phpunit_helper;
 

@@ -25,6 +25,9 @@ use totara_contentmarketplace\sync;
 use totara_core\http\clients\simple_mock_client;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_sync_action_testcase extends testcase {
     /**
      * @return void

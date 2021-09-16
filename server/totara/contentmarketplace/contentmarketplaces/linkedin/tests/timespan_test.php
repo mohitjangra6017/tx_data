@@ -24,6 +24,9 @@
 use contentmarketplace_linkedin\dto\timespan;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_timespan_testcase extends testcase {
     /**
      * Provide data for testing minute factory function of timespan.

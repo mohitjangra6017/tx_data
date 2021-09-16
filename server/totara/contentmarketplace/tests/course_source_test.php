@@ -29,6 +29,9 @@ use totara_contentmarketplace\testing\generator;
 use totara_contentmarketplace\testing\helper;
 use container_course\course;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_course_source_testcase extends testcase {
     /**
      * @return void

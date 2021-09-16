@@ -27,6 +27,9 @@ use core_phpunit\testcase;
 use mod_contentmarketplace\entity\content_marketplace as entity;
 use mod_contentmarketplace\model\content_marketplace;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_content_marketplace_model_testcase extends testcase {
     /**
      * @return void

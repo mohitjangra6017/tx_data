@@ -24,6 +24,9 @@
 use contentmarketplace_linkedin\api\v2\service\helper;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_service_helper_testcase extends testcase {
     /**
      * @return void

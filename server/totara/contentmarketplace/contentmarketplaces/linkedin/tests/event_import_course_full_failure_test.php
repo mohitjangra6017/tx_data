@@ -23,6 +23,9 @@
 use core_phpunit\testcase;
 use contentmarketplace_linkedin\event\import_course_full_failure;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_event_import_course_full_failure_testcase extends testcase {
     /**
      * @return void

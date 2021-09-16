@@ -30,6 +30,9 @@ use totara_contentmarketplace\course\course_builder;
 use totara_contentmarketplace\course\result;
 use totara_contentmarketplace\testing\helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_course_builder_testcase extends testcase {
     /**
      * @return void

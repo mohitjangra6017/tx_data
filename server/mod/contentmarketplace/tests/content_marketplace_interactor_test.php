@@ -28,6 +28,9 @@ use mod_contentmarketplace\interactor\content_marketplace_interactor;
 use mod_contentmarketplace\testing\generator;
 use mod_contentmarketplace\model\content_marketplace;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class content_marketplace_content_marketplace_interactor_testcase extends testcase {
     /**
      * @return void

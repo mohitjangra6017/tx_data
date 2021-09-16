@@ -37,6 +37,9 @@ use totara_contentmarketplace\token\token;
 use totara_core\http\clients\simple_mock_client;
 use contentmarketplace_linkedin\dto\locale;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_full_sync_testcase extends testcase {
     /**
      * @return void

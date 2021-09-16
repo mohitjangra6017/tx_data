@@ -28,6 +28,7 @@ use totara_contentmarketplace\testing\helper;
 
 /**
  * @covers \contentmarketplace_linkedin\webapi\resolver\query\catalog_import_course_categories
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_course_categories_testcase extends testcase {
 

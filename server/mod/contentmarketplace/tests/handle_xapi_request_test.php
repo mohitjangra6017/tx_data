@@ -37,6 +37,9 @@ use totara_xapi\entity\xapi_statement;
 use totara_xapi\request\request as xapi_request;
 use totara_xapi\response\json_result;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_handle_xapi_request_testcase extends testcase {
     /**
      * @var user|null

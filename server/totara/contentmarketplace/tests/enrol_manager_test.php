@@ -28,6 +28,9 @@ use core_phpunit\testcase;
 use totara_contentmarketplace\course\enrol_manager;
 use core\entity\user_enrolment;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_enrol_manager_testcase extends testcase {
     /**
      * @return void

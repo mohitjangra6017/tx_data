@@ -31,6 +31,7 @@ use core_phpunit\testcase;
 
 /**
  * @covers contentmarketplace_linkedin\formatter\learning_object
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_learning_object_formatter_testcase extends testcase {
 

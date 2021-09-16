@@ -25,6 +25,9 @@ use contentmarketplace_linkedin\contentmarketplace;
 use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace as plugin_info;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_content_marketplace_testcase extends testcase{
     /**
      * @var contentmarketplace|null

@@ -24,6 +24,9 @@ use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\oauth\oauth_2;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_oauth_2_testcase extends testcase {
     /**
      * @return void

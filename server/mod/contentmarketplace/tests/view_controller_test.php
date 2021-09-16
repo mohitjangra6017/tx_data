@@ -28,6 +28,9 @@ use core_phpunit\testcase;
 use mod_contentmarketplace\controllers\view;
 use totara_mvc\tui_view;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_view_controller_testcase extends testcase {
     /**
      * @return void

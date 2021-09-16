@@ -30,6 +30,7 @@ use core_phpunit\testcase;
 
 /**
  * Unit test for {@see classification}
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_model_classification_testcase extends testcase {
     /**

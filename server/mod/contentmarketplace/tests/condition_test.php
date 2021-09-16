@@ -24,6 +24,9 @@ use core_phpunit\testcase;
 use mod_contentmarketplace\completion\condition;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_condition_testcase extends testcase {
     /**
      * Returns the data provided for test checking validity.

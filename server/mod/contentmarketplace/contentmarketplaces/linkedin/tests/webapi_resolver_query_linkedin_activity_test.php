@@ -25,6 +25,9 @@ use core_phpunit\testcase;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use mod_contentmarketplace\model\content_marketplace as model;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplaceactivity_linkedin_webapi_resolver_query_linkedin_activity_test_testcase extends testcase {
     use webapi_phpunit_helper;
 

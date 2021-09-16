@@ -28,6 +28,8 @@ use totara_contentmarketplace\testing\generator;
 
 /**
  * Test the OAUTH2 API with mock data and classes
+ *
+ * @group totara_contentmarketplace
  */
 class totara_contentmarketplace_oauth_2_client_testcase extends testcase {
     /**

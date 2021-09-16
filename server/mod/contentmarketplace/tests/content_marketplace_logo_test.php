@@ -24,6 +24,9 @@ use core_phpunit\testcase;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\output\content_marketplace_logo;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_content_marketplace_logo_testcase extends testcase {
     /**
      * @return void

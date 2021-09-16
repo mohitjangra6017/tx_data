@@ -31,6 +31,9 @@ use totara_catalog\dataformatter\formatter;
 use totara_contentmarketplace\totara_catalog\course_logo_dataholder_factory;
 
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_catalog_course_logo_dataformatter_testcase extends testcase {
 
     /**

@@ -33,6 +33,9 @@ use totara_contentmarketplace\testing\mock\learning_object;
 use totara_contentmarketplace\testing\generator;
 use totara_contentmarketplace\testing\helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class totara_contentmarketplace_course_builder_testcase extends testcase {
 
     /**

@@ -24,6 +24,9 @@
 use contentmarketplace_linkedin\dto\timestamp;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_timestamp_testcase extends testcase {
     /**
      * @return void

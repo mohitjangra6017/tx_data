@@ -28,6 +28,9 @@ use core\format;
 use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_formatter_classification_testcase extends testcase {
     /**
      * @var model|null

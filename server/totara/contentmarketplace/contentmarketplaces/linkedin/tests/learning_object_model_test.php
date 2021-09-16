@@ -29,6 +29,7 @@ use core_phpunit\testcase;
 
 /**
  * @covers learning_object
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_learning_object_model_testcase extends testcase {
 

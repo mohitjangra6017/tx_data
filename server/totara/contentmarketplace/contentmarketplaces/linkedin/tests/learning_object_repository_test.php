@@ -25,6 +25,9 @@ use contentmarketplace_linkedin\testing\generator;
 use core\orm\query\builder;
 use contentmarketplace_linkedin\entity\learning_object;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_learning_object_repository_testcase extends testcase {
     /**
      * @return void

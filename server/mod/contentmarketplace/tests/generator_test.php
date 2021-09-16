@@ -26,6 +26,9 @@ use core_phpunit\testcase;
 use totara_contentmarketplace\learning_object\factory;
 use mod_contentmarketplace\testing\generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_generator_testcase extends testcase {
     /**
      * @return void

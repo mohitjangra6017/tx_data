@@ -28,6 +28,9 @@ use core_phpunit\testcase;
 use core\entity\adhoc_task;
 use contentmarketplace_linkedin\testing\generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_local_sync_helper_testcase extends testcase {
     /**
      * @var string

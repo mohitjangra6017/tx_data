@@ -30,6 +30,9 @@ use totara_contentmarketplace\testing\helper;
 use totara_contentmarketplace\testing\generator as marketplace_generator;
 use totara_contentmarketplace\testing\mock\create_course_interactor;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_totara_contentmarketplace_course_builder_testcase extends testcase {
     /**
      * @return void

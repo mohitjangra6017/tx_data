@@ -44,6 +44,7 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
  * @covers \contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_objects
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_objects_testcase extends testcase {
 

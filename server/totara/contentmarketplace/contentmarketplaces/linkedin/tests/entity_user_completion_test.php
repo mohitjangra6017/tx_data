@@ -27,6 +27,9 @@ use core\entity\user;
 use core\orm\query\builder;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_entity_user_completion_testcase extends testcase {
     /**
      * @var user|null

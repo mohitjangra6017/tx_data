@@ -24,6 +24,9 @@
 use core_phpunit\testcase;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_webapi_resolver_mutation_set_self_completion_testcase extends testcase {
     use webapi_phpunit_helper;
 

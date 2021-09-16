@@ -39,6 +39,9 @@ use totara_notification\manager\event_queue_manager;
 use totara_notification\manager\notification_queue_manager;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_full_creation_workflow_testcase extends testcase {
     use webapi_phpunit_helper;
 

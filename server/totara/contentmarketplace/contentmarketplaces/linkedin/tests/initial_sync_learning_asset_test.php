@@ -35,6 +35,9 @@ use totara_core\http\exception\http_exception;
 use totara_core\http\response;
 use totara_core\http\response_code;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends testcase {
     /**
      * @return void

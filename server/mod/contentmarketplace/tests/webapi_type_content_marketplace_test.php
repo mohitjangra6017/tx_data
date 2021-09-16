@@ -27,6 +27,9 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\webapi\resolver\type\content_marketplace as type_content_marketplace;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_webapi_type_content_marketplace_testcase extends testcase {
     use webapi_phpunit_helper;
 

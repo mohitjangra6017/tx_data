@@ -27,6 +27,9 @@ use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\task\create_course_delay_task;
 use container_course\course;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_create_course_delay_task_testcase extends testcase {
     /**
      * @var array

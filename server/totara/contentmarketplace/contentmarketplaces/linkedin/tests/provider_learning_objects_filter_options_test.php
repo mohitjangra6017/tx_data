@@ -27,6 +27,9 @@ use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
 use totara_core\tui\tree\tree_node;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_provider_learning_objects_filter_options_testcase extends testcase {
     /**
      * @return void

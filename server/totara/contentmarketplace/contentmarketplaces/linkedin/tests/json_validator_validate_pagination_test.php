@@ -26,6 +26,9 @@ use core\json\validation_adapter;
 use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_json_validator_validate_pagination_testcase extends testcase {
     /**
      * @return void

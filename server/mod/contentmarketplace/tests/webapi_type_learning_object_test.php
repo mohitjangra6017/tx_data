@@ -29,6 +29,9 @@ use mod_contentmarketplace\webapi\resolver\type\learning_object as type_learning
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_learning_object_testcase extends testcase {
     use webapi_phpunit_helper;
 

@@ -30,6 +30,9 @@ use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use contentmarketplace_linkedin\dto\locale;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_resolver_query_available_locales_testcase extends testcase {
     use webapi_phpunit_helper;
 

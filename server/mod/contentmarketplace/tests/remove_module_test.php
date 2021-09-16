@@ -26,6 +26,9 @@ use core_container\hook\module_supported_in_container;
 use core_phpunit\testcase;
 use container_course\course_helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_remove_module_testcase extends testcase {
     /**
      * @return void

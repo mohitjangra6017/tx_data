@@ -25,6 +25,9 @@ use contentmarketplace_linkedin\core_json\structure\xapi_statement;
 use core\json\validation_adapter;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_json_validator_xapi_statement_testcase extends testcase {
     /**
      * @return void

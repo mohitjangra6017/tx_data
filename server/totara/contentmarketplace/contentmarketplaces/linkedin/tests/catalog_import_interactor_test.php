@@ -26,6 +26,9 @@ use core_phpunit\testcase;
 use totara_contentmarketplace\testing\helper;
 use totara_tenant\testing\generator as tenant_generator;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_catalog_import_interactor_testcase extends testcase {
     /**
      * @return void

@@ -33,6 +33,9 @@ use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\testing\helper;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create_course_testcase extends testcase {
     use webapi_phpunit_helper;
 

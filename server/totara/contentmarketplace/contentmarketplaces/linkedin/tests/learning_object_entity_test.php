@@ -30,6 +30,7 @@ use core\orm\query\builder;
 
 /**
  * @covers contentmarketplace_linkedin\entity\learning_object
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_learning_object_entity_testcase extends testcase {
     /**

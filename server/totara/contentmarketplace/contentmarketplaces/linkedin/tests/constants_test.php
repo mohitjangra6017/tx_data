@@ -24,6 +24,9 @@
 use contentmarketplace_linkedin\constants;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_constants_testcase extends testcase {
     /**
      * @return void

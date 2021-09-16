@@ -29,6 +29,9 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\webapi\resolver\type\classification as type_classification;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_resolver_type_classification_testcase extends testcase {
     use webapi_phpunit_helper;
 

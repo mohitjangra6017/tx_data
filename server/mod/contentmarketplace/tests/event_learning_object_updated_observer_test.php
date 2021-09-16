@@ -36,6 +36,9 @@ use contentmarketplace_linkedin\entity\learning_object as entity;
 use mod_contentmarketplace\entity\content_marketplace;
 use core\orm\entity\repository;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_event_learning_object_updated_observer_testcase extends testcase {
     /**
      * @var generator

@@ -26,6 +26,9 @@ use contentmarketplace_linkedin\testing\generator;
 use core\orm\query\builder;
 use core_phpunit\testcase;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_entity_classification_relationship_testcase extends testcase {
     /**
      * @return void

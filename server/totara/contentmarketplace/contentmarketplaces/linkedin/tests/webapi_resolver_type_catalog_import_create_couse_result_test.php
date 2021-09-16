@@ -26,6 +26,9 @@ use core_phpunit\testcase;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use contentmarketplace_linkedin\webapi\resolver\type\catalog_import_create_course_result;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_webapi_resolver_type_catalog_import_create_course_result_testcase extends testcase {
     use webapi_phpunit_helper;
 

@@ -31,6 +31,9 @@ use core_phpunit\testcase;
 use totara_contentmarketplace\token\token;
 use totara_core\http\clients\simple_mock_client;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends testcase {
     /**
      * @return void

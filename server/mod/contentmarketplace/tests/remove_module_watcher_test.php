@@ -25,6 +25,9 @@ use container_course\hook\remove_module_hook;
 use core_phpunit\testcase;
 use mod_contentmarketplace\watcher\remove_module_watcher;
 
+/**
+ * @group totara_contentmarketplace
+ */
 class mod_contentmarketplace_remove_module_watcher_testcase extends testcase {
     /**
      * @return void

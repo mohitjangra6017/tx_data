@@ -32,6 +32,7 @@ use contentmarketplace_linkedin\testing\generator;
 /**
  * Most of the functionalities from {@see learning_objects} were covered
  * by webapi unit tests {@see contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_objects_testcase}
+ * @group totara_contentmarketplace
  */
 class contentmarketplace_linkedin_provider_learning_objects_testcase extends testcase {
     /**
