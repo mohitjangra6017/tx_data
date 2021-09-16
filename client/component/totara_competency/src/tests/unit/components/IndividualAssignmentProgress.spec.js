@@ -150,9 +150,7 @@ describe('individualAssignmentProgress', () => {
 
     expect(wrapper.vm.labels).toHaveLength(3);
     expect(wrapper.vm.data.datasets[0].data).toHaveLength(3);
-    expect(wrapper.vm.data.datasets[0].rawData).toHaveLength(3);
     expect(wrapper.vm.data.datasets[1].data).toHaveLength(3);
-    expect(wrapper.vm.data.datasets[1].rawData).toHaveLength(3);
     expect(wrapper.vm.data.labels).toHaveLength(3);
     expect(wrapper.vm.data.competencies).toHaveLength(3);
 
@@ -180,9 +178,7 @@ describe('individualAssignmentProgress', () => {
 
     expect(wrapper.vm.labels).toHaveLength(4);
     expect(wrapper.vm.data.datasets[0].data).toHaveLength(4);
-    expect(wrapper.vm.data.datasets[0].rawData).toHaveLength(4);
     expect(wrapper.vm.data.datasets[1].data).toHaveLength(4);
-    expect(wrapper.vm.data.datasets[1].rawData).toHaveLength(4);
     expect(wrapper.vm.data.labels).toHaveLength(4);
     expect(wrapper.vm.data.competencies).toHaveLength(4);
 
@@ -210,10 +206,185 @@ describe('individualAssignmentProgress', () => {
 
     expect(wrapper.vm.labels).toHaveLength(3);
     expect(wrapper.vm.data.datasets[0].data).toHaveLength(3);
-    expect(wrapper.vm.data.datasets[0].rawData).toHaveLength(3);
     expect(wrapper.vm.data.datasets[1].data).toHaveLength(3);
-    expect(wrapper.vm.data.datasets[1].rawData).toHaveLength(3);
     expect(wrapper.vm.data.labels).toHaveLength(3);
     expect(wrapper.vm.data.competencies).toHaveLength(3);
+  });
+
+  it('getDataIndex works as expected', () => {
+    // One competency should have 3 items in the arrays
+    let wrapper = shallowMount(IAP, {
+      propsData: props,
+    });
+
+    expect(wrapper.vm.getDataIndex(1)).toBe(0);
+
+    // 2 competencies should have 4 items in the arrays
+    let name = 'some name repeated'.repeat(50);
+    let props2 = Object.assign({}, props);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name,
+      },
+      my_value: {
+        percentage: 5,
+        name: 'simple',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'junk',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props2,
+    });
+
+    expect(wrapper.vm.getDataIndex(1)).toBe(0);
+    expect(wrapper.vm.getDataIndex(2)).toBe(1);
+
+    // 3 or more competencies should have the same amount of items in it's arrays
+    let name3 = 'shorter name';
+    let props3 = Object.assign({}, props2);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name3,
+      },
+      my_value: {
+        percentage: 15,
+        name: 'simple',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'junk',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props3,
+    });
+
+    expect(wrapper.vm.getDataIndex(0)).toBe(0);
+    expect(wrapper.vm.getDataIndex(1)).toBe(1);
+    expect(wrapper.vm.getDataIndex(2)).toBe(2);
+  });
+
+  it('getToolTipText works as expected', () => {
+    // One competency should have 3 items in the arrays
+    let wrapper = shallowMount(IAP, {
+      propsData: props,
+    });
+    let tooltipItem = {
+      index: 1,
+      datasetIndex: 0,
+    };
+    let tooltipData = {
+      datasets: [{ label: 'labelOne' }, { label: 'labelTwo' }],
+    };
+
+    let value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelOne: simple');
+
+    tooltipItem.datasetIndex = 1;
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelTwo: junk');
+
+    // 2 competencies should have 4 items in the arrays
+    let name = 'some name repeated'.repeat(50);
+    let props2 = Object.assign({}, props);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name,
+      },
+      my_value: {
+        percentage: 5,
+        name: 'simple improved',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'potentially',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props2,
+    });
+
+    // Confirm 2 items in the competency profile
+    tooltipItem.index = 1;
+    tooltipItem.datasetIndex = 0;
+
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelOne: simple');
+
+    tooltipItem.datasetIndex = 1;
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelTwo: junk');
+
+    tooltipItem.index = 2;
+    tooltipItem.datasetIndex = 0;
+
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelOne: simple improved');
+
+    tooltipItem.datasetIndex = 1;
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelTwo: potentially');
+
+    // 3 or more competencies should have the same amount of items in it's arrays
+    let name3 = 'shorter name';
+    let props3 = Object.assign({}, props2);
+    props2.assignmentProgress.items.push({
+      competency: {
+        fullname: name3,
+      },
+      my_value: {
+        percentage: 15,
+        name: 'another',
+      },
+      min_value: {
+        percentage: 0,
+        name: 'overly',
+      },
+      max_value: { percentage: 100 },
+    });
+
+    wrapper = shallowMount(IAP, {
+      propsData: props3,
+    });
+
+    // Confirm 3 items in the competency profile
+    tooltipItem.index = 0;
+    tooltipItem.datasetIndex = 0;
+
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelOne: simple');
+
+    tooltipItem.datasetIndex = 1;
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelTwo: junk');
+
+    tooltipItem.index = 1;
+    tooltipItem.datasetIndex = 0;
+
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelOne: simple improved');
+
+    tooltipItem.datasetIndex = 1;
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelTwo: potentially');
+
+    tooltipItem.index = 2;
+    tooltipItem.datasetIndex = 0;
+
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelOne: another');
+
+    tooltipItem.datasetIndex = 1;
+    value = wrapper.vm.getToolTipText(tooltipItem, tooltipData);
+    expect(value).toBe('labelTwo: overly');
   });
 });
