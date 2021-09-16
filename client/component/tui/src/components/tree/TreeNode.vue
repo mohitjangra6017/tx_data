@@ -392,6 +392,7 @@ export default {
 
   &__content {
     width: 100%;
+    min-width: 0;
     padding-left: calc(var(--gap-1) / 2);
   }
 
