@@ -29,7 +29,9 @@ Feature: Content marketplace activity completion feature
     When I click on "Create course(s)" "button"
     Then I should see "Course A"
     And I am on "Course A" course homepage
-    And I should see "Not started"
+    When I click on "Enrol to course Course A" "button"
+    And I wait for the next second
+    Then I should see "Not started"
     And I click on "Administration" "button"
     And I click on "Edit settings" "link"
     And I follow "Activity completion"

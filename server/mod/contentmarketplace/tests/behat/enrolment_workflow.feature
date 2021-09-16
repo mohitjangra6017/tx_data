@@ -36,7 +36,7 @@ Feature: General enrolment workflow mod contentmarketplace
     And I should see "You’re accessing this course as an administrator. You must enrol in the course for your learning to be recorded."
     And I should see "Enrol"
     And the "Launch (opens in new window)" "button" should be disabled
-    When I click on "//button[contains(text(),'Enrol')]" "xpath_element"
+    When I click on "Enrol to course Spring" "button"
     Then I should see "You've been enrolled successfully"
     And the "Launch (opens in new window)" "button" should be enabled
     And I should not see "You’re accessing this course as an administrator. You must enrol in the course for your learning to be recorded."
@@ -113,7 +113,7 @@ Feature: General enrolment workflow mod contentmarketplace
     When I press "Go to course"
     Then I should see "Enrol"
     And I should see "You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded."
-    When I click on "//button[contains(text(),'Enrol')]" "xpath_element"
+    When I click on "Enrol to course Spring" "button"
     Then I should see "You've been enrolled successfully"
     And the "Launch (opens in new window)" "button" should be enabled
     And I should not see "You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded."
