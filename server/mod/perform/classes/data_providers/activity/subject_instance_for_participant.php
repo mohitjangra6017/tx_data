@@ -23,6 +23,7 @@
 
 namespace mod_perform\data_providers\activity;
 
+use coding_exception;
 use core\collection;
 use core\orm\entity\repository;
 use core\orm\query\builder;
@@ -96,9 +97,10 @@ class subject_instance_for_participant extends provider {
      * @param subject_instance_repository|repository $repository
      * @param string|string[] $about Subject instance about constant(s)
      *
-     * @deprecated replaced by filter_query_by_about_role().
+     * @deprecated since Totara 15
      */
     protected function filter_query_by_about(repository $repository, $about): void {
+        debugging('Filtering by about is deprecated please use the filter "about_role" instead.', DEBUG_DEVELOPER);
         if (!is_array($about)) {
             $about = [$about];
         }
@@ -169,13 +171,15 @@ class subject_instance_for_participant extends provider {
 
         $progress_values = array_map(function ($progress) use ($all_progress_names) {
             if (!isset($all_progress_names[$progress])) {
-                throw new \coding_exception("{progress} is not a valid participant progress type");
+                throw new coding_exception("{progress} is not a valid participant progress type");
             }
             return $all_progress_names[$progress];
         }, $progress_values);
 
+        $relationship_id = $this->filters['about_role'] ?? null;
+
         $repository->set_filter(
-            (new subject_instances_participant_progress($this->participant_id, 'target_participant'))
+            (new subject_instances_participant_progress($this->participant_id, 'target_participant', $relationship_id))
                 ->set_value($progress_values)
         );
     }
@@ -187,8 +191,10 @@ class subject_instance_for_participant extends provider {
     protected function filter_query_by_exclude_complete(repository $repository, bool $exclude_complete): void {
         // Nothing to filter if it's set to false.
         if ($exclude_complete) {
+            $relationship_id = $this->filters['about_role'] ?? null;
+
             $repository->set_filter(
-                (new subject_instances_participant_progress($this->participant_id, 'target_participant'))
+                (new subject_instances_participant_progress($this->participant_id, 'target_participant', $relationship_id))
                     ->exclude_progress_values()
                     ->set_value([complete::get_code()])
             );
@@ -367,15 +373,22 @@ class subject_instance_for_participant extends provider {
      */
     public function get_completed_count(): int {
         $query = $this->build_query(false);
+
         // Only apply the about role filter, ignore the rest
         if (isset($this->filters['about_role'])) {
             $this->filter_query_by_about_role($query, $this->filters['about_role']);
         }
-        return $query->join([participant_instance::TABLE, 'pi'], 'si.id', 'pi.subject_instance_id')
+
+        $query = $query->join([participant_instance::TABLE, 'pi'], 'si.id', 'pi.subject_instance_id')
             ->where('pi.participant_source', $this->participant_source)
             ->where('pi.participant_id', $this->participant_id)
-            ->where('pi.progress', complete::get_code())
-            ->count();
+            ->where('pi.progress', complete::get_code());
+
+        if (isset($this->filters['about_role'])) {
+            $query->where('pi.core_relationship_id', (int)$this->filters['about_role']);
+        }
+
+        return $query->count();
     }
 
     /**

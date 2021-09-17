@@ -361,7 +361,6 @@ export default {
      */
     currentFilterOptions() {
       return {
-        about: [this.isAboutOthers ? 'OTHERS' : 'SELF'],
         about_role: this.aboutRole,
         activity_type: this.userFilters.activityType,
         exclude_complete: this.userFilters.excludeCompleted,

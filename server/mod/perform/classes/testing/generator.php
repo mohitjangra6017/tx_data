@@ -1257,7 +1257,7 @@ final class generator extends \core\testing\component_generator {
         $subject_user = user::repository()->where('username', $data['subject_username'])->one();
         $manager_appraiser_user = user::repository()->where('username', $data['manager_appraiser_username'])->one();
 
-        $this->create_section_with_combined_manager_appraiser($subject_user, $manager_appraiser_user, $data['activity_name']);
+        $this->create_section_with_combined_manager_appraiser($subject_user, $manager_appraiser_user, $data['activity_name'], $data['track'] ?? null);
     }
 
     private function find_or_make_perform_activity($name, $type, $status = null, $anonymous_responses = false): activity {
@@ -1460,7 +1460,8 @@ final class generator extends \core\testing\component_generator {
     public function create_section_with_combined_manager_appraiser(
         $subject_user,
         $manager_appraiser_user,
-        $activity_name = null
+        $activity_name = null,
+        $track = null
     ): array {
         $subject_instance = $this->create_subject_instance([
             'activity_name' => $activity_name,
@@ -1468,6 +1469,7 @@ final class generator extends \core\testing\component_generator {
             'subject_user_id' => $subject_user->id,
             'other_participant_id' => null,
             'include_questions' => false,
+            'track' => $track,
         ]);
 
         $activity = new activity($subject_instance->activity());

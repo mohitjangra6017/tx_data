@@ -25,6 +25,7 @@ namespace mod_perform\entity\activity\filters;
 
 use core\orm\entity\filter\filter;
 use mod_perform\entity\activity\participant_instance as participant_instance_entity;
+use mod_perform\models\activity\participant_source;
 
 class subject_instances_participant_progress extends filter {
 
@@ -38,16 +39,31 @@ class subject_instances_participant_progress extends filter {
      */
     protected $exclude_progress_values = false;
 
-    public function __construct(int $participant_id, string $participant_instance_alias = 'pi') {
+    /**
+     * @var int|null
+     */
+    protected $relationship_id;
+
+    public function __construct(
+        int $participant_id,
+        string $participant_instance_alias = 'pi',
+        ?int $relationship_id = null
+    ) {
         parent::__construct([$participant_id]);
         $this->participant_instance_alias = $participant_instance_alias;
+        $this->relationship_id = $relationship_id;
     }
 
     public function apply(): void {
         $repository = participant_instance_entity::repository()
             ->as('target_participant_progress')
             ->where_raw('target_participant_progress.subject_instance_id = si.id')
-            ->where('participant_id', $this->get_participant_id());
+            ->where('participant_id', $this->get_participant_id())
+            ->where('participant_source', participant_source::INTERNAL);
+
+        if (!empty($this->relationship_id)) {
+            $repository->where('core_relationship_id', $this->relationship_id);
+        }
 
         if ($this->exclude_progress_values) {
             $repository->where_not_in('progress', $this->value);

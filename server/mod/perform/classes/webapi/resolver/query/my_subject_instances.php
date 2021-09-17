@@ -40,6 +40,10 @@ class my_subject_instances implements query_resolver, has_middleware {
     public static function resolve(array $args, execution_context $ec) {
         $participant_id = user::logged_in()->id;
 
+        if (isset($args['filters']['about'])) {
+            debugging('The about filter is deprecated and got replaced with the about_role filter.', DEBUG_DEVELOPER);
+        }
+
         $pagination = $args['pagination'] ?? [];
         $data_provider = (new subject_instance_data_provider($participant_id, participant_source::INTERNAL))
             ->add_filters($args['filters'] ?? []);

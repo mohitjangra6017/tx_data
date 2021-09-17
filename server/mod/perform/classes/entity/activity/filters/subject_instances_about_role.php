@@ -26,6 +26,7 @@ namespace mod_perform\entity\activity\filters;
 use coding_exception;
 use core\orm\entity\filter\filter;
 use mod_perform\entity\activity\participant_instance;
+use mod_perform\models\activity\participant_source;
 
 class subject_instances_about_role extends filter {
     public function __construct(int $participant_id) {
@@ -39,6 +40,7 @@ class subject_instances_about_role extends filter {
         $repository = participant_instance::repository()
             ->as('target_role')
             ->where_raw('target_role.subject_instance_id = si.id')
+            ->where('participant_source', participant_source::INTERNAL)
             ->where('participant_id', $this->params[0])
             ->where('target_role.core_relationship_id', (int)$this->value);
 
