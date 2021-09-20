@@ -49,7 +49,6 @@ exports[`ProgressTracker should check snapshot 1`] = `
              
             <span
               aria-live="assertive"
-              class="tui-formBtn__loading"
             >
               <!---->
             </span>
@@ -148,7 +147,6 @@ exports[`ProgressTracker should check snapshot 1`] = `
              
             <span
               aria-live="assertive"
-              class="tui-formBtn__loading"
             >
               <!---->
             </span>

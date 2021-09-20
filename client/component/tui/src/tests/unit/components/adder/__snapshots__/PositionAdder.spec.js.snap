@@ -183,7 +183,6 @@ exports[`PositionAdder should check snapshot 1`] = `
                      
                     <span
                       aria-live="assertive"
-                      class="tui-formBtn__loading"
                     >
                       <!---->
                     </span>
@@ -206,7 +205,6 @@ exports[`PositionAdder should check snapshot 1`] = `
                      
                     <span
                       aria-live="assertive"
-                      class="tui-formBtn__loading"
                     >
                       <!---->
                     </span>

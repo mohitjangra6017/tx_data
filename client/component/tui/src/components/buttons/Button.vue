@@ -48,11 +48,10 @@
       {{ text }}
     </span>
     <Caret v-if="caret" class="tui-formBtn__caret" />
-    <span class="tui-formBtn__loading" aria-live="assertive">
-      <Loading
-        v-if="loading"
-        :alt="$str('button_loading_text', 'totara_core', text)"
-      />
+    <span aria-live="assertive">
+      <span v-if="loading" class="tui-formBtn__loading">
+        <Loading :alt="$str('button_loading_text', 'totara_core', text)" />
+      </span>
     </span>
   </button>
 </template>
@@ -238,7 +237,7 @@ export default {
     margin-left: var(--gap-2);
   }
 
-  > .tui-formBtn__loading {
+  .tui-formBtn__loading {
     position: absolute;
     top: 0;
     right: 0;

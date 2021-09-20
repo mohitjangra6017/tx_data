@@ -54,7 +54,7 @@ Feature: Perform evidence activity
     And I should see "Text input custom field name"
     And I click on "Content (First Activity)" "link"
     And I switch to "Assignments" tui tab
-    And I click on ".tui-formBtn__caret" "css_element" in the ".tui-performManageActivityAssignmentsForm__add-dropdown" "css_element"
+    And I click on "Add group" "button"
     And I click on "Audience" "link"
     And I click on ".tui-checkbox__label" "css_element" in the tui datatable row with "Cohort 1" "Audience name" in the ".tui-modalContent" "css_element"
     And I click on "Add" "button" in the ".tui-modal" "css_element"

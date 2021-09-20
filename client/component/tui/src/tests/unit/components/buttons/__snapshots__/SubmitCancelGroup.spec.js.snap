@@ -21,7 +21,6 @@ exports[`presentation/buttons/SubmitCancelGroup.vue Checks snapshot 1`] = `
      
     <span
       aria-live="assertive"
-      class="tui-formBtn__loading"
     >
       <!---->
     </span>
@@ -44,7 +43,6 @@ exports[`presentation/buttons/SubmitCancelGroup.vue Checks snapshot 1`] = `
      
     <span
       aria-live="assertive"
-      class="tui-formBtn__loading"
     >
       <!---->
     </span>
