@@ -102,39 +102,24 @@ class enrol_manager {
     }
 
     /**
-     * @param int|null $user_id
+     * @param int $user_id
      */
-    public function self_enrol_as_student(int $user_id = null): void {
-        global $USER;
+    public function do_non_interactive_enrol(int $user_id): void {
+        $instances = enrol_get_instances($this->course->id, true);
 
-        if(is_null($user_id)) {
-            $user_id = $USER->id;
+        $result = false;
+        foreach($instances as $instance) {
+            if ($plugin = enrol_get_plugin($instance->enrol)) {
+                $result = $plugin->do_non_interactive_enrol($instance, $user_id);
+                if ($result) {
+                    break;
+                }
+            }
         }
 
-        if (!is_enrolled($this->course->get_context(), $user_id)) {
-            $this->do_self_enrol($this->course->get_id());
+        // If no enrol plugin supports non interactive enrol, we throw exception.
+        if (!$result) {
+            throw new coding_exception('No enrol plugin supports non interactive enrol');
         }
-    }
-
-    /**
-     * @param int $course_id
-     * @return void
-     */
-    private function do_self_enrol(int $course_id): void {
-        global $DB;
-
-        if (!enrol_is_enabled('self')) {
-            throw new coding_exception("Self enrolment is not enabled");
-        }
-
-        if (!$enrol = enrol_get_plugin('self')) {
-            throw new coding_exception("Can not get self enrol plugin");
-        }
-
-        if (!$instances = $DB->get_records('enrol', ['enrol'=>'self', 'courseid'=>$course_id, 'status'=>ENROL_INSTANCE_ENABLED], 'sortorder,id ASC')) {
-            throw new coding_exception("Self enrol for the course with ${$course_id} is not enabled");
-        }
-        $instance = reset($instances);
-        $enrol->enrol_self($instance);
     }
 }

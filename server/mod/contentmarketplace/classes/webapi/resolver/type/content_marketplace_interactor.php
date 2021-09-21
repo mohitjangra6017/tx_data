@@ -52,6 +52,22 @@ class content_marketplace_interactor implements type_resolver {
                 return $content_marketplace_interactor->can_launch();
             case "is_enrolled":
                 return $content_marketplace_interactor->is_enrolled();
+            case 'can_non_interactive_enrol':
+                $count = $content_marketplace_interactor->count_non_interactive_enrol();
+                $url = new moodle_url('/enrol/index.php', ['id' => $content_marketplace_interactor->get_course_id()]);
+
+                $result = [
+                    'redirect_url' => $count > 1 ? $url->out() : '',
+                    'enabled' => false,
+                    'enrol_instance_count' => $count
+                ];
+
+                if (!$content_marketplace_interactor->can_non_interactive_enrol()) {
+                    $result['redirect_url'] = $url->out();
+                    $result['enabled'] = true;
+                }
+
+                return $result;
             default:
                 throw new coding_exception("Unexpected field passed {$field}");
         }

@@ -23,11 +23,23 @@ type mod_contentmarketplace_content_marketplace_interactor {
   Whether user is enrolled to the course or not.
   """
   is_enrolled: Boolean!
+
+  """
+  Whether user can direct enrol via click button
+  """
+  can_non_interactive_enrol: mod_contentmarketplace_can_non_interactive_enrol_result!
 }
 
-type mod_contentmarketplace_self_enrol_enabled_with_required_key_payload {
-  enabled: Boolean!
+type mod_contentmarketplace_can_non_interactive_enrol_result {
   redirect_url: String
+  """
+  Return enabled enrol instance count.
+  """
+  enrol_instance_count: Int!
+  """
+  Check whether at least one enrol instance supports non interactive enrol or not.
+  """
+  enabled: Boolean!
 }
 
 type mod_contentmarketplace_content_marketplace {
@@ -72,21 +84,6 @@ type mod_contentmarketplace_content_marketplace {
   completion_enabled: Boolean!
 
   interactor: mod_contentmarketplace_content_marketplace_interactor!
-
-  """
-  Whether self enrol is enabled or not.
-  """
-  self_enrol_enabled: Boolean!
-
-  """
-  Whether guest enrol is enabled or not.
-  """
-  guest_enrol_enabled: Boolean!
-
-  """
-  Whether self_enrol_enabled_with_required_key if guest or admin is logged in.
-  """
-  self_enrol_enabled_with_required_key: mod_contentmarketplace_self_enrol_enabled_with_required_key_payload!
 }
 
 """
@@ -104,5 +101,7 @@ extend type Mutation {
     status: param_boolean!
   ): Boolean!
 
-  mod_contentmarketplace_request_self_enrol(cm_id: core_id!): Boolean!
+  mod_contentmarketplace_request_non_interactive_enrol(
+    cm_id: core_id!
+  ): Boolean!
 }

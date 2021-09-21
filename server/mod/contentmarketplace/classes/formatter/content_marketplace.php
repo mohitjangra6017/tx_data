@@ -44,10 +44,7 @@ class content_marketplace extends entity_model_formatter {
 
                 return completion_condition_helper::get_enum($value);
             },
-            'completion_enabled' => null,
-            'self_enrol_enabled' => null,
-            'guest_enrol_enabled' => null,
-            'self_enrol_enabled_with_required_key' => null
+            'completion_enabled' => null
         ];
     }
 }

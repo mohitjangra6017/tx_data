@@ -1782,6 +1782,29 @@ abstract class enrol_plugin {
     }
 
     /**
+     * Attempt to check logged user can do non interactive enrolment by clicking an enrol button on course page
+     * via graphql and users are not being redirected to an enrolment page
+     *
+     * @param stdClass $instance
+     * @param int $user_id
+     * @return bool|null
+     */
+    public function supports_non_interactive_enrol(stdClass $instance, int $user_id): ?bool {
+        return null;
+    }
+
+    /**
+     * If child plugin supports non_interactive enrol, please call this to do enrolment.
+     *
+     * @param stdClass $instance
+     * @param int $user_id
+     * @return bool
+     */
+    public function do_non_interactive_enrol(stdClass $instance, int $user_id): bool {
+        return false;
+    }
+
+    /**
      * Enrol user into course via enrol instance.
      *
      * @param stdClass $instance

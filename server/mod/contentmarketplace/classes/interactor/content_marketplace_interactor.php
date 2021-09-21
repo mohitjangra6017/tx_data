@@ -23,7 +23,6 @@
 namespace mod_contentmarketplace\interactor;
 
 use container_course\interactor\course_interactor;
-use core_container\factory;
 use mod_contentmarketplace\model\content_marketplace;
 use totara_contentmarketplace\interactor\base;
 
@@ -139,5 +138,31 @@ class content_marketplace_interactor extends base {
      */
     public function get_course_id(): int {
         return $this->model->get_course_id();
+    }
+
+    /**
+     * @return bool
+     */
+    public function can_non_interactive_enrol(): bool {
+        return $this->count_non_interactive_enrol() > 0;
+    }
+
+    /**
+     * Count enabled non interative enrol instance.
+     *
+     * @return int
+     */
+    public function count_non_interactive_enrol(): int {
+        $instances = enrol_get_instances($this->get_course_id(), true);
+        $count = 0;
+        foreach($instances as $instance) {
+            if ($plugin = enrol_get_plugin($instance->enrol)) {
+                $result = $plugin->supports_non_interactive_enrol($instance, $this->get_actor_id());
+                if ($result) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
     }
 }

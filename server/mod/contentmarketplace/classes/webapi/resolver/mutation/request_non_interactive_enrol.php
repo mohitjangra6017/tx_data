@@ -36,9 +36,9 @@ use totara_contentmarketplace\course\enrol_manager;
 /**
  * Self enrolment only for admin user and guest
  *
- * Mutation for Class request_self_enrol
+ * Mutation for Class supports_non_interactive_enrol
  */
-final class request_self_enrol implements mutation_resolver, has_middleware {
+final class request_non_interactive_enrol implements mutation_resolver, has_middleware {
     /**
      * @param array $args
      * @param execution_context $ec
@@ -53,18 +53,23 @@ final class request_self_enrol implements mutation_resolver, has_middleware {
         $cm_model = content_marketplace::from_course_module_id($cmid);
         $interactor = new content_marketplace_interactor($cm_model);
 
-        if (!$cm_model->get_self_enrol_enabled()) {
-            throw new coding_exception('Self enrolment is not enabled');
+        if ($interactor->is_enrolled()) {
+            throw new coding_exception('You have already enroled.');
         }
 
         if ($interactor->is_site_guest()) {
             throw new coding_exception('Site guest can not request self enrol');
         }
 
+        // If self enrol configuration has been customised, you cannot do self enrol
+        if (!$interactor->can_non_interactive_enrol()) {
+            throw new coding_exception('Not support non interactive enrol');
+        }
+
         $course = course::from_id($cm_model->get_course_id());
         $manager = new enrol_manager($course);
 
-        $manager->self_enrol_as_student();
+        $manager->do_non_interactive_enrol($interactor->get_actor_id());
         return true;
     }
 

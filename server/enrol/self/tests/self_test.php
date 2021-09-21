@@ -832,4 +832,41 @@ class enrol_self_testcase extends advanced_testcase {
         $this->assertCount(1, $enrolments);
         $this->assertSame('self', reset($enrolments)->enrol);
     }
+
+    /**
+     * @return void
+     */
+    public function test_supports_non_interactive_enrol_with_givenuser(): void {
+        $gen = $this->getDataGenerator();
+        $this->setGuestUser();
+        $course = $gen->create_course(['fullname' => 'Test course']);
+
+        $self_enrol = new enrol_self_plugin();
+        $instance = $this->get_self_enrol_instance($course->id);
+        $self_enrol->update_status($instance, ENROL_INSTANCE_ENABLED);
+
+        self::assertFalse($self_enrol->supports_non_interactive_enrol($instance, guest_user()->id));
+
+        // Logged in user.
+        $user = $gen->create_user();
+        $this->setUser($user);
+        self::assertTrue($self_enrol->supports_non_interactive_enrol($instance, $user->id));
+    }
+
+    /**
+     * @param int $course_id
+     * @return mixed|null
+     */
+    private function get_self_enrol_instance(int $course_id) {
+        $instances = enrol_get_instances($course_id, false);
+
+        $inner_instance = null;
+        foreach($instances as $instance) {
+            if ($instance->enrol === 'self') {
+                $inner_instance = $instance;
+            }
+        }
+
+        return $inner_instance;
+    }
 }

@@ -194,7 +194,7 @@ class totara_contentmarketplace_enrol_manager_testcase extends testcase {
     /**
      * @return void
      */
-    public function test_self_enrol_as_student(): void {
+    public function test_self_enrol(): void {
         self::setAdminUser();
         $generator = self::getDataGenerator();
         $course_record = $generator->create_course();
@@ -210,7 +210,7 @@ class totara_contentmarketplace_enrol_manager_testcase extends testcase {
             ->where('userid', get_admin()->id)
             ->exists());
 
-        $manager->self_enrol_as_student();
+        $manager->do_non_interactive_enrol(get_admin()->id);
 
         // User enrolment record is created
         self::assertTrue(user_enrolment::repository()->join(['enrol', 'e'], 'enrolid', 'id')

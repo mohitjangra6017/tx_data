@@ -59,7 +59,7 @@
                   )
                 "
                 :text="$str('enrol', 'core_enrol')"
-                @click="requestSelfEnrol"
+                @click="requestNonInteractiveEnrol"
               />
             </template>
           </ActionCard>
@@ -165,7 +165,7 @@ import { notify } from 'tui/notifications';
 // GraphQL
 import LinkedinActivityQuery from 'contentmarketplaceactivity_linkedin/graphql/linkedin_activity';
 import setSelfCompletionMutation from 'mod_contentmarketplace/graphql/set_self_completion';
-import requestSelfEnrol from 'mod_contentmarketplace/graphql/request_self_enrol';
+import requestNonInteractiveEnrol from 'mod_contentmarketplace/graphql/request_non_interactive_enrol';
 
 export default {
   components: {
@@ -207,16 +207,15 @@ export default {
         isAdmin: false,
         isEnrolled: false,
         isSiteGuest: false,
+        canNonInteractiveEnrol: {
+          redirectUrl: '',
+          enabled: false,
+          enrolInstanceCount: 0,
+        },
       },
       setCompletion: false,
       // Open nodes of contents tree
       openContents: [],
-      selfEnrolEnabled: false,
-      guestEnrolEnabled: false,
-      selfEnrolEnabledWithRequiredKey: {
-        redirectUrl: '',
-        enabled: false,
-      },
       webLaunchUrl: null,
       ssoLaunchUrl: null,
     };
@@ -242,10 +241,10 @@ export default {
     },
 
     displayBannerInfo() {
-      const { isAdmin, isSiteGuest } = this.interactor;
+      const { isAdmin, isSiteGuest, canNonInteractiveEnrol } = this.interactor;
 
       if (isAdmin) {
-        return this.selfEnrolEnabled
+        return !canNonInteractiveEnrol.enabled
           ? this.$str('viewing_as_enrollable_admin', 'mod_contentmarketplace')
           : this.$str(
               'viewing_as_enrollable_admin_self_enrol_disabled',
@@ -253,18 +252,18 @@ export default {
             );
       }
 
-      return this.guestEnrolEnabled && this.selfEnrolEnabled && !isSiteGuest
+      return !canNonInteractiveEnrol.enabled && !isSiteGuest
         ? this.$str('viewing_as_enrollable_guest', 'mod_contentmarketplace')
         : this.$str('viewing_as_guest', 'mod_contentmarketplace');
     },
 
     displayEnrolButton() {
-      const { canEnrol, isSiteGuest } = this.interactor;
-      if (!this.selfEnrolEnabled || isSiteGuest) {
+      const { canEnrol, canNonInteractiveEnrol } = this.interactor;
+      if (!canEnrol) {
         return false;
       }
 
-      return canEnrol;
+      return !canNonInteractiveEnrol.enabled;
     },
   },
 
@@ -326,13 +325,12 @@ export default {
         this.interactor.isSiteGuest = interactor.is_site_guest;
         this.interactor.canLaunch = interactor.can_launch;
         this.interactor.isEnrolled = interactor.is_enrolled;
-
-        this.selfEnrolEnabled = module.self_enrol_enabled;
-        this.guestEnrolEnabled = module.guest_enrol_enabled;
-        this.selfEnrolEnabledWithRequiredKey.redirectUrl =
-          module.self_enrol_enabled_with_required_key.redirect_url || '';
-        this.selfEnrolEnabledWithRequiredKey.enabled =
-          module.self_enrol_enabled_with_required_key.enabled;
+        this.interactor.canNonInteractiveEnrol.redirectUrl =
+          interactor.can_non_interactive_enrol.redirect_url || '';
+        this.interactor.canNonInteractiveEnrol.enabled =
+          interactor.can_non_interactive_enrol.enabled;
+        this.interactor.canNonInteractiveEnrol.enrolInstanceCount =
+          interactor.can_non_interactive_enrol.enrol_instance_count;
 
         if (module.completion_status !== null) {
           // The completion of this activity had been started and it is either completed or in progress
@@ -415,9 +413,13 @@ export default {
       }
     },
 
-    async requestSelfEnrol() {
-      if (this.selfEnrolEnabledWithRequiredKey.enabled) {
-        window.location.href = this.selfEnrolEnabledWithRequiredKey.redirectUrl;
+    async requestNonInteractiveEnrol() {
+      const { canNonInteractiveEnrol } = this.interactor;
+      if (
+        canNonInteractiveEnrol.enabled ||
+        canNonInteractiveEnrol.enrolInstanceCount > 1
+      ) {
+        window.location.href = canNonInteractiveEnrol.redirectUrl;
         return;
       }
 
@@ -427,7 +429,7 @@ export default {
         let {
           data: { result },
         } = await this.$apollo.mutate({
-          mutation: requestSelfEnrol,
+          mutation: requestNonInteractiveEnrol,
           variables,
           refetchAll: true,
         });

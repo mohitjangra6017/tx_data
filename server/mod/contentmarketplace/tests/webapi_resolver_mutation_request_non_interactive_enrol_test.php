@@ -30,13 +30,13 @@ use core\entity\user_enrolment;
 /**
  * @group totara_contentmarketplace
  */
-class mod_contentmarketplace_webapi_resolver_mutation_request_self_enrol_testcase extends testcase {
+class mod_contentmarketplace_webapi_resolver_mutation_request_non_interactive_enrol_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @var string
      */
-    private const MUTATION = 'mod_contentmarketplace_request_self_enrol';
+    private const MUTATION = 'mod_contentmarketplace_request_non_interactive_enrol';
 
     /**
      * @var stdClass
@@ -137,7 +137,7 @@ class mod_contentmarketplace_webapi_resolver_mutation_request_self_enrol_testcas
         $this->disable_enrol_plugin('self');
 
         self::expectException(coding_exception::class);
-        self::expectExceptionMessage('Self enrolment is not enabled');
+        self::expectExceptionMessage('Not support non interactive enrol');
         $this->resolve_graphql_mutation(
             self::MUTATION,
             ['cm_id' => $this->cm->get_cm_id()]
@@ -232,5 +232,96 @@ class mod_contentmarketplace_webapi_resolver_mutation_request_self_enrol_testcas
         }
 
         $this->self_plugin->update_status($enrol_instance, ENROL_INSTANCE_DISABLED);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_request_self_enrol_with_password_setting(): void {
+        $user = $this->generator->create_user();
+        self::setUser($user);
+
+        $this->update_self_enrol_setting('password', 'aaaa');
+
+        self::expectException(coding_exception::class);
+        self::expectExceptionMessage('Not support non interactive enrol');
+        $this->resolve_graphql_mutation(
+            self::MUTATION,
+            ['cm_id' => $this->cm->get_cm_id()]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_request_self_enrol_with_new_enrol_setting(): void {
+        $user = $this->generator->create_user();
+        self::setUser($user);
+
+        $this->update_self_enrol_setting('customint6', 0);
+
+        self::expectException(coding_exception::class);
+        self::expectExceptionMessage('Not support non interactive enrol');
+        $this->resolve_graphql_mutation(
+            self::MUTATION,
+            ['cm_id' => $this->cm->get_cm_id()]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_request_self_enrol_with_enrol_date_duration(): void {
+        $user = $this->generator->create_user();
+        self::setUser($user);
+
+        $this->update_self_enrol_setting('enrolstartdate', time() - 10);
+        $this->update_self_enrol_setting('enrolenddate', time() - 5);
+
+        self::expectException(coding_exception::class);
+        self::expectExceptionMessage('Not support non interactive enrol');
+        $this->resolve_graphql_mutation(
+            self::MUTATION,
+            ['cm_id' => $this->cm->get_cm_id()]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_request_self_enrol_with_audience_enabled(): void {
+        $user = $this->generator->create_user();
+        self::setUser($user);
+
+        $this->update_self_enrol_setting('customint5', 1);
+
+        self::expectException(coding_exception::class);
+        self::expectExceptionMessage('Not support non interactive enrol');
+        $this->resolve_graphql_mutation(
+            self::MUTATION,
+            ['cm_id' => $this->cm->get_cm_id()]
+        );
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     *
+     */
+    private function update_self_enrol_setting(string $key, string $value): void {
+        global $DB;
+
+        $instance = $DB->get_record(
+            'enrol',
+            [
+                'courseid' => $this->cm->get_course_id(),
+                'enrol' => 'self'
+            ],
+            '*',
+            MUST_EXIST
+        );
+
+        $instance->{$key} = $value;
+        $DB->update_record('enrol', $instance);
     }
 }

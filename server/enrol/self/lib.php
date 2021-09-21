@@ -271,6 +271,80 @@ class enrol_self_plugin extends enrol_plugin {
         return false;
     }
 
+    /**
+     * @param stdClass $instance
+     * @param int $user_id
+     * @return bool
+     */
+    public function do_non_interactive_enrol(stdClass $instance, int $user_id): bool {
+        if ($this->supports_non_interactive_enrol($instance, $user_id)) {
+            $this->enrol_self($instance);
+            return true;
+        }
+
+        return parent::do_non_interactive_enrol($instance, $user_id);
+    }
+
+    /**
+     * @param stdClass $instance
+     * @param int $user_id
+     * @return bool
+     */
+    public function supports_non_interactive_enrol(stdClass $instance, int $user_id): bool {
+        global $CFG, $DB;
+
+        // Can not enrol guests.
+        if (isguestuser($user_id)) {
+            return false;
+        }
+
+        // Check if user is already enroled.
+        if ($DB->record_exists('user_enrolments', array('userid' => $user_id, 'enrolid' => $instance->id))) {
+            return false;
+        }
+
+        if ($instance->status != ENROL_INSTANCE_ENABLED) {
+            return false;
+        }
+
+        // Check password.
+        if (!empty($instance->password)) {
+            return false;
+        }
+
+        // Check startdate
+        if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > time()) {
+            return false;
+        }
+
+        // Check enddate.
+        if ($instance->enrolenddate != 0 && $instance->enrolenddate < time()) {
+            return false;
+        }
+
+        // New enrols not allowed.
+        if (!$instance->customint6) {
+            return false;
+        }
+
+        // Check max enrol limit.
+        if ($instance->customint3 > 0) {
+            $count = $DB->count_records('user_enrolments', ['enrolid' => $instance->id]);
+            if ($count >= $instance->customint3) {
+                return false;
+            }
+        }
+
+        // Check audience setting.
+        if ($instance->customint5) {
+            require_once("$CFG->dirroot/cohort/lib.php");
+            if (!cohort_is_member($instance->customint5, $user_id)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     /**
      * Checks if user can self enrol.
