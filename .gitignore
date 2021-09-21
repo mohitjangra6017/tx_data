@@ -62,5 +62,8 @@ diff.log
 CVS
 /.cache
 
-# Python interpreter generated cache directories when Recommender Engine runs
+# Python interpreter generated cache directories when Recommender Engine runs and other
+# ignorable files
 **/__pycache__/
+**/.pyc
+/extensions/ml_service/data/

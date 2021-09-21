@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  mldev:
+    build:
+      context: .
+      target: mlbase
+    volumes:
+      - ./data:/etc/ml/data
+      - ./service:/etc/ml/service
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development
+    env_file:
+      - .env
+    extra_hosts:
+      - "${TOTARA_DOMAIN}:${TOTARA_IP}"
