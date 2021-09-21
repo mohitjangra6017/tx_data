@@ -40,6 +40,15 @@ class course extends core_course implements item_has_dueinfo {
     public function export_for_template() {
         $record = parent::export_for_template();
         $record->duetext = $this->duedate;
+
+        $canview = is_enrolled(\context_course::instance($record->id)) || totara_course_is_viewable($record->id, $this->user->id);
+        if (!$canview) {
+            $url = new \moodle_url(
+                '/totara/plan/required.php',
+                array('planid' => $this->get_owner()->id, 'courseid' => $record->id, 'sesskey' => sesskey(), 'userid' => $this->user->id));
+            $record->url_view = $url->out(false);
+        }
+
         return $record;
     }
 

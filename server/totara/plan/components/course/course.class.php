@@ -681,12 +681,22 @@ class dp_course_component extends dp_base_component {
      * @return  string
      */
     public function display_item_name($item) {
-        global $CFG, $OUTPUT;
+        global $OUTPUT;
+
         $approved = $this->is_item_approved($item->approved);
 
         if ($approved) {
             $class = '';
-            $action_link = $OUTPUT->action_link(new moodle_url('/course/view.php', array('id' => $item->courseid)), get_string('launchcourse', 'totara_plan'), null, array('class' => 'btn btn-default'));
+            $canview = is_enrolled(\context_course::instance($item->courseid)) || totara_course_is_viewable($item->courseid, $this->plan->userid);
+            if (!$canview) {
+                $url = new \moodle_url(
+                    '/totara/plan/required.php',
+                    array('planid' => $item->planid, 'courseid' => $item->courseid, 'sesskey' => sesskey(), 'userid' => $this->plan->userid));
+            } else {
+                $url = new moodle_url('/course/view.php', array('id' => $item->courseid));
+            }
+
+            $action_link = $OUTPUT->action_link($url, get_string('launchcourse', 'totara_plan'), null, array('class' => 'btn btn-default'));
             $launch = $OUTPUT->container(html_writer::tag('small', $action_link), "plan-launch-course-button");
         } else {
             $class = 'dimmed';
