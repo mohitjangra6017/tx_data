@@ -29,12 +29,12 @@ ES6 Promise
 Promise polyfill is required in IE11 when not using jQuery.
 
 1. Go to https://github.com/stefanpenner/es6-promise
-2. Override existing file with downloaded es6-promise.auto.js
+2. Override existing file (server/lib/javascript_polyfill/es/es_promise_ie11.js) with downloaded es6-promise.auto.js
 3. Do not change any whitespace or formatting
 4. Update version in /lib/thirdpartylibs.xml
 5. Use totara/core/dev/fix_file_permissions.php to fix file permissions
 
-At the time of this commit, at least core-js 3.10.1 - 3.15.1 introduce a bug in the Promise polyfill
+At the time of this commit, at least core-js 3.10.1 - 3.17.2 introduce a bug in the Promise polyfill
 that might be a race condition and hard to detect. For the time being, we will retain the earlier
 polyfill for Promises.
 
