@@ -32,6 +32,8 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Updated Repeater.vue to allow repeating headers
   * Template and SCSS changes
+* Improved select all label usage in SelectVisibleRowsCell.vue to be clickable when displayed
+  * Template and SCSS changes
 
 === 14.0 ===
 

@@ -25,10 +25,15 @@
       :large-check-box="true"
       :no-label-offset="true"
       :row-label-key="rowLabelKey"
+      :select-all-enabled="true"
       :selected-highlight-off="true"
       :value="selectedItems"
       @input="$emit('update', $event)"
     >
+      <template v-slot:header-row>
+        <HeaderCell size="12" valign="center" />
+      </template>
+
       <template v-slot:row="{ row }">
         <Cell size="12">
           <slot name="row" :row="row" />
@@ -41,11 +46,13 @@
 <script>
 // Components
 import Cell from 'tui/components/datatable/Cell';
+import HeaderCell from 'tui/components/datatable/HeaderCell';
 import SelectTable from 'tui/components/datatable/SelectTable';
 
 export default {
   components: {
     Cell,
+    HeaderCell,
     SelectTable,
   },
 

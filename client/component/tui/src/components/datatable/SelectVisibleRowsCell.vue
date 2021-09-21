@@ -19,7 +19,10 @@
 <template>
   <div
     class="tui-dataTableSelectVisibleRowsCell"
-    :class="{ 'tui-dataTableSelectVisibleRowsCell--hidden': hidden }"
+    :class="{
+      'tui-dataTableSelectVisibleRowsCell--hidden': hidden,
+      'tui-dataTableSelectVisibleRowsCell--stacked': isStacked && !hidden,
+    }"
     role="cell"
   >
     <div
@@ -39,15 +42,20 @@
         :aria-label="$str('selectallrows', 'totara_core')"
         :disabled="disabled || hidden"
         @change="$emit('change', $event)"
-      />
-      <span
-        class="tui-dataTableCell__label"
-        :class="{
-          'tui-dataTableCell__label--stacked': isStacked,
-        }"
       >
-        {{ $str('selectallrows', 'totara_core') }}
-      </span>
+        <template>
+          <span
+            class="tui-dataTableSelectVisibleRowsCell__label"
+            :class="{
+              'tui-dataTableSelectVisibleRowsCell__label--large': largeCheckBox,
+              'tui-dataTableSelectVisibleRowsCell__label--stacked':
+                isStacked && !hidden,
+            }"
+          >
+            {{ $str('selectallrows', 'totara_core') }}
+          </span>
+        </template>
+      </Checkbox>
     </template>
   </div>
 </template>
@@ -101,9 +109,23 @@ export default {
     }
   }
 
-  .tui-dataTableCell__label {
-    margin: auto 0;
-    padding-left: var(--gap-2);
+  &--stacked {
+    margin: var(--gap-2) 0;
+  }
+
+  &__label {
+    display: none;
+    @include tui-font-heading-label-small();
+
+    padding: 0 0 var(--gap-1) var(--gap-1);
+
+    &--stacked {
+      display: inline-block;
+    }
+
+    &--large {
+      padding: var(--gap-1) 0 var(--gap-1) var(--gap-2);
+    }
   }
 }
 </style>

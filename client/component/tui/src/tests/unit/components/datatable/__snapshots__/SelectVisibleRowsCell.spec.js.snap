@@ -9,14 +9,14 @@ exports[`presentation/datatable/SelectVisibleRowsCell.vue Checks snapshot 1`] = 
   <checkbox-stub
     arialabel="5"
     id="id"
-  />
-   
-  <span
-    class="tui-dataTableCell__label"
   >
-    
-      5
-    
-  </span>
+    <span
+      class="tui-dataTableSelectVisibleRowsCell__label"
+    >
+      
+          5
+        
+    </span>
+  </checkbox-stub>
 </div>
 `;

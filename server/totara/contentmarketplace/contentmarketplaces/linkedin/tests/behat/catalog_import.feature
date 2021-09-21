@@ -195,6 +195,10 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | Course A |
       | Course B |
       | Course C |
+    When I click on "Select all rows" tui "checkbox"
+    Then I should see "3" in the ".tui-basket__selectedCount" "css_element"
+    When I click on "Next: Review" "button"
+    Then I should see "3" rows in the tui datatable
     And I should see "3 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "< 10 mins" tui "checkbox" in the "Time to Complete" tui "tree"
     Then I should see "1 items matching \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"

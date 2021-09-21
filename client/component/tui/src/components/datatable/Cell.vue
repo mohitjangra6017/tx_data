@@ -197,7 +197,7 @@ export default {
 
   &--stacked {
     flex-basis: auto;
-    align-items: start;
+    align-items: initial;
   }
 }
 </style>
