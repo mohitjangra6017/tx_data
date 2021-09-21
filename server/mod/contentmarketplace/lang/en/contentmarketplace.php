@@ -47,7 +47,6 @@ $string['activity_set_self_completion'] = 'I have completed this activity';
 $string['activity_status_completed'] = 'Completed';
 $string['activity_status_in_progress'] = 'In progress';
 $string['activity_status_not_started'] = 'Not started';
-$string['administration'] = 'Administration';
 $string['course_details'] = 'Course details';
 $string['enrol_to_course'] = 'Enrol to course {$a}';
 $string['enrol_success_message'] = 'You\'ve been enrolled successfully';

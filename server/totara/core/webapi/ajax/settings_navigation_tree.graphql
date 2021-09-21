@@ -2,12 +2,11 @@ query totara_core_settings_navigation_tree(
   $context_id: core_id!
   $page_url: param_url!
 ) {
-  tree: totara_core_settings_navigation_tree(
+  data: totara_core_settings_navigation_tree(
     context_id: $context_id
     page_url: $page_url
   ) {
-    ...totara_core_settings_navigation_tree_node
-    children {
+    trees {
       ...totara_core_settings_navigation_tree_node
       children {
         ...totara_core_settings_navigation_tree_node
@@ -17,11 +16,15 @@ query totara_core_settings_navigation_tree(
             ...totara_core_settings_navigation_tree_node
             children {
               ...totara_core_settings_navigation_tree_node
+              children {
+                ...totara_core_settings_navigation_tree_node
+              }
             }
           }
         }
       }
     }
+    open_ids
   }
 }
 

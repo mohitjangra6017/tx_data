@@ -13,13 +13,14 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @package mod_contentmarketplace
+  @package tui
 -->
+
 <template>
-  <div class="tui-linkedinActivityAdminMenu">
+  <div class="tui-settingsNavigation">
     <Button
-      v-if="stackedLayout"
-      :text="$str('administration', 'mod_contentmarketplace')"
+      v-if="navigationType"
+      :text="$str('administration', 'core')"
       @click="showAdminModal"
     />
 
@@ -27,53 +28,34 @@
       <template v-slot:trigger="{ toggle, isOpen }">
         <Button
           :aria-expanded="isOpen ? 'true' : 'false'"
-          :aria-label="$str('administration', 'mod_contentmarketplace')"
+          :aria-label="$str('administration', 'core')"
           :caret="true"
-          :text="$str('administration', 'mod_contentmarketplace')"
+          :text="$str('administration', 'core')"
           @click="toggle"
         />
       </template>
 
-      <Tree
+      <SettingsTree
         v-model="openTreeBranches"
-        class="tui-linkedinActivityAdminMenu__tree tui-linkedinActivityAdminMenu__tree--dropDown"
-        :tree-data="treeData"
+        class="tui-settingsNavigation__content"
         no-padding
-        @input="$emit('input', $event)"
-      >
-        <!-- Branch label -->
-        <template v-slot:custom-label="{ label, linkUrl, topLevel }">
-          <div
-            class="tui-linkedinActivityAdminMenu__tree-contentsLabel"
-            :class="{
-              'tui-linkedinActivityAdminMenu__tree-topBranch': topLevel,
-              'tui-linkedinActivityAdminMenu__spacing': !topLevel,
-            }"
-          >
-            <DropdownItem v-if="linkUrl" :href="linkUrl" no-padding>
-              {{ label }}
-            </DropdownItem>
-            <template v-else>
-              {{ label }}
-            </template>
-          </div>
-        </template>
-      </Tree>
+        :tree-data="treeData"
+        is-dropdown
+      />
     </Dropdown>
 
     <ModalPresenter :open="modalOpen" @request-close="closeModal">
       <Modal size="sheet" :aria-labelledby="$id('admin-modal')">
         <ModalContent
-          :title="$str('administration', 'mod_contentmarketplace')"
+          :title="$str('administration', 'core')"
           :title-id="$id('admin-modal')"
           @dismiss="closeModal"
         >
-          <Tree
+          <SettingsTree
             v-model="openTreeBranches"
-            class="tui-linkedinActivityAdminMenu__tree"
+            class="tui-settingsNavigation__content"
             label-type="link"
             :tree-data="treeData"
-            @input="$emit('input', $event)"
           />
         </ModalContent>
       </Modal>
@@ -83,13 +65,13 @@
 
 <script>
 import Button from 'tui/components/buttons/Button';
+import { config } from 'tui/config';
 import Dropdown from 'tui/components/dropdown/Dropdown';
-import DropdownItem from 'tui/components/dropdown/DropdownItem';
 import Modal from 'tui/components/modal/Modal';
 import ModalContent from 'tui/components/modal/ModalContent';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
-import Tree from 'tui/components/tree/Tree';
-import { config } from 'tui/config';
+import { NavigationType } from '../../js/lib/internal/settings_navigation_utils';
+import SettingsTree from 'tui/components/settings_navigation/SettingsNavigationTree';
 
 import settingsTreeQuery from 'totara_core/graphql/settings_navigation_tree';
 
@@ -97,11 +79,10 @@ export default {
   components: {
     Button,
     Dropdown,
-    DropdownItem,
     Modal,
     ModalContent,
     ModalPresenter,
-    Tree,
+    SettingsTree,
   },
 
   props: {
@@ -109,12 +90,21 @@ export default {
      * Tree data for admin options
      */
     stackedLayout: Boolean,
+    // Type of settings navigation
+    type: {
+      type: String,
+      default: NavigationType.DROPDOWN,
+      validator(prop) {
+        return Object.values(NavigationType).includes(prop);
+      },
+    },
   },
 
   data() {
     return {
       modalOpen: false,
-      openTreeBranches: ['modulesettings'],
+      treeData: [],
+      openTreeBranches: [],
     };
   },
 
@@ -127,9 +117,24 @@ export default {
           page_url: window.location.href,
         };
       },
-      update({ tree: data }) {
-        return data;
+      update({ data }) {
+        this.openTreeBranches = this.openTreeBranches.concat(data.open_ids);
+        return data.trees;
       },
+    },
+  },
+
+  computed: {
+    isModalType() {
+      return this.type === NavigationType.MODAL;
+    },
+
+    /**
+     * Switch to modal layout if it is stacked or
+     * if prop type is set to NavigationType.MODAL
+     */
+    navigationType() {
+      return this.stackedLayout || this.isModalType;
     },
   },
 
@@ -150,38 +155,16 @@ export default {
 
 <lang-strings>
   {
-    "mod_contentmarketplace": [
+    "core": [
       "administration"
     ]
   }
 </lang-strings>
 
 <style lang="scss">
-.tui-linkedinActivityAdminMenu {
-  &__spacing {
-    padding: var(--gap-2) 0;
-  }
-
-  &__tree {
-    hyphens: none;
-
-    &-topBranch {
-      padding-bottom: var(--gap-2);
-      font-weight: bold;
-    }
-
-    &-contentsItem {
-      margin-top: var(--gap-2);
-      white-space: normal;
-    }
-
-    &-contentsLabel {
-      width: 100%;
-    }
-
-    &--dropDown {
-      margin: 0 var(--gap-2);
-    }
+.tui-settingsNavigation {
+  &__content {
+    margin: 0 var(--gap-2);
   }
 }
 </style>

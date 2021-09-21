@@ -85,7 +85,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         ];
 
         $result = $this->resolve_query($this->category_context);
-        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
+        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result['trees']));
     }
 
     public function test_resolve_tree_for_course_context(): void {
@@ -127,7 +127,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         ];
 
         $result = $this->resolve_query($this->course_context);
-        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
+        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result['trees']));
     }
 
     public function test_resolve_tree_for_module_context(): void {
@@ -179,7 +179,8 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         ];
 
         $result = $this->resolve_query($this->module_context);
-        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
+        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result['trees']));
+        $this->assertEquals(['modulesettings'], $result['open_ids']);
     }
 
     public function test_resolve_tree_for_module_context_as_enrolled_learner(): void {
@@ -194,7 +195,8 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         ];
 
         $result = $this->resolve_query($this->module_context);
-        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result));
+        $this->assert_tree_structure_same($expected_ids, $this->simplify_tree($result['trees']));
+        $this->assertEquals([], $result['open_ids']);
     }
 
     /**
@@ -207,7 +209,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
 
         $result = $this->resolve_query($this->module_context, $test_page_url);
         $resolved_nodes = [];
-        foreach ($result as $node) {
+        foreach ($result['trees'] as $node) {
             $resolved_nodes[] = $this->resolve_node($node);
         }
 
@@ -274,8 +276,9 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         self::setAdminUser();
 
         $result = $this->resolve_query($this->system_context);
-        $actual_ids = $this->simplify_tree($result);
+        $actual_ids = $this->simplify_tree($result['trees']);
         $this->assertEmpty($actual_ids);
+        $this->assertEmpty($result['open_ids']);
     }
 
     public function test_tree_for_system_context_with_legacy_setting_enabled(): void {
@@ -284,9 +287,10 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         $CFG->legacyadminsettingsmenu = true;
 
         $result = $this->resolve_query($this->system_context);
-        $actual_ids = $this->simplify_tree($result);
+        $actual_ids = $this->simplify_tree($result['trees']);
         $this->assertNotEmpty($actual_ids);
         $this->assertArrayHasKey('systeminformation', $actual_ids['root']);
+        $this->assertEquals(['root'], $result['open_ids']);
     }
 
     public function test_string_formatting(): void {
@@ -300,7 +304,7 @@ class totara_core_webapi_resolver_query_settings_navigation_tree_test extends te
         $result = $this->resolve_query($course_context);
 
         /** @var tree_node $root_node */
-        $root_node = $result[0];
+        $root_node = $result['trees'][0];
         $node = $root_node->find_node('courseadmin/unenrolself');
 
         // String should be formatted both after AND before going through the graphQL type

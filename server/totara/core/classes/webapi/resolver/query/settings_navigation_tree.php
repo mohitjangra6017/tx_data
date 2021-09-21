@@ -87,6 +87,7 @@ class settings_navigation_tree implements query_resolver, has_middleware {
         // TODO: Add caching in TL-32139
 
         $tree_roots = [];
+        $open_ids = [];
         foreach ($settings_nav->children as $nav) {
             /** @var navigation_node $nav */
             if (!$nav->display) {
@@ -99,12 +100,16 @@ class settings_navigation_tree implements query_resolver, has_middleware {
                 continue;
             }
 
-            $tree = self::map_tree($context, $nav);
+            $tree = self::map_tree($context, $nav, $open_ids);
             if ($tree) {
                 $tree_roots[] = $tree;
             }
         }
-        return $tree_roots;
+
+        return [
+            'trees' => $tree_roots,
+            'open_ids' => array_unique($open_ids),
+        ];
     }
 
     /**
@@ -148,6 +153,7 @@ class settings_navigation_tree implements query_resolver, has_middleware {
      *
      * @param context $context
      * @param navigation_node $navigation_node
+     * @param array|null $open_ids Pass an array by reference. Null is only accepted in order to work in unit tests.
      * @param tree_node|null $parent
      * @param int $depth
      * @return tree_node
@@ -155,6 +161,7 @@ class settings_navigation_tree implements query_resolver, has_middleware {
     private static function map_tree(
         context $context,
         navigation_node $navigation_node,
+        array &$open_ids = null,
         tree_node $parent = null,
         int $depth = 1
     ): tree_node {
@@ -187,9 +194,14 @@ class settings_navigation_tree implements query_resolver, has_middleware {
             $tree_node->set_link_url($navigation_node->action);
         }
 
+        // If this node is supposed to be open by default, then add it's ID to the list of open IDs.
+        if ($navigation_node->forceopen) {
+            $open_ids[] = $id;
+        }
+
         // Now process the children of this node.
         foreach ($navigation_node->children as $child) {
-            $child_node = static::map_tree($context, $child, $tree_node, $depth + 1);
+            $child_node = static::map_tree($context, $child, $open_ids, $tree_node, $depth + 1);
             if ($child_node) {
                 $tree_node->add_children($child_node);
             }

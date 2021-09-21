@@ -151,7 +151,7 @@
 
 <script>
 import ActionCard from 'tui/components/card/ActionCard';
-import AdminMenu from 'mod_contentmarketplace/components/administration/AdminMenu';
+import AdminMenu from 'tui/components/settings_navigation/SettingsNavigation';
 import Button from 'tui/components/buttons/Button';
 import Layout from 'mod_contentmarketplace/components/layouts/LayoutBannerSidepanelTwoColumn';
 import Lozenge from 'tui/components/lozenge/Lozenge';

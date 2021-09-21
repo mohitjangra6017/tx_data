@@ -231,7 +231,6 @@ export default {
 
 <style lang="scss">
 .tui-tree {
-  margin: 0;
   list-style: none;
 }
 </style>
