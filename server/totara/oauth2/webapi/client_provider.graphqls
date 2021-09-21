@@ -8,7 +8,5 @@ type totara_oauth2_client_provider {
 }
 
 extend type Query {
-  totara_oauth2_client_providers(
-    id: param_integer!
-  ): [totara_oauth2_client_provider]
+  totara_oauth2_client_providers(id: core_id!): [totara_oauth2_client_provider]
 }

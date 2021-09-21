@@ -1,4 +1,4 @@
-query totara_oauth2_client_providers($id: param_integer!) {
+query totara_oauth2_client_providers($id: core_id!) {
   providers: totara_oauth2_client_providers(id: $id) {
     client_id
     client_secret
