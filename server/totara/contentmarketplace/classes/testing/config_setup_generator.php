@@ -1,8 +1,8 @@
 <?php
-/*
- * This file is part of Totara Learn
+/**
+ * This file is part of Totara Core
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Sergey Vidusov <sergey.vidusov@androgogic.com>
- * @package contentmarketplace_goone
+ * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
+ * @package totara_contentmarketplace
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace totara_contentmarketplace\testing;
 
-$plugin->component = 'contentmarketplace_goone';
-$plugin->version   = 2021092300;
-$plugin->requires  = 2021052500; // Totara 9+ is required.
+interface config_setup_generator {
+
+    /**
+     * Set up the environment with either given client's id and secret or
+     * the system will mock these two attributes itself.
+     */
+    public function set_up_configuration(): void;
+
+}

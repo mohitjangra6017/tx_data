@@ -19,7 +19,7 @@ Feature: Create a course from the Go1 content marketplace
     And I click on "Continue" "button"
     And I click on "Save and explore Go1" "button"
 
-  Scenario: Single Multiactivity go1 course can be created
+  Scenario: Multiactivity go1 course can be created with a single Go1 course
     When I click on "[for='selection-1868492']" "css_element"
     Then I should see "1 item selected"
     When I click on "Create course" "link"
@@ -33,6 +33,12 @@ Feature: Create a course from the Go1 content marketplace
     And I click on "Create and view course" "button"
     Then I should see "bsr" in the ".breadcrumb" "css_element"
     And I should see "Basic First Aid" in the "#section-1" "css_element"
+
+    # Course catalogue Go1 provider logo
+    When I click on "Find Learning" in the totara menu
+    Then I should see "1 items"
+    And I should see "Basic First Aid"
+    And I should see image with alt text "Go1's logo"
 
   Scenario: Single activity go1 course can be created
     When I click on "[for='selection-1868492']" "css_element"
@@ -50,7 +56,13 @@ Feature: Create a course from the Go1 content marketplace
     Then I should see "bsr" in the ".breadcrumb" "css_element"
     And I should see "Basic First Aid"
 
-  Scenario: Multiactivity go1 course can be created
+    # Course catalogue Go1 provider logo
+    When I click on "Find Learning" in the totara menu
+    Then I should see "1 items"
+    And I should see "Basic First Aid"
+    And I should see image with alt text "Go1's logo"
+
+  Scenario: Multiactivity go1 course can be created with multiple Go1 courses
     # Select assortment of courses
     When I click on "[for='selection-1868492']" "css_element"
     And I click on "[for='selection-1873868']" "css_element"
@@ -81,6 +93,25 @@ Feature: Create a course from the Go1 content marketplace
     And I should see "Interviewing 101" in the "#section-1" "css_element"
     And I should see "Epilepsy and the Older Person" in the "#section-1" "css_element"
 
+    # Course catalogue Go1 provider logo
+    When I click on "Find Learning" in the totara menu
+    Then I should see "1 items"
+    And I should see "Go1 test course"
+    And I should see image with alt text "Go1's logo"
+
+    # Course catalogue provider filter
+    When I click on "Configure catalogue" "link"
+    And I switch to "Filters" tab
+    And I set the field "Add another..." to "Provider"
+    And I click on "Save" "button"
+    And I click on "View catalogue" "link"
+    Then I should see "Provider" in the ".tw-selectRegionPanel" "css_element"
+    When I click on "Internal" "link" in the "[aria-labelledby='contentmarketplace_provider_panel']" "css_element"
+    # Multi activity go1 courses also have a forum module, so they count as internal as well as go1
+    Then I should see "1 items"
+    When I click on "Go1" "link" in the "[aria-labelledby='contentmarketplace_provider_panel']" "css_element"
+    Then I should see "1 items"
+
   Scenario: Multiple single activity go1 courses can be created
     # Select assortment of courses
     When I click on "[for='selection-1868492']" "css_element"
@@ -107,3 +138,13 @@ Feature: Create a course from the Go1 content marketplace
     And I should see "Seizure First Aid"
     And I should see "Interviewing 101"
     And I should see "Epilepsy and the Older Person"
+
+    # Course catalogue Go1 provider logo
+    When I click on "Find Learning" in the totara menu
+    Then I should see "5 items"
+    And I should see "Basic First Aid"
+    And I should see "How to Master Public Speaking"
+    And I should see "Seizure First Aid"
+    And I should see "Interviewing 101"
+    And I should see "Epilepsy and the Older Person"
+    And I should see image with alt text "Go1's logo"

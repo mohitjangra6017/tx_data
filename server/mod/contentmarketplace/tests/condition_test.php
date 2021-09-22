@@ -20,6 +20,7 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
+
 use core_phpunit\testcase;
 use mod_contentmarketplace\completion\condition;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
@@ -71,7 +72,7 @@ class mod_contentmarketplace_condition_testcase extends testcase {
      */
     public function test_get_contentmarketplace_conditions_string_with_error(): void {
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("Unknown content marketplace plugin requested.");
+        $this->expectExceptionMessage("Unknown content marketplace plugin requested: 'invalid'");
 
         condition::get_content_marketplace_conditions_string("contentmarketplace_invalid");
     }

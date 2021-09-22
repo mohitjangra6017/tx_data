@@ -34,9 +34,11 @@ class course_logo extends formatter {
     /**
      * course_logo constructor.
      * @param string $marketplace_component_field
+     * @param string $cm_ids_field
      */
-    public function __construct(string $marketplace_component_field) {
+    public function __construct(string $marketplace_component_field, string $cm_ids_field) {
         $this->add_required_field('marketplace_component', $marketplace_component_field);
+        $this->add_required_field('cm_ids', $cm_ids_field);
     }
 
     /**
@@ -55,11 +57,21 @@ class course_logo extends formatter {
      * @return stdClass|null
      */
     public function get_formatted_value(array $data, context $context) {
-        if (empty($data['marketplace_component'])) {
+        if (empty($data['marketplace_component']) || empty($data['cm_ids'])) {
             return null;
         }
 
-        $marketplace = (contentmarketplace::plugin($data['marketplace_component']))->contentmarketplace();
+        $marketplace_components = explode('|', $data['marketplace_component']);
+        if (count($marketplace_components) > 1) {
+            // In the case that there are multiple activities, then we just show the logo of the first activity's marketplace
+            // by keying the marketplaces by course module ID and then sorting them to get the first marketplace component logo.
+            $cm_ids = explode('|', $data['cm_ids']);
+            $marketplace_components = array_combine($cm_ids, $marketplace_components);
+            ksort($marketplace_components);
+        }
+        $marketplace_component = reset($marketplace_components);
+
+        $marketplace = (contentmarketplace::plugin($marketplace_component))->contentmarketplace();
         return (object) [
             'url' => $marketplace->get_logo_url()->out(false),
             'alt' => $marketplace->get_logo_alt_text(),

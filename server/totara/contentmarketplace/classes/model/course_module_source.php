@@ -27,6 +27,7 @@ use container_course\module\course_module;
 use core\entity\course;
 use core\orm\entity\model;
 use totara_contentmarketplace\entity\course_module_source as course_module_source_entity;
+use totara_contentmarketplace\event\course_module_source_created;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object_model;
 
 /**
@@ -79,6 +80,11 @@ class course_module_source extends model {
 
         $entity->save();
 
-        return static::load_by_entity($entity);
+        $model = static::load_by_entity($entity);
+
+        $event = course_module_source_created::from_model($model);
+        $event->trigger();
+
+        return $model;
     }
 }

@@ -72,7 +72,7 @@ $catalog_item_narrow-image_ratio: $catalog_item_narrow-image_height / $catalog_i
 
         &_logo {
           height: 20px;
-          width: 70px;
+          max-width: 70px;
         }
       }
     }

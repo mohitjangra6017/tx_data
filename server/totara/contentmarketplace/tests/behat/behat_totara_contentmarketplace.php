@@ -21,8 +21,9 @@
  * @package totara_contentmarketplace
  */
 
-
+use core\testing\component_generator;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
+use totara_contentmarketplace\testing\config_setup_generator;
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
@@ -48,6 +49,28 @@ class behat_totara_contentmarketplace extends behat_base {
             $plugin->enable();
         } else {
             $plugin->disable();
+        }
+    }
+
+    /**
+     * Set up the content marketplace plugin by enabling it and setting some default config values if there are any.
+     *
+     * @Given /^I set up the "([^"]*)" content marketplace plugin$/
+     */
+    public function set_up_configuration(string $plugin_name): void {
+        behat_hooks::set_step_readonly(false);
+
+        $this->enable_contentmarketplace_plugin($plugin_name, 'enabled');
+
+        $generator_class = "\\contentmarketplace_{$plugin_name}\\testing\\generator";
+        if (!class_exists($generator_class)) {
+            return;
+        }
+
+        /** @var component_generator $generator */
+        $generator = $generator_class::instance();
+        if ($generator instanceof config_setup_generator) {
+            $generator->set_up_configuration();
         }
     }
 

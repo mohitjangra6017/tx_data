@@ -110,6 +110,10 @@ abstract class restore_task extends base_task {
         if ($this->executed && method_exists($this, 'after_restore')) {
             $this->after_restore();
         }
+
+        // Totara: Allow other plugins to do additional handling after restoring.
+        $hook = new \totara_core\hook\backup_post_restore_task($this);
+        $hook->execute();
     }
 }
 

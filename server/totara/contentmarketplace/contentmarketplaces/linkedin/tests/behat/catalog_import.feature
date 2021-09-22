@@ -2,7 +2,7 @@
 Feature: Use the catalogue import page to create courses based upon LinkedIn Learning course content.
 
   Background:
-    Given I set up the LinkedIn Learning content marketplace plugin
+    Given I set up the "linkedin" content marketplace plugin
     And I log in as "admin"
 
   Scenario: Learning objects catalog: No items

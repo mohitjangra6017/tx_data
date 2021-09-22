@@ -25,9 +25,13 @@ require('../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/mod/scorm/locallib.php');
 
-use contentmarketplace_goone\contentmarketplace;
-use contentmarketplace_goone\form\create_course_form;
+use container_course\module\course_module;
 use contentmarketplace_goone\form\create_course_controller;
+use contentmarketplace_goone\form\create_course_form;
+use contentmarketplace_goone\model\learning_object;
+use core_container\factory;
+use core_container\module\module;
+use totara_contentmarketplace\model\course_module_source;
 
 $selection = required_param_array('selection', PARAM_ALPHANUMEXT);
 $create = optional_param('create', create_course_form::CREATE_COURSE_MULTI_ACTIVITY, PARAM_INT);
@@ -118,8 +122,17 @@ function storedfile($name, $packageid, $scorm) {
     return $fs->create_file_from_string($record, $scorm);
 }
 
-
-function add_scorm_module($course, $name, $itemid, $descriptionhtml, $assessable, $section = 0) {
+/**
+ * @param object $course
+ * @param string $name
+ * @param int $itemid
+ * @param string $descriptionhtml
+ * @param int $assessable
+ * @param int $section
+ * @param learning_object|null $learning_object_model
+ * @return module
+ */
+function add_scorm_module($course, $name, $itemid, $descriptionhtml, $assessable, $section = 0, $learning_object_model = null) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/mod/scorm/lib.php');
 
@@ -169,7 +182,15 @@ function add_scorm_module($course, $name, $itemid, $descriptionhtml, $assessable
         $moduleinfo->completionstatusrequired = get_completionstatusrequired('completed');
     }
 
-    return add_moduleinfo($moduleinfo, $course);
+    $container = factory::from_record($course);
+    /** @var course_module $module */
+    $module = $container->add_module($moduleinfo);
+
+    if ($learning_object_model) {
+        course_module_source::create($module, $learning_object_model);
+    }
+
+    return $module;
 }
 
 function get_completionstatusrequired($option) {
@@ -232,7 +253,9 @@ if ($form->is_cancelled()) {
             $learningobject = $api->get_learning_object($id);
             $title = clean_param($learningobject->title, !empty($CFG->formatstringstriptags) ? PARAM_TEXT : PARAM_CLEANHTML);
             $descriptionhtml = clean_text($learningobject->description);
-            add_scorm_module($course, $title, $id, $descriptionhtml, $learningobject->assessable, $section);
+
+            $learning_object_model = learning_object::load_by_external_id($id, $api);
+            add_scorm_module($course, $title, $id, $descriptionhtml, $learningobject->assessable, $section, $learning_object_model);
         }
 
         \core\notification::success(get_string('coursecreated', 'contentmarketplace_goone'));
@@ -268,7 +291,9 @@ if ($form->is_cancelled()) {
             $learningobject = $api->get_learning_object($id);
             $title = clean_param($learningobject->title, !empty($CFG->formatstringstriptags) ? PARAM_TEXT : PARAM_CLEANHTML);
             $descriptionhtml = clean_text($learningobject->description);
-            add_scorm_module($course, $title, $id, $descriptionhtml, $learningobject->assessable);
+
+            $learning_object_model = learning_object::load_by_external_id($id, $api);
+            add_scorm_module($course, $title, $id, $descriptionhtml, $learningobject->assessable, 0, $learning_object_model);
 
             $courselinkshtml[] = s($coursedata->fullname);
         }

@@ -17,7 +17,7 @@ Feature: View content marketplace linkedin as activity within course
     And the following "categories" exist:
       | name       | category | idnumber |
       | Category A | 0        | A        |
-    And I set up the LinkedIn Learning content marketplace plugin
+    And I set up the "linkedin" content marketplace plugin
 
   Scenario: Course back url display depends upon course format
     Given I am on a totara site

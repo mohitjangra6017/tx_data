@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Sergey Vidusov <sergey.vidusov@androgogic.com>
+ * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
  * @package contentmarketplace_goone
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace contentmarketplace_goone\entity;
 
-$plugin->component = 'contentmarketplace_goone';
-$plugin->version   = 2021092300;
-$plugin->requires  = 2021052500; // Totara 9+ is required.
+use core\orm\entity\entity;
+
+/**
+ * A Go1 learning object that has been fetched and stored locally within Totara.
+ *
+ * @property-read int $id
+ * @property int $external_id
+ *
+ * @package contentmarketplace_goone\entity
+ */
+class learning_object extends entity {
+
+    /**
+     * @var string
+     */
+    public const TABLE = 'marketplace_goone_learning_object';
+
+}

@@ -49,17 +49,32 @@ final class mock_curl {
                 self::url('PUT', '/configuration')
                 => '/configuration/PUT.json',
 
+                self::url('GET', '/learning-objects/1873868')
+                => '/learning-objects/1873868/GET.json',
+
                 self::url('GET', '/learning-objects/1873868/scorm')
                 => '/learning-objects/1873868/scorm/GET.zip',
+
+                self::url('GET', '/learning-objects/29271')
+                => '/learning-objects/29271/GET.json',
 
                 self::url('GET', '/learning-objects/29271/scorm')
                 => '/learning-objects/29271/scorm/GET.zip',
 
+                self::url('GET', '/learning-objects/1916572')
+                => '/learning-objects/1916572/GET.json',
+
                 self::url('GET', '/learning-objects/1916572/scorm')
                 => '/learning-objects/1916572/scorm/GET.zip',
 
+                self::url('GET', '/learning-objects/1881379')
+                => '/learning-objects/1881379/GET.json',
+
                 self::url('GET', '/learning-objects/1881379/scorm')
                 => '/learning-objects/1881379/scorm/GET.zip',
+
+                self::url('GET', '/learning-objects/1868492')
+                => '/learning-objects/1868492/GET.json',
 
                 self::url('GET', '/learning-objects/1868492/scorm')
                 => '/learning-objects/1868492/scorm/GET.zip',

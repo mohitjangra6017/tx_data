@@ -1,7 +1,7 @@
 @totara @totara_contentmarketplace @contentmarketplace_linkedin @vuejs @javascript
 Feature: Content marketplace linkedin with multi languages filter
   Background:
-    Given I set up the LinkedIn Learning content marketplace plugin
+    Given I set up the "linkedin" content marketplace plugin
 
   Scenario: View catalog import with different languages available.
     Given the following "learning objects" exist in "contentmarketplace_linkedin" plugin:

@@ -49,7 +49,7 @@ interface model {
      *
      * @return string
      */
-    public function get_language(): string;
+    public function get_language(): ?string;
 
     /**
      * Returns the URL for displaying the thumbnail image of the learning object.

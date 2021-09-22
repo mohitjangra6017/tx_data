@@ -1,7 +1,7 @@
 @totara @contentmarketplace_linkedin @totara_contentmarketplace @javascript
 Feature: Create course from content marketplace Linkedin Learning
   Background:
-    Given I set up the LinkedIn Learning content marketplace plugin
+    Given I set up the "linkedin" content marketplace plugin
     And the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
       | urn | title    | level        | asset_type    | time_to_complete | time_to_complete_unit |
       | A   | Course A | BEGINNER     | COURSE        | 30               | MINUTE                |

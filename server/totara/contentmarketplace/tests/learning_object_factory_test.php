@@ -20,6 +20,7 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_contentmarketplace
  */
+
 use core_phpunit\testcase;
 use totara_contentmarketplace\learning_object\factory;
 
@@ -61,16 +62,4 @@ class totara_contentmarketplace_learning_object_factory_testcase extends testcas
         self::assertTrue(factory::is_valid_marketplace_component('contentmarketplace_goone'));
     }
 
-    /**
-     * @return void
-     */
-    public function test_get_resolver_with_non_supported_marketplace_component(): void {
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage(
-            "The class 'contentmarketplace_goone\\learning_object\\resolver' is not a child of ".
-            "'totara_contentmarketplace\\learning_object\\abstraction\\resolver'"
-        );
-
-        factory::resolve_resolver_class_name('contentmarketplace_goone');
-    }
 }

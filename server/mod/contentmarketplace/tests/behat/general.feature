@@ -29,7 +29,7 @@ Feature: General behaviour with mod contentmarketplace
   Scenario: Launch new course created from learning object
     Given I am on a totara site
     And I log in as "admin"
-    And I set up the LinkedIn Learning content marketplace plugin
+    And I set up the "linkedin" content marketplace plugin
     And the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
       | urn          | title     |
       | urn:course:1 | Spring    |

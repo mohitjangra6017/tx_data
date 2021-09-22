@@ -34,7 +34,6 @@ use coursecat;
 use stdClass;
 use Throwable as throwable;
 use totara_contentmarketplace\completion_constants;
-use totara_contentmarketplace\event\course_module_source_created;
 use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
 use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
 use totara_contentmarketplace\learning_object\abstraction\metadata\configuration;
@@ -386,10 +385,7 @@ class course_builder {
         $module = $course->add_module($module_info);
 
         // Create course source.
-        $model = course_module_source::create($module, $this->learning_object);
-
-        // Trigger course_module_source_created event
-        (course_module_source_created::from_model($model))->trigger();
+        course_module_source::create($module, $this->learning_object);
 
         return $module;
     }

@@ -21,15 +21,12 @@
  * @package totara_contentmarketplace
  */
 
+use core\testing\generator as core_generator;
 use core_course\totara_catalog\course\dataholder_factory\course_logo;
 use core_phpunit\testcase;
-use totara_contentmarketplace\testing\generator;
-use totara_contentmarketplace\course\course_builder;
-use totara_contentmarketplace\testing\mock\create_course_interactor;
-use totara_contentmarketplace\testing\helper;
+use mod_contentmarketplace\testing\generator as module_generator;
 use totara_catalog\dataformatter\formatter;
 use totara_contentmarketplace\totara_catalog\course_logo_dataholder_factory;
-
 
 /**
  * @group totara_contentmarketplace
@@ -37,40 +34,93 @@ use totara_contentmarketplace\totara_catalog\course_logo_dataholder_factory;
 class totara_contentmarketplace_catalog_course_logo_dataformatter_testcase extends testcase {
 
     /**
-     * @return void
+     * @var stdClass
      */
-    public function test_course_logo_dataformatter(): void {
+    private $course;
+
+    /**
+     * @var course_logo
+     */
+    private $dataholder;
+
+    protected function setUp(): void {
+        parent::setUp();
         self::setAdminUser();
-        $admin = get_admin();
-
-        $marketplace_generator = generator::instance();
-        $learning_object = $marketplace_generator->create_learning_object('contentmarketplace_linkedin');
-
-        $course_builder = new course_builder(
-            $learning_object,
-            helper::get_default_course_category_id(),
-            new create_course_interactor($admin->id)
-        );
-        $result = $course_builder->create_course();
-
+        $this->course = core_generator::instance()->create_course();
         $data_holders = course_logo::get_dataholders();
-        $this->assertCount(1, $data_holders);
+        $this->dataholder = current($data_holders);
+    }
 
-        $data_holder = current($data_holders);
-        self::assertEquals(course_logo_dataholder_factory::DATAHOLDER_KEY, $data_holder->key);
-        self::assertEquals(course_logo_dataholder_factory::DATAHOLDER_NAME, $data_holder->name);
+    protected function tearDown(): void {
+        parent::tearDown();
+        $this->course = null;
+        $this->dataholder = null;
+    }
 
-        $context = context_course::instance($result->get_course_id());
-        $result = $data_holder->get_formatted_value(
+    public function test_course_logo_dataformatter_with_no_course_module_source(): void {
+        self::assertNull($this->get_logo([], []));
+    }
+
+    public function test_dataholder_constants_are_correct(): void {
+        self::assertEquals(course_logo_dataholder_factory::DATAHOLDER_KEY, $this->dataholder->key);
+        self::assertEquals(course_logo_dataholder_factory::DATAHOLDER_NAME, $this->dataholder->name);
+    }
+
+    /**
+     * Ensure that a logo is returned if there is a single course module source record for a course.
+     */
+    public function test_course_logo_dataformatter_with_single_course_module_source(): void {
+        $module_generator = module_generator::instance();
+        $module = $module_generator->create_content_marketplace_instance([
+            'course' => $this->course, 'marketplace_component' => 'contentmarketplace_goone', 'name' => 29271,
+        ]);
+
+        $result = $this->get_logo(['contentmarketplace_goone'], [$module->cmid]);
+        self::assertStringContainsString('contentmarketplace_goone', $result->url);
+        self::assertStringContainsString(
+            get_string('pluginname', 'contentmarketplace_goone'),
+            $result->alt
+        );
+    }
+
+    /**
+     * Ensures that if there are multiple course module sources for a course,
+     * that the first module's (ordered by ID) marketplace logo is used.
+     */
+    public function test_course_logo_dataformatter_with_multiple_course_module_sources(): void {
+        $module_generator = module_generator::instance();
+        $lil_module = $module_generator->create_content_marketplace_instance([
+            'course' => $this->course, 'marketplace_component' => 'contentmarketplace_linkedin', 'name' => 'foobar',
+        ]);
+        $go1_module = $module_generator->create_content_marketplace_instance([
+            'course' => $this->course, 'marketplace_component' => 'contentmarketplace_goone', 'name' => 29271,
+        ]);
+
+        $result = $this->get_logo(
+            ['contentmarketplace_goone', 'contentmarketplace_linkedin'],
+            [$go1_module->cmid, $lil_module->cmid]
+        );
+        self::assertStringContainsString('contentmarketplace_linkedin', $result->url);
+        self::assertStringContainsString(
+            get_string('pluginname', 'contentmarketplace_linkedin'),
+            $result->alt
+        );
+    }
+
+    /**
+     * @param array $marketplace_components
+     * @param array $cm_ids
+     * @return object|null
+     */
+    private function get_logo(array $marketplace_components, array $cm_ids): ?object {
+        return $this->dataholder->get_formatted_value(
             formatter::TYPE_PLACEHOLDER_IMAGE,
             [
-                'marketplace_component' => $learning_object::get_marketplace_component(),
-                'learning_object_id' => $learning_object->get_id(),
+                'marketplace_component' => implode('|', $marketplace_components),
+                'cm_ids' => implode('|', $cm_ids),
             ],
-            $context
+            context_course::instance($this->course->id)
         );
-        self::assertNotEmpty($result);
-        self::assertNotEmpty($result->url);
-        self::assertEquals(get_string('logo_alt',  $learning_object::get_marketplace_component()), $result->alt);
     }
+
 }

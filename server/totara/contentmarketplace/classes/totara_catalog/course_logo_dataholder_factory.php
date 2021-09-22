@@ -37,14 +37,13 @@ class course_logo_dataholder_factory {
     /**
      * @var string
      */
-    public const DATAHOLDER_NAME = "markertplace course logo";
+    public const DATAHOLDER_NAME = "marketplace course logo";
 
     /**
      * @return dataholder[]
      */
     public static function get_dataholders(): array {
         global $DB;
-        $group_concat = $DB->sql_group_concat_unique('cm_source.marketplace_component', '|');
         return [
             // Content marketplace logo
             new dataholder(
@@ -53,16 +52,20 @@ class course_logo_dataholder_factory {
                 [
                     formatter::TYPE_PLACEHOLDER_IMAGE => new course_logo(
                         'cm_source.marketplace_component',
+                        'cm_source.cm_ids'
                     )
                 ],
                 [
                     self::DATAHOLDER_KEY => "
                         LEFT JOIN (
-                            SELECT cm.course, {$group_concat} AS marketplace_component
+                            SELECT
+                                cm.course,
+                                " . $DB->sql_group_concat('cm_source.marketplace_component', '|') . " marketplace_component,
+                                " . $DB->sql_group_concat('cm_source.cm_id', '|') . " cm_ids
                             FROM {course_modules} cm
                             INNER JOIN {totara_contentmarketplace_course_module_source} cm_source ON cm_source.cm_id = cm.id
                             GROUP BY cm.course
-                        ) AS cm_source ON cm_source.course = base.id
+                        ) cm_source ON cm_source.course = base.id
                     "
                 ]
             )

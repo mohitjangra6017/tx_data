@@ -2,7 +2,7 @@
 Feature: Test the LinkedIn Learning content marketplace plugin workflow
 
   Background:
-    Given I set up the LinkedIn Learning content marketplace plugin
+    Given I set up the "linkedin" content marketplace plugin
     And the following "users" exist:
       | username | firstname | lastname | email          |
       | user1    | User      | One      | user1@test.com |

@@ -20,7 +20,7 @@ Feature: Catalog import learning objects classifications.
       | urn:course:1        | urn:category:2     |
       | urn:course:1        | urn:category:3     |
       | urn:course:2        | urn:category:3     |
-    And I set up the LinkedIn Learning content marketplace plugin
+    And I set up the "linkedin" content marketplace plugin
 
   Scenario: Filter the catalog learning objects by subjects
     Given I am on a totara site

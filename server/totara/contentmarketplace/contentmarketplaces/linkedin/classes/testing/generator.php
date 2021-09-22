@@ -37,17 +37,18 @@ use contentmarketplace_linkedin\entity\learning_object_classification;
 use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use core\orm\query\builder;
 use core\testing\component_generator;
+use ReflectionClass;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
+use totara_contentmarketplace\testing\config_setup_generator;
 use totara_contentmarketplace\testing\learning_object_generator;
 use totara_contentmarketplace\token\token;
 use totara_core\http\response;
 use totara_core\http\response_code;
-use ReflectionClass;
 
 /**
  * @method static generator instance()
  */
-class generator extends component_generator implements learning_object_generator {
+class generator extends component_generator implements learning_object_generator, config_setup_generator {
     /**
      * Whether the locale provider had been modified or not with static memory.
      * This flag is only help to speed up the test, by not having to reset the list

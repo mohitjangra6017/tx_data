@@ -95,10 +95,17 @@ class generator extends mod_generator {
 
         $db = builder::get_db();
 
-        $course_record = $db->get_record('course', ['shortname' => $data['course']], '*', MUST_EXIST);
-        /** @var course $course */
-        $course = factory::from_record($course_record);
+        $course = $data['course'];
+        if (is_object($course)) {
+            $course = factory::from_record($course);
+        } else if (is_numeric($course)) {
+            $course = factory::from_id($course);
+        } else {
+            $course_record = $db->get_record('course', ['shortname' => $data['course']], '*', MUST_EXIST);
+            $course = factory::from_record($course_record);
+        }
 
+        /** @var course $course */
         $module = $this->create_instance([
             'course' => $course->id,
             'section' => 0,
@@ -107,7 +114,7 @@ class generator extends mod_generator {
         ]);
 
         if ('singleactivity' === $course->format) {
-            $course_format = course_get_format($course_record);
+            $course_format = course_get_format($course->to_record());
             $course_format->update_course_format_options(['activitytype' => 'contentmarketplace']);
 
             $course->rebuild_cache();

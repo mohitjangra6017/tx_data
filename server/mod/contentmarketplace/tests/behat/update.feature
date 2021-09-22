@@ -1,7 +1,7 @@
 @mod @javascript @mod_contentmarketplace @totara @contentmarketplace_linkedin @totara_contentmarketplace
 Feature: Update content marketplace activity within course
   Background:
-    Given I set up the LinkedIn Learning content marketplace plugin
+    Given I set up the "linkedin" content marketplace plugin
     And the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
       | urn          | title     |
       | urn:course:1 | Hibernate |

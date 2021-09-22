@@ -2,7 +2,7 @@
 Feature: General enrolment workflow mod contentmarketplace
 
   Background:
-    Given I set up the LinkedIn Learning content marketplace plugin
+    Given I set up the "linkedin" content marketplace plugin
     And the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
       | urn          | title     |
       | urn:course:1 | Spring |

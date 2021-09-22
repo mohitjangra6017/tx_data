@@ -17,25 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author  Mark Metcalfe <mark.metcalfe@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
+ * @package contentmarketplace_goone
  */
 
-use contentmarketplace_linkedin\testing\generator;
+defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../../../lib/behat/behat_base.php');
+use contentmarketplace_goone\watcher\restore_task_watcher;
+use totara_core\hook\backup_post_restore_task;
 
-class behat_contentmarketplace_linkedin extends behat_base {
-
-    /**
-     * @Given /^I set up the LinkedIn Learning content marketplace plugin$/
-     */
-    public function set_up_configuration(): void {
-        behat_hooks::set_step_readonly(false);
-
-        $this->execute('behat_totara_contentmarketplace::enable_contentmarketplace_plugin', ['linkedin', 'enabled']);
-
-        generator::instance()->set_up_configuration();
-    }
-
-}
+$watchers = [
+    [
+        'hookname' => backup_post_restore_task::class,
+        'callback' => [restore_task_watcher::class, 'post_scorm_activity_restored'],
+    ],
+];

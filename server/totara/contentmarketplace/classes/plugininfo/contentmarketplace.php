@@ -104,12 +104,12 @@ class contentmarketplace extends base {
         $plugin = core_plugin_manager::instance()->get_plugin_info($component);
         if ($plugin === null) {
             if ($required) {
-                throw new \coding_exception('Unknown content marketplace plugin requested.');
+                throw new \coding_exception("Unknown content marketplace plugin requested: '{$name}'");
             }
             return null;
         }
         if (!$plugin instanceof contentmarketplace) {
-            throw new \coding_exception('Content marketplace plugin is not of the correct type.');
+            throw new \coding_exception("Content marketplace plugin '{$name}' is not of the correct type.");
         }
         return $plugin;
     }
