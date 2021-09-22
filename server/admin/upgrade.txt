@@ -1,5 +1,10 @@
 This files describes API changes in /admin/*.
 
+== 15.0 ===
+
+* Added the 'admin/roles/classes/hook/core_role_potential_assignees_container()' hook to 'core_role_get_potential_user_selector()' function
+  under admin/roles/lib.php
+
 === 14.0 ===
 
 * Added more role ids (managerroleid, learnerroleid, assessorroleid, performanceactivitycreatornewroleid, creatornewroleid, restorernewroleid)

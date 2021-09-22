@@ -37,6 +37,13 @@ defined('MOODLE_INTERNAL') || die();
  * @return user_selector_base an appropriate user selector.
  */
 function core_role_get_potential_user_selector(context $context, $name, $options) {
+	// Hook here allows plugins to return a different user_selector for role assignment.
+    $hook = new \core_role\hook\core_role_potential_assignees_container($context, $name, $options);
+    $hook->execute();
+    $potentialuserselector = $hook->get_potential_user_selector();
+    if ($potentialuserselector) {
+        return $potentialuserselector;
+    }
     $blockinsidecourse = false;
     if ($context->contextlevel == CONTEXT_BLOCK) {
         $parentcontext = $context->get_parent_context();
