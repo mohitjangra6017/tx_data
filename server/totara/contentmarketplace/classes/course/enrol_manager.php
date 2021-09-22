@@ -24,7 +24,6 @@ namespace totara_contentmarketplace\course;
 
 use coding_exception;
 use container_course\course;
-use core\entity\enrol;
 
 class enrol_manager {
     /**
@@ -41,35 +40,6 @@ class enrol_manager {
         require_once("{$CFG->dirroot}/lib/enrollib.php");
 
         $this->course = $course;
-    }
-
-    /**
-     * @param string $enrol_name
-     * @return void
-     */
-    public function enable_enrol(string $enrol_name): void {
-        if (!enrol_is_enabled($enrol_name)) {
-            // The enrolment is not enabled at the system level
-            return;
-        }
-
-        $course_id = $this->course->get_id();
-        $repository = enrol::repository();
-
-        // The process of course cration should create the enrolment method entry by
-        // default. Hence at this point of the code, this function should just mainly
-        // be about enable the the enrol method.
-        $enrol = $repository->find_enrol($enrol_name, $course_id, true);
-
-        $plugin = enrol_get_plugin($enrol_name);
-        $enrol_record = $enrol->to_record();
-
-        // Clone the enrol record, but only update the status. This happens because
-        // the plugin's API might expect different attributes, but not just the status.
-        $update_enrol = clone $enrol_record;
-        $update_enrol->status = ENROL_INSTANCE_ENABLED;
-
-        $plugin->update_instance($enrol_record, $update_enrol);
     }
 
     /**

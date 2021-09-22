@@ -75,15 +75,6 @@ class course_builder {
     private $course_format;
 
     /**
-     * The list of which enrol methods to enabled, by default we are going
-     * to enable the self enrolment, but it is up to the caller to provide
-     * more enrolment methods to be enabled.
-     *
-     * @var string[]
-     */
-    private $enrol_names_enable;
-
-    /**
      * The default section number that we would want to add the course module into.
      * Default to section zero.
      *
@@ -126,14 +117,6 @@ class course_builder {
         $this->category_id = $category_id;
         $this->course_interactor = $interactor;
         $this->course_format = 'singleactivity';
-        $this->enrol_names_enable = ['self'];
-
-        if ($this->learning_object instanceof configuration) {
-            if ($this->learning_object->get_guest_access_config()) {
-                array_push($this->enrol_names_enable, 'guest');
-            }
-        }
-
         $this->default_section_number = 0;
         $this->module_completion_tracking = COMPLETION_TRACKING_AUTOMATIC;
         $this->module_completion_condition = completion_constants::COMPLETION_CONDITION_CONTENT_MARKETPLACE;
@@ -259,40 +242,6 @@ class course_builder {
     }
 
     /**
-     * @param string $enrol_name
-     * @return void
-     */
-    public function disable_enrol(string $enrol_name): void {
-        $this->enrol_names_enable = array_filter(
-            $this->enrol_names_enable,
-            function (string $internal_enrol_name) use ($enrol_name): bool {
-                return $internal_enrol_name !== $enrol_name;
-            }
-        );
-    }
-
-    /**
-     * @param string $enrol_name
-     * @return void
-     */
-    public function enable_enrol(string $enrol_name): void {
-        $enrol_name = strtolower($enrol_name);
-        if (!in_array($enrol_name, $this->enrol_names_enable)) {
-            $this->enrol_names_enable[] = $enrol_name;
-        }
-    }
-
-    /**
-     * @param string[] $enrol_names
-     * @return void
-     */
-    public function enable_enrols(string ...$enrol_names): void {
-        foreach ($enrol_names as $enrol_name) {
-            $this->enable_enrol($enrol_name);
-        }
-    }
-
-    /**
      * Set default section number
      *
      * @param int $section_number
@@ -352,12 +301,6 @@ class course_builder {
         }
 
         $manager = new enrol_manager($course);
-
-        // Enable any enrol method.
-        foreach ($this->enrol_names_enable as $enrol_name) {
-            $manager->enable_enrol($enrol_name);
-        }
-
         $actor_id = $this->course_interactor->get_actor_id();
         $manager->enrol_course_creator($actor_id);
 

@@ -82,14 +82,12 @@ function contentmarketplace_cm_info_view(cm_info $course_module): void {
 function contentmarketplace_supports($feature): ?bool {
     switch ($feature) {
         case FEATURE_BACKUP_MOODLE2:
+        case FEATURE_COMPLETION_HAS_RULES:
+        case FEATURE_MOD_INTRO:
             return true;
 
         case FEATURE_NO_VIEW_LINK:
             return false;
-
-        case FEATURE_COMPLETION_HAS_RULES:
-        case FEATURE_MOD_INTRO:
-            return true;
 
         default:
             // Everything is unknown for now.

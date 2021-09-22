@@ -15,12 +15,6 @@ Feature: General enrolment workflow mod contentmarketplace
       | user_two   | User      | Two      | two@example.com   |
 
     And I log in as "admin"
-    And I navigate to "Plugins > Content Marketplace > LinkedIn Learning settings" in site administration
-    And I should see "Client ID"
-    And I should see "Client secret"
-    And I click on "Guest access" "checkbox"
-    When I click on "Save changes" "button"
-    Then I should see "Changes saved"
     And I navigate to the catalog import page for the the "linkedin" content marketplace
     And I should see "Spring"
     And I toggle the selection of row "1" of the tui select table
@@ -33,7 +27,13 @@ Feature: General enrolment workflow mod contentmarketplace
     Given I am on a totara site
     And I log in as "admin"
     And I am on "Spring" course homepage
-    And I should see "You’re accessing this course as an administrator. You must enrol in the course for your learning to be recorded."
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
+    When I am on "Spring" course homepage
+    Then I should see "You’re accessing this course as an administrator. You must enrol in the course for your learning to be recorded."
     And I should see "Enrol"
     And the "Launch (opens in new window)" "button" should be disabled
     When I click on "Enrol to course Spring" "button"
@@ -44,15 +44,14 @@ Feature: General enrolment workflow mod contentmarketplace
   Scenario: Check enrol button should be configurable by self completion setting
     Given I am on a totara site
     And I log in as "admin"
-    And I am on "Spring" course homepage
+    When I am on "Spring" course homepage
+    Then I should not see "Enrol"
+    And I should see "You’re accessing this course as an administrator."
     And I click on "Administration" "button"
     And I press "Course administration"
     And I press "Users"
     And I click on "Enrolment methods" "link"
-    And I click on "Disable" "link" in the "Self enrolment (Learner)" "table_row"
-    When I am on "Spring" course homepage
-    Then I should not see "Enrol"
-    And I should see "You’re accessing this course as an administrator."
+    And I click on "Enable" "link" in the "Guest access" "table_row"
     And I log out
 
     And I log in as "user_one"
@@ -69,8 +68,7 @@ Feature: General enrolment workflow mod contentmarketplace
 
     And I log in as "guest"
     When I am on "Spring" course homepage
-    Then I should not see "Enrol"
-    And I should see "You are viewing as a ‘Guest’. Your progress will not be recorded."
+    Then I should see "Guests cannot access this course."
     And I log out
 
     # Disabled guest access
@@ -82,13 +80,14 @@ Feature: General enrolment workflow mod contentmarketplace
     And I click on "Enrolment methods" "link"
     And I click on "Edit" "link" in the "Guest access" "table_row"
     And I set the following fields to these values:
-      | Allow guest access | No   |
+      | Allow guest access | Yes |
     And I press "Save changes"
     And I log out
 
     And I log in as "guest"
     When I am on "Spring" course homepage
-    Then I should see "Guests cannot access this course."
+    Then I should not see "Enrol"
+    And I should see "You are viewing as a ‘Guest’. Your progress will not be recorded."
 
   Scenario: Enrolment workflow for a system user
     Given I am on a totara site
@@ -98,6 +97,7 @@ Feature: General enrolment workflow mod contentmarketplace
     And I press "Course administration"
     And I press "Users"
     And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
     And I click on "Edit" "link" in the "Guest access" "table_row"
     And I set the following fields to these values:
       | Allow guest access | Yes   |

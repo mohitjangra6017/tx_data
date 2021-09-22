@@ -58,22 +58,4 @@ if (isset($settings_page)) {
 
     $client_secret_setting->set_updatedcallback([sync_helper::class, "settings_update_callback"]);
     $settings_page->add($client_secret_setting);
-
-    if (enrol_is_enabled('guest')) {
-        $settings_page->add(
-            new admin_setting_heading(
-                'contentmarketplace_linkedin/course_creation',
-                new lang_string('course_creation', 'contentmarketplace_linkedin'),
-                ''
-            )
-        );
-        $settings_page->add(
-            new admin_setting_configcheckbox(
-                'contentmarketplace_linkedin/guest_access',
-                new lang_string('guest_access', 'contentmarketplace_linkedin'),
-                new lang_string('guest_access_help', 'contentmarketplace_linkedin'),
-                '0'
-            )
-        );
-    }
 }

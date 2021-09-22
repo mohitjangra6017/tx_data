@@ -7,7 +7,6 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
       cm_id
       course {
         fullname
-        summary(format: HTML)
         image
         url
         course_format {

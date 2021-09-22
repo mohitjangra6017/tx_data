@@ -29,6 +29,12 @@ Feature: Content marketplace activity completion feature
     When I click on "Create course(s)" "button"
     Then I should see "Course A"
     And I am on "Course A" course homepage
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
+    And I am on "Course A" course homepage
     When I click on "Enrol to course Course A" "button"
     And I wait for the next second
     Then I should see "Not started"
@@ -50,7 +56,12 @@ Feature: Content marketplace activity completion feature
     Then I should see "Course A"
     And I am on "Course A" course homepage
     And I should not see "I have completed this activity"
-    And I should see "Enrol"
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
+    And I am on "Course A" course homepage
     And I click on "Enrol to course Course A" "button"
     And I should not see "I have completed this activity"
     And I click on "Administration" "button"
@@ -82,6 +93,7 @@ Feature: Content marketplace activity completion feature
     And I press "Course administration"
     And I press "Users"
     And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
     And I click on "Enable" "link" in the "Guest access" "table_row"
     And the following "users" exist:
       | username | firstname | lastname | email           |

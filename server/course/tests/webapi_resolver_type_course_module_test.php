@@ -531,20 +531,25 @@ class totara_core_webapi_resolver_type_course_module_testcase extends advanced_t
     }
 
     /**
-     * This is to check that the content marketplace is being fetched correctly.
+     * Make sure that the description returns null rather than throwing an exception if a module doesn't support having an intro.
      * @return void
      */
     public function test_resolve_description_of_module_does_not_support_intro(): void {
         global $USER;
-        $generator = self::getDataGenerator();
-        $course = $generator->create_course();
-
-        $content_marketplace = $generator->create_module("contentmarketplace", ["course" => $course->id]);
         self::setAdminUser();
+
+        $generator = self::getDataGenerator();
+        $course = \container_perform\perform::create((object) [
+            'container_name' => 'Container',
+            'category' => \mod_perform\util::get_default_category_id(),
+        ]);
+
+        /** @var \container_perform\module\perform_module $module */
+        $module = $generator->create_module("perform", ["course" => $course->id]);
 
         // Start resolving description of this content marketplace module.
         $mod_info = get_fast_modinfo($course->id, $USER->id);
-        $cm_info = $mod_info->get_cm($content_marketplace->cmid);
+        $cm_info = $mod_info->get_cm($module->get_id());
 
         self::assertNull(
             $this->resolve("description", $cm_info, ["format" => format::FORMAT_HTML])
