@@ -28,8 +28,8 @@ use core_container\entity\module;
 use core_phpunit\testcase;
 use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\entity\content_marketplace;
-use mod_contentmarketplace\model\content_marketplace as model;
 use mod_contentmarketplace\exception\learning_object_not_found;
+use mod_contentmarketplace\model\content_marketplace as model;
 use mod_contentmarketplace\output\content_marketplace_logo;
 use totara_contentmarketplace\testing\generator as totara_content_marketplace_generator;
 
@@ -335,8 +335,7 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         self::assertFalse(contentmarketplace_supports(FEATURE_NO_VIEW_LINK));
         self::assertFalse(contentmarketplace_supports(FEATURE_MOD_INTRO));
 
-        // This will be changed later on
-        self::assertFalse(contentmarketplace_supports(FEATURE_BACKUP_MOODLE2));
+        self::assertTrue(contentmarketplace_supports(FEATURE_BACKUP_MOODLE2));
         self::assertTrue(contentmarketplace_supports(FEATURE_COMPLETION_HAS_RULES));
 
         self::assertNull(contentmarketplace_supports(FEATURE_COMMENT));

@@ -82,8 +82,7 @@ function contentmarketplace_cm_info_view(cm_info $course_module): void {
 function contentmarketplace_supports($feature): ?bool {
     switch ($feature) {
         case FEATURE_BACKUP_MOODLE2:
-            // Return false for now, but TL-30933 will help to resolve this.
-            return false;
+            return true;
 
         case FEATURE_NO_VIEW_LINK:
         case FEATURE_MOD_INTRO:

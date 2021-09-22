@@ -22,6 +22,7 @@
  */
 namespace totara_contentmarketplace\learning_object\abstraction;
 
+use core\orm\entity\entity;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 
 abstract class resolver {
@@ -33,6 +34,28 @@ abstract class resolver {
     }
 
     /**
+     * Get the entity class that is used.
+     *
+     * @return string|entity
+     */
+    abstract public static function get_entity_class(): string;
+
+    /**
+     * Get the field in the table that is used as a unique identifier for the learning object record outside of Totara.
+     *
+     * @return string
+     */
+    abstract public static function get_external_id_field(): string;
+
+    /**
+     * Load a model instance from an entity instance.
+     *
+     * @param entity $entity
+     * @return model
+     */
+    abstract protected static function load_model_from_entity(entity $entity): model;
+
+    /**
      * Finding the learning object record via id.
      *
      * @param int  $id
@@ -40,7 +63,39 @@ abstract class resolver {
      *
      * @return model|null
      */
-    abstract public function find(int $id, bool $strict = false): ?model;
+    public function find(int $id, bool $strict = false): ?model {
+        $repository = static::get_entity_class()::repository();
+
+        if ($strict) {
+            $entity = $repository->find_or_fail($id);
+        } else {
+            $entity = $repository->find($id);
+
+            if (null === $entity) {
+                return null;
+            }
+        }
+
+        return static::load_model_from_entity($entity);
+    }
+
+    /**
+     * Find the learning object record by the unique identifier for the learning object record that is used outside of Totara.
+     *
+     * @param string $external_id
+     * @param bool $strict
+     * @return model|null
+     */
+    public function find_by_external_identifier(string $external_id, bool $strict = false): ?model {
+        $repository = static::get_entity_class()::repository();
+
+        $entity = $repository->where(static::get_external_id_field(), $external_id)->one($strict);
+        if (!$entity) {
+            return null;
+        }
+
+        return static::load_model_from_entity($entity);
+    }
 
     /**
      * @return string
@@ -76,7 +131,4 @@ abstract class resolver {
         return false;
     }
 
-    // This is where the rest of getter methods should be:
-    // + get_backup_plan
-    // + get_restore_plan
 }

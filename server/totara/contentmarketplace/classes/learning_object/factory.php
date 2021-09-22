@@ -89,4 +89,14 @@ class factory {
 
         return isset($sub_plugins[$plugin_name]);
     }
+
+    /**
+     * Get the list of content marketplace plugins and their respective resolver classes.
+     *
+     * @return resolver[]|string[] Resolver class names
+     */
+    public static function get_marketplace_plugin_resolvers(): array {
+        return core_component::get_namespace_classes('learning_object', resolver::class);
+    }
+
 }

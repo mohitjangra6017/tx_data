@@ -22,32 +22,35 @@
  */
 namespace contentmarketplace_linkedin\learning_object;
 
-use contentmarketplace_linkedin\entity\learning_object as entity;
+use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\entity\user_completion;
 use contentmarketplace_linkedin\model\learning_object;
+use core\orm\entity\entity as core_entity;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 use totara_contentmarketplace\learning_object\abstraction\resolver as base;
 
 class resolver extends base {
+
     /**
-     * @param int  $id
-     * @param bool $strict
-     * @return learning_object|null
+     * @return string|learning_object_entity
      */
-    public function find(int $id, bool $strict = false): ?model {
-        $repository = entity::repository();
+    public static function get_entity_class(): string {
+        return learning_object_entity::class;
+    }
 
-        if ($strict) {
-            $entity = $repository->find_or_fail($id);
-        } else {
-            $entity = $repository->find($id);
+    /**
+     * @return string
+     */
+    public static function get_external_id_field(): string {
+        return 'urn';
+    }
 
-            if (null === $entity) {
-                return null;
-            }
-        }
-
-        return new learning_object($entity);
+    /**
+     * @param core_entity $entity
+     * @return model
+     */
+    protected static function load_model_from_entity(core_entity $entity): model {
+        return learning_object::load_by_entity($entity);
     }
 
     /**
@@ -61,7 +64,7 @@ class resolver extends base {
      * @return bool
      */
     public function has_user_completed_on_launch(int $user_id, int $learning_object_id): bool {
-        $learning_object = new entity($learning_object_id);
+        $learning_object = new learning_object_entity($learning_object_id);
         $repository = user_completion::repository();
 
         $completion = $repository->find_for_user_with_urn($user_id, $learning_object->urn);
@@ -79,7 +82,7 @@ class resolver extends base {
      * @return bool
      */
     public function has_user_completed_on_marketplace_condition(int $user_id, int $learning_object_id): bool {
-        $learning_object = new entity($learning_object_id);
+        $learning_object = new learning_object_entity($learning_object_id);
         $repository = user_completion::repository();
 
         $completion = $repository->find_for_user_with_urn($user_id, $learning_object->urn);
