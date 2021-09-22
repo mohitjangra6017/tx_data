@@ -53,6 +53,7 @@ type mod_contentmarketplace_content_marketplace {
   cm_id: core_id!
   course: core_course!
   name(format: core_format = PLAIN): String!
+  intro(format: core_format = HTML): String
   """
   NULL means that this content marketplace activity does not have a completion condition.
   """

@@ -25,7 +25,6 @@ Feature: Update content marketplace activity within course
     And I click on "Edit settings" "link"
     Then I should see "Updating: External content marketplace"
     And the field "Name" matches value "Hibernate"
-    And the "Name" "field" should be disabled
     And I follow "Common module settings"
     Then I should see "ID number"
     And the field "ID number" matches value ""

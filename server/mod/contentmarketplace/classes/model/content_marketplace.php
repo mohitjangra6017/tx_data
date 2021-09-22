@@ -31,6 +31,7 @@ use core_container\entity\module;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
 use moodle_url;
 use stdClass;
+use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object;
 use totara_contentmarketplace\learning_object\factory;
 use coding_exception;
@@ -55,6 +56,9 @@ use completion_info;
  * @property-read bool            $self_enrol_enabled
  * @property-read bool            $guest_enrol_enabled
  * @property-read array           $self_enrol_enabled_with_required_key
+ * @property-read string|null     $intro
+ * @property-read int             $introformat
+ *
  */
 class content_marketplace extends model {
     /**
@@ -88,6 +92,8 @@ class content_marketplace extends model {
         'learning_object_id',
         'time_modified',
         'completion_condition',
+        'intro',
+        'introformat'
     ];
 
     /**
@@ -133,6 +139,14 @@ class content_marketplace extends model {
         $entity->learning_object_marketplace_component = $learning_object::get_marketplace_component();
         $entity->name = $learning_object->get_name();
         $entity->completion_condition = $completion_condition;
+
+        if ($learning_object instanceof detailed_model) {
+            $description = $learning_object->get_description();
+            if (!is_null($description)) {
+                $entity->intro = $description->get_raw_value();
+                $entity->introformat = $description->get_format();
+            }
+        }
 
         $entity->save();
 

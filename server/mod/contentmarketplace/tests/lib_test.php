@@ -198,12 +198,12 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         global $CFG;
         require_once("{$CFG->dirroot}/lib/completionlib.php");
 
+        self::setAdminUser();
         $generator = self::getDataGenerator();
         $course = $generator->create_course(['enablecompletion' => COMPLETION_ENABLED]);
 
         $module_record = $generator->create_module('contentmarketplace', ['course' => $course->id]);
         $module = course_module::from_id($module_record->cmid);
-
 
         $db = builder::get_db();
         self::assertNull(
@@ -221,6 +221,13 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         $update_data->completion = COMPLETION_TRACKING_AUTOMATIC;
         $update_data->completion_condition = condition::LAUNCH;
         $update_data->completionunlocked = 1;
+        $update_data->visible = 1;
+        file_prepare_draft_area($draftid_editor, null, null, null, null);
+        $update_data->introeditor = [
+            'text' => 'This is a module',
+            'format' => FORMAT_HTML,
+            'itemid' => $draftid_editor
+        ];
 
         $module->update($update_data);
         self::assertEquals(
@@ -241,12 +248,12 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         global $CFG;
         require_once("{$CFG->dirroot}/lib/completionlib.php");
 
+        self::setAdminUser();
         $generator = self::getDataGenerator();
         $course = $generator->create_course(['enablecompletion' => COMPLETION_ENABLED]);
 
         $module_record = $generator->create_module('contentmarketplace', ['course' => $course->id]);
         $module = course_module::from_id($module_record->cmid);
-
 
         $db = builder::get_db();
         self::assertNull(
@@ -264,6 +271,13 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         $update_data->completion = COMPLETION_TRACKING_AUTOMATIC;
         $update_data->completion_condition = condition::LAUNCH;
         $update_data->completionunlocked = 1;
+        $update_data->visible = 1;
+        file_prepare_draft_area($draftid_editor, null, null, null, null);
+        $update_data->introeditor = [
+            'text' => 'This is a module',
+            'format' => FORMAT_HTML,
+            'itemid' => $draftid_editor
+        ];
 
         $module->update($update_data);
         self::assertEquals(
@@ -281,6 +295,13 @@ class mod_contentmarketplace_lib_testcase extends testcase {
         $new_update_data->completion = COMPLETION_TRACKING_NONE;
         $new_update_data->completion_condition = condition::CONTENT_MARKETPLACE;
         $new_update_data->completionunlocked = 1;
+        $new_update_data->visible = 1;
+        file_prepare_draft_area($draftid_editor, null, null, null, null);
+        $new_update_data->introeditor = [
+            'text' => 'This is a module',
+            'format' => FORMAT_HTML,
+            'itemid' => $draftid_editor
+        ];
 
         $module->update($new_update_data);
         self::assertNull(
@@ -333,7 +354,7 @@ class mod_contentmarketplace_lib_testcase extends testcase {
      */
     public function test_check_supports_flag(): void {
         self::assertFalse(contentmarketplace_supports(FEATURE_NO_VIEW_LINK));
-        self::assertFalse(contentmarketplace_supports(FEATURE_MOD_INTRO));
+        self::assertTrue(contentmarketplace_supports(FEATURE_MOD_INTRO));
 
         self::assertTrue(contentmarketplace_supports(FEATURE_BACKUP_MOODLE2));
         self::assertTrue(contentmarketplace_supports(FEATURE_COMPLETION_HAS_RULES));

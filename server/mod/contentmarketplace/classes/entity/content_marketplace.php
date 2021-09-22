@@ -39,6 +39,8 @@ use mod_contentmarketplace\repository\content_marketplace_repository;
  * @property int    $learning_object_id
  * @property int    $time_modified
  * @property int    $completion_condition
+ * @property string $intro
+ * @property int    $introformat
  *
  * @property-read course $course_entity
  * @property-read module $course_module

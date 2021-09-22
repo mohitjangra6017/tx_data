@@ -38,17 +38,19 @@ class mod_contentmarketplace_mod_form extends moodleform_mod {
         $moodle_form->addElement('header', 'general', get_string('general', 'form'));
 
         $current_data = $this->get_current();
+
         // Default to maximum length.
         $name_length = 200;
-
         if (null !== $current_data && $current_data->name) {
             $name_length = strlen($current_data->name);
         }
 
-        // Disable input name.
-        $moodle_form->addElement('text', 'name', get_string('name'), ['disabled' => true, 'size' => $name_length]);
+        $moodle_form->addElement('text', 'name', get_string('name'), ['size' => $name_length]);
         $moodle_form->setType('name', PARAM_TEXT);
+        $moodle_form->addRule('name', null, 'required', null, 'client');
+        $moodle_form->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
+        $this->standard_intro_elements();
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }

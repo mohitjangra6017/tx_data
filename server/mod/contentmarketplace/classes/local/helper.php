@@ -69,18 +69,30 @@ class helper {
 
     /**
      * @param int      $content_marketplace_id
-     * @param int|null $completion_condition    One of the condition constants from {@see condition}, or null to
-     *                                          unset the condition.
+     * @param array    $data
+     *
+     * Given an array like:
+     * $data = [
+     *      'name' => 'content_marketplace name',
+     *      'intro' => 'content_marketplace intro',
+     *      'introformat' => 1,
+     *      'completion_condition' => 1       One of the condition constants from {@see condition}, or null to
+     *                                        unset the condition.
+     * ]
      *
      * @return void
      */
-    public static function update_content_marketplace(int $content_marketplace_id, ?int $completion_condition): void {
+    public static function update_content_marketplace(int $content_marketplace_id, array $data): void {
+        $completion_condition = $data['completion_condition'];
         if (!empty($completion_condition)) {
             condition::validate($completion_condition);
         }
 
         $entity = new content_marketplace_entity($content_marketplace_id);
         $entity->completion_condition = $completion_condition;
+        $entity->intro = $data['intro'];
+        $entity->name = $data['name'];
+        $entity->introformat = $data['introformat'];
 
         $entity->save();
     }

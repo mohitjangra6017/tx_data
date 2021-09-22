@@ -85,10 +85,10 @@ function contentmarketplace_supports($feature): ?bool {
             return true;
 
         case FEATURE_NO_VIEW_LINK:
-        case FEATURE_MOD_INTRO:
             return false;
 
         case FEATURE_COMPLETION_HAS_RULES:
+        case FEATURE_MOD_INTRO:
             return true;
 
         default:
@@ -125,8 +125,15 @@ function contentmarketplace_update_instance(stdClass $content_marketplace, $mood
         $completion_condition = $content_marketplace->completion_condition;
     }
 
+    $data = [
+        'name' => $content_marketplace->name,
+        'intro' => $content_marketplace->intro,
+        'introformat' => $content_marketplace->introformat,
+        'completion_condition' => $completion_condition
+    ];
+
     // If the record does not exist, entity API will yield error. So no need to check the validity of record.
-    helper::update_content_marketplace($content_marketplace->instance, $completion_condition);
+    helper::update_content_marketplace($content_marketplace->instance, $data);
     return true;
 }
 

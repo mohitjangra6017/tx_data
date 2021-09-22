@@ -120,6 +120,6 @@ class mod_contentmarketplace_local_helper_testcase extends testcase {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The completion condition is invalid");
 
-        helper::update_content_marketplace($model->id, 42);
+        helper::update_content_marketplace($model->id, ['completion_condition' => 42]);
     }
 }

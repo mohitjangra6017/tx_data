@@ -296,10 +296,10 @@ export default {
             name: module.course.fullname,
             url: has_course_view_page ? module.course.url : null,
           },
-          description: module.course.summary,
+          description: module.intro,
           image: module.course.image,
           levelString: learning_object.level,
-          name: module.course.fullname,
+          name: module.name,
           // Default to completion not started
           status: this.$str(
             'activity_status_not_started',
