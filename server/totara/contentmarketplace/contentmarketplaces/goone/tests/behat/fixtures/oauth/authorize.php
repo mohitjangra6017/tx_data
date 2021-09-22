@@ -45,7 +45,7 @@ if ($authorize) {
 
     $PAGE->set_url(new moodle_url('/totara/contentmarketplace/contentmarketplaces/goone/tests/behat/fixtures/oauth/authorize.php'));
     $PAGE->set_context($context);
-    echo $OUTPUT->heading('Allow Totara to access GO1');
+    echo $OUTPUT->heading('Allow Totara to access Go1');
 
     $state = json_decode(base64_decode($state));
     $table = new html_table();

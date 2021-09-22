@@ -22,11 +22,9 @@
  */
 namespace totara_contentmarketplace\totara_catalog\dataformatter;
 
-use coding_exception;
 use context;
-use core_component;
-use totara_catalog\dataformatter\formatter;
 use stdClass;
+use totara_catalog\dataformatter\formatter;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 
 /**
@@ -66,33 +64,11 @@ class course_logo extends formatter {
             return null;
         }
 
-        [$plugin_type, $plugin_name] = core_component::normalize_component($marketplace_component);
-
-        // If it's not contentmarketplace'subplugin, we just return null.
-        if ($plugin_type !== 'contentmarketplace') {
-            return null;
-        }
-
-        $plugin_info = (contentmarketplace::plugin($plugin_name))->contentmarketplace();
-
-        $image = new stdClass();
-        $image->url = $plugin_info->get_mini_logo_url();
-        $image->alt = $this->get_image_alt($marketplace_component);
-
-        return $image;
+        $marketplace = (contentmarketplace::plugin($marketplace_component))->contentmarketplace();
+        return (object) [
+            'url' => $marketplace->get_logo_url()->out(false),
+            'alt' => $marketplace->get_logo_alt_text(),
+        ];
     }
 
-    /**
-     * @param string $sub_plugin
-     * @return string
-     */
-    private function get_image_alt(string $sub_plugin): string {
-        if (get_string_manager()->string_exists('logo_alt', $sub_plugin)) {
-            // Using the string from the actual content marketplace plugin.
-            return get_string('logo_alt', $sub_plugin);
-        }
-
-        // Fallback to the string provided by totara_contentmarketplace.
-        return  get_string('logo_alt', 'totara_contentmarketplace');
-    }
 }

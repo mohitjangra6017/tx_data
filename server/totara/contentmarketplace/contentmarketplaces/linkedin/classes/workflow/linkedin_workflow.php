@@ -24,34 +24,26 @@ namespace contentmarketplace_linkedin\workflow;
 
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use context_coursecat;
-use totara_contentmarketplace\local;
-use totara_contentmarketplace\plugininfo\contentmarketplace;
+use totara_contentmarketplace\workflow\marketplace_workflow;
 
-final class workflow_access_manager {
+abstract class linkedin_workflow extends marketplace_workflow {
+
     /**
-     * Constructor is private: this is a static class
+     * @return bool
      */
-    private function __construct() {
-    }
-
-    public static function can_access(array $data): bool {
-        if (!local::is_enabled()) {
+    public function can_access(): bool {
+        if (!parent::can_access()) {
             return false;
         }
 
-        $plugin = contentmarketplace::plugin('linkedin');
-        if ($plugin === null || !$plugin->is_enabled()) {
-            return false;
-        }
+        $params = $this->manager->get_params();
 
-        $category = isset($data['category']) ? $data['category']:null;
         $interactor = new catalog_import_interactor();
-
-        if (empty($category)) {
+        if (empty($params['category'])) {
             return $interactor->can_add_course();
         }
 
-        return $interactor->can_add_course_to_category(context_coursecat::instance($category));
+        return $interactor->can_add_course_to_category(context_coursecat::instance($params['category']));
     }
 
 }

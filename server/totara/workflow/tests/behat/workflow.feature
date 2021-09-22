@@ -10,7 +10,7 @@ Feature: Visit a workflow and experience the different possible behaviours
     And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
     And I click on "Set up" "link" in the ".contentmarketplace_goone" "css_element"
     And I switch to "setup" window
-    And I should see "Allow Totara to access GO1"
+    And I should see "Allow Totara to access Go1"
     And the following should exist in the "state" table:
       | full_name       | Admin User         |
       | email           | moodle@example.com |
@@ -21,8 +21,8 @@ Feature: Visit a workflow and experience the different possible behaviours
     And I should see "testing.mygo1.com"
     When I click on "Continue" "button"
     Then I should see "All content (82,137)"
-    When I click on "Save and explore GO1" "button"
-    Then I should see "Explore Content Marketplace: GO1"
+    When I click on "Save and explore Go1" "button"
+    Then I should see "Explore Content Marketplace: Go1"
     And I should see "82,137 results"
     When I am on site homepage
     And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
@@ -35,8 +35,8 @@ Feature: Visit a workflow and experience the different possible behaviours
     Then I should see "Add a new course"
     And I should see "Create a multi-activity course"
     And I should see image with alt text "Create a multi-activity course"
-    And I should see "Add courses from the GO1 content marketplace"
-    And I should see image with alt text "Add courses from the GO1 content marketplace"
+    And I should see "Add courses from the Go1 content marketplace"
+    And I should see image with alt text "Add courses from the Go1 content marketplace"
     When I click on "Create a multi-activity course" "link"
     Then I should see "Add a new course"
     And I should see "Course full name"
@@ -46,11 +46,11 @@ Feature: Visit a workflow and experience the different possible behaviours
   Scenario: Pass through a workflow with multiple available options but only one enabled
     Given I am on a totara site
     And I navigate to "Manage workflows" node in "Site administration > Navigation"
-    And I click on "Disable" "link" in the "Add courses from the GO1 content marketplace" "table_row"
+    And I click on "Disable" "link" in the "Add courses from the Go1 content marketplace" "table_row"
     And I click on "Courses" in the totara menu
     And I click on "Create Course" "button"
     Then I should not see "Create a multi-activity course"
-    And I should not see "Add courses from the GO1 content marketplace"
+    And I should not see "Add courses from the Go1 content marketplace"
     And I should see "Add a new course"
     And I should see "Course full name"
     And I should see "Courses and categories"
@@ -59,7 +59,7 @@ Feature: Visit a workflow and experience the different possible behaviours
   Scenario: Attempt to use a workflow when none of the available options are enabled
     Given I am on a totara site
     And I navigate to "Manage workflows" node in "Site administration > Navigation"
-    And I click on "Disable" "link" in the "Add courses from the GO1 content marketplace" "table_row"
+    And I click on "Disable" "link" in the "Add courses from the Go1 content marketplace" "table_row"
     And I click on "Disable" "link" in the "Create a multi-activity course" "table_row"
     And I click on "Courses" in the totara menu
     Then "//input[@value='Create Course' and @type='submit']" "xpath_element" should not exist

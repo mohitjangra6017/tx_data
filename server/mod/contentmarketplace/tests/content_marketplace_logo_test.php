@@ -20,9 +20,11 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
+
 use core_phpunit\testcase;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\output\content_marketplace_logo;
+use totara_contentmarketplace\plugininfo\contentmarketplace;
 
 /**
  * @group totara_contentmarketplace
@@ -38,14 +40,15 @@ class mod_contentmarketplace_content_marketplace_logo_testcase extends testcase 
 
         $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
         $content_marketplace = content_marketplace::from_course_module_id($cm->cmid);
-        $learning_object = $content_marketplace->get_learning_object();
+        $plugin_info = (contentmarketplace::plugin($content_marketplace->learning_object_marketplace_component))
+            ->contentmarketplace();
 
         $template = content_marketplace_logo::create_from_model($content_marketplace);
         $expected = sprintf(
-            /** @lang text */'<img class="%s" alt="%s" src="%s" />',
+            /** @lang text */'<img class="%s" src="%s" alt="%s"/>',
             'tw-mod-contentmarketplace__logo',
-            get_string('marketplace_logo', 'mod_contentmarketplace'),
-            $learning_object::get_marketplace_image_url()
+            $plugin_info->get_logo_url()->out(false),
+            s($plugin_info->get_logo_alt_text()),
         );
 
         // Remove space to make the assertion easier.

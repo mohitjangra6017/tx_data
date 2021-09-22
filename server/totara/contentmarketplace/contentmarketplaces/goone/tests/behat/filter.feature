@@ -17,8 +17,8 @@ Feature: Search for content in the Go1 content marketplace
     And I click on "Authorize Totara" "button"
     And I switch to the main window
     And I click on "Continue" "button"
-    And I click on "Save and explore GO1" "button"
-    And I should see "Explore Content Marketplace: GO1"
+    And I click on "Save and explore Go1" "button"
+    And I should see "Explore Content Marketplace: Go1"
     And I should see "82,137 results"
     And "All 82,137" "radio" in the "Availability" "fieldset" should be visible
     And "Subscription 319" "radio" in the "Availability" "fieldset" should be visible

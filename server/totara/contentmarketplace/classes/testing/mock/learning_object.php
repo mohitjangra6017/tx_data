@@ -131,11 +131,4 @@ class learning_object implements model {
     public function get_image_url(): ?string {
         return $this->image_url;
     }
-
-    /**
-     * @return string
-     */
-    public static function get_marketplace_image_url(): string {
-        return 'https://example.com';
-    }
 }

@@ -120,25 +120,20 @@ abstract class contentmarketplace {
      abstract public function course_create_page();
 
     /**
-     * Returns a HTML snippet with the content marketplace logo image, or empty string
-     * if logo isn't found.
+     * Returns a HTML snippet with the content marketplace logo image.
      *
      * @param integer $width Width of the image (100px by default)
-     * @return string Logo HTML, or empty string if no logo found.
+     * @return string Logo HTML
      */
     public function get_logo_html($width = 100) {
-        global $PAGE;
-
-        $logo = $this->get_plugin_directory() . '/pix/logo.png';
-        if (file_exists($logo)) {
-            // No need to screen variables here; html_writer takes care of it.
-            return html_writer::img(
-                $PAGE->theme->image_url('logo', $this->get_plugin_name()),
-                $this->fullname,
-                array('width' => $width, 'title' => $this->fullname)
-            );
-        }
-        return '';
+        return html_writer::img(
+            $this->get_padded_logo_url()->out(false),
+            $this->get_logo_alt_text(),
+            [
+                'title' => $this->fullname,
+                'width' => $width,
+            ]
+        );
     }
 
     /**
@@ -208,19 +203,36 @@ abstract class contentmarketplace {
     }
 
     /**
-     * By default this function will return null which means that the content marketplace does not have
-     * a logo yet. Override the function to returns the logo url at child plugin info.
+     * Get the logo for this content marketplace.
      *
-     * @return string|null
+     * @return moodle_url
      */
-    public function get_mini_logo_url(): ?string {
-        global $PAGE;
-        $logo = $this->get_plugin_directory() . '/pix/logo.png';
-
-        if (!file_exists($logo)) {
-            return null;
-        }
-
-        return $PAGE->theme->image_url('logo', $this->get_plugin_name())->out();
+    public function get_logo_url(): moodle_url {
+        global $OUTPUT;
+        return $OUTPUT->image_url('logo', $this->get_plugin_name());
     }
+
+    /**
+     * Get the logo for this marketplace, in a square ratio with padding.
+     *
+     * @return moodle_url
+     */
+    public function get_padded_logo_url(): moodle_url {
+        global $OUTPUT;
+        return $OUTPUT->image_url('logo_padded', $this->get_plugin_name());
+    }
+
+    /**
+     * Get the alt text to use for when displaying the logo.
+     *
+     * @return string
+     */
+    public function get_logo_alt_text(): string {
+        return get_string(
+            'logo_alt',
+            'totara_contentmarketplace',
+            get_string('pluginname', $this->get_plugin_name())
+        );
+    }
+
 }

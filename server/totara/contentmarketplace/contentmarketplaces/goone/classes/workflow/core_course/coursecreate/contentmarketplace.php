@@ -23,9 +23,10 @@
 
 namespace contentmarketplace_goone\workflow\core_course\coursecreate;
 
-defined('MOODLE_INTERNAL') || die();
+use totara_contentmarketplace\explorer;
+use totara_contentmarketplace\workflow\marketplace_workflow;
 
-class contentmarketplace extends \totara_workflow\workflow\base {
+class contentmarketplace extends marketplace_workflow {
 
     public function get_name(): string {
         return get_string('addcoursego1', 'contentmarketplace_goone');
@@ -37,7 +38,7 @@ class contentmarketplace extends \totara_workflow\workflow\base {
 
     public function can_access(): bool {
         // Content marketplaces are enabled.
-        if (!\totara_contentmarketplace\local::is_enabled()) {
+        if (!parent::can_access()) {
             return false;
         }
 
@@ -45,28 +46,13 @@ class contentmarketplace extends \totara_workflow\workflow\base {
         $params = $this->manager->get_params();
         $category = $params['category'] ?? get_config('core', 'defaultrequestcategory');
         $context = empty($category) ? \context_system::instance() : \context_coursecat::instance($category);
-        if (!has_capability('totara/contentmarketplace:add', $context)) {
-            return false;
-        }
-
-        // Go1 marketplace plugin enabled.
-        /** @var \totara_contentmarketplace\plugininfo\contentmarketplace $plugin */
-        $plugin = \core_plugin_manager::instance()->get_plugin_info("contentmarketplace_goone");
-        if ($plugin === null || !$plugin->is_enabled()) {
-            return false;
-        }
-
-        return true;
+        return has_capability('totara/contentmarketplace:add', $context);
     }
 
     public function get_workflow_url(): \moodle_url {
-        return new \moodle_url('/totara/contentmarketplace/explorer.php', [
-            'marketplace' => 'goone',
-            'mode' => \totara_contentmarketplace\explorer::MODE_CREATE_COURSE,
-        ]);
+        $url = parent::get_workflow_url();
+        $url->param('mode', explorer::MODE_CREATE_COURSE);
+        return $url;
     }
 
-    public function get_image(): \moodle_url {
-        return new \moodle_url('/totara/contentmarketplace/contentmarketplaces/goone/pix/logo.png');
-    }
 }

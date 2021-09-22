@@ -22,12 +22,9 @@
  */
 namespace contentmarketplace_linkedin\workflow\core_course\coursecreate;
 
-use contentmarketplace_linkedin\workflow\workflow_access_manager;
-use totara_contentmarketplace\explorer;
-use totara_workflow\workflow\base;
-use moodle_url;
+use contentmarketplace_linkedin\workflow\linkedin_workflow;
 
-class contentmarketplace extends base {
+class contentmarketplace extends linkedin_workflow {
     /**
      * @inheritDoc
      */
@@ -42,27 +39,4 @@ class contentmarketplace extends base {
         return get_string('add_linkedin_courses_description', 'contentmarketplace_linkedin');
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function get_workflow_url(): moodle_url {
-        return new moodle_url('/totara/contentmarketplace/explorer.php', [
-            'marketplace' => 'linkedin',
-            'mode' => explorer::MODE_CREATE_COURSE,
-        ]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_image(): moodle_url {
-        return new moodle_url('/totara/contentmarketplace/contentmarketplaces/linkedin/pix/logo.png');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function can_access(): bool {
-        return workflow_access_manager::can_access($this->manager->get_params());
-    }
 }

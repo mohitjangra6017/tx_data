@@ -95,7 +95,12 @@ class contentmarketplace extends base {
      * @return contentmarketplace|null
      */
     public static function plugin($name, $required = true) {
-        $plugin = core_plugin_manager::instance()->get_plugin_info("contentmarketplace_{$name}");
+        $component = $name;
+        if (strpos($name, 'contentmarketplace_', 0) === false) {
+            $component = 'contentmarketplace_' . $component;
+        }
+
+        $plugin = core_plugin_manager::instance()->get_plugin_info($component);
         if ($plugin === null) {
             if ($required) {
                 throw new \coding_exception('Unknown content marketplace plugin requested.');

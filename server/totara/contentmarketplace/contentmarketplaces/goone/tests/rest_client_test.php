@@ -76,7 +76,7 @@ class contentmarketplace_goone_rest_client_testcase extends basic_testcase {
         $curl->errno = CURLE_OK;
 
         $this->expectException(invalid_token_exception::class);
-        $this->expectExceptionMessage("There is an authentication problem when connecting to the GO1 servers. The GO1 content marketplace will need to be set up again. (Received 401 response when calling GO1 API (Called URL https://api.host/endpoint/function))");
+        $this->expectExceptionMessage("There is an authentication problem when connecting to the Go1 servers. The Go1 content marketplace will need to be set up again. (Received 401 response when calling GO1 API (Called URL https://api.host/endpoint/function))");
         $client = new rest_client("https://api.host/endpoint", $curl);
         $client->get("function");
     }

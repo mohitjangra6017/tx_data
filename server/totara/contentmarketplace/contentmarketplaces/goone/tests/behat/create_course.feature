@@ -17,7 +17,7 @@ Feature: Create a course from the Go1 content marketplace
     And I click on "Authorize Totara" "button"
     And I switch to the main window
     And I click on "Continue" "button"
-    And I click on "Save and explore GO1" "button"
+    And I click on "Save and explore Go1" "button"
 
   Scenario: Single Multiactivity go1 course can be created
     When I click on "[for='selection-1868492']" "css_element"
@@ -72,7 +72,7 @@ Feature: Create a course from the Go1 content marketplace
     And I should not see "Basic First Aid"
 
     When I set the following Totara form fields to these values:
-      | Course full name  | GO1 test course |
+      | Course full name  | Go1 test course |
       | Course short name | g1tc            |
     And I click on "Create and view course" "button"
     Then I should see "g1tc" in the ".breadcrumb" "css_element"

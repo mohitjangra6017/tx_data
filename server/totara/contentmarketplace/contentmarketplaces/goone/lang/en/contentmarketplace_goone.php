@@ -25,22 +25,22 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['account'] = 'Account';
 $string['addcourse'] = 'Add a new course';
-$string['addcoursego1'] = 'Add courses from the GO1 content marketplace';
-$string['addcoursego1_description'] = 'Create single or multi-activity courses based on what is available in the GO1 content marketplace.';
+$string['addcoursego1'] = 'Add courses from the Go1 content marketplace';
+$string['addcoursego1_description'] = 'Create single or multi-activity courses based on what is available in the Go1 content marketplace.';
 $string['all_content'] = 'All content ({$a})';
 $string['annualcost'] = 'Annual subscription cost';
 $string['availability-filter:all'] = 'All';
 $string['availability-filter:collection'] = 'Custom collection';
 $string['availability-filter:subscription'] = 'Subscription';
-$string['cachedef_goonewslearningobject'] = 'GO1 learning object';
-$string['cachedef_goonewslearningobjectbulk'] = 'GO1 bulk learning objects';
-$string['cachedef_goonewscount'] = 'Count of GO1 items';
+$string['cachedef_goonewslearningobject'] = 'Go1 learning object';
+$string['cachedef_goonewslearningobjectbulk'] = 'Go1 bulk learning objects';
+$string['cachedef_goonewscount'] = 'Count of Go1 items';
 $string['collection_content'] = 'Custom collection ({$a})';
 $string['collections'] = 'Collections';
 $string['content_creators'] = 'Content creators';
 $string['content_creators_help'] = 'Content creators are anyone with permissions to create courses';
 $string['content_settings'] = 'Content settings';
-$string['content_settings_description'] = 'When exploring Content Marketplace, which GO1 content should these users be able to access?';
+$string['content_settings_description'] = 'When exploring Content Marketplace, which Go1 content should these users be able to access?';
 $string['continue'] = 'Continue';
 $string['course_creation'] = 'Course creation';
 $string['course_creation_help'] = 'Include all content in a single course, or create a new course for each content item?';
@@ -52,17 +52,17 @@ $string['duration'] = '{$a} minutes';
 $string['enabledby'] = 'Enabled by';
 $string['enabledbyunknown'] = 'Unknown';
 $string['enableddate'] = 'Enabled date';
-$string['error:invalid_token'] = 'There is an authentication problem when connecting to the GO1 servers. The GO1 content marketplace will need to be set up again.';
-$string['error:rest_client_timeout'] = 'Communication with GO1 server timed out. Please try again in a moment.';
-$string['error:unavailable_learning_object'] = 'Attempted to use unavailable learning object. Please return to the GO1 content marketplace.';
-$string['explorego1marketplace'] = 'GO1 Content Marketplace';
-$string['explorego1marketplacedesc'] = 'Explore content from the GO1 marketplace';
+$string['error:invalid_token'] = 'There is an authentication problem when connecting to the Go1 servers. The Go1 content marketplace will need to be set up again.';
+$string['error:rest_client_timeout'] = 'Communication with Go1 server timed out. Please try again in a moment.';
+$string['error:unavailable_learning_object'] = 'Attempted to use unavailable learning object. Please return to the Go1 content marketplace.';
+$string['explorego1marketplace'] = 'Go1 Content Marketplace';
+$string['explorego1marketplacedesc'] = 'Explore content from the Go1 marketplace';
 $string['filter:availability'] = 'Availability';
 $string['filter:language'] = 'Languages';
 $string['filter:provider'] = 'Providers';
 $string['filter:tags'] = 'Tags';
-$string['go1planname'] = 'GO1 {$a}';
-$string['go1plantype'] = 'GO1 {$a}';
+$string['go1planname'] = 'Go1 {$a}';
+$string['go1plantype'] = 'Go1 {$a}';
 $string['langwithcode'] = '{$a->lang} ({$a->country})';
 $string['learners'] = 'Learners';
 $string['managesubscription'] = 'Manage subscription';
@@ -76,7 +76,7 @@ $string['pay_per_seat:admin'] = 'Request sent to admin';
 $string['pay_per_seat:learner'] = 'Learner pays';
 $string['pay_per_seat_help'] = 'When a course is not included in your subscription, how should learners access the course?';
 $string['plugin_description_html'] = 'Compliance and professional development made easy. Access over 100K courses. <a href="https://www.go1.com/totara-partners" target="_blank">Find out more</a>';
-$string['pluginname'] = 'GO1';
+$string['pluginname'] = 'Go1';
 $string['portalurl'] = 'Portal URL';
 $string['price:free'] = 'Free';
 $string['price:included'] = 'Included';
@@ -90,11 +90,11 @@ $string['region:OTHER'] = 'Rest of the world';
 $string['region:UK'] = 'United Kingdom';
 $string['region:US'] = 'United States of America';
 $string['renewaldate'] = 'Renewal date';
-$string['saveandexplorego1'] = 'Save and explore GO1';
+$string['saveandexplorego1'] = 'Save and explore Go1';
 $string['search:placeholder'] = 'Search course title, provider, or keyword';
 $string['selectcontent'] = 'Select {$a}';
 $string['settings_saved'] = 'Settings have been saved.';
-$string['setup_page_header'] = 'Set up GO1 integration';
+$string['setup_page_header'] = 'Set up Go1 integration';
 $string['sort:created:desc'] = 'Latest';
 $string['sort:popularity'] = 'Popular';
 $string['sort:price'] = 'Price (low to high)';
@@ -105,14 +105,14 @@ $string['specific_collection'] = 'Specific collection';
 $string['subscribed_content'] = 'Subscribed content ({$a})';
 $string['subscription_details'] = 'Subscription details';
 $string['unknownlanguage'] = 'Unknown';
-$string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the GO1 Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
-<p>Users who have previously already started GO1 activities will continue to have access to that content, but they will not be able to start new GO1 activities.</p>
+$string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the Go1 Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
+<p>Users who have previously already started Go1 activities will continue to have access to that content, but they will not be able to start new Go1 activities.</p>
 <p>Are you sure you wish to proceed?</p>';
-$string['warningdisablemarketplace:title'] = 'Disable GO1 content';
-$string['warningenablemarketplace:body:html'] = 'You are about to enable the GO1 Content Marketplace. If you proceed, items from the marketplace will be available to course creators for inclusion in newly created courses.';
-$string['warningenablemarketplace:title'] = 'Enable GO1 content';
+$string['warningdisablemarketplace:title'] = 'Disable Go1 content';
+$string['warningenablemarketplace:body:html'] = 'You are about to enable the Go1 Content Marketplace. If you proceed, items from the marketplace will be available to course creators for inclusion in newly created courses.';
+$string['warningenablemarketplace:title'] = 'Enable Go1 content';
 
 
 // Deprecated since Totara 15
 
-$string['warningdisablemarketplace:yes'] = 'Disable GO1';
+$string['warningdisablemarketplace:yes'] = 'Disable Go1';

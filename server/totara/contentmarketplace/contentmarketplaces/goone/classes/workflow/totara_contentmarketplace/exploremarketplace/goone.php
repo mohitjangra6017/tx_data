@@ -23,12 +23,12 @@
 
 namespace contentmarketplace_goone\workflow\totara_contentmarketplace\exploremarketplace;
 
-defined('MOODLE_INTERNAL') || die();
+use totara_contentmarketplace\workflow\marketplace_workflow;
 
 /**
  * Go1 explore marketplace workflow implementation.
  */
-class goone extends \totara_workflow\workflow\base {
+class goone extends marketplace_workflow {
 
     public function get_name(): string {
         return get_string('explorego1marketplace', 'contentmarketplace_goone');
@@ -38,21 +38,4 @@ class goone extends \totara_workflow\workflow\base {
         return get_string('explorego1marketplacedesc', 'contentmarketplace_goone');
     }
 
-    public function get_image(): ?\moodle_url {
-        return new \moodle_url('/totara/contentmarketplace/marketplaces/goone/pix/logo.png');
-    }
-
-    protected function get_workflow_url(): \moodle_url {
-        return new \moodle_url('/totara/contentmarketplace/explorer.php', ['marketplace' => 'goone']);
-    }
-
-    public function can_access(): bool {
-        // Check Go1 marketplace plugin is enabled.
-        /** @var \totara_contentmarketplace\plugininfo\contentmarketplace $plugin */
-        $plugin = \core_plugin_manager::instance()->get_plugin_info("contentmarketplace_goone");
-        if ($plugin === null || !$plugin->is_enabled()) {
-            return false;
-        }
-        return true;
-    }
 }

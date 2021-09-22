@@ -24,6 +24,7 @@ namespace mod_contentmarketplace\output;
 
 use core\output\template;
 use mod_contentmarketplace\model\content_marketplace;
+use totara_contentmarketplace\plugininfo\contentmarketplace;
 
 /**
  * Mustache template to output the content marketplace as a single module
@@ -35,10 +36,12 @@ class content_marketplace_logo extends template {
      * @return content_marketplace_logo
      */
     public static function create_from_model(content_marketplace $content_marketplace): content_marketplace_logo {
-        $learning_object = $content_marketplace->get_learning_object();
+        $plugin_info = (contentmarketplace::plugin($content_marketplace->learning_object_marketplace_component))
+            ->contentmarketplace();
 
         return new static([
-            'logo_url' => $learning_object::get_marketplace_image_url()
+            'url' => $plugin_info->get_logo_url()->out(false),
+            'alt' => $plugin_info->get_logo_alt_text(),
         ]);
     }
 }

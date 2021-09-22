@@ -21,11 +21,11 @@
  * @package totara_contentmarketplace
  */
 
+use contentmarketplace_linkedin\controllers\catalog_import as lil_catalog_import;
 use core_phpunit\testcase;
 use totara_contentmarketplace\controllers\catalog_import;
 use totara_contentmarketplace\explorer as explorer_model;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
-use contentmarketplace_linkedin\controllers\catalog_import as lil_catalog_import;
 
 /**
  * @group totara_contentmarketplace
@@ -106,7 +106,7 @@ class totara_contentmarketplace_catalog_import_controller_testcase extends testc
         $_GET['marketplace'] = 'goone';
 
         self::expectException(moodle_exception::class);
-        self::expectExceptionMessage('GO1 Content Marketplace disabled');
+        self::expectExceptionMessage('Go1 Content Marketplace disabled');
         $controller = new catalog_import();
         $controller->action();
     }

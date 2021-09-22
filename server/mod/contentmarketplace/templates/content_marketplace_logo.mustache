@@ -26,16 +26,14 @@
     This template generates the small viewing of content marketplace.
 
     Context variables required for this template:
-      * logo_url: The logo URL
+      * url: The logo URL
+      * alt: The logo alt text
 
     Example content (json):
     {
-        "logo_url": "http://example.com/mod/contentmarketplace/NSA.jpg",
+        "url": "http://example.com/mod/contentmarketplace/NSA.jpg",
+        "alt": "LinkedIn Learning's logo"
     }
 }}
 
-<img
-    class="tw-mod-contentmarketplace__logo"
-    alt="{{#str}}marketplace_logo, mod_contentmarketplace{{/str}}"
-    src="{{ logo_url }}"
-/>
+<img class="tw-mod-contentmarketplace__logo" src="{{ url }}" alt="{{ alt }}"/>

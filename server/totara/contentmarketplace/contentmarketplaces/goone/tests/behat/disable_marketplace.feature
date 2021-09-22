@@ -33,7 +33,7 @@ Feature: Disabling a content marketplace
     And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
     And I should see "Enabled" in the ".contentmarketplace_goone" "css_element"
     When I click on "Disable" "link" in the ".contentmarketplace_goone" "css_element"
-    And I should see "Disable GO1 content" in the ".modal" "css_element"
+    And I should see "Disable Go1 content" in the ".modal" "css_element"
     And I click on "Disable" "button" in the ".modal" "css_element"
     Then I should see "Disabled" in the ".contentmarketplace_goone" "css_element"
     And "Enable" "link" should exist in the ".contentmarketplace_goone" "css_element"

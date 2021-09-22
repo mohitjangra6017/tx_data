@@ -30,11 +30,11 @@ use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\event\learning_object_updated;
 use contentmarketplace_linkedin\learning_object\resolver;
-use core\entity\user;
-use core\orm\entity\model;
-use core\orm\collection as orm_collection;
-use core\orm\query\builder;
 use core\entity\course;
+use core\entity\user;
+use core\orm\collection as orm_collection;
+use core\orm\entity\model;
+use core\orm\query\builder;
 use totara_contentmarketplace\learning_object\abstraction\metadata\configuration;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\text;
@@ -247,17 +247,6 @@ class learning_object extends model implements detailed_model, configuration {
      */
     public function get_web_launch_url(): ?string {
         return $this->entity->web_launch_url;
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_marketplace_image_url(): string {
-        global $OUTPUT;
-        return $OUTPUT->image_url(
-            'logo_small_transparent',
-            'contentmarketplace_linkedin',
-        );
     }
 
     /**
