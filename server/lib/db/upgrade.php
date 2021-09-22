@@ -435,7 +435,7 @@ function xmldb_main_upgrade($oldversion) {
         $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
         $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
         $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '1024', null, null, null, null);
         $table->add_field('recipient', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('subject', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('subject_format', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
@@ -453,7 +453,6 @@ function xmldb_main_upgrade($oldversion) {
         // Adding indexes to table notification_preference.
         $table->add_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
         $table->add_index('notification_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('notification_class_name'));
-        $table->add_index('title_index', XMLDB_INDEX_NOTUNIQUE, array('title'));
 
         // Conditionally launch create table for notification_preference.
         if (!$dbman->table_exists($table)) {
@@ -529,6 +528,26 @@ function xmldb_main_upgrade($oldversion) {
 
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2021061700.00);
+    }
+
+    if ($oldversion < 2021092200.00) {
+        // Define index title_index (not unique) to be dropped from notification_preference.
+        $table = new xmldb_table('notification_preference');
+        $index = new xmldb_index('title_index', XMLDB_INDEX_NOTUNIQUE, array('title'));
+
+        // Conditionally launch drop index title_index.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Changing precision of field title on table notification_preference to (1024).
+        $field = new xmldb_field('title', XMLDB_TYPE_CHAR, '1024', null, null, null, null, 'item_id');
+
+        // Launch change of precision for field title.
+        $dbman->change_field_precision($table, $field);
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2021092200.00);
     }
 
     return true;

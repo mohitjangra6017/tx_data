@@ -4094,7 +4094,7 @@
         <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The component property of the extended context"/>
         <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
         <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="This is required for custom notifications, but should be null for notification override records. The overridden of custom does not have to have value."/>
+        <FIELD NAME="title" TYPE="char" LENGTH="1024" NOTNULL="false" SEQUENCE="false" COMMENT="This is required for custom notifications, but should be null for notification override records. The overridden of custom does not have to have value."/>
         <FIELD NAME="additional_criteria" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Stores data which specifies additional criteria which must be met for a notification to be sent, json encoded"/>
         <FIELD NAME="recipient" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then this is required, otherwise null to fallback to the default defined in built in notification"/>
         <FIELD NAME="subject" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>
@@ -4113,7 +4113,6 @@
       <INDEXES>
         <INDEX NAME="resolver_class_name_index" UNIQUE="false" FIELDS="resolver_class_name"/>
         <INDEX NAME="notification_class_name_index" UNIQUE="false" FIELDS="notification_class_name"/>
-        <INDEX NAME="title_index" UNIQUE="false" FIELDS="title"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="notifiable_event_preference" COMMENT="A table stores the system's configurations of notifiable events">
