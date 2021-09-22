@@ -26,6 +26,7 @@ use admin_settingpage;
 use core\plugininfo\base;
 use core_plugin_manager;
 use part_of_admin_tree;
+use totara_contentmarketplace\entity\course_module_source;
 use totara_contentmarketplace\local\contentmarketplace\collection;
 use totara_contentmarketplace\local\contentmarketplace\contentmarketplace as local_instance;
 use totara_contentmarketplace\local\contentmarketplace\search;
@@ -199,4 +200,27 @@ class contentmarketplace extends base {
             $adminroot->add($parentnodename, $settings_page);
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_usage_for_registration_data() {
+        $marketplace = $this->contentmarketplace();
+
+        $data = [];
+
+        $data["{$marketplace->name}enabled"] = (int) $this->is_enabled();
+
+        $unique_course_count = course_module_source::repository()
+            ->select_raw('DISTINCT course_modules.course')
+            ->join('course_modules', 'cm_id', 'id')
+            ->where('marketplace_component', $marketplace->get_plugin_name())
+            ->group_by('course_modules.course')
+            ->count();
+
+        $data["num{$marketplace->name}courses"] = $unique_course_count;
+
+        return $data;
+    }
+
 }

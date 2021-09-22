@@ -27,14 +27,9 @@ defined('MOODLE_INTERNAL') || die();
 
 class plugininfo extends \totara_contentmarketplace\plugininfo\contentmarketplace {
     public function get_usage_for_registration_data() {
-        global $CFG, $DB;
-        $data = array();
+        global $DB;
 
-        $pluginmanager = \core_plugin_manager::instance();
-        $goone = $pluginmanager->get_plugin_info('contentmarketplace_goone');
-        if (!is_null($goone)) {
-            $data['gooneenabled'] = (int)$goone->is_enabled();
-        }
+        $data = parent::get_usage_for_registration_data();
 
         $select = "source LIKE :source AND filearea <> :filearea";
         $params = array(
