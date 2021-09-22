@@ -22,6 +22,8 @@ class rb_source_scorm extends rb_base_source {
         $this->base = '(SELECT max(id) as id, userid, scormid, scoid, attempt ' .
             "from {scorm_scoes_track} " .
             'GROUP BY userid, scormid, scoid, attempt)';
+        // KINEO CCM - GLOTOT-1989
+        $this->base = \local_core\Hook\ReportBuilder\ScormOptimisation::switchScormScoesTrackTable($this->base);
         $this->joinlist = $this->define_joinlist();
         $this->columnoptions = $this->define_columnoptions();
         $this->filteroptions = $this->define_filteroptions();
