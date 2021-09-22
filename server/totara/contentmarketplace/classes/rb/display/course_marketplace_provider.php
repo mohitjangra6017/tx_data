@@ -23,11 +23,11 @@
 
 namespace totara_contentmarketplace\rb\display;
 
-use coding_exception;
 use rb_column;
 use rb_column_option;
 use reportbuilder;
 use stdClass;
+use totara_contentmarketplace\totara_catalog\provider;
 use totara_reportbuilder\rb\display\base;
 
 /**
@@ -36,20 +36,35 @@ use totara_reportbuilder\rb\display\base;
 class course_marketplace_provider extends base {
 
     /**
-     * @param string $component
+     * @param string $components_concat
      * @param string $format
      * @param stdClass $row
      * @param rb_column $column
      * @param reportbuilder $report
      * @return string
-     * @throws coding_exception
      */
-    public static function display($component, $format, stdClass $row, rb_column $column, reportbuilder $report): string {
-        if (empty($component)) {
-            return get_string('provider_internal', 'totara_contentmarketplace');
+    public static function display($components_concat, $format, stdClass $row, rb_column $column, reportbuilder $report): string {
+        $components = explode('|', $components_concat);
+
+        $provider_names = [];
+
+        // If there is an internal provider, then we always show this first
+        if (in_array(provider::INTERNAL, $components)) {
+            $provider_names[] = get_string('provider_internal', 'totara_contentmarketplace');
+            $components = array_diff($components, [provider::INTERNAL]);
         }
 
-        return get_string('pluginname', $component);
+        // After internal, we then display the content marketplaces in alphabetical order
+        $marketplace_plugin_names = array_map(function (string $component) {
+            return get_string('pluginname', $component);
+        }, $components);
+        asort($marketplace_plugin_names);
+        $provider_names += $marketplace_plugin_names;
+
+        return implode(
+            get_string('list_separator', 'totara_contentmarketplace'),
+            $provider_names
+        );
     }
 
     /**

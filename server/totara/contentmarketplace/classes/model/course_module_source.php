@@ -23,23 +23,26 @@
 
 namespace totara_contentmarketplace\model;
 
-use container_course\course;
+use container_course\module\course_module;
+use core\entity\course;
 use core\orm\entity\model;
-use totara_contentmarketplace\entity\course_source as course_source_entity;
+use totara_contentmarketplace\entity\course_module_source as course_module_source_entity;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object_model;
 
 /**
- * Model class for course_source.
+ * Model class for course_module_source.
  *
- * @property-read int     $id
- * @property-read string  $marketplace_component
- * @property-read int     $learning_object_id
- * @property-read int     $course_id
- *
+ * @property-read int $id
+ * @property-read int $cm_id
+ * @property-read string $marketplace_component
+ * @property-read int $learning_object_id
+ * @property-read int $course_id
+ * @property-read course $course
+ * @property-read course_module $course_module
  */
-class course_source extends model {
+class course_module_source extends model {
     /**
-     * @var course_source_entity
+     * @var course_module_source_entity
      */
     protected $entity;
 
@@ -48,26 +51,29 @@ class course_source extends model {
      */
     protected $entity_attribute_whitelist = [
         'id',
+        'cm_id',
         'marketplace_component',
         'learning_object_id',
-        'course_id'
+        'course',
+        'course_id',
+        'course_module',
     ];
 
     /**
      * @return string
      */
     protected static function get_entity_class(): string {
-        return course_source_entity::class;
+        return course_module_source_entity::class;
     }
 
     /**
-     * @param course $course
+     * @param course_module $course_module
      * @param learning_object_model $learning_object
      * @return static
      */
-    public static function create(course $course, learning_object_model $learning_object): self {
-        $entity = new course_source_entity();
-        $entity->course_id = $course->id;
+    public static function create(course_module $course_module, learning_object_model $learning_object): self {
+        $entity = new course_module_source_entity();
+        $entity->cm_id = $course_module->get_id();
         $entity->marketplace_component = $learning_object::get_marketplace_component();
         $entity->learning_object_id = $learning_object->get_id();
 

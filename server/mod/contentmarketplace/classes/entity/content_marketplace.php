@@ -25,6 +25,8 @@ namespace mod_contentmarketplace\entity;
 use core\entity\course;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
+use core\orm\entity\relations\has_one;
+use core_container\entity\module;
 use mod_contentmarketplace\repository\content_marketplace_repository;
 
 /**
@@ -39,6 +41,7 @@ use mod_contentmarketplace\repository\content_marketplace_repository;
  * @property int    $completion_condition
  *
  * @property-read course $course_entity
+ * @property-read module $course_module
  *
  * @method static content_marketplace_repository repository()
  */
@@ -70,6 +73,16 @@ class content_marketplace extends entity {
      */
     public function course_entity(): belongs_to {
         return $this->belongs_to(course::class, 'course');
+    }
+
+    /**
+     * @return has_one
+     */
+    public function course_module(): has_one {
+        return $this->has_one(module::class, 'instance')
+            ->join('modules', 'module', 'id')
+            ->where('modules.name', self::TABLE)
+            ->where('course', $this->course);
     }
 
 }

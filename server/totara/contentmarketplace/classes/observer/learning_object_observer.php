@@ -25,9 +25,8 @@ namespace totara_contentmarketplace\observer;
 use coding_exception;
 use container_course\course_helper;
 use core\entity\course;
-use stdClass;
 use totara_contentmarketplace\course\course_image_downloader;
-use totara_contentmarketplace\entity\course_source;
+use totara_contentmarketplace\entity\course_module_source;
 use totara_contentmarketplace\event\base_learning_object_updated;
 
 final class learning_object_observer {
@@ -43,35 +42,33 @@ final class learning_object_observer {
     public static function on_learning_object_updated(base_learning_object_updated $event): void {
         $other = $event->other;
 
-        $repository = course_source::repository();
-        $course_sources = $repository->fetch_by_id_and_component($event->objectid, $other["marketplace_component"]);
+        /** @var course_module_source[] $course_module_sources */
+        $course_module_sources = course_module_source::repository()
+            ->with('course')
+            ->filter_by_id_and_component($event->objectid, $other["marketplace_component"])
+            ->get();
 
-        try {
-            /** @var course_source $course_source */
-            foreach ($course_sources as $course_source) {
-                $course = $course_source->course;
-                $new_course = self::get_updated_course_record($event, $course);
+        foreach ($course_module_sources as $course_module_source) {
+            $course = $course_module_source->course;
+            $new_course = self::get_updated_course_record($event, $course);
 
-                $new_image = $event->get_new_image();
-                $new_image = new course_image_downloader($course->id, $new_image);
-                $old_image = $event->get_old_image();
-                if (isset($old_image)) {
-                    $old_image = new course_image_downloader($course->id, $old_image);
-                    $old_image->compare_and_update($new_image);
-                } else {
-                    $new_image->download_image_for_course();
-                }
-
-                if (empty($new_course)) {
-                    // Skip updating this course.
-                    continue;
-                }
-
-                // Update the course accordingly.
-                course_helper::update_course($course->id, (object) $new_course);
+            $new_image = $event->get_new_image();
+            $new_image = new course_image_downloader($course->id, $new_image);
+            $old_image = $event->get_old_image();
+            if (isset($old_image)) {
+                $old_image = new course_image_downloader($course->id, $old_image);
+                $old_image->compare_and_update($new_image);
+            } else {
+                $new_image->download_image_for_course();
             }
-        } finally {
-            $course_sources->close();
+
+            if (empty($new_course)) {
+                // Skip updating this course.
+                continue;
+            }
+
+            // Update the course accordingly.
+            course_helper::update_course($course->id, (object) $new_course);
         }
     }
 

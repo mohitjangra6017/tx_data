@@ -25,7 +25,7 @@ namespace totara_contentmarketplace\totara_catalog;
 
 use totara_catalog\dataformatter\formatter;
 use totara_catalog\dataholder;
-use totara_contentmarketplace\entity\course_source;
+use totara_contentmarketplace\entity\course_module_source;
 use totara_contentmarketplace\totara_catalog\dataformatter\course_logo;
 
 class course_logo_dataholder_factory {
@@ -43,6 +43,8 @@ class course_logo_dataholder_factory {
      * @return dataholder[]
      */
     public static function get_dataholders(): array {
+        global $DB;
+        $group_concat = $DB->sql_group_concat_unique('cm_source.marketplace_component', '|');
         return [
             // Content marketplace logo
             new dataholder(
@@ -50,13 +52,18 @@ class course_logo_dataholder_factory {
                 self::DATAHOLDER_NAME,
                 [
                     formatter::TYPE_PLACEHOLDER_IMAGE => new course_logo(
-                        'cs.learning_object_id',
-                        'cs.marketplace_component'
+                        'cm_source.marketplace_component',
                     )
                 ],
                 [
-                    self::DATAHOLDER_KEY =>
-                        'LEFT JOIN {totara_contentmarketplace_course_source} cs ON cs.course_id = base.id'
+                    self::DATAHOLDER_KEY => "
+                        LEFT JOIN (
+                            SELECT cm.course, {$group_concat} AS marketplace_component
+                            FROM {course_modules} cm
+                            INNER JOIN {totara_contentmarketplace_course_module_source} cm_source ON cm_source.cm_id = cm.id
+                            GROUP BY cm.course
+                        ) AS cm_source ON cm_source.course = base.id
+                    "
                 ]
             )
         ];
@@ -66,6 +73,6 @@ class course_logo_dataholder_factory {
      * @return string|null
      */
     public static function get_course_logo_key(): ?string {
-        return course_source::repository()->count() == 0 ? null : self::DATAHOLDER_KEY;
+        return course_module_source::repository()->count() === 0 ? null : self::DATAHOLDER_KEY;
     }
 }

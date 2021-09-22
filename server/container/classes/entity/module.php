@@ -22,7 +22,9 @@
  */
 namespace core_container\entity;
 
+use core\entity\course;
 use core\orm\entity\entity;
+use core\orm\entity\relations\belongs_to;
 
 /**
  * @property int           $id
@@ -46,6 +48,8 @@ use core\orm\entity\entity;
  * @property int           $showdescription
  * @property string|null   $availability
  * @property int           $deletioninprogress
+ *
+ * @property-read course $course_entity
  */
 final class module extends entity {
     /**
@@ -85,4 +89,12 @@ final class module extends entity {
 
         $this->set_attribute_raw('deletioninprogress',$value);
     }
+
+    /**
+     * @return belongs_to
+     */
+    public function course_entity(): belongs_to {
+        return $this->belongs_to(course::class, 'course');
+    }
+
 }

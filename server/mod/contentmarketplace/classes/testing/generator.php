@@ -24,12 +24,12 @@ namespace mod_contentmarketplace\testing;
 
 use coding_exception;
 use container_course\course;
+use container_course\module\course_module;
 use core\orm\query\builder;
 use core\testing\mod_generator;
 use core_container\factory;
 use stdClass;
-use totara_contentmarketplace\event\course_source_created;
-use totara_contentmarketplace\model\course_source;
+use totara_contentmarketplace\model\course_module_source;
 use totara_contentmarketplace\testing\generator as totara_contentmarketplace_generator;
 
 class generator extends mod_generator {
@@ -99,10 +99,6 @@ class generator extends mod_generator {
         /** @var course $course */
         $course = factory::from_record($course_record);
 
-        // Create course source.
-        $model = course_source::create($course, $learning_object);
-        (course_source_created::from_model($model))->trigger();
-
         $module = $this->create_instance([
             'course' => $course->id,
             'section' => 0,
@@ -116,6 +112,9 @@ class generator extends mod_generator {
 
             $course->rebuild_cache();
         }
+
+        // Create course module source.
+        course_module_source::create(course_module::from_id($module->cmid), $learning_object);
 
         return $module;
     }

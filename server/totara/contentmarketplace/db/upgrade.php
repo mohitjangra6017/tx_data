@@ -72,5 +72,53 @@ function xmldb_totara_contentmarketplace_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021061502, 'totara', 'contentmarketplace');
     }
 
+    if ($oldversion < 2021091300) {
+        // Define table totara_contentmarketplace_course_module_source to be renamed to totara_contentmarketplace_course_module_source.
+        $table = new xmldb_table('totara_contentmarketplace_course_source');
+
+        // Launch rename table for totara_contentmarketplace_course_module_source.
+        $dbman->rename_table($table, 'totara_contentmarketplace_course_module_source');
+
+        $table = new xmldb_table('totara_contentmarketplace_course_module_source');
+
+        // Define index course_idx (not unique) to be dropped form
+        $index = new xmldb_index('course_idx', XMLDB_INDEX_NOTUNIQUE, array('course_id'));
+
+        // Conditionally launch drop index course_idx.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        $course_module_source_records = $DB->get_records_sql("
+            SELECT cm.id AS cm_id, cm_source.id AS id
+            FROM {course_modules} cm
+            INNER JOIN {totara_contentmarketplace_course_module_source} cm_source ON cm_source.course_id = cm.course
+        ");
+
+        // Rename field course_id on table totara_contentmarketplace_course_module_source to cm_id.
+        $field = new xmldb_field('course_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'learning_object_id');
+
+        // Launch rename field course_id.
+        $dbman->rename_field($table, $field, 'cm_id');
+
+        foreach ($course_module_source_records as $course_module_source) {
+            $DB->update_record('totara_contentmarketplace_course_module_source', [
+                'id' => $course_module_source->id,
+                'cm_id' => $course_module_source->cm_id,
+            ], true);
+        }
+
+        // Define index cm_idx (unique) to be added to totara_contentmarketplace_course_module_source.
+        $index = new xmldb_index('cm_idx', XMLDB_INDEX_UNIQUE, array('cm_id'));
+
+        // Conditionally launch add index cm_idx.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Contentmarketplace savepoint reached.
+        upgrade_plugin_savepoint(true, 2021091300, 'totara', 'contentmarketplace');
+    }
+
     return true;
 }

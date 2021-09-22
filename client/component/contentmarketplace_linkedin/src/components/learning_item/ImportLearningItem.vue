@@ -283,7 +283,7 @@ export default {
     subjectsString() {
       return this.data.subjects
         .map(subject => subject.name)
-        .join(this.$str('comma_and_space', 'contentmarketplace_linkedin'));
+        .join(this.$str('list_separator', 'totara_contentmarketplace'));
     },
   },
 };
@@ -298,7 +298,6 @@ export default {
       "a11y_content_type",
       "a11y_view_courses",
       "appears_in",
-      "comma_and_space",
       "content_appears_in",
       "course_difficulty_advanced",
       "course_difficulty_beginner",
@@ -308,6 +307,9 @@ export default {
       "course_type_video",
       "course_number",
       "course_number_plural"
+    ],
+    "totara_contentmarketplace": [
+      "list_separator"
     ]
   }
 </lang-strings>

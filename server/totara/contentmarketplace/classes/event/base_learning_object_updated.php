@@ -25,10 +25,8 @@ namespace totara_contentmarketplace\event;
 
 use coding_exception;
 use context_system;
-use core\entity\course;
 use core\event\base;
 use core\orm\entity\entity;
-use totara_contentmarketplace\entity\course_source;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 
 /**

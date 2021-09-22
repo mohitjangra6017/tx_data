@@ -26,10 +26,10 @@ use core_plugin_manager;
 use lang_string;
 use stdClass;
 use totara_catalog\datasearch\equal;
-use totara_catalog\datasearch\in_or_equal;
-use totara_catalog\merge_select\multi;
 use totara_catalog\datasearch\filter as datasearch_filter;
+use totara_catalog\datasearch\in_or_equal;
 use totara_catalog\filter;
+use totara_catalog\merge_select\multi;
 use totara_catalog\merge_select\tree;
 use totara_contentmarketplace\local;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
@@ -38,7 +38,7 @@ class provider {
     /**
      * @var int
      */
-    public const INTERNAL = 'container_course';
+    public const INTERNAL = '0';
 
     /**
      * @return array
@@ -118,12 +118,20 @@ class provider {
      * @param datasearch_filter $filter
      */
     private static function add_source(datasearch_filter $filter): void {
+        global $DB;
+        $internal_component = $DB->sql_cast_2char(self::INTERNAL);
+
         // Add internal filter.
         $filter->add_source(
-            'course.containertype',
-            '(SELECT c.id AS id, c.containertype FROM {course} c 
-            LEFT JOIN {totara_contentmarketplace_course_source} cs 
-            ON c.id = cs.course_id WHERE cs.learning_object_id IS NULL)',
+            'course.component',
+            "(
+                SELECT course.id, {$internal_component} AS component
+                FROM {course} course
+                LEFT JOIN {course_modules} cm ON course.id = cm.course
+                LEFT JOIN {totara_contentmarketplace_course_module_source} cm_source ON cm.id = cm_source.cm_id
+                WHERE cm.id IS NULL
+                OR cm_source.id IS NULL
+            )",
             'course',
             ['objectid' => 'course.id', 'objecttype' => "'course'"]
         );
@@ -131,12 +139,14 @@ class provider {
         if (!empty(contentmarketplace::get_enabled_plugins())) {
             // Add subplugin filter.
             $filter->add_source(
-                'course.component',
-                '(SELECT c.id AS id, cs.marketplace_component AS component FROM {course} c 
-            JOIN {totara_contentmarketplace_course_source} cs 
-            ON c.id = cs.course_id)',
-                'course',
-                ['objectid' => 'course.id', 'objecttype' => "'course'"],
+                'course_modules.component',
+                "(
+                    SELECT cm.course, cm_source.marketplace_component AS component
+                    FROM {course_modules} cm
+                    LEFT JOIN {totara_contentmarketplace_course_module_source} cm_source ON cm.id = cm_source.cm_id
+                )",
+                'course_modules',
+                ['objectid' => 'course_modules.course', 'objecttype' => "'course'"],
             );
         }
     }
@@ -172,6 +182,7 @@ class provider {
      */
     private static function get_options(): array {
         $options[self::INTERNAL] = get_string('provider_internal', 'totara_contentmarketplace');
+
         /** @var contentmarketplace[] $plugins */
         $plugins = core_plugin_manager::instance()->get_plugins_of_type('contentmarketplace');
         foreach ($plugins as $plugin) {

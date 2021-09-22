@@ -22,39 +22,40 @@
  */
 namespace totara_contentmarketplace\event;
 
-use context_course;
+use context_module;
 use core\event\base;
-use totara_contentmarketplace\model\course_source;
+use totara_contentmarketplace\model\course_module_source;
 
 /**
- * Class base_course_source
+ * Class base_course_module_source
  * @package totara_contentmarketplace\event
  */
-abstract class base_course_source extends base {
+abstract class base_course_module_source extends base {
     /**
      * @inheritDoc
      */
     protected function init() {
-        $this->data['objecttable'] = 'totara_contentmarketplace_course_source';
+        $this->data['objecttable'] = 'totara_contentmarketplace_course_module_source';
         $this->data['edulevel'] = self::LEVEL_OTHER;
     }
 
     /**
-     * @param course_source $course_source
+     * @param course_module_source $course_module_source
      * @return static
      */
-    public static function from_model(course_source $course_source): self {
+    public static function from_model(course_module_source $course_module_source): self {
         $data = [
-            'objectid' => $course_source->id,
-            'context' => context_course::instance($course_source->course_id),
-            'courseid' => $course_source->course_id,
+            'objectid' => $course_module_source->id,
+            'context' => context_module::instance($course_module_source->cm_id),
+            'courseid' => $course_module_source->course_id,
             'other' => [
-                'component' => $course_source->marketplace_component,
-                'learning_object_id' => $course_source->learning_object_id
+                'cm_id' => $course_module_source->cm_id,
+                'component' => $course_module_source->marketplace_component,
+                'learning_object_id' => $course_module_source->learning_object_id,
             ]
         ];
 
-        /** @var base_course_source $event */
+        /** @var base_course_module_source $event */
         $event = static::create($data);
         return $event;
     }

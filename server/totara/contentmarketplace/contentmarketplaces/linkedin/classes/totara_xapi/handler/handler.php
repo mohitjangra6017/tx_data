@@ -22,19 +22,19 @@
  */
 namespace contentmarketplace_linkedin\totara_xapi\handler;
 
+use cm_info;
+use completion_info;
 use contentmarketplace_linkedin\entity\learning_object;
 use contentmarketplace_linkedin\entity\user_completion;
 use contentmarketplace_linkedin\totara_xapi\statement;
-use core\entity\course;
-use totara_contentmarketplace\entity\course_source;
+use context_course;
+use totara_contentmarketplace\entity\course_module_source;
 use totara_oauth2\io\request;
 use totara_oauth2\server;
 use totara_xapi\entity\xapi_statement;
 use totara_xapi\handler\base_handler;
 use totara_xapi\response\facade\result;
 use totara_xapi\response\json_result;
-use completion_info;
-use context_course;
 
 class handler extends base_handler {
     /**
@@ -106,56 +106,41 @@ class handler extends base_handler {
         }
 
         // Get all the courses that are linked with this very learning object.
-        $course_source_repository = course_source::repository();
-        $course_sources = $course_source_repository->fetch_by_id_and_component(
-            $learning_object->id,
-            "contentmarketplace_linkedin"
-        );
+        /** @var course_module_source[] $course_module_sources */
+        $course_module_sources = course_module_source::repository()
+            ->with('module.course_entity')
+            ->filter_by_id_and_component($learning_object->id, "contentmarketplace_linkedin")
+            ->get();
 
         $target_user_id = $statement->get_user_id();
-        $progress = $statement->get_progress();
 
         require_once("{$CFG->dirroot}/lib/completionlib.php");
 
-        try {
-            /** @var course_source $course_source */
-            foreach ($course_sources as $course_source) {
-                $course = new course($course_source->course_id);
-                $course_record = $course->to_record(true);
+        foreach ($course_module_sources as $course_module_source) {
+            $course = $course_module_source->module->course_entity;
+            $course_record = $course->to_record(true);
 
-                // Check if the user is enrolled into this course or not.
-                $context_course = context_course::instance($course->id);
-                if (!is_enrolled($context_course, $target_user_id)) {
-                    continue;
-                }
-
-                $completion_info = new completion_info($course_record);
-                if (!$completion_info->is_enabled()) {
-                    // Course's completion is not marked as enabled.
-                    continue;
-                }
-
-                // Get all the cm from the courses that are mod contentmarketplace
-                $course_mod_info = get_fast_modinfo($course_record, $target_user_id);
-                $cms = $course_mod_info->get_cms();
-
-                foreach ($cms as $cm) {
-                    if ("contentmarketplace" !== $cm->modname) {
-                        // Skip none content_marketplace module.
-                        continue;
-                    }
-
-                    if (!$completion_info->is_enabled($cm)) {
-                        // Completion is not enabled for this course module contentmarketplace.
-                        // Hence, we move on.
-                        continue;
-                    }
-
-                    $completion_info->update_state($cm, COMPLETION_UNKNOWN, $target_user_id);
-                }
+            // Check if the user is enrolled into this course or not.
+            $context_course = context_course::instance($course->id);
+            if (!is_enrolled($context_course, $target_user_id)) {
+                continue;
             }
-        } finally {
-            $course_sources->close();
+
+            $completion_info = new completion_info($course_record);
+            if (!$completion_info->is_enabled()) {
+                // Course's completion is not marked as enabled.
+                continue;
+            }
+
+            // Get all the cm from the courses that are mod contentmarketplace
+            $cm_info = cm_info::create($course_module_source->module->to_record(true), $target_user_id);
+
+            if (!$completion_info->is_enabled($cm_info)) {
+                // Completion is not enabled for this course module contentmarketplace.
+                continue;
+            }
+
+            $completion_info->update_state($cm_info, COMPLETION_UNKNOWN, $target_user_id);
         }
     }
 

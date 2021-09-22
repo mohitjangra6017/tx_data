@@ -20,10 +20,11 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
+
+use core\orm\query\builder;
 use core_phpunit\testcase;
 use mod_contentmarketplace\completion\condition;
 use mod_contentmarketplace\entity\content_marketplace;
-use core\orm\query\builder;
 
 /**
  * @group totara_contentmarketplace
@@ -122,4 +123,65 @@ class mod_contentmarketplace_entity_content_marketplace_testcase extends testcas
         self::assertEquals($record->completion_condition, $entity->completion_condition);
         self::assertEquals($record->time_modified, $entity->time_modified);
     }
+
+    public function test_course_module_relation(): void {
+        global $DB;
+        $generator = self::getDataGenerator();
+        $course1 = $generator->create_course();
+        $course2 = $generator->create_course();
+
+        $seminar1 = $generator->create_module(
+            'facetoface',
+            ['course' => $course1->id]
+        );
+
+        $contentmarketplace1 = $generator->create_module(
+            'contentmarketplace',
+            [
+                'course' => $course1->id,
+                'learning_object_marketplace_component' => 'contentmarketplace_linkedin',
+            ]
+        );
+
+        $seminar2 = $generator->create_module(
+            'facetoface',
+            ['course' => $course2->id]
+        );
+
+        $contentmarketplace2 = $generator->create_module(
+            'contentmarketplace',
+            [
+                'course' => $course2->id,
+                'learning_object_marketplace_component' => 'contentmarketplace_linkedin',
+            ]
+        );
+
+
+        // We want to simulate both the facetoface and contentmarketplace tables having rows with ID 1 and 2,
+        // in order to test that the join is happening to the correct table when getting the course_module instance.
+        $DB->execute("UPDATE {facetoface} SET id = 1 WHERE id = {$seminar1->id}");
+        $DB->execute("UPDATE {course_modules} SET instance = 1 WHERE instance = {$seminar1->id}");
+        $seminar1->id = 1;
+        $DB->execute("UPDATE {facetoface} SET id = 2 WHERE id = {$seminar2->id}");
+        $DB->execute("UPDATE {course_modules} SET instance = 2 WHERE instance = {$seminar2->id}");
+        $seminar2->id = 2;
+        $DB->execute("UPDATE {contentmarketplace} SET id = 1 WHERE id = {$contentmarketplace1->id}");
+        $DB->execute("UPDATE {course_modules} SET instance = 1 WHERE instance = {$contentmarketplace1->id}");
+        $contentmarketplace1->id = 1;
+        $DB->execute("UPDATE {contentmarketplace} SET id = 2 WHERE id = {$contentmarketplace2->id}");
+        $DB->execute("UPDATE {course_modules} SET instance = 2 WHERE instance = {$contentmarketplace2->id}");
+        $contentmarketplace2->id = 2;
+
+
+        $contentmarketplace_entity = new content_marketplace($contentmarketplace1->id);
+        $course_module_entity = $contentmarketplace_entity->course_module;
+
+        $this->assertNotNull($course_module_entity);
+        $this->assertEquals($contentmarketplace1->cmid, $course_module_entity->id);
+        $this->assertEquals($course1->id, $course_module_entity->course);
+        $this->assertNotEquals($contentmarketplace2->cmid, $course_module_entity->id);
+        $this->assertNotEquals($seminar1->cmid, $course_module_entity->id);
+        $this->assertNotEquals($seminar2->cmid, $course_module_entity->id);
+    }
+
 }

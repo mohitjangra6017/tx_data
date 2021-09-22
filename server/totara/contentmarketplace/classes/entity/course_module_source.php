@@ -22,40 +22,65 @@
  */
 namespace totara_contentmarketplace\entity;
 
+use core\entity\course;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
-use core\entity\course;
-use totara_contentmarketplace\repository\course_source_repository;
+use core\orm\entity\relations\has_one_through;
+use core_container\entity\module;
+use totara_contentmarketplace\repository\course_module_source_repository;
 
 /**
- * Entity class represent for table "ttr_totara_contentmarketplace_course_source"
+ * Entity class represent for table "ttr_totara_contentmarketplace_course_module_source"
  *
- * @property int    $id
+ * @property int $id
+ * @property int $cm_id
  * @property string $marketplace_component
- * @property int    $course_id
- * @property int    $learning_object_id
- *
+ * @property int $learning_object_id
+ * @property-read int $course_id
  * @property-read course $course
+ * @property-read module $module
  *
- * @method static course_source_repository repository()
+ * @method static course_module_source_repository repository()
  */
-class course_source extends entity {
+class course_module_source extends entity {
     /**
      * @var string
      */
-    public const TABLE = 'totara_contentmarketplace_course_source';
+    public const TABLE = 'totara_contentmarketplace_course_module_source';
 
     /**
      * @return string
      */
     public static function repository_class_name(): string {
-        return course_source_repository::class;
+        return course_module_source_repository::class;
+    }
+
+    /**
+     * @return has_one_through
+     */
+    public function course(): has_one_through {
+        return $this->has_one_through(
+            module::class,
+            course::class,
+            'cm_id',
+            'id',
+            'course',
+            'id'
+        );
+    }
+
+    /**
+     * @return int
+     */
+    protected function get_course_id_attribute(): int {
+        return $this->module->course;
     }
 
     /**
      * @return belongs_to
      */
-    public function course(): belongs_to {
-        return $this->belongs_to(course::class, "course_id");
+    public function module(): belongs_to {
+        return $this->belongs_to(module::class, 'cm_id');
     }
+
 }

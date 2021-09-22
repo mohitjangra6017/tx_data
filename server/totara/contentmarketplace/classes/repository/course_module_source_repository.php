@@ -20,20 +20,22 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_contentmarketplace
  */
-defined('MOODLE_INTERNAL') || die();
 
-use core\event\course_module_deleted;
-use totara_contentmarketplace\event\base_learning_object_updated;
-use totara_contentmarketplace\observer\course_module_source;
-use totara_contentmarketplace\observer\learning_object_observer;
+namespace totara_contentmarketplace\repository;
 
-$observers = [
-    [
-        'eventname' => base_learning_object_updated::class,
-        'callback' => [learning_object_observer::class, 'on_learning_object_updated']
-    ],
-    [
-        'eventname' => course_module_deleted::class,
-        'callback' => [course_module_source::class, 'course_module_deleted'],
-    ],
-];
+use core\orm\entity\repository;
+
+class course_module_source_repository extends repository {
+
+    /**
+     * @param int $learning_object_id
+     * @param string $marketplace_component
+     * @return self
+     */
+    public function filter_by_id_and_component(int $learning_object_id, string $marketplace_component): self {
+        return $this
+            ->where('learning_object_id', $learning_object_id)
+            ->where('marketplace_component', $marketplace_component);
+    }
+
+}

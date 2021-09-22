@@ -21,55 +21,52 @@
  * @package totara_contentmarketplace
  */
 
-use core\event\course_module_deleted;
+use container_course\module\course_module;
 use core_phpunit\testcase;
 use totara_contentmarketplace\course\course_builder;
-use totara_contentmarketplace\testing\mock\create_course_interactor;
+use totara_contentmarketplace\entity\course_module_source;
 use totara_contentmarketplace\testing\generator;
 use totara_contentmarketplace\testing\helper;
-use container_course\course;
+use totara_contentmarketplace\testing\mock\create_course_interactor;
 
 /**
  * @group totara_contentmarketplace
  */
-class totara_contentmarketplace_course_source_testcase extends testcase {
+class totara_contentmarketplace_course_module_source_testcase extends testcase {
     /**
      * @return void
      */
-    public function test_course_source_created(): void {
-        global $DB;
+    public function test_course_module_source_created(): void {
+        global $DB, $USER;
 
-        $this->setAdminUser();
-        self::assertEquals(
-            0,
-            $DB->count_records('totara_contentmarketplace_course_source')
-        );
+        self::setAdminUser();
+        self::assertEquals(0, course_module_source::repository()->count());
 
-        $admin = get_admin();
         $marketplace_generator = generator::instance();
         $learning_object = $marketplace_generator->create_learning_object('contentmarketplace_linkedin');
 
         $course_builder = new course_builder(
             $learning_object,
             helper::get_default_course_category_id(),
-            new create_course_interactor($admin->id)
+            new create_course_interactor($USER->id)
         );
 
         $result = $course_builder->create_course();
         self::assertTrue($result->is_successful());
 
-        $records = $DB->get_records('totara_contentmarketplace_course_source');
-        self::assertCount(1, $records);
+        $entities = course_module_source::repository()->get();
+        self::assertCount(1, $entities);
 
-        $record = reset($records);
-        self::assertEquals($learning_object->get_id(), $record->learning_object_id);
-        self::assertEquals($learning_object::get_marketplace_component(), $record->marketplace_component);
-        self::assertEquals($result->get_course_id(), $record->course_id);
+        /** @var course_module_source $entity */
+        $entity = $entities->first();
+        self::assertEquals($learning_object->get_id(), $entity->learning_object_id);
+        self::assertEquals($learning_object::get_marketplace_component(), $entity->marketplace_component);
+        self::assertEquals($result->get_course_id(), $entity->course_id);
 
-        // Delete the course
-        $course = course::from_id($result->get_course_id());
-        $course->delete();
-        self::assertFalse($DB->record_exists('course', ['id' => $result->get_course_id()]));
-        self::assertCount(0, $DB->get_records('totara_contentmarketplace_course_source'));
+        // Delete the course module
+        $course_module = course_module::from_id($entity->cm_id);
+        $course_module->delete();
+
+        self::assertEquals(0, course_module_source::repository()->count());
     }
 }

@@ -33,11 +33,9 @@ use totara_contentmarketplace\plugininfo\contentmarketplace;
 class course_logo extends formatter {
     /**
      * course_logo constructor.
-     * @param string $learning_object_id_field
      * @param string $marketplace_component_field
      */
-    public function __construct(string $learning_object_id_field, string $marketplace_component_field) {
-        $this->add_required_field('learning_object_id', $learning_object_id_field);
+    public function __construct(string $marketplace_component_field) {
         $this->add_required_field('marketplace_component', $marketplace_component_field);
     }
 
@@ -57,14 +55,11 @@ class course_logo extends formatter {
      * @return stdClass|null
      */
     public function get_formatted_value(array $data, context $context) {
-        $marketplace_component = $data['marketplace_component'];
-        $learning_object_id = $data['learning_object_id'];
-
-        if (is_null($learning_object_id) || is_null($marketplace_component) || count(array_keys($data)) != 2) {
+        if (empty($data['marketplace_component'])) {
             return null;
         }
 
-        $marketplace = (contentmarketplace::plugin($marketplace_component))->contentmarketplace();
+        $marketplace = (contentmarketplace::plugin($data['marketplace_component']))->contentmarketplace();
         return (object) [
             'url' => $marketplace->get_logo_url()->out(false),
             'alt' => $marketplace->get_logo_alt_text(),

@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'totara_contentmarketplace';
-$plugin->version   = 2021061502;
+$plugin->version   = 2021091300;
 $plugin->requires  = 2021052500; // Totara 9+ is required.
 $plugin->dependencies = [
     'mod_scorm' => 2020101200,

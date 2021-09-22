@@ -17,28 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
  * @package totara_contentmarketplace
  */
 
-namespace totara_contentmarketplace\event;
+namespace totara_contentmarketplace\observer;
 
-use container_course\course;
-use totara_contentmarketplace\learning_object\abstraction\metadata\model;
+use core\event\base;
+use core\event\course_module_deleted;
+use totara_contentmarketplace\entity\course_module_source as course_module_source_entity;
 
-final class course_source_created extends base_course_source {
-    /**
-     * @inheritDoc
-     */
-    protected function init() {
-        parent::init();
-        $this->data['crud'] = 'c';
-    }
+final class course_module_source {
 
     /**
-     * @return string
+     * Deletes all corresponding course module source records when a course module is deleted.
+     *
+     * @param base|course_module_deleted $event
      */
-    public static function get_name() {
-        return get_string('event_course_source_created', 'totara_contentmarketplace');
+    public static function course_module_deleted(base $event): void {
+        course_module_source_entity::repository()
+            ->where('cm_id', $event->objectid)
+            ->delete();
     }
+
 }

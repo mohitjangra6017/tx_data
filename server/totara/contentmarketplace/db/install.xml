@@ -4,19 +4,19 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="totara_contentmarketplace_course_source" COMMENT="Stores the relationship between a course and a totara_contentmarketplace plugin">
+    <TABLE NAME="totara_contentmarketplace_course_module_source" COMMENT="Stores the relationship between a course module and a totara_contentmarketplace plugin">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="learning_object_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="marketplace_component" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
+        <INDEX NAME="cm_idx" UNIQUE="true" FIELDS="cm_id"/>
         <INDEX NAME="learning_object_idx" UNIQUE="false" FIELDS="learning_object_id"/>
-        <INDEX NAME="course_idx" UNIQUE="false" FIELDS="course_id"/>
         <INDEX NAME="marketplace_component_idx" UNIQUE="false" FIELDS="marketplace_component"/>
       </INDEXES>
     </TABLE>

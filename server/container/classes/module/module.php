@@ -22,9 +22,9 @@
  */
 namespace core_container\module;
 
-use core_container\entity\module as module_entity;
 use core_container\cache_helper;
 use core_container\container;
+use core_container\entity\module as module_entity;
 use core_container\factory;
 use core_container\section\section;
 use core_container\section\section_factory;
@@ -745,7 +745,7 @@ abstract class module {
      * @param int  $id
      * @param bool $strict
      *
-     * @return module|null
+     * @return static|null
      */
     public static function from_id(int $id, bool $strict = true): ?module {
         $repo = module_entity::repository();
@@ -766,12 +766,23 @@ abstract class module {
     }
 
     /**
+     * Build the module object from a course module entity.
+     *
+     * @param module_entity $entity
+     *
+     * @return static
+     */
+    public static function from_entity(module_entity $entity): module {
+        return new static($entity);
+    }
+
+    /**
      * Build the module object from the actuall record object. But it MUST be the proper record from
      * table {course_modules}.
      *
      * @param \stdClass $record
      *
-     * @return module
+     * @return static
      */
     public static function from_record(\stdClass $record): module {
         $entity = new module_entity($record);

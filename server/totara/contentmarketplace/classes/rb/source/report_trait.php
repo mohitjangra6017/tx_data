@@ -23,11 +23,11 @@
 
 namespace totara_contentmarketplace\rb\source;
 
-use core\orm\query\builder;
 use rb_column_option;
 use rb_filter_option;
 use rb_join;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
+use totara_contentmarketplace\totara_catalog\provider;
 
 /**
  * Content marketplace report column and filter options.
@@ -46,19 +46,28 @@ trait report_trait {
      * @param string $field
      */
     protected function add_totara_contentmarketplace_tables(array &$joinlist, string $join, string $field): void {
+        global $DB;
         if (empty($this->get_enabled_marketplace_plugins())) {
             return;
         }
 
         $this->usedcomponents[] = 'totara_contentmarketplace';
 
-        // Note: When we add support for having multiple activities in a course that are from multiple different marketplaces,
-        // we will need to ensure it stays a one-to-one join by group the list of marketplaces and concatenating them.
+        $internal = $DB->sql_cast_2char(provider::INTERNAL);
+        $marketplace_list_field = "COALESCE(cm_source.marketplace_component, $internal)";
+        $marketplace_list = $DB->sql_group_concat_unique($DB->sql_cast_2char($marketplace_list_field), '|');
+
         $joinlist[] = new rb_join(
-            'course_source',
-            'left',
-            '{totara_contentmarketplace_course_source}',
-            "$join.$field = course_source.course_id",
+            'course_module_source',
+            'inner',
+            "(
+                SELECT course.id AS course_id, {$marketplace_list} AS marketplaces
+                FROM {course} course
+                LEFT JOIN {course_modules} cm ON course.id = cm.course
+                LEFT JOIN {totara_contentmarketplace_course_module_source} cm_source ON cm.id = cm_source.cm_id
+                GROUP BY course.id
+            )",
+            "$join.$field = course_module_source.course_id",
             REPORT_BUILDER_RELATION_ONE_TO_ONE,
             $join
         );
@@ -77,12 +86,11 @@ trait report_trait {
             'course',
             'provider',
             get_string('course_provider', 'totara_contentmarketplace'),
-            "CASE WHEN course_source.marketplace_component IS NULL
-                    THEN '0'
-                    ELSE course_source.marketplace_component
-                END",
+            'course_module_source.marketplaces',
             [
-                'joins' => [$join, 'course_source'],
+                'joins' => [$join, 'course_module_source'],
+                'dbdatatype' => 'char',
+                'outputformat' => 'text',
                 'displayfunc' => 'course_marketplace_provider',
             ]
         );
@@ -104,6 +112,7 @@ trait report_trait {
             [
                 'selectfunc' => 'totara_contentmarketplace_providers',
                 'simplemode' => true,
+                'concat' => true, // Multicheck filter needs to know that we are working with concatenated values
             ]
         );
     }
@@ -114,15 +123,13 @@ trait report_trait {
      * @return array<string, string>
      */
     public function rb_filter_totara_contentmarketplace_providers(): array {
-        $providers = [
-            0 => get_string('provider_internal', 'totara_contentmarketplace')
-        ];
-
         foreach ($this->get_enabled_marketplace_plugins() as $plugin) {
             $providers["contentmarketplace_$plugin"] = get_string('pluginname', "contentmarketplace_$plugin");
         }
 
-        return $providers;
+        asort($providers);
+
+        return [provider::INTERNAL => get_string('provider_internal', 'totara_contentmarketplace')] + $providers;
     }
 
     /**

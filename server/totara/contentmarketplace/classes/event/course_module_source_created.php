@@ -20,20 +20,22 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_contentmarketplace
  */
-defined('MOODLE_INTERNAL') || die();
 
-use core\event\course_module_deleted;
-use totara_contentmarketplace\event\base_learning_object_updated;
-use totara_contentmarketplace\observer\course_module_source;
-use totara_contentmarketplace\observer\learning_object_observer;
+namespace totara_contentmarketplace\event;
 
-$observers = [
-    [
-        'eventname' => base_learning_object_updated::class,
-        'callback' => [learning_object_observer::class, 'on_learning_object_updated']
-    ],
-    [
-        'eventname' => course_module_deleted::class,
-        'callback' => [course_module_source::class, 'course_module_deleted'],
-    ],
-];
+final class course_module_source_created extends base_course_module_source {
+    /**
+     * @inheritDoc
+     */
+    protected function init() {
+        parent::init();
+        $this->data['crud'] = 'c';
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_name() {
+        return get_string('event_course_module_source_created', 'totara_contentmarketplace');
+    }
+}
