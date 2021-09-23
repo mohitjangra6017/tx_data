@@ -22,7 +22,8 @@
  */
 
 use core\collection;
-use mod_perform\models\activity\element;
+use mod_perform\entity\activity\element as element_entity;
+use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
 use performelement_date_picker\answer_required_error;
 use performelement_date_picker\date_picker;
@@ -47,7 +48,9 @@ class performelement_date_picker_testcase extends advanced_testcase {
         ?int $year_range_end,
         ?string $expected_message
     ): void {
-        $element = new \mod_perform\entity\activity\element();
+
+        $element = new element_entity();
+        $element->plugin_name = 'date_picker';
         $element->data = json_encode([
             'yearRangeStart' => $year_range_start,
             'yearRangeEnd' => $year_range_end,
@@ -56,12 +59,8 @@ class performelement_date_picker_testcase extends advanced_testcase {
         if ($expected_message !== null) {
             $this->expectException(coding_exception::class);
             $this->expectExceptionMessage($expected_message);
-
-            (new date_picker())->process_data($element);
-        } else {
-            $data = (new date_picker())->process_data($element);
-            self::assertEquals($element->data, $data, 'Data should not change');
         }
+        element_model::validate($element);
     }
 
     public function process_data_validate_years_config_provider(): array {

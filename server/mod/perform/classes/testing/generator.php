@@ -440,7 +440,7 @@ final class generator extends \core\testing\component_generator {
         }
 
         $element_plugin = $data['element_plugin'] ?? 'short_text';
-        $element_data = !empty($data['data']) ? trim($data['data']) : null;
+        $element_data = !empty($data['data']) ? trim($data['data']) : json_encode([]);
         $is_required = !empty($data['is_required']) ? filter_var($data['is_required'], FILTER_VALIDATE_BOOLEAN) : null;
 
         $child_element = $parent_element->get_child_element_manager()->create_child_element([

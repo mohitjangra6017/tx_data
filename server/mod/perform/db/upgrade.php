@@ -240,11 +240,5 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2021031500, 'perform');
     }
 
-    if ($oldversion < 2021092300) {
-        mod_perform_maintain_active_date_picker_year_ranges();
-
-        upgrade_mod_savepoint(true, 2021092300, 'perform');
-    }
-
     return true;
 }
