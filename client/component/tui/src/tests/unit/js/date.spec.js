@@ -16,7 +16,7 @@
  * @module tui
  */
 
-import { getDateOrderFromStrftime } from 'tui/date';
+import { getDateOrderFromStrftime, getFixedYearsSelectArray } from 'tui/date';
 
 describe('getDateOrderFromStrftime', () => {
   it('Handles english', () => {
@@ -50,5 +50,58 @@ describe('getDateOrderFromStrftime', () => {
   it('Uses the default for complete rubbish (missing all parts)', () => {
     const order = getDateOrderFromStrftime('rubbish');
     expect(order).toEqual(['y', 'm', 'd']); // Default value.
+  });
+});
+
+describe('getFixedYearsSelectArray', () => {
+  it('It supports explicit start and end years', () => {
+    const yearOptions = getFixedYearsSelectArray(2020, 2022);
+    expect(yearOptions).toEqual([
+      { id: 2020, label: 2020 },
+      { id: 2021, label: 2021 },
+      { id: 2022, label: 2022 },
+    ]);
+  });
+
+  it('It supports single years', () => {
+    const yearOptions = getFixedYearsSelectArray(2020, 2020);
+    expect(yearOptions).toEqual([{ id: 2020, label: 2020 }]);
+  });
+
+  it('It supports zero years', () => {
+    const yearOptions = getFixedYearsSelectArray(0, 0);
+    expect(yearOptions).toEqual([{ id: 0, label: 0 }]);
+  });
+
+  it('It supports negative ranges by returning an empty array', () => {
+    const yearOptions = getFixedYearsSelectArray(2022, 2020);
+    expect(yearOptions).toEqual([]);
+  });
+
+  it('It supports implicit start years', () => {
+    const currentYear = new Date().getFullYear();
+
+    const yearOptions = getFixedYearsSelectArray(undefined, currentYear);
+    expect(yearOptions.length).toEqual(51);
+    expect(yearOptions[0].id).toEqual(currentYear - 50);
+    expect(yearOptions[50].id).toEqual(currentYear);
+  });
+
+  it('It supports implicit end years', () => {
+    const currentYear = new Date().getFullYear();
+
+    const yearOptions = getFixedYearsSelectArray(currentYear);
+    expect(yearOptions.length).toEqual(51);
+    expect(yearOptions[0].id).toEqual(currentYear);
+    expect(yearOptions[50].id).toEqual(currentYear + 50);
+  });
+
+  it('It supports implicit start end years', () => {
+    const currentYear = new Date().getFullYear();
+
+    const yearOptions = getFixedYearsSelectArray();
+    expect(yearOptions.length).toEqual(101);
+    expect(yearOptions[0].id).toEqual(currentYear - 50);
+    expect(yearOptions[100].id).toEqual(currentYear + 50);
   });
 });

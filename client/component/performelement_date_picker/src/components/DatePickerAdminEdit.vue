@@ -22,16 +22,70 @@
       :initial-values="initialValues"
       :settings="settings"
       @cancel="$emit('display')"
-      @update="$emit('update', $event)"
-    />
+      @change="updateValues"
+      @update="$emit('update', processData($event))"
+    >
+      <FormRow
+        :label="
+          $str('label_year_range_begins_at', 'performelement_date_picker')
+        "
+      >
+        <FormText
+          name="yearRangeStart"
+          :placeholder="$str('year_placeholder', 'performelement_date_picker')"
+          :validations="
+            v => [
+              v.integer(),
+              v.min(yearRangeMin),
+              v.maxForRangeStart(
+                yearRangeStart,
+                yearRangeEnd,
+                yearRangeMin,
+                yearRangeMax,
+                $str('error_start_after_end', 'performelement_date_picker')
+              ),
+            ]
+          "
+          :char-length="4"
+          :maxlength="4"
+        />
+      </FormRow>
+      <FormRow
+        :label="$str('label_year_range_ends_at', 'performelement_date_picker')"
+      >
+        <FormText
+          name="yearRangeEnd"
+          :placeholder="$str('year_placeholder', 'performelement_date_picker')"
+          :validations="
+            v => [
+              v.integer(),
+              v.minForRangeEnd(
+                yearRangeStart,
+                yearRangeEnd,
+                yearRangeMin,
+                yearRangeMax,
+                $str('error_end_before_start', 'performelement_date_picker')
+              ),
+              v.max(yearRangeMax),
+            ]
+          "
+          :char-length="4"
+          :maxlength="4"
+        />
+      </FormRow>
+    </PerformAdminCustomElementEdit>
   </div>
 </template>
 
 <script>
+import { DEFAULT_YEAR_RANGE_OFFSET } from 'tui/date';
+import { FormText, FormRow } from 'tui/components/uniform';
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
 
 export default {
   components: {
+    FormText,
+    FormRow,
     PerformAdminCustomElementEdit,
   },
 
@@ -42,16 +96,77 @@ export default {
     isRequired: Boolean,
     rawTitle: String,
     settings: Object,
+    data: Object,
   },
 
   data() {
+    const yearRangeStart = Number.isInteger(this.data.yearRangeStart)
+      ? this.data.yearRangeStart
+      : null;
+    const yearRangeEnd = Number.isInteger(this.data.yearRangeEnd)
+      ? this.data.yearRangeEnd
+      : null;
+
     return {
       initialValues: {
         rawTitle: this.rawTitle,
         identifier: this.identifier,
         responseRequired: this.isRequired,
+        yearRangeStart,
+        yearRangeEnd,
       },
+      yearRangeMin: 1000,
+      yearRangeMax: new Date().getFullYear() + DEFAULT_YEAR_RANGE_OFFSET,
+      yearRangeStart,
+      yearRangeEnd,
     };
+  },
+  methods: {
+    /**
+     * @param {number|string|null} yearRangeStart
+     * @param {number|string|null} yearRangeEnd
+     * Track changes to year range outside uniform so we can adjust the min/max validation accordingly.
+     */
+    updateValues({ yearRangeStart, yearRangeEnd }) {
+      let parsedYearRangeStart = parseInt(yearRangeStart, 10);
+      this.yearRangeStart = isNaN(parsedYearRangeStart)
+        ? null
+        : parsedYearRangeStart;
+
+      let parsedYearRangeEnd = parseInt(yearRangeEnd, 10);
+      this.yearRangeEnd = isNaN(parsedYearRangeEnd) ? null : parsedYearRangeEnd;
+    },
+    /**
+     * Cast the years before/after config to Numbers ready to be used by the DateSelector component.
+     *
+     * @return {object}
+     * @param {object} values
+     */
+    processData(values) {
+      // We need to explicitly handle, Number 0 because if the form is untouched and literal 0 has been fed in
+      // if will be passed back out untouched. If a "0" is typed in, it will come out as string zero.
+      values.data.yearRangeStart = values.data.yearRangeStart
+        ? Number(values.data.yearRangeStart)
+        : null;
+
+      values.data.yearRangeEnd = values.data.yearRangeEnd
+        ? Number(values.data.yearRangeEnd)
+        : null;
+
+      return values;
+    },
   },
 };
 </script>
+
+<lang-strings>
+{
+  "performelement_date_picker": [
+    "error_end_before_start",
+    "error_start_after_end",
+    "label_year_range_begins_at",
+    "label_year_range_ends_at",
+    "year_placeholder"
+  ]
+}
+</lang-strings>

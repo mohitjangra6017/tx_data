@@ -1304,7 +1304,11 @@ class behat_totara_tui extends behat_base {
      * @param string $date_value day month year; 26 June 2020
      */
     public function i_set_the_tui_date_selector_to(string $field_name, string $date_value): void {
-        $date_selector = $this->find_date_selector_by_name($field_name);
+        if (strpos($field_name, '.') === 0) {
+            $date_selector = $this->find('css', "{$field_name}.tui-dateSelector, {$field_name} .tui-dateSelector");
+        } else {
+            $date_selector = $this->find_date_selector_by_name($field_name);
+        }
 
         $date = new DateTime($date_value);
 
@@ -1591,6 +1595,7 @@ class behat_totara_tui extends behat_base {
             $parent = $parent->getParent();
         }
 
+        $expected_error = $this->expanded_text($expected_error);
 
         $errors = $parent->findAll('css', '.tui-formFieldError');
 
@@ -1825,9 +1830,9 @@ class behat_totara_tui extends behat_base {
      * @return NodeElement
      */
     private function find_date_selector_by_name($field_name): NodeElement {
-        $date_selectors = $this->find_all('css', ".tui-dateSelector");
+        $date_selectors = $this->find_all('css', '.tui-dateSelector');
 
-        $matching_date_selectors = array_filter($date_selectors, function (NodeElement $element) use ($field_name) {
+        $matching_date_selectors = array_filter($date_selectors, static function (NodeElement $element) use ($field_name) {
             return $element->getAttribute('name') === $field_name;
         });
 

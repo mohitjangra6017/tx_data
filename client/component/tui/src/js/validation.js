@@ -122,10 +122,92 @@ export const v = {
     message: () => langString('validation_invalid_min', 'totara_core', { min }),
   }),
 
+  /**
+   * @param {number|null} rangeStartVal
+   * @param {number|null} rangeEndVal
+   * @param {number} absoluteMin
+   * @param {number} absoluteMax
+   * @param {string} endBeforeStartMessage
+   * @return {object}
+   */
+  minForRangeEnd: (
+    rangeStartVal,
+    rangeEndVal,
+    absoluteMin,
+    absoluteMax,
+    endBeforeStartMessage
+  ) => {
+    let min;
+
+    if (typeof rangeStartVal !== 'number') {
+      min = absoluteMin;
+    } else if (rangeStartVal > absoluteMax) {
+      min = absoluteMax;
+    } else {
+      min = rangeStartVal < absoluteMin ? absoluteMin : rangeStartVal;
+    }
+
+    return {
+      validate: val => Number(val) >= min,
+      message: () => {
+        if (
+          typeof rangeStartVal === 'number' &&
+          typeof rangeEndVal === 'number' &&
+          rangeStartVal > rangeEndVal
+        ) {
+          return endBeforeStartMessage;
+        }
+
+        return langString('validation_invalid_min', 'totara_core', { min });
+      },
+    };
+  },
+
   max: max => ({
     validate: val => Number(val) <= max,
     message: () => langString('validation_invalid_max', 'totara_core', { max }),
   }),
+
+  /**
+   * @param {number|null} rangeStartVal
+   * @param {number|null} rangeEndVal
+   * @param {number} absoluteMin
+   * @param {number} absoluteMax
+   * @param {string} startAfterEndMessage
+   * @return {object}
+   */
+  maxForRangeStart: (
+    rangeStartVal,
+    rangeEndVal,
+    absoluteMin,
+    absoluteMax,
+    startAfterEndMessage
+  ) => {
+    let max;
+
+    if (typeof rangeEndVal !== 'number') {
+      max = absoluteMax;
+    } else if (rangeEndVal < absoluteMin) {
+      max = absoluteMin;
+    } else {
+      max = rangeEndVal < absoluteMax ? rangeEndVal : absoluteMax;
+    }
+
+    return {
+      validate: val => Number(val) <= max,
+      message: () => {
+        if (
+          typeof rangeStartVal === 'number' &&
+          typeof rangeEndVal === 'number' &&
+          rangeStartVal > rangeEndVal
+        ) {
+          return startAfterEndMessage;
+        }
+
+        return langString('validation_invalid_max', 'totara_core', { max });
+      },
+    };
+  },
 
   colorValueHex: () => ({
     validate: val => /^#[0-9A-F]{6}$/i.test(val),

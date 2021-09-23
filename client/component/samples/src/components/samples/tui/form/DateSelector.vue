@@ -33,9 +33,11 @@
               :disabled="disabled"
               :has-timezone="timezoned"
               :type="isoType"
-              :years-midrange="parseInt(midrangeYear)"
-              :years-before-midrange="parseInt(midrangeYearBefore)"
-              :years-after-midrange="parseInt(midrangeYearAfter)"
+              :years-midrange="parseInt(yearsMidrange)"
+              :years-before-midrange="parseInt(yearsBeforeMidrange)"
+              :years-after-midrange="parseInt(yearsAfterMidrange)"
+              :year-range-start="parseInt(yearRangeStart)"
+              :year-range-end="parseInt(yearRangeEnd)"
               :validations="
                 v => [
                   v.required(),
@@ -97,14 +99,16 @@
       </FormRow>
 
       <hr />
+      <h4>Floating year range</h4>
+
       <FormRow v-slot="{ id, label }" :label="'Midrange year'">
-        <InputNumber :id="id" v-model="midrangeYear" :placeholder="label" />
+        <InputNumber :id="id" v-model="yearsMidrange" :placeholder="label" />
       </FormRow>
 
       <FormRow v-slot="{ id, label }" :label="'Years before midrange'">
         <InputNumber
           :id="id"
-          v-model="midrangeYearBefore"
+          v-model="yearsBeforeMidrange"
           :placeholder="label"
         />
       </FormRow>
@@ -112,9 +116,20 @@
       <FormRow v-slot="{ id, label }" :label="'Years after midrange'">
         <InputNumber
           :id="id"
-          v-model="midrangeYearAfter"
+          v-model="yearsAfterMidrange"
           :placeholder="label"
         />
+      </FormRow>
+
+      <hr />
+      <h4>Fixed year range (alternative to floating)</h4>
+
+      <FormRow v-slot="{ id, label }" :label="'Year range start'">
+        <InputNumber :id="id" v-model="yearRangeStart" :placeholder="label" />
+      </FormRow>
+
+      <FormRow v-slot="{ id, label }" :label="'Year range end'">
+        <InputNumber :id="id" v-model="yearRangeEnd" :placeholder="label" />
       </FormRow>
 
       <hr />
@@ -191,9 +206,11 @@ export default {
       dateValue: {},
       disabled: false,
       errors: null,
-      midrangeYear: new Date().getFullYear(),
-      midrangeYearBefore: 50,
-      midrangeYearAfter: 50,
+      yearsMidrange: new Date().getFullYear(),
+      yearsBeforeMidrange: 50,
+      yearsAfterMidrange: 50,
+      yearRangeStart: null,
+      yearRangeEnd: null,
       maxLimit: false,
       maxLimitErrorMsg: '',
       minLimit: false,

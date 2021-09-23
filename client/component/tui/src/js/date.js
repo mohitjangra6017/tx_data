@@ -35,6 +35,8 @@ import {
   parseISO,
 } from 'date-fns';
 
+export const DEFAULT_YEAR_RANGE_OFFSET = 50;
+
 export { isExists, parseISO } from 'date-fns';
 
 /**
@@ -133,8 +135,8 @@ export function getMonthStringsSelectArray() {
  * Get array for select input range of year
  *
  * @param {number} year mid range year (defaults to current)
- * @param {number} yearsBefore years before mid range (defaults to 50)
- * @param {number} yearsAfter years after mid range (defaults to 50)
+ * @param {number} yearsBefore=50 years before mid range (defaults to 50)
+ * @param {number} yearsAfter=50 years after mid range (defaults to 50)
  * @returns {array}
  */
 export function getYearsSelectArray(year, yearsBefore, yearsAfter) {
@@ -142,10 +144,42 @@ export function getYearsSelectArray(year, yearsBefore, yearsAfter) {
 
   // Provides Defaults for year, years before & years after
   year = year || getYear(new Date());
-  yearsAfter = Number.isInteger(yearsAfter) ? yearsAfter : 50;
-  yearsBefore = Number.isInteger(yearsBefore) ? yearsBefore : 50;
+  yearsAfter = Number.isInteger(yearsAfter)
+    ? yearsAfter
+    : DEFAULT_YEAR_RANGE_OFFSET;
+  yearsBefore = Number.isInteger(yearsBefore)
+    ? yearsBefore
+    : DEFAULT_YEAR_RANGE_OFFSET;
 
   for (let i = year - yearsBefore; i <= year + yearsAfter; i++) {
+    years.push({
+      id: i,
+      label: i,
+    });
+  }
+
+  return years;
+}
+
+/**
+ * Get array for select input range of year when using fixed start and/or end years.
+ *
+ * @param {?number} startYear Defaults to 50 years ago
+ * @param {?number} endYear Defaults to 50 years in the future
+ */
+export function getFixedYearsSelectArray(startYear, endYear) {
+  const currentYear = getYear(new Date());
+
+  if (!startYear && startYear !== 0) {
+    startYear = currentYear - DEFAULT_YEAR_RANGE_OFFSET;
+  }
+
+  if (!endYear && endYear !== 0) {
+    endYear = currentYear + DEFAULT_YEAR_RANGE_OFFSET;
+  }
+
+  const years = [];
+  for (let i = startYear; i <= endYear; i++) {
     years.push({
       id: i,
       label: i,

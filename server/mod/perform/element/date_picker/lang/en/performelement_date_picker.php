@@ -21,11 +21,17 @@
  * @package performelement_date_picker
  */
 
-$string['error_iso_required'] = 'Invalid response data format, expected "date" field to contain "iso" property';
 $string['error_iso_date']     = 'Invalid response data format, could not parse ISO date';
+$string['error_iso_required'] = 'Invalid response data format, expected "date" field to contain "iso" property';
+$string['error_year_outside_range'] = 'Year is outside the allowed range. Year must be between {a->min_year} and {a->max_year}';
+$string['error_start_after_end'] = 'Year must be equal to or earlier than the year range ends';
+$string['error_end_before_start'] = 'Year must be equal to or later than the year range begins';
+$string['label_year_range_begins_at'] ='Year range begins at';
+$string['label_year_range_ends_at'] ='Year range ends at';
 $string['name'] = 'Date picker';
+$string['option_current_year'] ='Current year';
 $string['pluginname'] = 'Date picker';
-
+$string['year_placeholder'] = 'yyyy';
 
 // Deprecated in 13
 $string['date'] = 'Date';

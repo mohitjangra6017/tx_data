@@ -110,6 +110,7 @@ import {
   getMonthStringsSelectArray,
   getValuesFromIso,
   getYearsSelectArray,
+  getFixedYearsSelectArray,
 } from 'tui/date';
 import { getTimeZoneKeyStrings } from 'tui/time';
 import { config } from 'tui/config';
@@ -140,6 +141,10 @@ export default {
     yearsMidrange: Number,
     yearsBeforeMidrange: Number,
     yearsAfterMidrange: Number,
+    // First year of range (alternative to yearsMidrange & yearsAfterMidrange)
+    yearRangeStart: Number,
+    // Last year of range (alternative to yearsMidrange & yearsAfterMidrange)
+    yearRangeEnd: Number,
   },
 
   data() {
@@ -196,11 +201,20 @@ export default {
      *
      */
     yearRange() {
-      let years = getYearsSelectArray(
-        this.yearsMidrange,
-        this.yearsBeforeMidrange,
-        this.yearsAfterMidrange
-      );
+      let years;
+
+      if (this.yearRangeStart || this.yearRangeEnd) {
+        years = getFixedYearsSelectArray(
+          this.yearRangeStart,
+          this.yearRangeEnd
+        );
+      } else {
+        years = getYearsSelectArray(
+          this.yearsMidrange,
+          this.yearsBeforeMidrange,
+          this.yearsAfterMidrange
+        );
+      }
 
       // Check any existing year value is within range
       this.isYearWithinRange(years);

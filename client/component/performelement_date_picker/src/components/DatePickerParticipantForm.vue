@@ -28,9 +28,8 @@
         <FieldGroup :aria-labelledby="labelId">
           <FormDateSelector
             name="response"
-            :years-midrange="midrangeYear"
-            :years-before-midrange="midrangeYearBefore"
-            :years-after-midrange="midrangeYearAfter"
+            :year-range-start="element.data.yearRangeStart"
+            :year-range-end="element.data.yearRangeEnd"
           />
         </FieldGroup>
       </FormScope>
@@ -59,14 +58,6 @@ export default {
       type: [String, Array],
       default: '',
     },
-  },
-
-  data() {
-    return {
-      midrangeYear: 2000,
-      midrangeYearBefore: 100,
-      midrangeYearAfter: 50,
-    };
   },
 
   methods: {

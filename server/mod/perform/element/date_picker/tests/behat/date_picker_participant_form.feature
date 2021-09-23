@@ -25,8 +25,11 @@ Feature: Interact with the date picker in the participant form
     And I navigate to manage perform activity content page
     And I add a "Date picker" activity content element
 
+    # Setting the year range values to things clearly outside the default range.
     When I set the following fields to these values:
-      | rawTitle | Req date picker |
+      | rawTitle       | Req date picker |
+      | yearRangeStart | 1000            |
+      | yearRangeEnd   | 2071            |
     And I click on the "responseRequired" tui checkbox
     And I save the activity content element
     Then I should see "Required"
@@ -87,12 +90,13 @@ Feature: Interact with the date picker in the participant form
     Then I should see "Req date picker" has the validation error "Invalid date. Select day, month and year"
     And I should see "Opt date picker" has the validation error "Invalid date. Select day, month and year"
 
-    When I set the field "uid-10-event-date-year" to "2020"
+    When I set the field "uid-10-event-date-year" to "1000"
     And  I set the field "uid-14-event-date-year" to "2020"
     And I click on "Save as draft" "button"
     Then I should see "Req date picker" has no validation errors
     And I should see "Opt date picker" has no validation errors
 
-    When I click on "Submit" "button"
+    When I set the field "uid-10-event-date-year" to "2071"
+    And I click on "Submit" "button"
     Then I should see "Req date picker" has no validation errors
     And I should see "Opt date picker" has no validation errors

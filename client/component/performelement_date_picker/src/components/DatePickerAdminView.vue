@@ -20,7 +20,11 @@
   <div class="tui-datePickerAdminView">
     <Form input-width="full" :vertical="true">
       <FormRow>
-        <DateSelector :initial-current-date="false" />
+        <DateSelector
+          :initial-current-date="false"
+          :year-range-start="data.yearRangeStart"
+          :year-range-end="data.yearRangeEnd"
+        />
       </FormRow>
     </Form>
   </div>
@@ -39,5 +43,9 @@ export default {
   },
 
   inheritAttrs: false,
+
+  props: {
+    data: Object,
+  },
 };
 </script>

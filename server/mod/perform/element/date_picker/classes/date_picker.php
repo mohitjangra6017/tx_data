@@ -23,12 +23,17 @@
 
 namespace performelement_date_picker;
 
+use coding_exception;
 use core\collection;
 use DateTime;
+use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\respondable_element_plugin;
 
 class date_picker extends respondable_element_plugin {
+
+    private const DEFAULT_YEAR_RANGE_OFFSET = 50;
+    private const DEFAULT_MIN_YEAR = 1000;
 
     /**
      * @inheritDoc
@@ -40,13 +45,52 @@ class date_picker extends respondable_element_plugin {
     /**
      * @inheritDoc
      */
+    public function process_data(element_entity $element): ?string {
+        if (!$element->data) {
+            return json_encode([
+                'yearRangeStart' => null,
+                'yearRangeEnd' => null,
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $decoded_data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
+
+        $this->validate_years_config(
+            $decoded_data['yearRangeStart'] ?? null,
+            $decoded_data['yearRangeEnd'] ?? null,
+        );
+
+        return parent::process_data($element);
+    }
+
+    private function validate_years_config(
+        ?int $year_range_start,
+        ?int $year_range_end
+    ): void {
+        $min_year = $this->get_default_min_year();
+        if ($year_range_start !== null && $year_range_start < $min_year) {
+            throw new coding_exception("Year range start must be {$min_year} or more");
+        }
+
+        $max_year = $this->get_default_max_year();
+        if ($year_range_end !== null && $year_range_end > ($max_year)) {
+            throw new coding_exception("Year range end must be {$max_year} or less");
+        }
+
+        if ($year_range_start !== null && $year_range_end !== null && $year_range_start > $year_range_end) {
+            throw new coding_exception('Year range start must less than or equal to year range end');
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function validate_response(
         ?string $encoded_response_data,
         ?element $element,
         $is_draft_validation = false
     ): collection {
-
-        $response_data = json_decode($encoded_response_data, true);
+        $response_data = json_decode($encoded_response_data, true, 512, JSON_THROW_ON_ERROR);
 
         $errors = new collection();
 
@@ -62,6 +106,11 @@ class date_picker extends respondable_element_plugin {
 
                 if ($date_object === false) {
                     $errors->append(new invalid_date_error());
+                }
+
+                $year_outside_range = $date_object ? $this->validate_selected_year($element, $date_object) : null;
+                if ($year_outside_range !== null) {
+                    $errors->append($year_outside_range);
                 }
             }
         }
@@ -117,5 +166,40 @@ class date_picker extends respondable_element_plugin {
         $date_object = DateTime::createFromFormat('Y-m-d', $response_data['iso']);
 
         return $date_object->getTimestamp();
+    }
+
+    /**
+     * Check the year is inside the allowed range.
+     *
+     * @param element|null $element
+     * @param DateTime $selected_date
+     * @return year_outside_range|null Return the error object if the year is outside the range, otherwise null
+     */
+    public function validate_selected_year(?element $element, DateTime $selected_date): ?year_outside_range {
+        $min_year = $this->get_default_min_year();
+        $max_year = $this->get_default_max_year();
+
+        if ($element !== null) {
+            $decoded_data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
+            $min_year = $decoded_data['yearRangeStart'] ?? $min_year;
+            $max_year = $decoded_data['yearRangeEnd'] ?? $max_year;
+        }
+
+        $selected_year = (int) $selected_date->format('Y');
+        if ($selected_year < $min_year || $selected_year > $max_year) {
+            return new year_outside_range($min_year, $max_year);
+        }
+
+        return null;
+    }
+
+    public function get_default_min_year(): int {
+        return self::DEFAULT_MIN_YEAR;
+    }
+
+    public function get_default_max_year(): int {
+        $current_year = (int) (new DateTime())->format('Y');
+
+        return $current_year + self::DEFAULT_YEAR_RANGE_OFFSET;
     }
 }

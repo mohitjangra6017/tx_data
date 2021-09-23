@@ -1,6 +1,11 @@
 This file describes API changes in /client/component/performelement_date_picker,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* DatePickerParticipantForm year ranges are now driven by new yearsRangeStart and yearsRangeEnd element data
+  the original behaviour has been maintained for already active elements by means of a server side database upgrade step
+    * Changes to template & script block
+
 === 14.0 ===
 * Replaced several components to centralise common functionality improving consistency and reducing duplication
     * DatePickerElementAdminDisplay.vue replaced with DatePickerAdminView.vue

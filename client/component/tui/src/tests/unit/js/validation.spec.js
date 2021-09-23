@@ -147,6 +147,90 @@ describe('built-in validators', () => {
     expect(i.validate('3')).toBe(true);
     expect(i.validate('4')).toBe(false);
   });
+
+  test('min for range end', () => {
+    // Start and end are equal and in range.
+    let i = v.minForRangeEnd(5, 5, 0, 10, '');
+    expect(i.validate(5)).toBe(true);
+
+    // Start and end are equal and set to the absolute max.
+    i = v.minForRangeEnd(10, 10, 0, 10, '');
+    expect(i.validate(10)).toBe(true);
+
+    // Start and end are equal and set to the absolute min.
+    i = v.minForRangeEnd(0, 0, 0, 10, '');
+    expect(i.validate(0)).toBe(true);
+
+    // Start is less than end and both are in range.
+    i = v.minForRangeEnd(10, 5, 0, 10, '');
+    expect(i.validate(10)).toBe(true);
+
+    // End is less than start and both are in range.
+    i = v.minForRangeEnd(9, 8, 0, 10, 'range backwards');
+    expect(i.validate(8)).toBe(false);
+    expect(i.message(8)).toStrictEqual('range backwards');
+
+    // Start and end are less than than absolute min..
+    i = v.minForRangeEnd(-10, -1, 0, 10, '');
+    expect(i.validate(-1)).toBe(false);
+    expect(i.message(-1)).toStrictEqual(
+      langString('validation_invalid_min', 'totara_core', { min: 0 })
+    );
+
+    // Start and end are less than than absolute min and backwards.
+    i = v.minForRangeEnd(-1, -10, 0, 10, 'range backwards');
+    expect(i.validate(-10)).toBe(false);
+    expect(i.message(-10)).toStrictEqual('range backwards');
+
+    // Absolute min is used when no start value is supplied.
+    i = v.minForRangeEnd(-1, null, 0, 10, '');
+    expect(i.validate(-1)).toBe(false);
+    expect(i.message(-1)).toStrictEqual(
+      langString('validation_invalid_min', 'totara_core', { min: 0 })
+    );
+  });
+
+  test('max for range start', () => {
+    // Start and end are equal and in range.
+    let i = v.maxForRangeStart(5, 5, 0, 10, '');
+    expect(i.validate(5)).toBe(true);
+
+    // Start and end are equal and set to the absolute max.
+    i = v.maxForRangeStart(10, 10, 0, 10, '');
+    expect(i.validate(10)).toBe(true);
+
+    // Start and end are equal and set to the absolute min.
+    i = v.maxForRangeStart(0, 0, 0, 10, '');
+    expect(i.validate(0)).toBe(true);
+
+    // Start is less than end and both are in range.
+    i = v.maxForRangeStart(5, 10, 0, 10, '');
+    expect(i.validate(5)).toBe(true);
+
+    // Start is more than start and both are in range.
+    i = v.maxForRangeStart(9, 8, 0, 10, 'range backwards');
+    expect(i.validate(9)).toBe(false);
+    expect(i.message(9)).toStrictEqual('range backwards');
+
+    // Start and end are more than than absolute max.
+    i = v.maxForRangeStart(11, 11, 0, 10, '');
+    expect(i.validate(11)).toBe(false);
+    expect(i.message(11)).toStrictEqual(
+      langString('validation_invalid_max', 'totara_core', { max: 10 })
+    );
+
+    // Start and end are more than than absolute max and backwards.
+    i = v.maxForRangeStart(12, 11, 0, 10, 'range backwards');
+    expect(i.validate(12)).toBe(false);
+    expect(i.message(12)).toStrictEqual('range backwards');
+
+    // Absolute max is used when no end value is supplied.
+    i = v.maxForRangeStart(11, null, 0, 10, '');
+    expect(i.validate(11)).toBe(false);
+    expect(i.message(11)).toStrictEqual(
+      langString('validation_invalid_max', 'totara_core', { max: 10 })
+    );
+  });
 });
 
 describe('fieldValidator', () => {

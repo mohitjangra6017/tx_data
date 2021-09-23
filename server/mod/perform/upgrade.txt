@@ -10,6 +10,7 @@ information provided here is intended especially for developers.
     * GraphQL enum mod_perform_subject_instance_about_filter has been deprecated, please update all calls to mod_perform_subject_instance_filters
     * GraphQL input mod_perform_subject_instance_filters has deprecated the "about" filter; use the new "about_role" filter instead.
     * The due_date and is_overdue attributes in the mod_perform_subject_instance type; use the new attribute due_on instead.
+* Database upgrade step to maintain the original date picker year range of 1900 to 2050 for date picker elements in active activities
 
 === 14.0 ===
 * respondable_element_plugin::validate_response() function now includes new parameter 'is_draft_validation'

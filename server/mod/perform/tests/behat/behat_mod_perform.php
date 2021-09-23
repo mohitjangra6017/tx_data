@@ -1772,6 +1772,8 @@ class behat_mod_perform extends behat_base {
             case 'Static content':
                 $this->fill_static_content_admin_form_settings();
                 break;
+            case 'Date picker':
+                break;
             case 'Response aggregation':
                 // This must come AFTER (in terms of order, from calling method) the rating scale elements, so we can use them as source elements.
                 $this->fill_aggregation_admin_form_settings();
@@ -1953,12 +1955,12 @@ class behat_mod_perform extends behat_base {
             [
                 'name' => 'title',
                 'locator' => self::ADMIN_CUSTOM_ELEMENT_SUMMARY_SECTION_TITLE,
-                'expected' => $expected_title
+                'expected' => trim($expected_title)
             ],
             [
                 'name' => 'value',
                 'locator' => self::ADMIN_CUSTOM_ELEMENT_SUMMARY_SECTION_VALUE,
-                'expected' => $expected_value
+                'expected' => trim($expected_value)
             ],
         ];
 
