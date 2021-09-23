@@ -30,6 +30,7 @@ use container_course\module\course_module;
 use context_coursecat;
 use core\orm\query\builder;
 use core_container\module\module;
+use core_course\hook\edit_form_save_changes;
 use coursecat;
 use stdClass;
 use Throwable as throwable;
@@ -341,6 +342,9 @@ class course_builder {
 
         $course = course_helper::create_course($record);
 
+        // update record to make totara mobile compatible
+        $this->make_mobile_compatible($course->id);
+
         $image_url = $this->learning_object->get_image_url();
         if (!empty($image_url)) {
             // Download image and store it.
@@ -527,5 +531,20 @@ class course_builder {
         }
 
         return $search_shortname;
+    }
+
+    /**
+     * Make contentmarket course compatible with totara mobile.
+     *
+     * @param int $course_id
+     * @return string
+     */
+    private function make_mobile_compatible(int $course_id): void {
+        $form_data = new stdClass();
+        $form_data->totara_mobile_coursecompat = empty(get_config('totara_mobile', 'coursecompat')) ? "" : "1";
+        $form_data->totara_catalog_searchmetadata = '';
+
+        $hook = new edit_form_save_changes(true, $course_id, $form_data);
+        $hook->execute();
     }
 }

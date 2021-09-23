@@ -769,4 +769,29 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         // No course criteria get created.
         self::assertEquals(0, $db->count_records("course_completion_criteria"));
     }
+
+    /**
+     * @return void
+     */
+    public function test_create_course_with_mobile_compatible(): void {
+        self::setAdminUser();
+        set_config('enable', true, 'totara_mobile');
+        $table = builder::table('totara_mobile_compatible_courses');
+        self::assertEquals(0, $table->count());
+
+        $marketplace_generator = generator::instance();
+        $learning_object = $marketplace_generator->create_learning_object("contentmarketplace_linkedin");
+        $interactor = new create_course_interactor(get_admin()->id);
+
+        $course_builder = course_builder::create_with_learning_object(
+            $learning_object::get_marketplace_component(),
+            $learning_object->get_id(),
+            $interactor
+        );
+
+        $result = $course_builder->create_course();
+        self::assertTrue($result->is_successful());
+        self::assertEquals(1, $table->count());
+        self::assertTrue($table->where('courseid', $result->get_course_id())->exists());
+    }
 }
