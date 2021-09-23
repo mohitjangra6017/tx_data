@@ -327,6 +327,7 @@ class competency_assignment extends content_type {
                 'name' => $formatter->format('name', self::TEXT_FORMAT),
                 'proficient' => (bool) $value->proficient,
                 'sort_order' => $value->sortorder,
+                'description_html' => $formatter->format('description', format::FORMAT_HTML),
             ]);
         }
         return $result->sort('sort_order', 'asc', false)->to_array();

@@ -24,6 +24,8 @@ $string['name'] = 'Rating scale: Competency';
 $string['help_text'] = 'The Competency rating scale question references the rating scale for the selected competency. 
 Participants can choose a rating which will be captured in the performance activity. 
 However it would not be submitted to the competency.';
+$string['include_rating_scale_descriptions'] = 'Include rating scale descriptions';
 $string['error_answer_required'] = 'Answer is required';
 $string['pluginname'] = 'Competency Rating';
+$string['option_description'] = '{$a} description';
 $string['scale_value_deleted'] = 'Scale value deleted';

@@ -15,8 +15,8 @@ Feature: Responding to competency rating sub-question in a linked review perform
       | activity_name | section_title | element_title | content_type      |
       | activity1     | section1      | review1       | totara_competency |
     And the following "child elements" exist in "mod_perform" plugin:
-      | section  | parent_element | element_plugin    | element_title   | after_element | is_required | data |
-      | section1 | review1        | competency_rating | Rate competency |               | true        |      |
+      | section  | parent_element | element_plugin    | element_title   | after_element | is_required | data                                 |
+      | section1 | review1        | competency_rating | Rate competency |               | true        | { "scaleDescriptionsEnabled": true } |
     And the following "participants in section" exist in "performelement_linked_review" plugin:
       | section  | subject_user | user  | relationship     | can_answer |
       | section1 | user1        | user1 | subject          | true       |
@@ -32,6 +32,15 @@ Feature: Responding to competency rating sub-question in a linked review perform
       | review1 | user1        | user1         | Doing paperwork |
       | review1 | user1        | user1         | Managing people |
       | review1 | user1        | user1         | Locating stuff  |
+    And I log in as "admin"
+    And I navigate to "Manage competencies" node in "Site administration > Competencies"
+    And I click on "Competency scale" "link"
+    And I click on "Edit" "link"
+    And I set the field "Description" to "Fully competent without any supervision"
+    And I select the text in the "Description" Atto editor
+    When I click on "Bold" "button"
+    And I click on "Save changes" "button"
+    And I log out
 
   Scenario: Make a response to a competency rating question in a performance activity
     When I log in as "user1"
@@ -42,6 +51,10 @@ Feature: Responding to competency rating sub-question in a linked review perform
     And I click show others responses
     Then I should see "Manager response"
     And I should see "No response submitted"
+
+    # Make sure we have rendered actual html (bold text) in the summary for description.
+    When I click on "Show description" "button"
+    Then I should see "Fully competent without any supervision" in the ".tui-hideShow__content--show b" "css_element"
 
     # Respond to first & second competency
     And I click on the "Competent" tui radio in the ".tui-linkedReviewParticipantForm__item:nth-child(1)" "css_element"
@@ -66,6 +79,7 @@ Feature: Responding to competency rating sub-question in a linked review perform
     And I should see "Your response" in the 1st selected content item for the "review1" linked review print element
     And I should see "Competent" in the 1st selected content item for the "review1" linked review print element
     And I should see "Competent with supervision" in the 2nd selected content item for the "review1" linked review print element
+    And I should see "Fully competent without any supervision" in the ".tui-competencyRatingParticipantForm__descriptionPrint b" "css_element"
 
     # Manager view other's responses & submit
     When I log out

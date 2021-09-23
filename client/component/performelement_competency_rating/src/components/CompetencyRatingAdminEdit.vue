@@ -23,21 +23,37 @@
       :settings="settings"
       @cancel="$emit('display')"
       @update="$emit('update', $event)"
-    />
+    >
+      <!-- Enable description -->
+      <FormRow>
+        <FormCheckbox name="scaleDescriptionsEnabled">
+          {{
+            $str(
+              'include_rating_scale_descriptions',
+              'performelement_competency_rating'
+            )
+          }}
+        </FormCheckbox>
+      </FormRow>
+    </PerformAdminCustomElementEdit>
   </div>
 </template>
 
 <script>
+import { FormCheckbox, FormRow } from 'tui/components/uniform';
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
 
 export default {
   components: {
+    FormCheckbox,
+    FormRow,
     PerformAdminCustomElementEdit,
   },
 
   inheritAttrs: false,
 
   props: {
+    data: Object,
     identifier: String,
     isRequired: Boolean,
     rawTitle: String,
@@ -50,8 +66,17 @@ export default {
         rawTitle: this.rawTitle,
         identifier: this.identifier,
         responseRequired: this.isRequired,
+        scaleDescriptionsEnabled: this.data.scaleDescriptionsEnabled,
       },
     };
   },
 };
 </script>
+
+<lang-strings>
+{
+  "performelement_competency_rating": [
+    "include_rating_scale_descriptions"
+  ]
+}
+</lang-strings>

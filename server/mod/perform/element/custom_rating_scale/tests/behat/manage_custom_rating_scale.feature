@@ -93,7 +93,6 @@ Feature: Manage performance activity custom rating scale elements
     And I should see "Option two (score: 2)" in the ".tui-performAdminCustomElementSummary__section-options" "css_element"
     And I should see "Option three (score: 3)" in the ".tui-performAdminCustomElementSummary__section-options" "css_element"
 
-
   Scenario: Delete custom rating scale elements options
     Given I log in as "admin"
     And I navigate to the manage perform activities page

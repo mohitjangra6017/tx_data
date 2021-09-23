@@ -29,16 +29,44 @@
       <FormScope :path="path" :process="process">
         <FormRadioGroup
           class="tui-competencyRatingParticipantForm"
-          :validations="validations"
           name="response"
+          :char-length="50"
+          :validations="validations"
         >
-          <Radio
-            v-for="scaleValue in extraData.content.scale_values"
-            :key="scaleValue.id"
-            :value="scaleValue.id"
+          <template
+            v-for="(scaleValue, index) in extraData.content.scale_values"
           >
-            {{ scaleValue.name }}
-          </Radio>
+            <Radio :key="scaleValue.id" :value="scaleValue.id">
+              {{ scaleValue.name }}
+            </Radio>
+            <template
+              v-if="
+                element.data.scaleDescriptionsEnabled &&
+                  scaleValue.description_html
+              "
+            >
+              <RenderedContent
+                v-if="fromPrint"
+                :key="'description' + index"
+                class="tui-competencyRatingParticipantForm__descriptionPrint"
+                :content-html="scaleValue.description_html"
+              />
+              <ElementDescription
+                v-else
+                :key="'description' + index"
+                class="tui-competencyRatingParticipantForm__description"
+                :aria-region-label="
+                  $str(
+                    'option_description',
+                    'performelement_competency_rating',
+                    scaleValue.name
+                  )
+                "
+                :content-html="scaleValue.description_html"
+                initially-closed
+              />
+            </template>
+          </template>
         </FormRadioGroup>
       </FormScope>
     </template>
@@ -46,23 +74,28 @@
 </template>
 
 <script>
+import ElementDescription from 'mod_perform/components/element/participant_form/ElementDescription';
 import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 import FormRadioGroup from 'tui/components/uniform/FormRadioGroup';
 import FormScope from 'tui/components/reform/FormScope';
 import Radio from 'tui/components/form/Radio';
+import RenderedContent from 'tui/components/editor/RenderedContent';
 import { v as validation } from 'tui/validation';
 
 export default {
   components: {
+    ElementDescription,
     ElementParticipantFormContent,
     FormRadioGroup,
     FormScope,
     Radio,
+    RenderedContent,
   },
 
   props: {
     element: Object,
     isDraft: Boolean,
+    fromPrint: Boolean,
     extraData: {
       type: Object,
       required: true,
@@ -122,3 +155,25 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.tui-competencyRatingParticipantForm {
+  &__description {
+    margin-top: var(--gap-1);
+    margin-left: var(--gap-4);
+  }
+
+  &__descriptionPrint {
+    margin-top: var(--gap-4);
+    margin-left: var(--gap-6);
+  }
+}
+</style>
+
+<lang-strings>
+{
+  "performelement_competency_rating": [
+    "option_description"
+  ]
+}
+</lang-strings>

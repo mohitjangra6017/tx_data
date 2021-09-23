@@ -20,7 +20,7 @@
   <div class="tui-customRatingScaleAdminView">
     <Form input-width="full" :vertical="true">
       <FormRow>
-        <RadioGroup v-model="tempVal" :aria-label="title" char-length="50">
+        <RadioGroup v-model="tempVal" :aria-label="title" :char-length="50">
           <template v-for="(item, index) in data.options">
             <Radio :key="index" :name="item.name" :value="item.value">
               {{

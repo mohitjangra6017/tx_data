@@ -20,15 +20,25 @@
   <div class="tui-competencyRatingAdminView">
     <Form input-width="full" :vertical="true">
       <FormRow>
-        <RadioGroup v-model="tempVal" :aria-label="title">
-          <Radio
-            v-for="item in options"
-            :key="item.name"
-            :name="item.name"
-            :value="item.value"
-          >
-            {{ item.value }}
-          </Radio>
+        <RadioGroup v-model="tempVal" :aria-label="title" :char-length="50">
+          <template v-for="(item, index) in options">
+            <Radio :key="item.name" :name="item.name" :value="item.value">
+              {{ item.value }}
+            </Radio>
+            <ElementDescription
+              v-if="data.scaleDescriptionsEnabled"
+              :key="'description' + index"
+              class="tui-competencyRatingAdminView__description"
+              :content-html="
+                $str(
+                  'scale_description_dummy_text',
+                  'totara_competency',
+                  index + 1
+                )
+              "
+              initially-closed
+            />
+          </template>
         </RadioGroup>
       </FormRow>
     </Form>
@@ -36,6 +46,7 @@
 </template>
 
 <script>
+import ElementDescription from 'mod_perform/components/element/participant_form/ElementDescription';
 import Form from 'tui/components/form/Form';
 import FormRow from 'tui/components/form/FormRow';
 import Radio from 'tui/components/form/Radio';
@@ -43,6 +54,7 @@ import RadioGroup from 'tui/components/form/RadioGroup';
 
 export default {
   components: {
+    ElementDescription,
     Form,
     FormRow,
     Radio,
@@ -53,6 +65,7 @@ export default {
 
   props: {
     title: String,
+    data: Object,
   },
 
   data() {
@@ -83,9 +96,19 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.tui-competencyRatingAdminView {
+  &__description {
+    margin-top: var(--gap-2);
+    margin-left: var(--gap-4);
+  }
+}
+</style>
+
 <lang-strings>
   {
     "totara_competency": [
+      "scale_description_dummy_text",
       "rating_value"
     ]
   }

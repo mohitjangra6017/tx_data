@@ -364,6 +364,7 @@ $string['save_modal_body'] = '{$a} competency assignments will be created.';
 $string['save_modal_header'] = 'Confirm competency assignment creation';
 $string['save_modal_question'] = 'Do you want to proceed with competency assignment creation?';
 $string['savechanges'] = 'Save changes';
+$string['scale_description_dummy_text'] = 'Scale description {$a}';
 $string['search_competencies_descriptive'] = 'Search for competencies to self-assign';
 $string['search_courses'] = 'Search courses';
 $string['select_competencies'] = 'Select competencies';

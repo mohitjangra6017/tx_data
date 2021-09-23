@@ -18,6 +18,7 @@
 <template>
   <div class="tui-competencyRatingAdminSummary">
     <PerformAdminCustomElementSummary
+      :extra-fields="extraFields"
       :identifier="identifier"
       :is-required="isRequired"
       :settings="settings"
@@ -38,10 +39,39 @@ export default {
   inheritAttrs: false,
 
   props: {
+    data: Object,
     identifier: String,
     isRequired: Boolean,
     settings: Object,
     title: String,
   },
+
+  data() {
+    const extraFields = [
+      {
+        title: this.$str(
+          'include_rating_scale_descriptions',
+          'performelement_competency_rating'
+        ),
+        value: this.data.scaleDescriptionsEnabled
+          ? this.$str('yes', 'core')
+          : this.$str('no', 'core'),
+      },
+    ];
+
+    return { extraFields };
+  },
 };
 </script>
+
+<lang-strings>
+{
+  "core": [
+    "no",
+    "yes"
+  ],
+  "performelement_competency_rating": [
+    "include_rating_scale_descriptions"
+  ]
+}
+</lang-strings>

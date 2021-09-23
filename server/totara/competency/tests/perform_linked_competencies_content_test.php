@@ -106,7 +106,15 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
             'subject_user_id' => $user1->id,
         ]));
 
-        $competency1 = $this->generator()->create_competency();
+        $scale_values = [
+            ['name' => 'a', 'proficient' => 1, 'sortorder' => 1, 'default' => 0, 'description' => '<p>A</p>'],
+            ['name' => 'b', 'proficient' => 1, 'sortorder' => 2, 'default' => 0],
+            ['name' => 'c', 'proficient' => 0, 'sortorder' => 3, 'default' => 1],
+        ];
+        $scale1 = $this->generator()->create_scale('comp', null, $scale_values);
+        $framework1 = $this->generator()->create_framework($scale1);
+
+        $competency1 = $this->generator()->create_competency(null, $framework1);
         $competency2 = $this->generator()->create_competency();
 
         $assignment_generator = $this->generator()->assignment_generator();
@@ -157,6 +165,7 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
                 'name' => $expected_scale_value->name,
                 'proficient' => (bool) $expected_scale_value->proficient,
                 'sort_order' => $expected_scale_value->sortorder,
+                'description_html' => $expected_scale_value->description,
             ];
         }
 
@@ -201,6 +210,7 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
                 'name' => $expected_scale_value->name,
                 'proficient' => (bool) $expected_scale_value->proficient,
                 'sort_order' => $expected_scale_value->sortorder,
+                'description_html' => $expected_scale_value->description,
             ];
         }
 
@@ -299,6 +309,7 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
                 'name' => $expected_scale_value->name,
                 'proficient' => (bool) $expected_scale_value->proficient,
                 'sort_order' => $expected_scale_value->sortorder,
+                'description_html' => $expected_scale_value->description,
             ];
         }
 

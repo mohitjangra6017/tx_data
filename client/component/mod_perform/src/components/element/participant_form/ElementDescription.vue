@@ -21,7 +21,7 @@
     class="tui-performParticipantElementDescription"
     :label="$str('element_description', 'mod_perform')"
     :aria-region-label="ariaRegionLabel"
-    initially-expanded
+    :initially-expanded="!initiallyClosed"
   >
     <template v-slot:trigger="{ expanded, toggleContent, controls }">
       <ButtonIcon
@@ -75,6 +75,7 @@ export default {
       type: String,
       required: true,
     },
+    initiallyClosed: Boolean,
   },
 };
 </script>
