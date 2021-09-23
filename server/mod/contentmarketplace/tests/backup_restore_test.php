@@ -22,9 +22,12 @@
  */
 
 use container_course\course;
+use contentmarketplace_linkedin\model\learning_object;
 use contentmarketplace_linkedin\testing\generator as linkedin_generator;
+use core\entity\file;
 use core\orm\query\builder;
 use core\testing\generator as core_generator;
+use mod_contentmarketplace\testing\generator as mod_generator;
 use core_container\container;
 use core_container\factory;
 use core_phpunit\testcase;
@@ -45,26 +48,44 @@ class mod_contentmarketplace_backup_restore_testcase extends testcase {
      */
     public function test_backup_and_restore_successful(): void {
         self::setAdminUser();
+        $fs = get_file_storage();
         contentmarketplace::plugin('linkedin')->enable();
 
         $external_id1 = 'urn:abc';
         $learning_object1 = linkedin_generator::instance()->create_learning_object($external_id1);
+        $learning_object1_model = learning_object::load_by_entity($learning_object1);
 
         $external_id2 = 'urn:xyz';
         $learning_object2 = linkedin_generator::instance()->create_learning_object($external_id2);
+        $learning_object2_model = learning_object::load_by_entity($learning_object2);
 
-        $course1 = course_builder::create_with_learning_object(
-            'contentmarketplace_linkedin',
-            $learning_object1->id,
-            new create_course_interactor()
-        )->create_course();
-        $course2 = course_builder::create_with_learning_object(
-            'contentmarketplace_linkedin',
-            $learning_object2->id,
-            new create_course_interactor()
-        )->create_course();
+        $course1 = core_generator::instance()->create_course();
+        $course1_module = mod_generator::instance()->create_content_marketplace_instance([
+            'course' => $course1, 'learning_object' => $learning_object1_model,
+        ]);
+        $course1_module_file = $fs->create_file_from_string([
+            'contextid' => context_module::instance($course1_module->cmid)->id,
+            'component' => 'mod_contentmarketplace',
+            'filearea' => 'intro',
+            'itemid' => '0',
+            'filepath' => '/',
+            'filename' => 'course1',
+        ], 'course1');
 
-        $course1_backup = $this->backup($course1->get_course_id());
+        $course2 = core_generator::instance()->create_course();
+        $course2_module = mod_generator::instance()->create_content_marketplace_instance([
+            'course' => $course2, 'learning_object' => $learning_object2_model,
+        ]);
+        $course2_module_file = $fs->create_file_from_string([
+            'contextid' => context_module::instance($course2_module->cmid)->id,
+            'component' => 'mod_contentmarketplace',
+            'filearea' => 'intro',
+            'itemid' => '0',
+            'filepath' => '/',
+            'filename' => 'course2',
+        ], 'course2');
+
+        $course1_backup = $this->backup($course1->id);
 
         // Delete the original learning object record in order to make sure that we aren't restoring based on the internal ID.
         $learning_object1->delete();
@@ -76,8 +97,8 @@ class mod_contentmarketplace_backup_restore_testcase extends testcase {
             ->where('course', $course1_restored->id)
             ->one(true);
 
-        $this->assertNotEquals($course1->get_course_id(), $course1_activity_restored->course);
-        $this->assertNotEquals($course2->get_course_id(), $course1_activity_restored->course);
+        $this->assertNotEquals($course1->id, $course1_activity_restored->course);
+        $this->assertNotEquals($course2->id, $course1_activity_restored->course);
         $this->assertEquals('contentmarketplace_linkedin', $course1_activity_restored->learning_object_marketplace_component);
         $this->assertEquals($learning_object1->id, $course1_activity_restored->learning_object_id);
 
@@ -88,6 +109,21 @@ class mod_contentmarketplace_backup_restore_testcase extends testcase {
             ->one(true);
         $this->assertEquals('contentmarketplace_linkedin', $course1_activity_source->marketplace_component);
         $this->assertEquals($learning_object1->id, $course1_activity_source->learning_object_id);
+
+        // Check that the intro file was migrated
+        /** @var file[] $course1_files */
+        $course1_files = file::repository()
+            ->with('context')
+            ->where('component', 'mod_contentmarketplace')
+            ->where('filearea', 'intro')
+            ->where('itemid', 0)
+            ->where('filename', 'course1')
+            ->order_by('id')
+            ->get()
+            ->all();
+        $this->assertCount(2, $course1_files);
+        $this->assertEquals($course1_module->cmid, $course1_files[0]->context->instanceid);
+        $this->assertEquals($course1_activity_restored->course_module->id, $course1_files[1]->context->instanceid);
     }
 
     /**

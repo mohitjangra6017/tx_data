@@ -95,4 +95,11 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         course_module_source::create($course_module, $learning_object);
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function after_execute() {
+        $this->add_related_files('mod_contentmarketplace', 'intro', null);
+    }
+
 }

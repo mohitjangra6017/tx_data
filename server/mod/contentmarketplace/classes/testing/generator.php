@@ -29,6 +29,7 @@ use core\orm\query\builder;
 use core\testing\mod_generator;
 use core_container\factory;
 use stdClass;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 use totara_contentmarketplace\model\course_module_source;
 use totara_contentmarketplace\testing\generator as totara_contentmarketplace_generator;
 
@@ -56,6 +57,10 @@ class generator extends mod_generator {
             $record->section = 0;
         }
 
+        if (!property_exists($record, 'introformat')) {
+            $record->introformat = FORMAT_HTML;
+        }
+
         if (!property_exists($record, 'learning_object_marketplace_component')) {
             // Default to linkedin learning, for test environment, if it is not provided.
             $record->learning_object_marketplace_component = 'contentmarketplace_linkedin';
@@ -81,17 +86,24 @@ class generator extends mod_generator {
      * @return stdClass
      */
     public function create_content_marketplace_instance(array $data = []): stdClass {
-        if (!isset($data['course']) || !isset($data['name']) || !isset($data['marketplace_component'])) {
+        if (!isset($data['course'])) {
             throw new coding_exception(
-                "Missing either of the required fields: ['course', 'name', 'marketplace_component']"
+                "Missing either of the required fields: ['course', 'marketplace_component']"
             );
         }
 
-        $marketplace_generator = totara_contentmarketplace_generator::instance();
-        $learning_object = $marketplace_generator->create_learning_object(
-            $data['marketplace_component'],
-            $data['name']
-        );
+        if (isset($data['learning_object']) && $data['learning_object'] instanceof model) {
+            $learning_object = $data['learning_object'];
+        } else if (isset($data['name'], $data['marketplace_component'])) {
+            $learning_object = totara_contentmarketplace_generator::instance()->create_learning_object(
+                $data['marketplace_component'],
+                $data['name']
+            );
+        } else {
+            throw new coding_exception(
+                "Must specify either ['learning_object'] model instance, or ['marketplace_component', 'name']"
+            );
+        }
 
         $db = builder::get_db();
 
@@ -110,7 +122,9 @@ class generator extends mod_generator {
             'course' => $course->id,
             'section' => 0,
             'learning_object_id' => $learning_object->get_id(),
-            'learning_object_marketplace_component' => $learning_object::get_marketplace_component()
+            'learning_object_marketplace_component' => $learning_object::get_marketplace_component(),
+            'intro' => $data['intro'] ?? null,
+            'introformat' => $data['introformat'] ?? FORMAT_HTML,
         ]);
 
         if ('singleactivity' === $course->format) {

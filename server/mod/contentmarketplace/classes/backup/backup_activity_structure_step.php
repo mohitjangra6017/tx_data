@@ -42,6 +42,8 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ['id'],
             [
                 'name',
+                'intro',
+                'introformat',
                 'learning_object_marketplace_component',
                 'learning_object_external_id',
                 'learning_object_id',
@@ -55,6 +57,9 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             FROM {" . content_marketplace::TABLE . "} activity
             WHERE activity.id = :id
         ", ['id' => backup::VAR_ACTIVITYID]);
+
+        // Define file annotations
+        $contentmarketplace->annotate_files('mod_contentmarketplace', 'intro', null);
 
         return $this->prepare_activity_structure($contentmarketplace);
     }
