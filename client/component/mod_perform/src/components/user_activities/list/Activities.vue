@@ -303,6 +303,8 @@ export default {
       type: Number,
     },
     filterOptions: Object,
+    // Is the tab about others activities or the users own
+    isAboutOthers: Boolean,
     printUrl: {
       required: true,
       type: String,
@@ -340,15 +342,6 @@ export default {
   },
 
   computed: {
-    /**
-     * Check if the tab is about the users own activities or others
-     *
-     * @return {Boolean}
-     */
-    isAboutOthers() {
-      return this.aboutRole !== 1;
-    },
-
     /**
      * Return empty list string, either it is empty due to the active filters
      * Or you haven't been assigned any activities yet.

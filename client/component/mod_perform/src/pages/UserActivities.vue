@@ -43,6 +43,7 @@
             :about-role="tab.id"
             :current-user-id="currentUserId"
             :filter-options="filterOptions"
+            :is-about-others="tab.about_others"
             :print-url="printActivityUrl"
             :sort-by-options="sortByOptions"
             :view-url="viewActivityUrl"

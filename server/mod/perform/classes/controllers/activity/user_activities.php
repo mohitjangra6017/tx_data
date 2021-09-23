@@ -122,6 +122,7 @@ class user_activities extends perform_controller {
             // The FE requires the subject role to be returned even if this
             // participant does not have a subject role.
             [
+                'about_others' => false,
                 'id' => $subject_role_id,
                 'name' => get_string('user_activities_your_activities_title', 'mod_perform')
             ]
@@ -132,6 +133,7 @@ class user_activities extends perform_controller {
                 function (array $roles, relationship $relationship) use ($subject_idnumber): array {
                     if ($relationship->idnumber !== $subject_idnumber) {
                         $roles[] = [
+                            'about_others' => true,
                             'id' => $relationship->id,
                             'name' => get_string('user_activities_as_a_role', 'mod_perform', $relationship->name)
                         ];
