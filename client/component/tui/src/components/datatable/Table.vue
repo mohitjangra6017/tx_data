@@ -301,6 +301,11 @@ export default {
         ? this.getPlaceholderLoadingRows()
         : this.data;
 
+      // Close any expanded rows when loading content
+      if (this.loadingPreview) {
+        this.updateExpandedRow();
+      }
+
       return data.map((row, index) => {
         const id = this.getId(row, index);
         return {

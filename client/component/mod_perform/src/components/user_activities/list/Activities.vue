@@ -74,17 +74,17 @@
         v-model="sortByFilter"
         :about-others="isAboutOthers"
         :displayed-count="subjectInstances.length"
-        :loading="$apollo.loading"
+        :loading="$apollo.queries.subjectInstances.loading"
         :sort-by-options="sortByOptions"
         :total="totalActivities"
       />
 
-      <Loader :loading="$apollo.loading">
+      <Loader :loading="$apollo.queries.subjectInstances.loading">
         <Table
-          v-if="!$apollo.loading"
           ref="activity-table"
           :data="subjectInstances"
           :expandable-rows="true"
+          :loading-preview="$apollo.queries.subjectInstances.loading"
           :no-items-text="emptyListText"
           :stack-at="850"
         >
@@ -150,9 +150,11 @@
               :size="isAboutOthers ? '4' : '6'"
               valign="center"
             >
-              <a :href="getViewActivityUrl(row)">
-                {{ getActivityTitle(row.subject) }}
-              </a>
+              <template v-slot:default>
+                <a :href="getViewActivityUrl(row)">
+                  {{ getActivityTitle(row.subject) }}
+                </a>
+              </template>
             </Cell>
 
             <!-- User name (removed for own activities) -->
@@ -164,7 +166,9 @@
               size="2"
               valign="center"
             >
-              {{ row.subject.subject_user.fullname }}
+              <template v-slot:default>
+                {{ row.subject.subject_user.fullname }}
+              </template>
             </Cell>
 
             <!-- Job assignment -->
@@ -175,7 +179,9 @@
               size="2"
               valign="center"
             >
-              {{ getJobAssignmentDescription(row.subject.job_assignment) }}
+              <template v-slot:default>
+                {{ getJobAssignmentDescription(row.subject.job_assignment) }}
+              </template>
             </Cell>
 
             <!-- Due date -->
@@ -186,8 +192,10 @@
               size="2"
               valign="center"
             >
-              <template v-if="row.subject.due_on">
-                {{ row.subject.due_on.due_date }}
+              <template v-slot:default>
+                <span v-if="row.subject.due_on">
+                  {{ row.subject.due_on.due_date }}
+                </span>
               </template>
             </Cell>
 
@@ -199,7 +207,9 @@
               size="2"
               valign="center"
             >
-              {{ row.subject.activity.type.display_name }}
+              <template v-slot:default>
+                {{ row.subject.activity.type.display_name }}
+              </template>
             </Cell>
 
             <!-- Your progress -->
@@ -213,22 +223,26 @@
               size="2"
               valign="center"
             >
-              {{ getYourProgressText(row.subject.participant_instances) }}
+              <template v-slot:default>
+                {{ getYourProgressText(row.subject.participant_instances) }}
 
-              <OverdueLozenge
-                v-if="
-                  isCurrentRoleInstanceOverdue(
-                    row.subject.participant_instances
-                  )
-                "
-              />
+                <OverdueLozenge
+                  v-if="
+                    isCurrentRoleInstanceOverdue(
+                      row.subject.participant_instances
+                    )
+                  "
+                />
 
-              <Lock
-                v-if="
-                  isCurrentRoleInstanceClosed(row.subject.participant_instances)
-                "
-                :alt="$str('user_activities_closed', 'mod_perform')"
-              />
+                <Lock
+                  v-if="
+                    isCurrentRoleInstanceClosed(
+                      row.subject.participant_instances
+                    )
+                  "
+                  :alt="$str('user_activities_closed', 'mod_perform')"
+                />
+              </template>
             </Cell>
 
             <!-- Overall progress -->
@@ -239,16 +253,18 @@
               size="2"
               valign="center"
             >
-              {{ getStatusText(row.subject.progress_status) }}
+              <template v-slot:default>
+                {{ getStatusText(row.subject.progress_status) }}
 
-              <OverdueLozenge
-                v-if="row.subject.due_on && row.subject.due_on.is_overdue"
-              />
+                <OverdueLozenge
+                  v-if="row.subject.due_on && row.subject.due_on.is_overdue"
+                />
 
-              <Lock
-                v-if="row.subject.availability_status === 'CLOSED'"
-                :alt="$str('user_activities_closed', 'mod_perform')"
-              />
+                <Lock
+                  v-if="row.subject.availability_status === 'CLOSED'"
+                  :alt="$str('user_activities_closed', 'mod_perform')"
+                />
+              </template>
             </Cell>
           </template>
 
@@ -684,6 +700,10 @@ export default {
      * @return {string}
      */
     getExpandLabel(subjectInstance) {
+      if (!subjectInstance.subject) {
+        return;
+      }
+
       const activityTitle = this.getActivityTitle(subjectInstance.subject);
       if (!this.isAboutOthers) {
         return activityTitle;
