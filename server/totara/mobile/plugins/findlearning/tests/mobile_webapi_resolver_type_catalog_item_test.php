@@ -49,15 +49,35 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
      * @return []
      */
     private function create_faux_catalog_items($format = 'html'): array {
+        global $CFG;
+
+
         $prog_gen = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
+        // A dummy pluginfile URL to check trasformation to mobile plugin file URLS.
+        $file_url = $CFG->wwwroot . '/pluginfile.php/163/course/summary/summary_image.png';
+
         // Create some courses.
-        $this->getDataGenerator()->create_course(['shortname' => 'alpha', 'fullname' => 'Alpha course', 'summary' => 'Alphabetical courses 1']);
-        $this->getDataGenerator()->create_course(['shortname' => 'beta', 'fullname' => 'Beta course', 'summary' => 'Alphabetical courses 2']);
-        $this->getDataGenerator()->create_course(['shortname' => 'charlie', 'fullname' => 'Charlie course', 'summary' => 'Alphabetical courses 3']);
+        $this->getDataGenerator()->create_course([
+            'shortname' => 'alpha',
+            'fullname' => 'Alpha course',
+            'summary' => 'Alphabetical courses 1'
+        ]);
+
+        $this->getDataGenerator()->create_course([
+            'shortname' => 'beta',
+            'fullname' => 'Beta course',
+            'summary' => 'Alphabetical courses 2 ' . $file_url
+        ]);
+
+        $this->getDataGenerator()->create_course([
+            'shortname' => 'charlie',
+            'fullname' => 'Charlie course',
+            'summary' => 'Alphabetical courses 3 http://www.externaltest.com'
+        ]);
 
         // Add some extra courses as prog/cert content.
         $c1 = $this->getDataGenerator()->create_course(['fullname' => 'Prog content 1']);
@@ -65,10 +85,18 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
         $c3 = $this->getDataGenerator()->create_course(['fullname' => 'Prog content 3']);
 
         // Create a single program expected at the top of sort.
-        $program = $prog_gen->create_program(['shortname' => 'prg', 'fullname' => 'Alpha program', 'summary' => 'first program']);
+        $program = $prog_gen->create_program([
+            'shortname' => 'prg',
+            'fullname' => 'Alpha program',
+            'summary' => 'first program' . $file_url
+        ]);
 
         // Create a single certification expected at the top of sort.
-        $certification = $prog_gen->create_certification(['shortname' => 'crt', 'fullname' => 'Alpha certification', 'summary' => 'first certification']);
+        $certification = $prog_gen->create_certification([
+            'shortname' => 'crt',
+            'fullname' => 'Alpha certification',
+            'summary' => 'first certification'
+        ]);
 
         // Create a playlist to test.
         $playlistgen = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
@@ -217,6 +245,54 @@ class mobile_findlearning_webapi_resolver_type_catalog_item_testcase extends \co
                 $this->assertSame($expected, $this->resolve('title', $object, ['format' => format::FORMAT_PLAIN]));
             }
         }
+    }
+
+    /**
+     * Test that the catalog items summary is resolved as expected.
+     */
+    public function test_resolve_summary(): void {
+        global $CFG;
+
+        $users = $this->create_faux_catalog_items();
+
+        // get the catalog objects for user 1 since it will have a range of objects.
+        $this->setUser($users['u1']->id);
+        $page = mobile_catalog::load_catalog_page_objects();
+
+        // Resolve the items via the page so the summary data is loaded properly.
+        $objects = $this->resolve_graphql_type('mobile_findlearning_catalog_page', 'items', $page, []);
+
+        // Articles don't have a summary.
+        $object = array_shift($objects);
+        $this->assertSame('engage_article', $object->objecttype);
+        $this->assertEmpty($this->resolve('summary', $object, ['format' => format::FORMAT_PLAIN]));
+
+        // This one's just a basic course summary.
+        $object = array_shift($objects);
+        $this->assertSame('course', $object->objecttype);
+        $summary = $this->resolve('summary', $object, ['format' => format::FORMAT_PLAIN]);
+        $expected = 'Alphabetical courses 1';
+        $this->assertSame($expected, $summary);
+
+        // Playlists don't have a summary.
+        $object = array_shift($objects);
+        $this->assertSame('playlist', $object->objecttype);
+        $this->assertEmpty($this->resolve('summary', $object, ['format' => format::FORMAT_PLAIN]));
+
+        // Here's the main test, pluginfile.php should become totara/mobile/pluginfile.php
+        $object = array_shift($objects);
+        $this->assertSame('course', $object->objecttype);
+        $summary = $this->resolve('summary', $object, ['format' => format::FORMAT_PLAIN]);
+        $file_url = $CFG->wwwroot . '/totara/mobile/pluginfile.php/163/course/summary/summary_image.png';
+        $expected = 'Alphabetical courses 2 ' . $file_url;
+        $this->assertSame($expected, $summary);
+
+        // External URLs shouldnt change.
+        $object = array_shift($objects);
+        $this->assertSame('course', $object->objecttype);
+        $summary = $this->resolve('summary', $object, ['format' => format::FORMAT_PLAIN]);
+        $expected = 'Alphabetical courses 3 http://www.externaltest.com';
+        $this->assertSame($expected, $summary);
     }
 
     /**

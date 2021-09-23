@@ -112,7 +112,7 @@ class catalog_item implements type_resolver {
 
         $formatter = new item_formatter($data, $context);
         $formatted = $formatter->format($field, $format);
-        if (in_array($field, ['image_url'])) {
+        if (in_array($field, ['image_url', 'summary'])) {
             $formatted = str_replace($CFG->wwwroot . '/pluginfile.php', $CFG->wwwroot . '/totara/mobile/pluginfile.php', $formatted);
 
             if ($field == 'image_url') {
