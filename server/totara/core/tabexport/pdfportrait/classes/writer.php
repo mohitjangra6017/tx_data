@@ -124,20 +124,21 @@ class writer extends tabexport_writer {
             $pdf = new \PDF('L', 'mm', 'A4', true, 'UTF-8');
         }
 
+        // Get current language to set the font properly.
+        $language = current_language();
+        $font = $this->get_font($language);
+
         // Check if language is RTL.
         if (right_to_left()) {
             $pdf->setRTL(true);
         }
+        $pdf->SetFont($font);
         $pdf->setTitle($fullname);
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(true);
         $pdf->setFooterMargin(REPORT_BUILDER_PDF_MARGIN_FOOTER);
         $pdf->SetAutoPageBreak(true, REPORT_BUILDER_PDF_MARGIN_BOTTOM);
         $pdf->AddPage();
-
-        // Get current language to set the font properly.
-        $language = current_language();
-        $font = $this->get_font($language);
 
         // Report body html.
         $html = '';
