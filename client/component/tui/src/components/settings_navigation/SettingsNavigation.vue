@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-settingsNavigation">
+  <div v-if="treeData && treeData.length" class="tui-settingsNavigation">
     <Button
       v-if="navigationType"
       :text="$str('administration', 'core')"

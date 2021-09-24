@@ -274,6 +274,7 @@ class course_builder {
         $record->visible = 1;
         $record->visibleold = 1;
         $record->format = $this->course_format;
+        $record->showgrades = 0;
         $record->containertype = course::get_type();
         $record->enablecompletion = $this->enable_course_completion;
 

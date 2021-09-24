@@ -1,7 +1,8 @@
 @mod @mod_contentmarketplace @contentmarketplace_linkedin @totara @totara_contentmarketplace @javascript
 Feature: Content marketplace activity completion feature
   Background:
-    Given the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
+    Given I am on a totara site
+    And the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
       | urn | title    | level    | asset_type | locale_language | locale_country |
       | A   | Course A | BEGINNER | COURSE     | en              | US             |
     And the following "classifications" exist in "contentmarketplace_linkedin" plugin:
@@ -20,8 +21,7 @@ Feature: Content marketplace activity completion feature
     And I set up the "linkedin" content marketplace plugin
 
   Scenario: Should not see the completion when completion is disabled
-    Given I am on a totara site
-    And I log in as "admin"
+    When I log in as "admin"
     And I navigate to the catalog import page for the the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
@@ -46,8 +46,7 @@ Feature: Content marketplace activity completion feature
     Then I should not see "Not started"
 
   Scenario: Self completion is not enabled by default
-    Given I am on a totara site
-    And I log in as "admin"
+    When I log in as "admin"
     And I navigate to the catalog import page for the the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
@@ -80,29 +79,39 @@ Feature: Content marketplace activity completion feature
     Then the "I have completed this activity" tui toggle switch should be "on"
 
   Scenario: Should not see the completion when not enrolled
-    Given I am on a totara site
-    And I log in as "admin"
+    Given the following "users" exist:
+      | username | firstname | lastname | email           |
+      | user_one | User      | One      | one@example.com |
+    When I log in as "admin"
     And I navigate to the catalog import page for the the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"
-    When I click on "Create course(s)" "button"
-    Then I should see "Course A"
+    And I click on "Create course(s)" "button"
+    And I am on "Course A" course homepage
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Guest access" "table_row"
+    And I log out
+    And I log in as "user_one"
+    And I am on "Course A" course homepage
+    Then I should not see "Administration"
+    When I log out
+    And I log in as "admin"
     And I am on "Course A" course homepage
     And I click on "Administration" "button"
     And I press "Course administration"
     And I press "Users"
     And I click on "Enrolment methods" "link"
     And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
-    And I click on "Enable" "link" in the "Guest access" "table_row"
-    And the following "users" exist:
-      | username | firstname | lastname | email           |
-      | user_one | User      | One      | one@example.com |
     And I log out
     And I log in as "user_one"
-    When I am on "Course A" course homepage
+    And I am on "Course A" course homepage
     Then I should not see "Not started"
     And I should see "You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded."
+    And I should see "Administration"
     When I click on "Enrol" "button"
     And I wait for the next second
     Then I should see "Not started"
