@@ -29,12 +29,15 @@
         :label="
           $str('label_year_range_begins_at', 'performelement_date_picker')
         "
+        required
       >
-        <FormText
+        <FormField
+          v-slot="{ attrs, value, update, blur }"
+          char-length="full"
           name="yearRangeStart"
-          :placeholder="$str('year_placeholder', 'performelement_date_picker')"
           :validations="
             v => [
+              v.required(),
               v.integer(),
               v.min(yearRangeMin),
               v.maxForRangeStart(
@@ -46,18 +49,31 @@
               ),
             ]
           "
-          :char-length="4"
-          :maxlength="4"
-        />
+        >
+          <InputText
+            v-bind="attrs"
+            :placeholder="
+              $str('year_placeholder', 'performelement_date_picker')
+            "
+            :char-length="4"
+            :maxlength="4"
+            :value="value"
+            @input="update"
+            @blur="blur"
+          />
+        </FormField>
       </FormRow>
       <FormRow
         :label="$str('label_year_range_ends_at', 'performelement_date_picker')"
+        required
       >
-        <FormText
+        <FormField
+          v-slot="{ attrs, value, update, blur }"
+          char-length="full"
           name="yearRangeEnd"
-          :placeholder="$str('year_placeholder', 'performelement_date_picker')"
           :validations="
             v => [
+              v.required(),
               v.integer(),
               v.minForRangeEnd(
                 yearRangeStart,
@@ -69,9 +85,19 @@
               v.max(yearRangeMax),
             ]
           "
-          :char-length="4"
-          :maxlength="4"
-        />
+        >
+          <InputText
+            v-bind="attrs"
+            :placeholder="
+              $str('year_placeholder', 'performelement_date_picker')
+            "
+            :char-length="4"
+            :maxlength="4"
+            :value="value"
+            @input="update"
+            @blur="blur"
+          />
+        </FormField>
       </FormRow>
     </PerformAdminCustomElementEdit>
   </div>
@@ -79,13 +105,15 @@
 
 <script>
 import { DEFAULT_YEAR_RANGE_OFFSET } from 'tui/date';
-import { FormText, FormRow } from 'tui/components/uniform';
+import InputText from 'tui/components/form/InputText';
+import { FormField, FormRow } from 'tui/components/uniform';
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
 
 export default {
   components: {
-    FormText,
+    FormField,
     FormRow,
+    InputText,
     PerformAdminCustomElementEdit,
   },
 
@@ -112,11 +140,11 @@ export default {
         rawTitle: this.rawTitle,
         identifier: this.identifier,
         responseRequired: this.isRequired,
-        yearRangeStart,
-        yearRangeEnd,
+        yearRangeStart: yearRangeStart || this.getLowerOffsetYear(),
+        yearRangeEnd: yearRangeEnd || this.getUpperOffsetYear(),
       },
-      yearRangeMin: 1000,
-      yearRangeMax: new Date().getFullYear() + DEFAULT_YEAR_RANGE_OFFSET,
+      yearRangeMin: 1900,
+      yearRangeMax: this.getUpperOffsetYear(),
       yearRangeStart,
       yearRangeEnd,
     };
@@ -136,6 +164,25 @@ export default {
       let parsedYearRangeEnd = parseInt(yearRangeEnd, 10);
       this.yearRangeEnd = isNaN(parsedYearRangeEnd) ? null : parsedYearRangeEnd;
     },
+
+    /**
+     * Provide the lower offset based on current year
+     *
+     * @return {Number}
+     */
+    getLowerOffsetYear() {
+      return new Date().getFullYear() - DEFAULT_YEAR_RANGE_OFFSET;
+    },
+
+    /**
+     * Provide the upper offset based on current year
+     *
+     * @return {Number}
+     */
+    getUpperOffsetYear() {
+      return new Date().getFullYear() + DEFAULT_YEAR_RANGE_OFFSET;
+    },
+
     /**
      * Cast the years before/after config to Numbers ready to be used by the DateSelector component.
      *
