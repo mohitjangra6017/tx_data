@@ -83,6 +83,10 @@ class mod_contentmarketplace_event_learning_object_updated_observer_testcase ext
      * @return void
      */
     public function test_learning_object_observer(): void {
+        if (!@get_headers('https://cdn.lynda.com/')) {
+            $this->markTestSkipped("Couldn't connect to the LinkedIn/Lynda CDN, skipping test.");
+        }
+
         [$course_id, $old_cm] = $this->create_learning_object();
 
         // Run regular sync.
