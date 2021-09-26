@@ -126,6 +126,10 @@ class mod_contentmarketplace_entity_content_marketplace_testcase extends testcas
 
     public function test_course_module_relation(): void {
         global $DB;
+        if ($DB instanceof sqlsrv_native_moodle_database) {
+            $this->markTestSkipped();
+        }
+
         $generator = self::getDataGenerator();
         $course1 = $generator->create_course();
         $course2 = $generator->create_course();
