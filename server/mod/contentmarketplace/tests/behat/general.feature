@@ -1,10 +1,10 @@
-@mod @mod_contentmarketplace @totara @javascript
+@mod @mod_contentmarketplace @totara @javascript  @totara_contentmarketplace
 Feature: General behaviour with mod contentmarketplace
 
   Background:
     Given the following "courses" exist:
-      | fullname   | shortname | format |         summary           |
-      | Course 101 | c101      | topics | This is a learning object |
+      | fullname   | shortname | format |
+      | Course 101 | c101      | topics |
     And the following "content marketplace" exist in "mod_contentmarketplace" plugin:
       | name       | course | marketplace_component       |
       | Learning 1 | c101   | contentmarketplace_linkedin |
@@ -24,7 +24,6 @@ Feature: General behaviour with mod contentmarketplace
     Then I should see "Learning 1"
     When I follow "Learning 1"
     Then I should see "Course 101"
-    And I should see "This is a learning object"
 
   Scenario: Launch new course created from learning object
     Given I am on a totara site
@@ -43,7 +42,13 @@ Feature: General behaviour with mod contentmarketplace
     And I click on "Next: Review" "button"
     And I click on "Create course(s)" "button"
     And I am on "Spring" course homepage
-    And I click on "//button[contains(text(),'Enrol')]" "xpath_element"
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
+    When I am on "Spring" course homepage
+    And I click on "Enrol to course Spring" "button"
     Then I should see "You've been enrolled successfully"
     And the "Launch (opens in new window)" "button" should be enabled
     And I click on "Launch (opens in new window)" "button"
