@@ -37,6 +37,7 @@ Feature: Test the totara_mobile_language_strings feature
     And I set the following fields to these values:
     | Show strings of these components | totara_mobile |
     And I click on "Show strings" "button"
+    And I click on "Next" "link" in the ".paging" "css_element"
     And I set the field with xpath "//div[normalize-space(text())='app:general:loading']/parent::td/following-sibling::td[2]/textarea" to "Clouding..."
     And I click on "Save changes to the language pack" "button"
     And I click on "Continue" "button"
