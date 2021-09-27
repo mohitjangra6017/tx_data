@@ -25,17 +25,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $ADMIN->add('server', new admin_category('oauth2services', new lang_string('oauth2services', 'tool_oauth2')));
-    // During the installation, sub category needs the parent category to be installed.
-    $ADMIN->add(
-        'oauth2services',
-        new admin_externalpage(
-            'oauth2providerdetails',
-            new lang_string('oauth2providerdetails', 'totara_oauth2'),
-            "$CFG->wwwroot/totara/oauth2/oauth2_provider.php",
-            ['moodle/site:config']
-        )
-    );
     $ADMIN->add('oauth2services', new admin_externalpage('oauth2consumerdetails', new lang_string('oauth2consumerdetails', 'tool_oauth2'),
          "$CFG->wwwroot/$CFG->admin/tool/oauth2/issuers.php"));
 }

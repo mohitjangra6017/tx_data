@@ -94,7 +94,6 @@ $string['notconfigured'] = 'Not configured';
 $string['notdiscovered'] = 'Service discovery not successful';
 $string['notloginissuer'] = 'Do not allow login';
 $string['oauth2consumerdetails'] = 'OAuth 2 consumer details';
-$string['oauth2services'] = 'OAuth 2';
 $string['pluginname'] = 'OAuth 2 services';
 $string['savechanges'] = 'Save changes';
 $string['serviceshelp'] = 'Service provider setup instructions.';

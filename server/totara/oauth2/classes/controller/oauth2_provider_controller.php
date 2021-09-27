@@ -47,8 +47,6 @@ class oauth2_provider_controller extends admin_controller {
     public function __construct() {
         parent::__construct();
         $this->url = new moodle_url('/totara/oauth2/oauth2_provider.php');
-
-        $entity = (new client_provider())->get()->first();
     }
 
     /**

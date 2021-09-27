@@ -289,4 +289,7 @@ $temp->add(new admin_setting_configcheckbox('emailfromvia', new lang_string('ema
 
 $ADMIN->add('email', $temp);
 
+// Add new oauth2 category under the "server" category
+$ADMIN->add('server', new admin_category('oauth2services', new lang_string('oauth2services', 'admin')));
+
 } // end of speedup
