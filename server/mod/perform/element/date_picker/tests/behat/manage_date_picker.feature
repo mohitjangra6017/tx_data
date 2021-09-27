@@ -24,7 +24,7 @@ Feature: Manage performance activity date picker elements
       | yearRangeStart | 999                           |
       | yearRangeEnd   | 3000                          |
     And I save the activity content element
-    Then I should see "yearRangeStart" form field has the tui validation error "Number must be 1000 or more"
+    Then I should see "yearRangeStart" form field has the tui validation error "Number must be 1900 or more"
     And I should see "yearRangeEnd" form field has the tui validation error "Number must be## +50 years ## Y## or less"
 
     When I set the following fields to these values:
@@ -35,14 +35,14 @@ Feature: Manage performance activity date picker elements
     When I set the following fields to these values:
       | yearRangeStart | 2999 |
     And I save the activity content element
-    Then I should see "yearRangeStart" form field has the tui validation error "Number must be 2071 or less"
+    Then I should see "yearRangeStart" form field has the tui validation error "Number must be## +50 years ## Y## or less"
 
     When I set the following fields to these values:
       | yearRangeStart | 100 |
       | yearRangeEnd   | 100 |
     And I save the activity content element
-    Then I should see "yearRangeStart" form field has the tui validation error "Number must be 1000 or more"
-    And I should see "yearRangeEnd" form field has the tui validation error "Number must be 1000 or more"
+    Then I should see "yearRangeStart" form field has the tui validation error "Number must be 1900 or more"
+    And I should see "yearRangeEnd" form field has the tui validation error "Number must be 1900 or more"
 
     When I set the following fields to these values:
       | yearRangeStart | 1000 |
@@ -52,12 +52,12 @@ Feature: Manage performance activity date picker elements
 
     # Setting the year range values to things clearly outside the default range.
     When I set the following fields to these values:
-      | yearRangeStart | 1000 |
+      | yearRangeStart | 1900 |
       | yearRangeEnd   | 2071 |
     And I save the activity content element
     Then I should see "Element saved" in the tui success notification toast
     # Note that child 2 (is the first element)
-    And I set the ".tui-performSectionContent__draggableItem:nth-child(2)" tui date selector to "1000-01-01"
+    And I set the ".tui-performSectionContent__draggableItem:nth-child(2)" tui date selector to "1900-01-01"
     And I set the ".tui-performSectionContent__draggableItem:nth-child(2)" tui date selector to "2071-01-01"
 
     When I add a "Date picker" activity content element
@@ -74,7 +74,7 @@ Feature: Manage performance activity date picker elements
     And I click on "Element settings: Single fixed year date picker" "button"
     Then the perform element summary should contain:
       | Question text        | Single fixed year date picker |
-      | Year range begins at | 1000                          |
+      | Year range begins at | 1900                          |
       | Year range ends at   | 2071                          |
       | Reporting ID         | Identifier 1                  |
 

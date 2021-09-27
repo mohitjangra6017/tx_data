@@ -10,9 +10,9 @@ Feature: Selecting competency assignments linked to a performance review
       | activity_name | section_title | element_title | content_type      |
       | activity1     | section1      | review1       | totara_competency |
     And the following "child elements" exist in "mod_perform" plugin:
-      | section  | parent_element | element_plugin | element_title   | after_element   |
-      | section1 | review1        | long_text      | long text child |                 |
-      | section1 | review1        | date_picker    | date child      | long text child |
+      | section  | parent_element | element_plugin | element_title   | after_element   | data                                           |
+      | section1 | review1        | long_text      | long text child |                 | {}                                             |
+      | section1 | review1        | date_picker    | date child      | long text child | {"yearRangeStart": 1900, "yearRangeEnd": 2050} |
     And the following "participants in section" exist in "performelement_linked_review" plugin:
       | section  | subject_user | user  | relationship |
       | section1 | user1        | user1 | subject      |

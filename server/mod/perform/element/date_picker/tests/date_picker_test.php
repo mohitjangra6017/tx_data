@@ -2,7 +2,7 @@
 /*
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Nathan Lewis <nathan.lewis@totaralearning.com>
- * @package mod_perform
+ * @author Jaron Steenson <jaron.steenson@totaralearning.com>
+ * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
+ * @package performelement_date_picker
  */
 
 use core\collection;
+use core\orm\query\builder;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
+use mod_perform\state\activity\active;
+use mod_perform\state\activity\draft;
 use performelement_date_picker\answer_required_error;
 use performelement_date_picker\date_picker;
 use performelement_date_picker\date_iso_required_error;
@@ -66,16 +70,16 @@ class performelement_date_picker_testcase extends advanced_testcase {
     public function process_data_validate_years_config_provider(): array {
         return [
             'Empty values (use front end defined defaults)' => [
-                null, null, null,
+                null, null, 'Year range cannot be empty',
             ],
             'Filled valid values' => [
                 1000, 2071, null,
             ],
             'Start too early fails' => [
-                999, null, 'Year range start must be 1000 or more',
+                999, 2021, 'Year range start must be 1000 or more',
             ],
             'End too late fails' => [
-                null, (int) (new DateTime)->modify('+51 years')->format('Y'), ' or less',
+                1900, (int) (new DateTime)->modify('+51 years')->format('Y'), ' or less',
             ],
             'Backwards range fails' => [
                 2021, 2020, 'Year range start must less than or equal to year range end',
@@ -243,6 +247,73 @@ class performelement_date_picker_testcase extends advanced_testcase {
                 ['iso' => '2050-12-04'],
             ],
         ];
+    }
+
+    public function test_defaults(): void {
+        self::setAdminUser();
+
+        $generator = \mod_perform\testing\generator::instance();
+
+        $active_empty_data = $generator->create_element(
+            [
+                'plugin_name' => date_picker::get_plugin_name(),
+                'title' => 'active date picker empty data',
+                'is_required' => true,
+                'data' => json_encode(['yearRangeStart' => 2000, 'yearRangeEnd' => 2020]),
+            ]
+        );
+        // Set the data to empty (only previous versions supported this)
+        builder::table(element_entity::TABLE)
+            ->where('id', $active_empty_data->id)
+            ->update(['data' => '{}']);
+
+        $this->add_to_activity($active_empty_data, active::get_code());
+
+        $draft = $generator->create_element(
+            [
+                'plugin_name' => date_picker::get_plugin_name(),
+                'title' => 'draft date picker empty data',
+                'is_required' => true,
+                'data' => json_encode(['yearRangeStart' => 1900, 'yearRangeEnd' => 2050]),
+            ]
+        );
+        $this->add_to_activity($draft, draft::get_code());
+
+        $active_default_data = $generator->create_element(
+            [
+                'plugin_name' => date_picker::get_plugin_name(),
+                'title' => 'active date picker empty data',
+                'is_required' => true,
+                'data' => json_encode(['yearRangeStart' => 1900, 'yearRangeEnd' => 2050]),
+            ]
+        );
+        $this->add_to_activity($active_default_data, active::get_code());
+
+        $active_empty_data = element_model::load_by_id($active_empty_data->id);
+        self::assertEquals([
+            'yearRangeStart' => 1900,
+            'yearRangeEnd' => 2050,
+        ], json_decode($active_empty_data->data, true, 512, JSON_THROW_ON_ERROR));
+
+        $active_default_data = element_model::load_by_id($active_default_data->id);
+        self::assertEquals([
+            'yearRangeStart' => 1900,
+            'yearRangeEnd' => 2050,
+        ], json_decode($active_default_data->data, true, 512, JSON_THROW_ON_ERROR));
+
+        $draft = element_model::load_by_id($draft->id);
+        self::assertEquals([
+            'yearRangeStart' => 1900,
+            'yearRangeEnd' => 2050,
+        ], json_decode($draft->data, true, 512, JSON_THROW_ON_ERROR));
+    }
+
+    private function add_to_activity(element_model $element, int $activity_state): void {
+        $generator = \mod_perform\testing\generator::instance();
+
+        $activity = $generator->create_activity_in_container(['activity_status' => $activity_state]);
+        $section = $generator->create_section($activity, ['title' => 'Part one']);
+        $generator->create_section_element($section, $element);
     }
 
     /**

@@ -86,13 +86,17 @@ class date_picker extends respondable_element_plugin {
         ?int $year_range_start,
         ?int $year_range_end
     ): void {
+        if (empty($year_range_start) || empty($year_range_end)) {
+            throw new coding_exception('Year range cannot be empty');
+        }
+
         $min_year = $this->get_default_min_year();
-        if ($year_range_start !== null && $year_range_start < $min_year) {
+        if ($year_range_start < $min_year) {
             throw new coding_exception("Year range start must be {$min_year} or more");
         }
 
         $max_year = $this->get_default_max_year();
-        if ($year_range_end !== null && $year_range_end > ($max_year)) {
+        if ($year_range_end > ($max_year)) {
             throw new coding_exception("Year range end must be {$max_year} or less");
         }
 
