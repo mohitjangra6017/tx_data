@@ -45,24 +45,6 @@ class date_picker extends respondable_element_plugin {
     /**
      * @inheritDoc
      */
-    public function process_data(element_entity $element): ?string {
-        $decoded_data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
-
-        // Older versions of the date picker might not have a
-        // range defined, so we add the previous defaults here
-        if (!array_key_exists('yearRangeStart', $decoded_data)) {
-            $decoded_data['yearRangeStart'] = 1900;
-        }
-        if (!array_key_exists('yearRangeEnd', $decoded_data)) {
-            $decoded_data['yearRangeEnd'] = 2050;
-        }
-
-        return json_encode($decoded_data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function validate_element(element_entity $element): void {
         if (!$element->data) {
             return;
