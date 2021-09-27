@@ -24,16 +24,19 @@ namespace contentmarketplace_linkedin\entity;
 
 use contentmarketplace_linkedin\repository\user_completion_repository;
 use core\orm\entity\entity;
+use core\orm\entity\relations\belongs_to;
 
 /**
  * An entity record that represent for a row of table "ttr_linkedin_user_completion".
  *
- * @property int $id
+ * @property-read int $id
  * @property int $user_id
  * @property string $learning_object_urn
  * @property int $progress
  * @property bool $completion
  * @property int $time_created
+ *
+ * @property learning_object|null $learning_object
  *
  * @method static user_completion_repository repository()
  */
@@ -64,4 +67,12 @@ class user_completion extends entity {
     public static function repository_class_name(): string {
         return user_completion_repository::class;
     }
+
+    /**
+     * @return belongs_to
+     */
+    public function learning_object(): belongs_to {
+        return $this->belongs_to(learning_object::class, 'learning_object_urn', 'urn');
+    }
+
 }

@@ -293,7 +293,7 @@ $string['tooltipcompletionroleany'] = 'You must be marked as complete by <strong
 $string['tooltipcompletioncourseone'] = 'One other course needs to be completed';
 $string['tooltipcompletioncoursemany'] = '{$a} other courses need to be completed';
 $string['userdatacomponentname'] = 'Completion';
-$string['userdataitemcourse_completion'] = 'Course completions (including activity completion)';
+$string['userdataitemcourse_completion'] = 'Course completions (including internal activity completion)';
 
 // Deprecated since 13.0
 $string['completion-title-manual-n'] = 'Mark as complete: {$a}';

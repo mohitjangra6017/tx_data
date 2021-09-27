@@ -106,6 +106,7 @@ $string['timespan_format_minutes'] = '{$a->minutes}m';
 $string['timespan_format_minutes_seconds'] = '{$a->minutes}m {$a->seconds}s';
 $string['timespan_format_seconds'] = '{$a->seconds}s';
 $string['update'] = 'Update';
+$string['userdataitemcompletion'] = 'LinkedIn Learning activity completion';
 $string['warningdisablemarketplace:body:html'] = '<p>Items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
 <p>Users who have previously already started LinkedIn Learning activities will continue to have access to that content, but they will not be able to start new LinkedIn Learning activities.</p>';
 $string['warningdisablemarketplace:title'] = 'Disable LinkedIn Learning content';
