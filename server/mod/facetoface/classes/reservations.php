@@ -109,10 +109,10 @@ final class reservations {
 
      * @param seminar_event $seminarevent to remove the reservations from
      * @param int $bookedby the user who made the original reservations
-     * @param int $number the number of reservations to remove
+     * @param int $number the number of reservations to remove. If this is null, then all reservations are removed.
      * @param bool $sendnotification
      */
-    public static function remove(seminar_event $seminarevent, int $bookedby, int $number, bool $sendnotification = false): void {
+    public static function remove(seminar_event $seminarevent, int $bookedby, ?int $number, bool $sendnotification = false): void {
         global $DB;
 
         $sql = 'SELECT su.id
@@ -123,15 +123,22 @@ final class reservations {
         // Start by deleting low-status reservations (cancelled, waitlisted), then order by most recently booked.
         $params = array('sessionid' => $seminarevent->get_id(), 'bookedby' => $bookedby);
 
-        $reservations = $DB->get_records_sql($sql, $params, 0, $number);
+        $reservations = is_null($number)
+            ? $DB->get_records_sql($sql, $params)
+            : $DB->get_records_sql($sql, $params, 0, $number);
+
         $removecount = count($reservations);
+        if ($removecount && $sendnotification) {
+            // This is done before physically removing the reservation because
+            // the notice sender needs to the affected records first. If the
+            // records are deleted first, the notifications will never be sent
+            // because there are no records for the notice sender to process.
+            notice_sender::reservation_cancelled($seminarevent);
+        }
+
         foreach ($reservations as $reservation) {
             $signup = new signup($reservation->id);
             $signup->delete();
-        }
-
-        if ($removecount && $sendnotification) {
-            notice_sender::reservation_cancelled($seminarevent);
         }
 
         signup_helper::update_attendees($seminarevent);
@@ -143,15 +150,12 @@ final class reservations {
      * @param seminar_event $seminarevent
      * @param int $managerid
      * @return true
+     *
+     * @deprecated since Totara 15.0
      */
-    public static function delete(seminar_event $seminarevent, int $managerid): bool {
-        global $DB;
-
-        $params = ['userid' => 0, 'sessionid' => $seminarevent->get_id(), 'bookedby' => $managerid];
-        $transaction = $DB->start_delegated_transaction();
-        $signups = signup_list::from_conditions($params);
-        $signups->delete();
-        $transaction->allow_commit();
+    public static function delete(seminar_event $seminarevent, int $managerid, bool $sendnotification = false): bool {
+        debugging('reservations::delete() is deprecated. Please use reservations::remove() with a null $number parameter instead.', DEBUG_DEVELOPER);
+        static::remove($seminarevent, $managerid, null, $sendnotification);
 
         return true;
     }

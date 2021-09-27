@@ -48,8 +48,7 @@ if ($confirm) {
     // Delete reservations to free up space in session.
     if (confirm_sesskey()) {
         try {
-            $signups = \mod_facetoface\reservations::delete($seminarevent, $managerid);
-            \mod_facetoface\signup_helper::update_attendees($seminarevent);
+            \mod_facetoface\reservations::remove($seminarevent, $managerid, null, ($USER->id != $managerid));
 
             if ($backtoeventinfo) {
                 $url = new moodle_url('/mod/facetoface/eventinfo.php', array('s' => $seminarevent->get_id()));

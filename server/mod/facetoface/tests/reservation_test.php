@@ -24,6 +24,7 @@
 use core\orm\query\builder;
 use mod_facetoface\{attendees_helper, reservations, seminar_event, signup, signup_helper};
 use mod_facetoface\signup\state\{attendance_state, booked, requested, requestedadmin, requestedrole, waitlisted};
+use mod_facetoface\testing\generator;
 use totara_job\job_assignment;
 
 defined('MOODLE_INTERNAL') || die();
@@ -36,7 +37,6 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
      * Check that users deallocated correctly
      */
     public function test_facetoface_remove_allocations() {
-
         $manager = $this->getDataGenerator()->create_user();
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -44,8 +44,8 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course->id);
         $this->getDataGenerator()->enrol_user($user2->id, $course->id);
 
-        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
-        $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
+        /** @var generator $facetofacegenerator */
+        $facetofacegenerator = generator::instance();
         $facetoface = $facetofacegenerator->create_instance(array(
             'course' => $course->id,
             'multiplesessions' => 1,
@@ -136,8 +136,8 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
         $gen->enrol_user($manager->id, $course->id, 'manager');
         $gen->enrol_user($staff->id, $course->id, 'staffmanager');
 
-        /** @var \mod_facetoface\testing\generator $f2fgen */
-        $f2fgen = $gen->get_plugin_generator('mod_facetoface');
+        /** @var generator $f2fgen */
+        $f2fgen = generator::instance();
         $f2f = $f2fgen->create_instance([
             'course' => $course->id,
             'managerreserve' => 1,
@@ -224,8 +224,8 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
         $gen->enrol_user($student3->id, $course->id);
         $gen->enrol_user($manager->id, $course->id, 'manager');
 
-        /** @var \mod_facetoface\testing\generator $f2fgen */
-        $f2fgen = $gen->get_plugin_generator('mod_facetoface');
+        /** @var generator $f2fgen */
+        $f2fgen = generator::instance();
         $f2f = $f2fgen->create_instance([
             'course' => $course->id,
             'managerreserve' => 1,
@@ -309,5 +309,62 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
             (object)['userid' => 0, 'statuscode' => booked::get_code()],
             (object)['userid' => $student1->id, 'statuscode' => booked::get_code()],
         ]);
+    }
+
+    public function test_notifications_after_remove() {
+        $gen = $this->getDataGenerator();
+        $manager_id = $gen->create_user()->id;
+        $course_id = $gen->create_course()->id;
+
+        $gen->enrol_user($manager_id, $course_id, 'manager');
+
+        $f2fgen = generator::instance();
+        $f2f = $f2fgen->create_instance([
+            'course' => $course_id,
+            'managerreserve' => 1,
+            'maxmanagerreserves' => 5
+        ]);
+        $sessionid = $f2fgen->add_session([
+            'facetoface' => $f2f->id,
+            'capacity' => 200,
+            'allowoverbook' => 1,
+            'sessiondates' => [time() + YEARSECS]
+        ]);
+
+        $seminarevent = new seminar_event($sessionid);
+
+        $this->setUser($manager_id);
+        reservations::add($seminarevent, $manager_id, 2, 0);
+
+        $reservation = (object)['userid' => 0, 'statuscode' => booked::get_code()];
+        self::assert_signups_of_event($sessionid, [$reservation, $reservation]);
+
+        // By default if the manager is the one cancelling reservations, he does
+        // not need a notification to tell him he did so.
+        $sink = $this->redirectEmails();
+        reservations::remove($seminarevent, $manager_id, null);
+        $this->executeAdhocTasks();
+
+        self::assert_signups_of_event($sessionid, []);
+
+        $messages = $sink->get_messages();
+        $sink->close();
+        $this->assertCount(0, $messages);
+
+        reservations::add($seminarevent, $manager_id, 3, 0);
+        self::assert_signups_of_event($sessionid, [$reservation, $reservation, $reservation]);
+
+        $this->setAdminUser();
+
+        // But notifications could be forced if the manager is not the one cancelling.
+        $sink = $this->redirectEmails();
+        reservations::remove($seminarevent, $manager_id, null, true);
+        $this->executeAdhocTasks();
+
+        self::assert_signups_of_event($sessionid, []);
+
+        $messages = $sink->get_messages();
+        $sink->close();
+        $this->assertCount(1, $messages);
     }
 }

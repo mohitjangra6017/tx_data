@@ -5,6 +5,11 @@ information provided here is intended especially for developers.
 
 * Function facetoface_get_session_managers had changed the behaviour. The function now returns the temporary manager record as well
   as the permanent manager for the job assignment that is used with the sign up record.
+* mod_facetoface\reservations::delete() is deprecated; use mod_facetoface\reservations::remove() instead
+* mod_facetoface\reservations::remove()'s $number parameter is now nullable. This means:
+  - if $number is any integer, only that number of reservations for the manager/event are removed. This is the original behavior.
+  - if $number is null, then *all* reservations for the manager/event are removed. This is effectively the behavior originally
+    in mod_facetoface\reservations::delete()
 
 === 14.0 ===
 
