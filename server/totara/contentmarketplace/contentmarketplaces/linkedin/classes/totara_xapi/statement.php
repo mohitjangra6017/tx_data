@@ -24,7 +24,6 @@ namespace contentmarketplace_linkedin\totara_xapi;
 
 use contentmarketplace_linkedin\dto\xapi\progress;
 use contentmarketplace_linkedin\exception\json_validation_exception;
-use core\entity\user;
 use core\json\validation_adapter;
 use core\orm\query\builder;
 use totara_xapi\entity\xapi_statement;
@@ -115,25 +114,19 @@ class statement {
             }
 
             $actor = $statement_json["actor"];
-            $db = builder::get_db();
-
             if (array_key_exists("mbox", $actor)) {
                 $email = $actor["mbox"];
 
                 // Remove the mailto within the statement content.
                 $email = str_replace("mailto:", "", $email);
 
+                $db = builder::get_db();
                 // Note: we use MUST_EXIST here because we do not want non-existing user with
                 //       the email from linkedin learning's end. Hence, exception.
-                $this->user_id = $db->get_field(
-                    user::TABLE,
-                    "id",
-                    [
-                        "email" => $email,
-                        "deleted" => 0
-                    ],
-                    MUST_EXIST
-                );
+                $sql = "SELECT id FROM {user} WHERE deleted = 0 AND " .
+                    $db->sql_equal('email', ':email', false);
+
+                $this->user_id = $db->get_field_sql($sql, ['email' => $email], MUST_EXIST);
             } else {
                 // This is where we are going to check for SSO - but it is not yet implemented.
                 throw new coding_exception("Unsupported feature to identify user");

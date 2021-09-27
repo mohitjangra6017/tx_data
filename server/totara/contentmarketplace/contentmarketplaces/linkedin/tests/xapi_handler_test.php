@@ -32,6 +32,7 @@ use totara_xapi\controller\receiver_controller;
 use totara_xapi\entity\xapi_statement;
 use totara_xapi\request\request;
 use totara_xapi\response\json_result;
+use contentmarketplace_linkedin\totara_xapi\statement;
 
 /**
  * @group totara_contentmarketplace
@@ -247,5 +248,74 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
 
         self::assertEquals(progress::PROGRESS_MAXIMUM, $user_completion->progress);
         self::assertTrue($user_completion->completion);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_xpi_statement_get_user_id(): void {
+        $gen = self::getDataGenerator();
+
+        $email = 'UPCASE@EXAMPLE.COM';
+        // Test with upcase email.
+        $user = $gen->create_user(['email' => $email, 'deleted' => 0]);
+
+        $entity = new xapi_statement();
+        $entity->statement = json_encode(
+            $this->get_mock_response_data_by_email($user->email)
+        );
+
+        $entity->component = "contentmarketplace_linkedin";
+        $entity = $entity->save();
+
+        $statement = statement::create_with_validation($entity);
+        self::assertEquals($user->id, $statement->get_user_id());
+
+        // Test with lowercase email.
+        $entity = new xapi_statement();
+        $entity->statement = json_encode(
+            $this->get_mock_response_data_by_email(strtolower($email))
+        );
+
+        $entity->component = "contentmarketplace_linkedin";
+        $entity = $entity->save();
+
+        $statement = statement::create_with_validation($entity);
+        self::assertEquals($user->id, $statement->get_user_id());
+    }
+
+    /**
+     * @param string $email
+     * @return array
+     */
+    private function get_mock_response_data_by_email(string $email): array {
+        return [
+            "actor" => [
+                "mbox" => "mailto:{$email}",
+                "objectType" => "Agent"
+            ],
+            "result" => [
+                "completion" => true,
+                "duration" => "PT4M30S",
+                "extensions" => [
+                    "https://w3id.org/xapi/cmi5/result/extensions/progress" => "100"
+                ]
+            ],
+            "verb" => [
+                "display" => [
+                    "en-US" => "COMPLETED",
+                ],
+                "id" => "http://adlnet.gov/expapi/verbs/completed"
+            ],
+            "id" => "212tvkodls-csacx-487f-9jiv34-1i93ikkvnid",
+            "object" => [
+                "definition" => [
+                    "type" => "http://adlnet.gov/expapi/activities/course"
+                ],
+                "id" => "urn:lyndaCourse:252",
+                "objectType" => "Activity"
+            ],
+            "timestamp" => date(DATE_ISO8601, $this->time_now)
+        ];
     }
 }
