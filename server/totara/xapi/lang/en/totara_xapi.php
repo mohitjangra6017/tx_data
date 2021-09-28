@@ -23,4 +23,5 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Totara xAPI';
+$string['pluginname'] = 'Experience API (xAPI)';
+$string['userdataitemstatement'] = 'Learning activity';
