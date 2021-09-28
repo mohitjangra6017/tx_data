@@ -24,8 +24,9 @@
 use core\orm\query\builder;
 use core_phpunit\testcase;
 use totara_xapi\entity\xapi_statement;
+use totara_xapi\model\xapi_statement as xapi_statement_model;
 
-class totara_oauth2_entity_xapi_statement_testcase extends testcase {
+class totara_xapi_entity_xapi_statement_testcase extends testcase {
     /**
      * @return void
      */
@@ -36,6 +37,7 @@ class totara_oauth2_entity_xapi_statement_testcase extends testcase {
         $entity = new xapi_statement();
         $entity->statement = json_encode(["data" => ["some_data"]]);
         $entity->component = "totara_core";
+        $entity->user_id = 1234;
 
         self::assertFalse($entity->exists());
         $entity->save();
@@ -74,7 +76,8 @@ class totara_oauth2_entity_xapi_statement_testcase extends testcase {
         $entity->component = "totara_core";
         $entity->save();
 
-        $statement = $entity->get_statement_as_json_array();
+        $model = xapi_statement_model::load_by_entity($entity);
+        $statement = $model->statement;
         self::assertEquals(["data" => ["some_data"]], $statement);
     }
 }

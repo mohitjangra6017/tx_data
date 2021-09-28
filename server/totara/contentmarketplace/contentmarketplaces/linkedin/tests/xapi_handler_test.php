@@ -30,6 +30,8 @@ use totara_oauth2\testing\generator as oauth2_generator;
 use contentmarketplace_linkedin\testing\generator as linkedin_generator;
 use totara_xapi\controller\receiver_controller;
 use totara_xapi\entity\xapi_statement;
+use totara_xapi\handler\factory;
+use totara_xapi\model\xapi_statement as xapi_statement_model;
 use totara_xapi\request\request;
 use totara_xapi\response\json_result;
 use contentmarketplace_linkedin\totara_xapi\statement;
@@ -254,34 +256,26 @@ class contentmarketplace_linkedin_xapi_handler_testcase extends testcase {
      * @return void
      */
     public function test_xpi_statement_get_user_id(): void {
-        $gen = self::getDataGenerator();
-
-        $email = 'UPCASE@EXAMPLE.COM';
-        // Test with upcase email.
-        $user = $gen->create_user(['email' => $email, 'deleted' => 0]);
-
-        $entity = new xapi_statement();
-        $entity->statement = json_encode(
-            $this->get_mock_response_data_by_email($user->email)
+        $token = oauth2_generator::instance()->create_access_token();
+        $email = 'my.EMAIL@example.COM';
+        $user = self::getDataGenerator()->create_user(['email' => $email, 'deleted' => 0]);
+        $request = request::create_from_global(
+            ["component" => "contentmarketplace_linkedin"],
+            [],
+            ["Authorization" => "Bearer {$token}"]
         );
 
-        $entity->component = "contentmarketplace_linkedin";
-        $entity = $entity->save();
+        // Test with regular email.
+        $request->set_content(json_encode($this->get_mock_response_data_by_email($user->email)));
+        $handler = factory::create_handler('contentmarketplace_linkedin', $request, time());
+        $statement = xapi_statement_model::create_from_request($request, $handler);
+        self::assertEquals($user->id, $statement->user_id);
 
-        $statement = statement::create_with_validation($entity);
-        self::assertEquals($user->id, $statement->get_user_id());
-
-        // Test with lowercase email.
-        $entity = new xapi_statement();
-        $entity->statement = json_encode(
-            $this->get_mock_response_data_by_email(strtolower($email))
-        );
-
-        $entity->component = "contentmarketplace_linkedin";
-        $entity = $entity->save();
-
-        $statement = statement::create_with_validation($entity);
-        self::assertEquals($user->id, $statement->get_user_id());
+        // Test with uppercase email.
+        $request->set_content(json_encode($this->get_mock_response_data_by_email(strtoupper($user->email))));
+        $handler = factory::create_handler('contentmarketplace_linkedin', $request, time());
+        $statement = xapi_statement_model::create_from_request($request, $handler);
+        self::assertEquals($user->id, $statement->user_id);
     }
 
     /**

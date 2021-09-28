@@ -22,14 +22,18 @@
  */
 namespace totara_xapi\entity;
 
+use core\entity\user;
 use core\orm\entity\entity;
-use stdClass;
+use core\orm\entity\relations\belongs_to;
 
 /**
  * @property int $id
  * @property int $time_created
  * @property string|null $component
  * @property string $statement
+ * @property int|null $user_id
+ *
+ * @property-read user|null $user
  */
 class xapi_statement extends entity {
     /**
@@ -43,16 +47,10 @@ class xapi_statement extends entity {
     public const CREATED_TIMESTAMP = "time_created";
 
     /**
-     * @return array
+     * @return belongs_to
      */
-    public function get_statement_as_json_array(): array {
-        return json_decode($this->statement, true, 512, JSON_THROW_ON_ERROR);
+    public function user(): belongs_to {
+        return $this->belongs_to(user::class, 'user_id');
     }
 
-    /**
-     * @return stdClass
-     */
-    public function get_statement_as_json_object(): stdClass {
-        return json_decode($this->statement, false, 512, JSON_THROW_ON_ERROR);
-    }
 }

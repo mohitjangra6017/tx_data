@@ -23,14 +23,14 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * @param int $old_version
+ * @param int $oldversion
  * @return bool
  */
-function xmldb_totara_xapi_upgrade(int $old_version): bool {
+function xmldb_totara_xapi_upgrade(int $oldversion): bool {
     global $DB;
-    $db_manager = $DB->get_manager();
+    $dbman = $DB->get_manager();
 
-    if ($old_version < 2021081800) {
+    if ($oldversion < 2021081800) {
         // Define table xapi_statement to be created.
         $table = new xmldb_table('xapi_statement');
 
@@ -48,25 +48,47 @@ function xmldb_totara_xapi_upgrade(int $old_version): bool {
         $table->add_index('time_created_idx', XMLDB_INDEX_NOTUNIQUE, ['time_created']);
 
         // Conditionally launch create table for xapi_statement.
-        if (!$db_manager->table_exists($table)) {
-            $db_manager->create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
         }
 
         // Paypal savepoint reached.
         upgrade_plugin_savepoint(true, 2021081800, 'totara', 'xapi');
     }
 
-    if ($old_version < 2021090200) {
+    if ($oldversion < 2021090200) {
         // Define table totara_xapi_statement to be renamed to totara_xapi_statement.
         $table = new xmldb_table('xapi_statement');
 
-        if ($db_manager->table_exists("xapi_statement")) {
+        if ($dbman->table_exists("xapi_statement")) {
             // Launch rename table for totara_xapi_statement.
-            $db_manager->rename_table($table, 'totara_xapi_statement');
+            $dbman->rename_table($table, 'totara_xapi_statement');
         }
 
         // Xapi savepoint reached.
         upgrade_plugin_savepoint(true, 2021090200, 'totara', 'xapi');
+    }
+
+    if ($oldversion < 2021092800) {
+        // Define field user_id to be added to totara_xapi_statement.
+        $table = new xmldb_table('totara_xapi_statement');
+        $field = new xmldb_field('user_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'time_created');
+
+        // Conditionally launch add field user_id.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define index user_id_idx (not unique) to be added to totara_xapi_statement.
+        $index = new xmldb_index('user_id_idx', XMLDB_INDEX_NOTUNIQUE, array('user_id'));
+
+        // Conditionally launch add index user_id_idx.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Xapi savepoint reached.
+        upgrade_plugin_savepoint(true, 2021092800, 'totara', 'xapi');
     }
 
     return true;

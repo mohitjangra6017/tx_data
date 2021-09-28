@@ -135,6 +135,20 @@ class user_repository extends repository {
     }
 
     /**
+     * Filter the users by email address.
+     *
+     * @param string $email
+     * @param bool $case_sensitive Note: Two emails are generally treated the same regardless of if their casing is the same.
+     * @return $this
+     */
+    public function filter_by_email(string $email, bool $case_sensitive = false): self {
+        $sql = builder::get_db()->sql_equal($this->get_alias_sql() . '.email', ':email', $case_sensitive);
+        $this->where_raw($sql, ['email' => $email]);
+
+        return $this;
+    }
+
+    /**
      * Select fields required for displaying name of the user.
      *
      * @return $this

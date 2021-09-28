@@ -22,7 +22,7 @@
  */
 namespace totara_xapi\handler;
 
-use totara_xapi\entity\xapi_statement;
+use totara_xapi\model\xapi_statement;
 use totara_xapi\request\request;
 use totara_xapi\response\facade\result;
 
@@ -65,6 +65,21 @@ abstract class base_handler {
      * @return result|null
      */
     abstract public function authenticate(): ?result;
+
+    /**
+     * Ensure that the xAPI statement data is valid, or throw an exception if it isn't.
+     *
+     * @param string $statement
+     */
+    abstract public function validate_structure(string $statement): void;
+
+    /**
+     * Get the ID of the Totara user that this xAPI statement is about.
+     *
+     * @param string $statement
+     * @return int|null
+     */
+    abstract public function get_user_id(string $statement): ?int;
 
     /**
      * Process on the xAPI request.

@@ -24,9 +24,10 @@ namespace totara_xapi\controller;
 
 use context;
 use context_system;
+use core\orm\query\builder;
 use totara_mvc\controller;
 use totara_xapi\handler\factory;
-use totara_xapi\local\helper;
+use totara_xapi\model\xapi_statement;
 use totara_xapi\request\request;
 use totara_xapi\response\facade\result;
 use moodle_url;
@@ -84,8 +85,10 @@ class receiver_controller extends controller {
         }
 
         // Logging the xapi statement.
-        $statement = helper::log_request($this->request);
-        return $handler->process($statement);
+        return builder::get_db()->transaction(function () use ($handler) {
+            return xapi_statement::create_from_request($this->request, $handler)
+                ->process();
+        });
     }
 
     /**
