@@ -1,225 +1,144 @@
-@totara @core_course @core_grades
-Feature: Test we can manually archive course completion.
+@totara @core_course @javascript
+Feature: Users can manually archive course completion for themself and others.
 
   Background:
     Given I am on a totara site
     And the following "users" exist:
-      | username | firstname | lastname   | email                |
-      | learner1 | Learner   | One        | learner1@example.com |
-      | learner2 | Learner   | Two        | learner2@example.com |
-      | learner3 | Learner   | Three      | learner3@example.com |
-      | learner4 | Learner   | Four       | learner4@example.com |
+      | username    | email                | firstname | lastname |
+      | user1       | user1@example.com    | User      | One      |
+      | user2       | user2@example.com    | User      | Two      |
+      | teacher1    | teacher1@example.com | Teacher   | One      |
     And the following "courses" exist:
       | fullname | shortname | enablecompletion |
-      | Course 1 | course1   | 1                |
-    And the following "course enrolments" exist:
-      | user     | course  | role    |
-      | learner1 | course1 | student |
-      | learner2 | course1 | student |
-      | learner3 | course1 | student |
-      | learner4 | course1 | student |
-
-  @javascript
-  Scenario: Test completion can be archived with manually enrolled courses
-    Given I log in as "admin"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add the "Self completion" block
-    And I navigate to "Course completion" node in "Course administration"
-    And I expand all fieldsets
-    And I click on "criteria_self_value" "checkbox"
-    And I press "Save changes"
-    And I log out
-    And I log in as "learner1"
-    And I am on "Course 1" course homepage
-    And I click on "Complete course" "link"
-    And I press "Yes"
-    And I log out
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Completions archive" node in "Course administration"
-    And I should see "The course completion data that will be archived is limited to: id; courseid; userid; timecompleted; grade."
-    And I should see "1 users will be affected"
-    And I press "Continue"
-    And I should see "1 users completion records have been successfully archived"
-    And I press "Continue"
-    And I navigate to "Completions archive" node in "Course administration"
-    Then I should see "There are no users that have completed this course"
-
-
-  @javascript
-  Scenario: Test completion cannot be archived for program enrolled courses
-    Given the following "programs" exist in "totara_program" plugin:
-      | fullname                | shortname |
-      | Completion archive test | compltest |
+      | Course 1 | c1        | 1                |
+      | Course 2 | c2        | 1                |
+    And the following "programs" exist in "totara_program" plugin:
+      | fullname  | shortname |
+      | Program 1 | P1        |
     And the following "program assignments" exist in "totara_program" plugin:
-      | program   | user     |
-      | compltest | learner1 |
+      | user     | program  |
+      | user1    | P1       |
+      | user2    | P1       |
+      | teacher1 | P1       |
+    And the following "activities" exist:
+      | activity | name   | intro                    | course | idnumber | completion |
+      | label    | label1 | Click to complete course | c1     | label1   | 1          |
+      | label    | label2 | Click to complete course | c2     | label2   | 1          |
+    And the following "course enrolments" exist:
+      | user     | course | role           |
+      | user1    | c1     | student        |
+      | user2    | c1     | student        |
+      | teacher1 | c1     | editingteacher |
+      | teacher1 | c2     | editingteacher |
     And I log in as "admin"
+
+      # Add Course 2 to Program 1.
+    When I navigate to "Manage programs" node in "Site administration > Programs"
+    And I follow "Miscellaneous"
+    And I click on "Settings" "link" in the "Program 1" "table_row"
+    And I switch to "Content" tab
+    And I press "Add"
+    And I follow "Miscellaneous"
+    And I follow "Course 2"
+    And I click on "Ok" "button" in the "Add course set" "totaradialogue"
+    And I wait "1" seconds
+    And I press "Save changes"
+    And I press "Save all changes"
+
     And I am on "Course 1" course homepage with editing mode on
-    And I add the "Self completion" block
     And I navigate to "Course completion" node in "Course administration"
     And I expand all fieldsets
-    And I click on "criteria_self_value" "checkbox"
+    And I set the field "Completion requirements" to "Course is complete when ANY of the conditions are met"
+    And I set the field "Label - Click to complete course" to "1"
     And I press "Save changes"
-    And I am on "Completion archive test" program homepage
-    And I click on "Edit program details" "button"
-    And I switch to "Content" tab
-    And I click on "addcontent_ce" "button" in the "#edit-program-content" "css_element"
-    And I click on "Miscellaneous" "link" in the "addmulticourse" "totaradialogue"
-    And I click on "Course 1" "link" in the "addmulticourse" "totaradialogue"
-    And I click on "Ok" "button" in the "addmulticourse" "totaradialogue"
-    And I press "Save changes"
-    And I click on "Save all changes" "button"
+
+    And the following "permission overrides" exist:
+      | capability                                   | permission | role           | contextlevel | reference |
+      | totara/core:archivemycourseprogress          | Allow      | student        | Course       |        c1 |
+      | totara/core:archiveenrolledcourseprogress    | Allow      | editingteacher | Course       |        c1 |
+      | totara/core:archiveusercourseprogress        | Allow      | editingteacher | Course       |        c1 |
+      | moodle/site:viewreports                      | Allow      | editingteacher | Course       |        c1 |
+      | totara/completioneditor:editcoursecompletion | Allow      | editingteacher | Course       |        c1 |
+      | totara/core:archivemycourseprogress          | Allow      | student        | Course       |        c2 |
+      | totara/core:archiveenrolledcourseprogress    | Allow      | editingteacher | Course       |        c2 |
+      | totara/core:archiveusercourseprogress        | Allow      | editingteacher | Course       |        c2 |
+      | moodle/site:viewreports                      | Allow      | editingteacher | Course       |        c2 |
+      | totara/completioneditor:editcoursecompletion | Allow      | editingteacher | Course       |        c2 |
     And I log out
-    And I log in as "learner1"
+
+  Scenario: I can archive my own course progress.
+    Given I log in as "user1"
     And I am on "Course 1" course homepage
-    And I click on "Complete course" "link"
-    And I press "Yes"
-    And I log out
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Completions archive" node in "Course administration"
+    And I set the field "Manual completion of Click to complete course" to "1"
+    When I navigate to "Reset this course" node in "Course administration"
+    And I click on "Continue" "button"
+    Then I should see "Your progress in this course and completion state have been archived and reset"
+    And the field "Manual completion of Click to complete course" matches value "0"
+
+    # Try resetting progress again.
+    When I navigate to "Reset this course" node in "Course administration"
+    Then I should see "You have not completed this course"
+    And "Continue" "button" should not be visible
+    And I click on "Ok" "button"
+
+    # Cannot archive course 2 linked to program
+    Given I am on "Course 2" course homepage
+    And I set the field "Manual completion of Click to complete course" to "1"
+    When I navigate to "Reset this course" node in "Course administration"
     Then I should see "Courses which are a part of a Program or Certification can not be manually archived."
-    And I should see "Completion archive test"
-    And I should not see "The course completion data that will be archived is limited to: id; courseid; userid; timecompleted; grade."
+    And "Continue" "button" should not be visible
 
-  @javascript @totara_reportbuilder
-  Scenario: Grades are archived but can be viewed via report builder
-    Given the following "standard_report" exist in "totara_reportbuilder" plugin:
-      | fullname                                        | shortname                                              | source                |
-      | Test course completion report                   | report_test_course_completion_report                   | course_completion     |
-      | Test course completion including history report | report_test_course_completion_including_history_report | course_completion_all |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage with editing mode on
-    And I navigate to "Course completion" node in "Course administration"
-    And I click on "Expand all" "link"
-    And I set the following fields to these values:
-      | criteria_grade | 1 |
-      | criteria_grade_value | 15 |
-    And I press "Save changes"
-    And I navigate to "Gradebook setup" node in "Course administration"
-    And I press "Add grade item"
-    And I set the following fields to these values:
-      | Item name     | Misc grade item |
-      | Maximum grade | 35              |
-      | Minimum grade | 5              |
-    And I press "Save changes"
-    When I follow "View"
-    And I follow "User report"
-    And I select "Learner Two" from the "Select all or one user" singleselect
-    Then I should see "Learner Two"
-    And I should see "5–35"
-    And I should see "0–35"
+  Scenario: I can archive course completion for all enrolled users.
+    # User One completes course.
+    When I log in as "user1"
+    And I am on "Course 1" course homepage
+    And I set the field "Manual completion of Click to complete course" to "1"
+    And I log out
 
-    When I follow "Grader report"
-    And I turn editing mode on
-    And I give the grade "0" to the user "Learner One" for the grade item "Course total"
-    And I give the grade "10" to the user "Learner Two" for the grade item "Course total"
-    And I give the grade "20" to the user "Learner Three" for the grade item "Course total"
-    And I give the grade "30" to the user "Learner Four" for the grade item "Course total"
-    And I press "Save changes"
-    And I turn editing mode off
-    Then I should see "0.00" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner One')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "10.00" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner Two')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "20.00" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner Three')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "30.00" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner Four')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "15.00" in the "//table[@id='user-grades']//th[contains(text(), 'Overall average')]/ancestor::tr/td[contains(@class, 'lastcol')]" "xpath_element"
+    # User Two completes course.
+    When I log in as "user2"
+    And I am on "Course 1" course homepage
+    And I set the field "Manual completion of Click to complete course" to "1"
+    And I log out
 
-    When I run the scheduled task "core\task\completion_regular_task"
+    # Teacher One can reset all users progress.
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    When I navigate to "Reset completions" node in "Course administration"
+    Then I should see "This action will affect 2 learner(s)"
+    And I click on "Continue" "button"
+    Then I should see "2 users have had their progress and completion archived and reset in this course"
+
+    # Try resetting progress again.
+    When I navigate to "Reset completions" node in "Course administration"
+    Then I should see "There are no users that have completed this course"
+    And "Continue" "button" should not be visible
+    And I click on "Ok" "button"
+
+    # Cannot archive course 2 linked to program
+    Given I am on "Course 2" course homepage
+    When I navigate to "Reset completions" node in "Course administration"
+    Then I should see "Courses which are a part of a Program or Certification can not be manually archived."
+    And "Continue" "button" should not be visible
+
+  Scenario: I can archive course progress for a specific user.
+    # User One completes course.
+    When I log in as "user1"
+    And I am on "Course 1" course homepage
+    And I set the field "Manual completion of Click to complete course" to "1"
+    And I log out
+
+    # Teacher One can reset User One's progress.
+    Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to "Course completion" node in "Course administration > Reports"
-    Then "//table[@id='completion-progress']//th/a[text()='Learner One']/ancestor::tr//span[contains(@title, 'Not completed')]" "xpath_element" should exist
-    And "//table[@id='completion-progress']//th/a[text()='Learner Two']/ancestor::tr//span[contains(@title, 'Not completed')]" "xpath_element" should exist
-    And "//table[@id='completion-progress']//th/a[text()='Learner Three']/ancestor::tr//span[contains(@title, 'Completed')]" "xpath_element" should exist
-    And "//table[@id='completion-progress']//th/a[text()='Learner Four']/ancestor::tr//span[contains(@title, 'Completed')]" "xpath_element" should exist
+    And I follow "Reset course completion for User One"
+    And I click on "Continue" "button"
+    Then I should see "Progress and completion state have been archived and reset for User One in this course."
 
-    When I navigate to my "Test course completion report" report
-    And I press "Edit this report"
-    And I follow "Columns"
-    And I set the field "newcolumns" to "Grade and required grade"
-    And I set the field "newcustomheading" to "1"
-    And I set the field "newheading" to "Required grade"
-    And I press "Add"
-    And I set the field "newcolumns" to "Grade"
-    And I press "Add"
-    And I set the field "newcolumns" to "Pass Grade"
-    And I press "Add"
-    And I press "Save changes"
-    And I follow "View This Report"
-    # Grade column
-    Then "Learner One" row "Grade" column of "report_test_course_completion_report" table should contain "0.0%"
-    And "Learner Two" row "Grade" column of "report_test_course_completion_report" table should contain "28.6%"
-    And "Learner Three" row "Grade" column of "report_test_course_completion_report" table should contain "57.1%"
-    And "Learner Four" row "Grade" column of "report_test_course_completion_report" table should contain "85.7%"
-    # Completion status
-    And "Learner One" row "Completion Status" column of "report_test_course_completion_report" table should contain "Not yet started"
-    And "Learner Two" row "Completion Status" column of "report_test_course_completion_report" table should contain "Not yet started"
-    And "Learner Three" row "Completion Status" column of "report_test_course_completion_report" table should contain "Complete"
-    And "Learner Four" row "Completion Status" column of "report_test_course_completion_report" table should contain "Complete"
-    # Pass grade
-    And "Learner One" row "Pass Grade" column of "report_test_course_completion_report" table should contain "42.9%"
-    And "Learner Two" row "Pass Grade" column of "report_test_course_completion_report" table should contain "42.9%"
-    And "Learner Three" row "Pass Grade" column of "report_test_course_completion_report" table should contain "42.9%"
-    And "Learner Four" row "Pass Grade" column of "report_test_course_completion_report" table should contain "42.9%"
-    # Required grade
-    And "Learner One" row "Required grade" column of "report_test_course_completion_report" table should contain "0.0% (42.9% to complete)"
-    And "Learner Two" row "Required grade" column of "report_test_course_completion_report" table should contain "28.6% (42.9% to complete)"
-    And "Learner Three" row "Required grade" column of "report_test_course_completion_report" table should contain "57.1% (42.9% to complete)"
-    And "Learner Four" row "Required grade" column of "report_test_course_completion_report" table should contain "85.7% (42.9% to complete)"
-
-    When I navigate to my "Test course completion including history report" report
-    Then "Learner Three" row "Grade at time of completion" column of "report_test_course_completion_including_history_report" table should contain "57.1%"
-    And "Learner Four" row "Grade at time of completion" column of "report_test_course_completion_including_history_report" table should contain "85.7%"
-    And I should not see "Learner One"
-    And I should not see "Learner Two"
-
-    When I follow "Course 1"
-    And I follow "Completions archive"
-    And I press "Continue"
-    Then I should see "2 users completion records have been successfully archived"
-    And I press "Continue"
-
-    When I navigate to "Course completion" node in "Course administration"
-    And I click on "Expand all" "link"
-    And I set the following fields to these values:
-      | criteria_grade_value | 10 |
-    And I press "Save changes"
-    And I navigate to "Gradebook setup" node in "Course administration"
-    And I follow "View"
-    Then I should see "0.00" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner One')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "10.00" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner Two')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "-" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner Three')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "-" in the "//table[@id='user-grades']//th/a[contains(text(), 'Learner Four')]/ancestor::tr/td[contains(@class, 'course')]/span[contains(@class, 'gradevalue')]" "xpath_element"
-    And I should see "5.00" in the "//table[@id='user-grades']//th[contains(text(), 'Overall average')]/ancestor::tr/td[contains(@class, 'lastcol')]" "xpath_element"
-
-    When I run the scheduled task "core\task\completion_regular_task"
-    And I am on homepage
-    And I follow "Reports"
-    And I follow "Test course completion report"
-    # Grade column
-    Then "Learner One" row "Grade" column of "report_test_course_completion_report" table should contain "0.0%"
-    And "Learner Two" row "Grade" column of "report_test_course_completion_report" table should contain "28.6%"
-    And "Learner Three" row "Grade" column of "report_test_course_completion_report" table should contain "-"
-    And "Learner Four" row "Grade" column of "report_test_course_completion_report" table should contain "-"
-    # Completion status
-    And "Learner One" row "Completion Status" column of "report_test_course_completion_report" table should contain "Not yet started"
-    And "Learner Two" row "Completion Status" column of "report_test_course_completion_report" table should contain "Complete"
-    And "Learner Three" row "Completion Status" column of "report_test_course_completion_report" table should contain "Not yet started"
-    And "Learner Four" row "Completion Status" column of "report_test_course_completion_report" table should contain "Not yet started"
-    # Pass grade
-    And "Learner One" row "Pass Grade" column of "report_test_course_completion_report" table should contain "28.6%"
-    And "Learner Two" row "Pass Grade" column of "report_test_course_completion_report" table should contain "28.6%"
-    And "Learner Three" row "Pass Grade" column of "report_test_course_completion_report" table should contain "28.6%"
-    And "Learner Four" row "Pass Grade" column of "report_test_course_completion_report" table should contain "28.6%"
-    # Required grade
-    And "Learner One" row "Required grade" column of "report_test_course_completion_report" table should contain "0.0% (28.6% to complete)"
-    And "Learner Two" row "Required grade" column of "report_test_course_completion_report" table should contain "28.6% (28.6% to complete)"
-    And "Learner Three" row "Required grade" column of "report_test_course_completion_report" table should contain ""
-    And "Learner Four" row "Required grade" column of "report_test_course_completion_report" table should contain ""
-
-    When I follow "Reports"
-    And I follow "Test course completion including history report"
-    Then I should not see "Learner One"
-    And "Learner Two" row "Grade at time of completion" column of "report_test_course_completion_including_history_report" table should contain "28.6%"
-    And "Learner Three" row "Grade at time of completion" column of "report_test_course_completion_including_history_report" table should contain "57.1%"
-    And "Learner Four" row "Grade at time of completion" column of "report_test_course_completion_including_history_report" table should contain "85.7%"
+    # Try resetting progress again.
+    When I follow "Reset course completion for User One"
+    Then I should see "User One"
+    And I should see "has not completed this course"
+    And "Continue" "button" should not be visible
+    And I click on "Ok" "button"

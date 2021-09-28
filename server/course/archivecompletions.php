@@ -22,159 +22,54 @@
  */
 
 /**
- * Deletes course completion records and archives activities for a course
+ * Archives activity progress and completion state, and then resets completion state.
+ *
+ * @global moodle_page $PAGE
+ * @global moodle_database $DB
  */
 
+use core\output\notification;
+use core_completion\hook\course_archive_completion;
+use core_course\local\archive_progress_helper\factory;
+use core_course\local\archive_progress_helper\output\validator\request_validator;
+
 require_once(dirname(dirname(__FILE__)) . '/config.php');
-require_once($CFG->dirroot . '/course/lib.php');
-require_once($CFG->dirroot . '/completion/completion_completion.php');
 
-$id = required_param('id', PARAM_INT); // course id
-$archive = optional_param('archive', '', PARAM_ALPHANUM); // archive confirmation hash
+$courseid = required_param('id', PARAM_INT);
+$userid = optional_param('userid', null, PARAM_INT); // If provided reset for just a single user, otherwise reset all completed users.
+$confirmed = optional_param(request_validator::SECRET_KEY, false, PARAM_ALPHANUMEXT);
 
-// Totara: allow the plugins to redirect away if course is not a legacy course.
-$hook = new \core_completion\hook\course_archive_completion($id);
-$hook->execute();
+// Allow the plugins to redirect away if course is not a legacy course.
+(new course_archive_completion($courseid))->execute();
 
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
-$coursecontext = context_course::instance($course->id);
-require_login($course);
+// Setup course and interacting user entities.
+$course = get_course($courseid);
+$user = null;
 
-// Set up page.
-$url = new moodle_url('/course/archivecompletions.php', array('id' => $id));
-$PAGE->set_url($url);
-$PAGE->set_context($coursecontext);
-$PAGE->set_title($course->fullname);
-$PAGE->set_heading($course->fullname);
-$PAGE->set_pagetype('admin-course-archivecompletions');
-
-// If the user can't delete then they can't archive
-if (!can_delete_course($id)) {
-    print_error('cannotarchivecompletions', 'completion');
+if (!is_null($userid)) {
+    $user = $DB->get_record('user', ['id' => $userid], 'id, ' . get_all_user_name_fields(true), MUST_EXIST);
 }
 
-$status = array(COMPLETION_STATUS_COMPLETE, COMPLETION_STATUS_COMPLETEVIARPL);
-list($statussql, $statusparams) = $DB->get_in_or_equal($status, SQL_PARAMS_NAMED, 'status');
-$sql = "SELECT DISTINCT cc.userid
-        FROM {course_completions} cc
-        WHERE cc.course = :courseid
-        AND cc.status {$statussql}";
-$params = array_merge(array('courseid' => $course->id), $statusparams);
-$users = $DB->get_records_sql($sql, $params);
+// Normal course require_login, but don't set wantsurl if we are processing the action.
+require_login($courseid, false, null, !empty($confirmed));
 
-$category = $DB->get_record('course_categories', array('id' => $course->category));
-$courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
-$categoryname = format_string($category->name, true, array('context' => context_coursecat::instance($category->id)));
-$strarchivecheck = get_string('archivecheck', 'completion', $courseshortname);
+// Prepare course and user so that we can instantiate a helper - it'll do everything for us.
+$helper = factory::get_helper($course, $user);
 
-// Archiving restricted when course is part of a program or certification.
-$cssql = "SELECT p.id, p.fullname, p.certifid
-          FROM {prog_courseset_course} pcc
-          JOIN {prog_courseset} pc
-            ON pcc.coursesetid = pc.id
-          JOIN {prog} p
-            ON pc.programid = p.id
-         WHERE pcc.courseid = :cid
-      GROUP BY p.id, p.fullname, p.certifid";
-$csparams = array('cid' => $course->id);
-$coursesets = $DB->get_records_sql($cssql, $csparams);
-if (!empty($coursesets)) {
-    // The course is part of one or more program(s) or cert(s).
-    $prognames = array();
-    $certnames = array();
-
-    foreach ($coursesets as $cs) {
-        if ($cs->certifid) {
-            $certnames[$cs->id] = format_string($cs->fullname);
-        } else {
-            $prognames[$cs->id] = format_string($cs->fullname);
-        }
-    }
-
-    echo $OUTPUT->header();
-
-    // Print generic error message.
-    echo $OUTPUT->notification(get_string('error:cannotarchiveprogcourse', 'completion'), 'notifyproblem');
-
-    // Print list of programs.
-    if (!empty($prognames)) {
-        echo html_writer::start_tag('div', array('class' => 'programlist'));
-        echo get_string('programs', 'totara_program');
-        echo html_writer::start_tag('ul');
-        foreach ($prognames as $progname) {
-            echo html_writer::tag('li', $progname);
-        }
-        echo html_writer::end_tag('ul');
-        echo html_writer::end_tag('div');
-    }
-
-    // Print list of certifications.
-    if (!empty($certnames)) {
-        echo html_writer::start_tag('div', array('class' => 'certificationlist'));
-        echo get_string('certifications', 'totara_certification');
-        echo html_writer::start_tag('ul');
-        foreach ($certnames as $certname) {
-            echo html_writer::tag('li', $certname);
-        }
-        echo html_writer::end_tag('ul');
-        echo html_writer::end_tag('div');
-    }
-
-    echo $OUTPUT->footer();
-    die();
+// Ensure the user can archive completions.
+$unable_to_archive_reason = $helper->get_unable_to_archive_reason();
+if (!is_null($unable_to_archive_reason)) {
+    throw new moodle_exception('invalidaccess', 'error', '', null, $unable_to_archive_reason);
 }
 
-// first time round - get confirmation
-$strarchivingcourse = get_string('archivingcompletions', 'completion', $courseshortname);
-if (!$archive) {
-    $strarchivecompletionscheck = get_string('archivecompletionscheck', 'completion');
-    echo $OUTPUT->header();
-    echo $OUTPUT->heading($strarchivingcourse);
-
-    if (empty($users)) {
-        echo $OUTPUT->box(get_string('nouserstoarchive', 'completion'));
-        $viewurl = new moodle_url('/course/view.php', array('id' => $course->id));
-        echo $OUTPUT->continue_button($viewurl);
-    } else {
-        $message = $strarchivecompletionscheck;
-        $message .= html_writer::empty_tag('br');
-        $message .= html_writer::empty_tag('br');
-        $message .= format_string($course->fullname, true, array('context' => $coursecontext));
-        $message .= ' (' . $courseshortname . ')';
-        $message .= html_writer::empty_tag('br');
-        $message .= html_writer::empty_tag('br');
-        $message .= get_string('archiveusersaffected', 'completion', count($users));
-
-        $archiveurl = new moodle_url('/course/archivecompletions.php',
-                array('id' => $course->id, 'archive' => md5($course->timemodified), 'sesskey'=>sesskey()));
-        $viewurl = new moodle_url('/course/view.php', array('id' => $course->id));
-        echo $OUTPUT->confirm($message, $archiveurl, $viewurl);
-    }
-} else {
-    // user confirmed archive
-    if ($archive != md5($course->timemodified)) {
-        print_error('invalidmd5');
-    }
-
-    require_sesskey();
-
-    foreach ($users as $user) {
-        // Archive the course completion record before the activities to get the grade
-        archive_course_completion($user->userid, $course->id);
-        archive_course_activities($user->userid, $course->id);
-
-        // Purge any leftovers.
-        archive_course_purge_gradebook($user->userid, $course->id);
-    }
-
-    \totara_core\event\course_completion_archived::create_from_course($course)->trigger();
-
-    // The above archive_course_activities() calls set_module_viewed() which needs to be called before $OUTPUT->header()
-    echo $OUTPUT->header();
-
-    echo $OUTPUT->heading($strarchivingcourse);
-    echo html_writer::tag('p', get_string('usersarchived', 'completion', count($users)));
-    $viewurl = new moodle_url('/course/view.php', array('id' => $course->id));
-    echo $OUTPUT->continue_button($viewurl);
+if (!empty($confirmed)) {
+    // User is confirming, we can attempt to process the action.
+    require_sesskey(); // Essential.
+    $helper->get_validator()->validate($confirmed); // Confirm the secret is as expected.
+    $helper->archive_and_reset(); // Process the action
+    // Redirect the user and show a success notification on the landing page.
+    $success_context = $helper->get_page_output()->get_success_page_context();
+    redirect($success_context->redirect_url(), $success_context->message(), null, notification::NOTIFY_SUCCESS);
 }
-echo $OUTPUT->footer();
+
+echo $helper->get_page_output()->render($PAGE);

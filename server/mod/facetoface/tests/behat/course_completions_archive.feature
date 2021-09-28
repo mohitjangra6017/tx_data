@@ -87,12 +87,10 @@ Feature: Course archive completions for seminar sessions
 
     And I log in as "admin"
     And I am on "Course 1" course homepage
-    When I navigate to "Completions archive" node in "Course administration"
-    Then I should see "The course completion data that will be archived is limited to: id; courseid; userid; timecompleted; grade."
-    And I should see "1 users will be affected"
+    When I navigate to "Reset completions" node in "Course administration"
+    Then I should see "This action will affect 1 learner(s)"
     When I press "Continue"
-    Then I should see "1 users completion records have been successfully archived"
-    And I press "Continue"
+    Then I should see "1 users have had their progress and completion archived and reset in this course."
     And I log out
 
     And I log in as "teacher1"
@@ -220,11 +218,10 @@ Feature: Course archive completions for seminar sessions
       | completiondelay           | 100 |
     And I press "Save and display"
 
-    When I navigate to "Completions archive" node in "Course administration"
-    Then I should see "9 users will be affected"
+    When I navigate to "Reset completions" node in "Course administration"
+    Then I should see "This action will affect 9 learner(s)"
     When I press "Continue"
-    Then I should see "9 users completion records have been successfully archived"
-    And I press "Continue"
+    Then I should see "9 users have had their progress and completion archived and reset in this course."
 
     When I navigate to "Course completion" node in "Course administration > Reports"
     Then I should not see "Completed"

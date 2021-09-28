@@ -43,6 +43,7 @@ $string['page-report-completion-x'] = 'Any completion report';
 $string['page-report-completion-index'] = 'Course completion report';
 $string['page-report-completion-user'] = 'User course completion report';
 $string['pluginname'] = 'Course completion';
+$string['reset_completion_for_user_x'] = 'Reset course completion for {$a}';
 $string['showonlyactiveenrols'] = 'Show only active enrolments';
 $string['showonlyactiveenrols_help'] = 'When enabled, completion records are shown for learners with existing active enrolments only.
 

@@ -89,12 +89,10 @@ Feature: Unarchive completions for seminar sessions
 
     And I log in as "manager1"
     And I am on "Course 1" course homepage
-    When I navigate to "Completions archive" node in "Course administration"
-    Then I should see "The course completion data that will be archived is limited to: id; courseid; userid; timecompleted; grade."
-    And I should see "4 users will be affected"
+    When I navigate to "Reset completions" node in "Course administration"
+    Then I should see "This action will affect 4 learner(s)"
     When I press "Continue"
-    Then I should see "4 users completion records have been successfully archived"
-    And I press "Continue"
+    Then I should see "4 users have had their progress and completion archived and reset in this course."
     And I log out
 
     And I log in as "teacher1"
