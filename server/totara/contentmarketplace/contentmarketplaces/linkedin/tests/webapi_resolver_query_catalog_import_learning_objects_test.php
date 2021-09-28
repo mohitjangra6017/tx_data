@@ -69,7 +69,12 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
     private function create_data_from_fixture(): void {
         $result = generator::instance()->get_mock_result_from_fixtures('response_1');
         learning_object::create_bulk_from_result($result);
-        $this->data = learning_object_entity::repository()->get()->map_to(learning_object::class)->all();
+        $this->data = learning_object_entity::repository()
+            ->order_by('title')
+            ->order_by('id')
+            ->get()
+            ->map_to(learning_object::class)
+            ->all();
     }
 
     protected function tearDown(): void {
@@ -124,9 +129,12 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->create_data_from_fixture();
 
         // language filter: english
-        $result_en = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, ['language' => 'en']));
-        $this->assertEquals($this->data[0]->id, $result_en['items']->last()->id);
-        $this->assertEquals($this->data[1]->id, $result_en['items']->first()->id);
+        $result_en = $this->resolve_graphql_query(
+            self::QUERY,
+            $this->get_query_options(null, ['language' => 'en'], learning_objects::SORT_BY_ALPHABETICAL)
+        );
+        $this->assertEquals($this->data[0]->id, $result_en['items']->first()->id);
+        $this->assertEquals($this->data[1]->id, $result_en['items']->last()->id);
 
         // language filter: french
         $result_fr = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, ['language' => 'fr']));
