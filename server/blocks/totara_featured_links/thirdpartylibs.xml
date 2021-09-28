@@ -28,6 +28,7 @@
         <name>Spectrum</name>
         <license>MIT</license>
         <version>1.8.0</version>
+        <repository>https://github.com/bgrins/spectrum</repository>
     </library>
     <library>
         <location>slick</location>
