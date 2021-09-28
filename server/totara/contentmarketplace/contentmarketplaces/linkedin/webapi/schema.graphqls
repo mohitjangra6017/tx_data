@@ -101,7 +101,7 @@ Output of the create course mutation.
 type contentmarketplace_linkedin_catalog_import_create_course_result {
   success: Boolean!
   message: String!
-  redirect_url: String!
+  redirect_url: String
 }
 
 """
