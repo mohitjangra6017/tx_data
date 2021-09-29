@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-TL-28244/15',
-        'version' => 'dev-TL-28244/15',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
         'type' => 'metapackage',
         'install_path' => __DIR__ . '/../',
         'aliases' => array(),
-        'reference' => '521224e3c8e0355c4ec4750081b1001d15dc9f80',
+        'reference' => NULL,
         'name' => 'totara/totara_require',
         'dev' => true,
     ),
@@ -55,13 +55,22 @@
             'reference' => '08e27c97e4c6ed02f37c5b2b20488046c8d90d75',
             'dev_requirement' => false,
         ),
+        'lcobucci/clock' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
+        ),
         'lcobucci/jwt' => array(
-            'pretty_version' => '3.4.5',
-            'version' => '3.4.5.0',
+            'pretty_version' => 'dev-totara-4.1.5',
+            'version' => 'dev-totara-4.1.5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../lcobucci/jwt',
-            'aliases' => array(),
-            'reference' => '511629a54465e89a31d3d7e4cf0935feab8b14c1',
+            'aliases' => array(
+                0 => '4.1.5',
+                1 => '9999999-dev',
+            ),
+            'reference' => 'dbf0bf17a0a6542293d1b712b097fcf45c56ab55',
             'dev_requirement' => false,
         ),
         'league/event' => array(
@@ -323,12 +332,12 @@
             'dev_requirement' => false,
         ),
         'totara/totara_require' => array(
-            'pretty_version' => 'dev-TL-28244/15',
-            'version' => 'dev-TL-28244/15',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
             'type' => 'metapackage',
             'install_path' => __DIR__ . '/../',
             'aliases' => array(),
-            'reference' => '521224e3c8e0355c4ec4750081b1001d15dc9f80',
+            'reference' => NULL,
             'dev_requirement' => false,
         ),
         'webonyx/graphql-php' => array(

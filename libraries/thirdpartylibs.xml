@@ -87,9 +87,17 @@
     <repository>https://github.com/michelf/php-markdown</repository>
   </library>
   <library>
+    <location>required/lcobucci/jwt</location>
+    <name>JSON Web Token and JSON Web Signature handler</name>
+    <license>BSD</license>
+    <version>4.1.5</version>
+    <licenseversion>3</licenseversion>
+    <repository>https://github.com/totara/jwt</repository>
+  </library>
+  <library>
     <location>required/league/oauth2-server</location>
     <name>Oauth 2.0 Server</name>
-    <liences>MIT</liences>
+    <license>MIT</license>
     <version>8.3.2</version>
     <licenseversion></licenseversion>
     <repository>https://github.com/thephpleague/oauth2-server</repository>

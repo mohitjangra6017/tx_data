@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Lcobucci\JWT\Validation;
 
@@ -13,11 +14,7 @@ final class RequiredConstraintsViolated extends RuntimeException implements Exce
     /** @var ConstraintViolation[] */
     private $violations = [];
 
-    /**
-     * @param ConstraintViolation ...$violations
-     * @return self
-     */
-    public static function fromViolations(ConstraintViolation ...$violations)
+    public static function fromViolations(ConstraintViolation ...$violations): self
     {
         $exception             = new self(self::buildMessage($violations));
         $exception->violations = $violations;
@@ -25,15 +22,11 @@ final class RequiredConstraintsViolated extends RuntimeException implements Exce
         return $exception;
     }
 
-    /**
-     * @param ConstraintViolation[] $violations
-     *
-     * @return string
-     */
-    private static function buildMessage(array $violations)
+    /** @param ConstraintViolation[] $violations */
+    private static function buildMessage(array $violations): string
     {
         $violations = array_map(
-            static function (ConstraintViolation $violation) {
+            static function (ConstraintViolation $violation): string {
                 return '- ' . $violation->getMessage();
             },
             $violations
@@ -46,7 +39,7 @@ final class RequiredConstraintsViolated extends RuntimeException implements Exce
     }
 
     /** @return ConstraintViolation[] */
-    public function violations()
+    public function violations(): array
     {
         return $this->violations;
     }

@@ -26,6 +26,7 @@ return array(
     'League\\OAuth2\\Server\\' => array($vendorDir . '/league/oauth2-server/src'),
     'League\\Event\\' => array($vendorDir . '/league/event/src'),
     'Lcobucci\\JWT\\' => array($vendorDir . '/lcobucci/jwt/src'),
+    'Lcobucci\\Clock\\' => array($vendorDir . '/lcobucci/jwt/clock/src'),
     'Http\\Message\\' => array($vendorDir . '/php-http/message-factory/src'),
     'GraphQL\\' => array($vendorDir . '/webonyx/graphql-php/src'),
     'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src/FontLib'),

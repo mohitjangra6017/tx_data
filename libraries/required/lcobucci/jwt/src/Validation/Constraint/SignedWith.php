@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Lcobucci\JWT\Validation\Constraint;
 
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 
@@ -11,7 +13,6 @@ final class SignedWith implements Constraint
 {
     /** @var Signer */
     private $signer;
-
     /** @var Signer\Key */
     private $key;
 
@@ -21,13 +22,17 @@ final class SignedWith implements Constraint
         $this->key    = $key;
     }
 
-    public function assert(Token $token)
+    public function assert(Token $token): void
     {
-        if ($token->headers()->get('alg') !== $this->signer->getAlgorithmId()) {
+        if (! $token instanceof UnencryptedToken) {
+            throw new ConstraintViolation('You should pass a plain token');
+        }
+
+        if ($token->headers()->get('alg') !== $this->signer->algorithmId()) {
             throw new ConstraintViolation('Token signer mismatch');
         }
 
-        if (! $this->signer->verify((string) $token->signature(), $token->getPayload(), $this->key)) {
+        if (! $this->signer->verify($token->signature()->hash(), $token->payload(), $this->key)) {
             throw new ConstraintViolation('Token signature mismatch');
         }
     }
