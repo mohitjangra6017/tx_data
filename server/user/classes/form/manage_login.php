@@ -61,7 +61,10 @@ final class manage_login extends \totara_form\form {
         $problems = [];
 
         $access = \core_user\access_controller::for($user);
-        $canchangepassword = ($auth->can_change_password() && !$auth->change_password_url());
+        $canchangepassword = (
+            ($auth->can_change_password() && !$auth->change_password_url()) &&
+            (!$currentuser && !is_siteadmin($user)) // Remove the ability to change their own password while editing their profile
+        );
         $lockedout = login_is_lockedout($user);
 
         $this->model->add(new hidden('id', PARAM_INT));

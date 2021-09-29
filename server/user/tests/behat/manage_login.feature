@@ -239,3 +239,14 @@ Feature: Account login management
       | Password | Grr!!666 |
     And I press "Log in"
     Then I should see "You do not have any current learning. For previously completed learning see your Record of Learning."
+
+  Scenario: Admin/manager can change password for others but not for yourself
+    Given I log in as "admin"
+    And I click on "Admin User" "link"
+    When I follow "Profile"
+    And I follow "Manage user login"
+    Then I should not see "Change password"
+
+    When I navigate to "Manage users" node in "Site administration > Users"
+    And I click on "Manage login of First User" "link" in the "First User" "table_row"
+    Then I should see "Change password"
