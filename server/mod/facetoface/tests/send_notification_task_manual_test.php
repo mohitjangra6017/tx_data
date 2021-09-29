@@ -29,6 +29,7 @@ global $CFG;
 require_once($CFG->dirroot.'/mod/facetoface/lib.php');
 require_once($CFG->dirroot.'/mod/facetoface/tests/facetoface_testcase.php');
 
+use core_phpunit\phpmailer_sink;
 use mod_facetoface\signup;
 use mod_facetoface\signup\state\booked;
 use mod_facetoface\signup\state\user_cancelled;
@@ -37,24 +38,61 @@ use mod_facetoface\signup_helper;
 use mod_facetoface\seminar_event;
 use mod_facetoface\task\send_notifications_task;
 
+/*
+ * Test custom notifications and combinations of their recipient status and event time settings.
+ */
 class mod_facetoface_send_notification_task_manual_testcase extends mod_facetoface_facetoface_testcase {
 
+    public function upcoming_recipient_status_data_provider(): array {
+        return [
+            'upcoming event booked' => [
+                ['upcoming_events' => 1],
+                ['user1']
+            ],
+            'in progress or past event booked' => [
+                [
+                    'events_in_progress' => 1,
+                    'past_events' => 1,
+                ],
+                []
+            ],
+            'all booked status' => [
+                [
+                    'past_events' => 1,
+                    'events_in_progress' => 1,
+                    'upcoming_events' => 1,
+                ],
+                ['user1']
+            ],
+            'in progress or past event booked, waitlisted or cancelled' => [
+                [
+                    'events_in_progress' => 1,
+                    'past_events' => 1,
+                    'user_cancelled' => 1,
+                    'waitlisted' => 1,
+                ],
+                []
+            ],
+            'upcoming event booked, waitlisted or cancelled' => [
+                [
+                    'upcoming_events' => 1,
+                    'user_cancelled' => 1,
+                    'waitlisted' => 1,
+                ],
+                ['user1', 'user2', 'user3']
+            ],
+        ];
+    }
+
     /**
-     * Test manual notifications
+     * @dataProvider upcoming_recipient_status_data_provider
      */
-    public function test_send_upcoming_notifications() {
+    public function test_send_upcoming_notifications(array $recipient_status_override, array $expected_recipients): void {
         global $DB;
 
-        $this->seed_data();
-
-        $sink = $this->redirectEmails();
-        $cron = new send_notifications_task();
-        $cron->testing = true;
-
-        // Clear automated messages (booking confirmation etc.).
-        $cron->execute();
-        self::executeAdhocTasks();
-        $sink->clear();
+        $seed = $this->seed_data();
+        $sink = $seed['sink'];
+        $cron = $seed['cron'];
 
         // Make notification manual
         $notificationrec = $DB->get_record('facetoface_notification', ['conditiontype'=> 32]);
@@ -62,57 +100,54 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $notificationrec->issent = 0;
         $notificationrec->status = 1;
         $notificationrec->recipients = json_encode(
-            [
-                'past_events' => 0,
-                'events_in_progress' => 0,
-                'upcoming_events' => 1,
-                'fully_attended' => 0,
-                'partially_attended' => 0,
-                'unable_to_attend' => 0,
-                'no_show' => 0,
-                'waitlisted' => 0,
-                'user_cancelled' => 0,
-                'requested' => 0,
-            ]
+            array_merge(self::all_recipient_status_unset(), $recipient_status_override)
         );
         $notificationrec->title = 'TEST';
         $DB->update_record('facetoface_notification', $notificationrec);
 
-        $cron->execute();
-        self::executeAdhocTasks();
+        $this->assert_users_receive_notifications($expected_recipients, $cron, $sink);
+    }
 
-        $messages = $sink->get_messages();
-        $sink->clear();
-        // Make sure only the booked user got the message.
-        $this->assertCount(1, $messages);
-        $message = current($messages);
-        $this->assertEquals('TEST', $message->subject);
-        $this->assertEquals('test@example.com', $message->to);
-
-        // Confirm that messages sent only once
-        $cron->execute();
-        self::executeAdhocTasks();
-        $this->assertEmpty($sink->get_messages());
-        $sink->close();
+    public function past_recipient_status_data_provider(): array {
+        return [
+            'past event booked' => [
+                ['past_events' => 1],
+                ['user1']
+            ],
+            'in progress or upcoming event booked' => [
+                [
+                    'events_in_progress' => 1,
+                    'upcoming_events' => 1,
+                ],
+                []
+            ],
+            'all booked status' => [
+                [
+                    'past_events' => 1,
+                    'events_in_progress' => 1,
+                    'upcoming_events' => 1,
+                ],
+                ['user1']
+            ],
+            'past event booked or cancelled' => [
+                [
+                    'past_events' => 1,
+                    'user_cancelled' => 1,
+                ],
+                ['user1', 'user2']
+            ],
+        ];
     }
 
     /**
-     * Test manual notifications
+     * @dataProvider past_recipient_status_data_provider
      */
-    public function test_send_past_notifications() {
+    public function test_send_past_notifications(array $recipient_status_override, array $expected_recipients): void {
         global $DB;
 
         $seed = $this->seed_data();
-
-        $sink = $this->redirectEmails();
-        $cron = new send_notifications_task();
-        $cron->testing = true;
-
-        // Clear automated message (booking confirmation).
-        $cron->execute();
-        self::executeAdhocTasks();
-
-        $sink->clear();
+        $sink = $seed['sink'];
+        $cron = $seed['cron'];
 
         $sessiondate = $DB->get_record('facetoface_sessions_dates', ['sessionid' => $seed['seminarevent']->get_id()]);
         $sessiondate->timestart = time() - DAYSECS;
@@ -125,54 +160,54 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $notificationrec->issent = 0;
         $notificationrec->status = 1;
         $notificationrec->recipients = json_encode(
-            [
-                'past_events' => 1,
-                'events_in_progress' => 0,
-                'upcoming_events' => 0,
-                'fully_attended' => 0,
-                'partially_attended' => 0,
-                'unable_to_attend' => 0,
-                'no_show' => 0,
-                'waitlisted' => 0,
-                'user_cancelled' => 0,
-                'requested' => 0,
-            ]
+            array_merge(self::all_recipient_status_unset(), $recipient_status_override)
         );
         $notificationrec->title = 'TEST';
         $DB->update_record('facetoface_notification', $notificationrec);
 
-        $cron->execute();
-        self::executeAdhocTasks();
-
-        $messages = $sink->get_messages();
-        $sink->clear();
-        // Make sure only the booked user got the message.
-        $this->assertCount(1, $messages);
-        $message = current($messages);
-        $this->assertEquals('TEST', $message->subject);
-        $this->assertEquals('test@example.com', $message->to);
-
-        // Confirm that messages sent only once
-        $cron->execute();
-        self::executeAdhocTasks();
-        $this->assertEmpty($sink->get_messages());
-        $sink->close();
+        $this->assert_users_receive_notifications($expected_recipients, $cron, $sink);
     }
 
-    public function test_send_in_progress_notifications() {
+    public function in_progress_recipient_status_data_provider(): array {
+        return [
+            'in progress booked' => [
+                ['events_in_progress' => 1],
+                ['user1']
+            ],
+            'past or upcoming event booked' => [
+                [
+                    'past_events' => 1,
+                    'upcoming_events' => 1,
+                ],
+                []
+            ],
+            'all booked status' => [
+                [
+                    'past_events' => 1,
+                    'events_in_progress' => 1,
+                    'upcoming_events' => 1,
+                ],
+                ['user1']
+            ],
+            'in progress booked or waitlisted' => [
+                [
+                    'events_in_progress' => 1,
+                    'waitlisted' => 1,
+                ],
+                ['user1', 'user3']
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider in_progress_recipient_status_data_provider
+     */
+    public function test_send_in_progress_notifications(array $recipient_status_override, array $expected_recipients): void {
         global $DB;
 
         $seed = $this->seed_data();
-
-        $sink = $this->redirectEmails();
-        $cron = new send_notifications_task();
-        $cron->testing = true;
-
-        // Clear automated message (booking confirmation).
-        $cron->execute();
-        self::executeAdhocTasks();
-
-        $sink->clear();
+        $sink = $seed['sink'];
+        $cron = $seed['cron'];
 
         $sessiondate = $DB->get_record('facetoface_sessions_dates', ['sessionid' => $seed['seminarevent']->get_id()]);
         $sessiondate->timestart = time() - DAYSECS;
@@ -185,32 +220,49 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $notificationrec->issent = 0;
         $notificationrec->status = 1;
         $notificationrec->recipients = json_encode(
-            [
-                'past_events' => 0,
-                'events_in_progress' => 1,
-                'upcoming_events' => 0,
-                'fully_attended' => 0,
-                'partially_attended' => 0,
-                'unable_to_attend' => 0,
-                'no_show' => 0,
-                'waitlisted' => 0,
-                'user_cancelled' => 0,
-                'requested' => 0,
-            ]
+            array_merge(self::all_recipient_status_unset(), $recipient_status_override)
         );
         $notificationrec->title = 'TEST';
         $DB->update_record('facetoface_notification', $notificationrec);
 
+        $this->assert_users_receive_notifications($expected_recipients, $cron, $sink);
+    }
+
+    private static function all_recipient_status_unset(): array {
+        return [
+            'past_events' => 0,
+            'events_in_progress' => 0,
+            'upcoming_events' => 0,
+            'fully_attended' => 0,
+            'partially_attended' => 0,
+            'unable_to_attend' => 0,
+            'no_show' => 0,
+            'waitlisted' => 0,
+            'user_cancelled' => 0,
+            'requested' => 0,
+        ];
+    }
+
+    /**
+     * @param array $expected_users
+     * @param send_notifications_task $cron
+     * @param phpmailer_sink $sink
+     */
+    private function assert_users_receive_notifications(array $expected_users, send_notifications_task $cron, phpmailer_sink $sink): void {
         $cron->execute();
         self::executeAdhocTasks();
 
         $messages = $sink->get_messages();
         $sink->clear();
-        // Make sure only the booked user got the message.
-        $this->assertCount(1, $messages);
-        $message = current($messages);
-        $this->assertEquals('TEST', $message->subject);
-        $this->assertEquals('test@example.com', $message->to);
+
+        // Make sure only the expected users got the message.
+        $this->assertCount(count($expected_users), $messages);
+        $actual_users = [];
+        foreach ($messages as $message) {
+            $this->assertEquals('TEST', $message->subject);
+            $actual_users[] = str_replace('@example.com', '', $message->to);
+        }
+        $this->assertEqualsCanonicalizing($expected_users, $actual_users);
 
         // Confirm that messages sent only once
         $cron->execute();
@@ -248,9 +300,9 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         );
         $sessionid = $facetofacegenerator->add_session($sessiondata);
 
-        $student1 = self::getDataGenerator()->create_user(['email' => 'test@example.com']);
-        $student2 = self::getDataGenerator()->create_user();
-        $student3 = self::getDataGenerator()->create_user();
+        $student1 = self::getDataGenerator()->create_user(['email' => 'user1@example.com']);
+        $student2 = self::getDataGenerator()->create_user(['email' => 'user2@example.com']);
+        $student3 = self::getDataGenerator()->create_user(['email' => 'user3@example.com']);
 
         self::getDataGenerator()->enrol_user($student1->id, $course1->id, 'student');
         self::getDataGenerator()->enrol_user($student2->id, $course1->id, 'student');
@@ -274,12 +326,21 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         signup_helper::signup($signup3);
         $this->assertInstanceOf(waitlisted::class, $signup3->get_state());
 
+        // Init email sink.
+        $sink = self::redirectEmails();
+        $cron = new send_notifications_task();
+        $cron->testing = true;
+        // Clear automated messages (booking confirmation etc.).
+        $cron->execute();
+        self::executeAdhocTasks();
+        $sink->clear();
+
         return [
+            'sink' => $sink,
+            'cron' => $cron,
             'course' => $course1,
             'seminarevent' => $seminarevent,
             'users' => [$student1, $student2, $student3]
         ];
     }
-
-
 }
