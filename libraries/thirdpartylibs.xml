@@ -12,7 +12,7 @@
     <location>required/box/spout</location>
     <name>Spout</name>
     <license>Apache</license>
-    <version>3.1.0</version>
+    <version>3.3.0</version>
     <licenseversion>2.0</licenseversion>
     <repository>https://github.com/box/spout</repository>
   </library>

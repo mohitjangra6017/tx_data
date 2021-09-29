@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-TL-28217/15',
-        'version' => 'dev-TL-28217/15',
+        'pretty_version' => 'dev-TL-28244/15',
+        'version' => 'dev-TL-28244/15',
         'type' => 'metapackage',
         'install_path' => __DIR__ . '/../',
         'aliases' => array(),
-        'reference' => '07159f38a2387cb9fcd6f1a2a31f511237261ecf',
+        'reference' => '521224e3c8e0355c4ec4750081b1001d15dc9f80',
         'name' => 'totara/totara_require',
         'dev' => true,
     ),
@@ -20,12 +20,12 @@
             'dev_requirement' => false,
         ),
         'box/spout' => array(
-            'pretty_version' => 'v3.1.0',
-            'version' => '3.1.0.0',
+            'pretty_version' => 'v3.3.0',
+            'version' => '3.3.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../box/spout',
             'aliases' => array(),
-            'reference' => '7964dadc2128f3a00ffa393395b618ea115c8032',
+            'reference' => '9bdb027d312b732515b884a341c0ad70372c6295',
             'dev_requirement' => false,
         ),
         'defuse/php-encryption' => array(
@@ -323,12 +323,12 @@
             'dev_requirement' => false,
         ),
         'totara/totara_require' => array(
-            'pretty_version' => 'dev-TL-28217/15',
-            'version' => 'dev-TL-28217/15',
+            'pretty_version' => 'dev-TL-28244/15',
+            'version' => 'dev-TL-28244/15',
             'type' => 'metapackage',
             'install_path' => __DIR__ . '/../',
             'aliases' => array(),
-            'reference' => '07159f38a2387cb9fcd6f1a2a31f511237261ecf',
+            'reference' => '521224e3c8e0355c4ec4750081b1001d15dc9f80',
             'dev_requirement' => false,
         ),
         'webonyx/graphql-php' => array(
