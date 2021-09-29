@@ -37,20 +37,32 @@ class totara_oauth2_oauth2_provider_controller_testcase extends testcase {
         $provider = $generator->create_client_provider("client_id_one");
 
         $controller = new oauth2_provider_controller();
-        ob_start();
-        $controller->process();
-        $content = ob_get_contents();
-        ob_end_clean();
 
-        $tui_view = new tui_view(
-            'totara_oauth2/pages/Oauth2ProviderPage',
-            [
-                'title' => 'OAuth 2 provider details',
-                'id' => $provider->id,
-            ]
-        );
+        $result = $controller->action();
+        $reflection = new ReflectionClass($result);
+        $property = $reflection->getProperty('data');
+        $property->setAccessible(true);
+        $data = $property->getValue($result);
 
-        self::assertEquals($tui_view->render(), $content);
+        self::assertEquals('OAuth 2 provider details', $data['title']);
+        self::assertEquals($provider->id, $data['id']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_oauth2_provider_controller_without_client_provider_record(): void {
+        self::setAdminUser();
+
+        $controller = new oauth2_provider_controller();
+        $result = $controller->action();
+        $reflection = new ReflectionClass($result);
+        $property = $reflection->getProperty('data');
+        $property->setAccessible(true);
+        $data = $property->getValue($result);
+
+        self::assertEquals('OAuth 2 provider details', $data['title']);
+        self::assertArrayNotHasKey('id', $data);
 
     }
 
@@ -64,33 +76,11 @@ class totara_oauth2_oauth2_provider_controller_testcase extends testcase {
         self::setUser($user);
 
         $generator = generator::instance();
-        $provider = $generator->create_client_provider("client_id_one");
+        $generator->create_client_provider("client_id_one");
 
         self::expectException(moodle_exception::class);
         self::expectExceptionMessage('Access denied');
         $controller = new oauth2_provider_controller();
         $controller->process();
-    }
-
-    /**
-     * @return void
-     */
-    public function test_oauth2_provider_controller_without_client_provider_record(): void {
-        self::setAdminUser();
-
-        $controller = new oauth2_provider_controller();
-        ob_start();
-        $controller->process();
-        $content = ob_get_contents();
-        ob_end_clean();
-
-        $tui_view = new tui_view(
-            'totara_oauth2/pages/Oauth2ProviderPage',
-            [
-                'title' => 'OAuth 2 provider details'
-            ]
-        );
-
-        self::assertEquals($tui_view->render(), $content);
     }
 }

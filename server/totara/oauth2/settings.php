@@ -20,6 +20,9 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_oauth2
  */
+
+defined('MOODLE_INTERNAL') || die;
+
 if ($hassiteconfig) {
     $ADMIN->add(
         'oauth2services',
