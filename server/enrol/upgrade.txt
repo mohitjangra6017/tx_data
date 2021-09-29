@@ -1,6 +1,10 @@
 This files describes API changes in /enrol/* - plugins,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* Added new method do_non_interactive_enrol and supports_non_interactive_enrol in the lib.php to allow sub plugin
+  to implement non interactive enrollment
+
 === 14.0 ===
 
 * MNET functionality was removed in Totara 14.0
