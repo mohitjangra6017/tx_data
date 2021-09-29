@@ -62,6 +62,7 @@ class content_marketplace extends entity_model_formatter {
                 );
                 return $formatter->format($intro);
             },
+            'redirect_enrol_url' => null
         ];
     }
 }

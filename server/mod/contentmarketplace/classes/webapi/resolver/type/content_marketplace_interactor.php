@@ -26,7 +26,6 @@ use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
 use mod_contentmarketplace\interactor\content_marketplace_interactor as interactor;
-use moodle_url;
 
 class content_marketplace_interactor implements type_resolver {
     /**
@@ -42,8 +41,8 @@ class content_marketplace_interactor implements type_resolver {
         }
 
         switch ($field) {
-            case 'is_admin':
-                return $content_marketplace_interactor->is_admin();
+            case 'has_view_capability':
+                return $content_marketplace_interactor->has_view_capability();
             case 'is_site_guest':
                 return $content_marketplace_interactor->is_site_guest();
             case 'can_enrol':
@@ -52,22 +51,11 @@ class content_marketplace_interactor implements type_resolver {
                 return $content_marketplace_interactor->can_launch();
             case "is_enrolled":
                 return $content_marketplace_interactor->is_enrolled();
-            case 'can_non_interactive_enrol':
-                $count = $content_marketplace_interactor->count_non_interactive_enrol();
-                $url = new moodle_url('/enrol/index.php', ['id' => $content_marketplace_interactor->get_course_id()]);
+            case 'non_interactive_enrol_instance_enabled':
+                return $content_marketplace_interactor->non_interactive_enrol_instance_enabled();
+            case 'supports_non_interactive_enrol':
+                return $content_marketplace_interactor->supports_non_interactive_enrol();
 
-                $result = [
-                    'redirect_url' => $count > 1 ? $url->out() : '',
-                    'enabled' => false,
-                    'enrol_instance_count' => $count
-                ];
-
-                if (!$content_marketplace_interactor->can_non_interactive_enrol()) {
-                    $result['redirect_url'] = $url->out();
-                    $result['enabled'] = true;
-                }
-
-                return $result;
             default:
                 throw new coding_exception("Unexpected field passed {$field}");
         }

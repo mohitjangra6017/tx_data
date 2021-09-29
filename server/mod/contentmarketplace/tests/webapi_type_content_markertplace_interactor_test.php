@@ -107,19 +107,19 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
     /**
      * @return void
      */
-    public function test_content_markertplace_interactor_type_is_admin(): void {
+    public function test_content_markertplace_interactor_type_has_view_capability(): void {
         $interactor = new content_marketplace_interactor(
             content_marketplace::from_course_module_id($this->course_module_id),
             get_admin()->id
         );
 
-        self::assertTrue($interactor->is_admin());
+        self::assertTrue($interactor->has_view_capability());
 
         self::assertEquals(
-            $interactor->is_admin(),
+            $interactor->has_view_capability(),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_content_marketplace_interactor::class),
-                'is_admin',
+                'has_view_capability',
                 $interactor
             )
         );
@@ -161,6 +161,44 @@ class mod_contentmarketplace_webapi_type_content_markertplace_interactor_testcas
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_content_marketplace_interactor::class),
                 'is_site_guest',
+                $interactor
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_content_markertplace_interactor_type_non_interactive_enrol_instance_enabled(): void {
+        $interactor = new content_marketplace_interactor(
+            content_marketplace::from_course_module_id($this->course_module_id),
+            get_admin()->id
+        );
+
+        self::assertEquals(
+            $interactor->can_enrol(),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(type_content_marketplace_interactor::class),
+                'non_interactive_enrol_instance_enabled',
+                $interactor
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_content_markertplace_interactor_type_supports_non_interactive_enrol(): void {
+        $interactor = new content_marketplace_interactor(
+            content_marketplace::from_course_module_id($this->course_module_id),
+            get_admin()->id
+        );
+
+        self::assertEquals(
+            $interactor->can_enrol(),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(type_content_marketplace_interactor::class),
+                'supports_non_interactive_enrol',
                 $interactor
             )
         );

@@ -108,6 +108,7 @@ class content_marketplace extends model {
         'course_id',
         'completion_enabled',
         'completion_tracking',
+        'redirect_enrol_url'
     ];
 
     /**
@@ -321,5 +322,12 @@ class content_marketplace extends model {
     public function get_completion_tracking(): int {
         $module = $this->get_course_module();
         return $module->completion;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_redirect_enrol_url(): string {
+        return (new moodle_url('/enrol/index.php', ['id' => $this->course_id]))->out();
     }
 }

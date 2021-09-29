@@ -204,20 +204,18 @@ export default {
         canEnrol: false,
         // Viewing activity as guest (not enrolled in activity)
         canLaunch: false,
-        isAdmin: false,
+        hasViewCapability: false,
         isEnrolled: false,
         isSiteGuest: false,
-        canNonInteractiveEnrol: {
-          redirectUrl: '',
-          enabled: false,
-          enrolInstanceCount: 0,
-        },
+        nonEnrolInstanceEnabled: false,
+        supportsNonInteractiveEnrol: false,
       },
       setCompletion: false,
       // Open nodes of contents tree
       openContents: [],
       webLaunchUrl: null,
       ssoLaunchUrl: null,
+      redirctEnrolUrl: null,
     };
   },
 
@@ -241,10 +239,14 @@ export default {
     },
 
     displayBannerInfo() {
-      const { isAdmin, isSiteGuest, canNonInteractiveEnrol } = this.interactor;
+      const {
+        hasViewCapability,
+        isSiteGuest,
+        nonEnrolInstanceEnabled,
+      } = this.interactor;
 
-      if (isAdmin) {
-        return !canNonInteractiveEnrol.enabled
+      if (hasViewCapability) {
+        return nonEnrolInstanceEnabled
           ? this.$str('viewing_as_enrollable_admin', 'mod_contentmarketplace')
           : this.$str(
               'viewing_as_enrollable_admin_self_enrol_disabled',
@@ -252,18 +254,14 @@ export default {
             );
       }
 
-      return !canNonInteractiveEnrol.enabled && !isSiteGuest
+      return nonEnrolInstanceEnabled && !isSiteGuest
         ? this.$str('viewing_as_enrollable_guest', 'mod_contentmarketplace')
         : this.$str('viewing_as_guest', 'mod_contentmarketplace');
     },
 
     displayEnrolButton() {
-      const { canEnrol, canNonInteractiveEnrol } = this.interactor;
-      if (!canEnrol) {
-        return false;
-      }
-
-      return !canNonInteractiveEnrol.enabled;
+      const { nonEnrolInstanceEnabled, isSiteGuest } = this.interactor;
+      return nonEnrolInstanceEnabled && !isSiteGuest;
     },
   },
 
@@ -313,6 +311,7 @@ export default {
 
         this.webLaunchUrl = learning_object.web_launch_url;
         this.ssoLaunchUrl = learning_object.sso_launch_url;
+        this.redirctEnrolUrl = module.redirect_enrol_url;
 
         // When the field completion_status is null, meaning that user is not yet started,
         // hence setCompletion should be False.
@@ -321,16 +320,14 @@ export default {
 
         const { interactor } = module;
         this.interactor.canEnrol = interactor.can_enrol;
-        this.interactor.isAdmin = interactor.is_admin;
+        this.interactor.hasViewCapability = interactor.has_view_capability;
         this.interactor.isSiteGuest = interactor.is_site_guest;
         this.interactor.canLaunch = interactor.can_launch;
         this.interactor.isEnrolled = interactor.is_enrolled;
-        this.interactor.canNonInteractiveEnrol.redirectUrl =
-          interactor.can_non_interactive_enrol.redirect_url || '';
-        this.interactor.canNonInteractiveEnrol.enabled =
-          interactor.can_non_interactive_enrol.enabled;
-        this.interactor.canNonInteractiveEnrol.enrolInstanceCount =
-          interactor.can_non_interactive_enrol.enrol_instance_count;
+        this.interactor.nonEnrolInstanceEnabled =
+          interactor.non_interactive_enrol_instance_enabled;
+        this.interactor.supportsNonInteractiveEnrol =
+          interactor.supports_non_interactive_enrol;
 
         if (module.completion_status !== null) {
           // The completion of this activity had been started and it is either completed or in progress
@@ -414,12 +411,9 @@ export default {
     },
 
     async requestNonInteractiveEnrol() {
-      const { canNonInteractiveEnrol } = this.interactor;
-      if (
-        canNonInteractiveEnrol.enabled ||
-        canNonInteractiveEnrol.enrolInstanceCount > 1
-      ) {
-        window.location.href = canNonInteractiveEnrol.redirectUrl;
+      const { supportsNonInteractiveEnrol } = this.interactor;
+      if (!supportsNonInteractiveEnrol) {
+        window.location.href = this.redirctEnrolUrl;
         return;
       }
 

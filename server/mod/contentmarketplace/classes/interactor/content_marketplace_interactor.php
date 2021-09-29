@@ -33,6 +33,11 @@ class content_marketplace_interactor extends base {
     private $model;
 
     /**
+     * @var course_interactor
+     */
+    private $course_interactor;
+
+    /**
      * content_marketplace_interactor constructor.
      * @param content_marketplace $model
      * @param int|null            $user_id
@@ -40,6 +45,8 @@ class content_marketplace_interactor extends base {
     public function __construct(content_marketplace $model, ?int $user_id = null) {
         parent::__construct($user_id);
         $this->model = $model;
+
+        $this->course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
     }
 
     /**
@@ -49,9 +56,7 @@ class content_marketplace_interactor extends base {
      * @return bool
      */
     public function can_view(): bool {
-        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
-
-        if (!$course_interactor->can_access()) {
+        if (!$this->course_interactor->can_access()) {
             // User must have to have the access to the course in order to view the marketplace.
             return false;
         }
@@ -68,8 +73,7 @@ class content_marketplace_interactor extends base {
      * @return void
      */
     public function require_view(): void {
-        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
-        $course_interactor->require_access();
+        $this->course_interactor->require_access();
 
         $context_module = $this->model->get_context();
         require_capability('mod/contentmarketplace:view', $context_module);
@@ -97,8 +101,12 @@ class content_marketplace_interactor extends base {
     /**
      * @return bool
      */
-    public function is_admin(): bool {
+    public function has_view_capability(): bool {
         if (!$this->can_view()) {
+            return false;
+        }
+
+        if (!$this->course_interactor->has_view_capability()) {
             return false;
         }
 
@@ -122,16 +130,14 @@ class content_marketplace_interactor extends base {
             return false;
         }
 
-        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
-        return $course_interactor->can_enrol();
+        return $this->course_interactor->can_enrol();
     }
 
     /**
      * @return bool
      */
     public function is_enrolled(): bool {
-        $course_interactor = course_interactor::from_course_id($this->model->course_id, $this->actor_id);
-        return $course_interactor->is_enrolled();
+        return  $this->course_interactor->is_enrolled();
     }
 
     /**
@@ -144,26 +150,14 @@ class content_marketplace_interactor extends base {
     /**
      * @return bool
      */
-    public function can_non_interactive_enrol(): bool {
-        return $this->count_non_interactive_enrol() > 0;
+    public function non_interactive_enrol_instance_enabled(): bool {
+        return $this->course_interactor->non_interactive_enrol_instance_enabled();
     }
 
-    /**
-     * Count enabled non interative enrol instance.
-     *
-     * @return int
+    /*
+     * @return bool
      */
-    public function count_non_interactive_enrol(): int {
-        $instances = enrol_get_instances($this->get_course_id(), true);
-        $count = 0;
-        foreach($instances as $instance) {
-            if ($plugin = enrol_get_plugin($instance->enrol)) {
-                $result = $plugin->supports_non_interactive_enrol($instance, $this->get_actor_id());
-                if ($result) {
-                    $count++;
-                }
-            }
-        }
-        return $count;
+    public function supports_non_interactive_enrol(): bool {
+        return  $this->course_interactor->supports_non_interactive_enrol();
     }
 }

@@ -19,17 +19,15 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
       completion_status
       completion_enabled
       self_completion
+      redirect_enrol_url
       interactor {
-        is_admin
+        has_view_capability
         can_enrol
         can_launch
         is_site_guest
         is_enrolled
-        can_non_interactive_enrol {
-          enabled
-          redirect_url
-          enrol_instance_count
-        }
+        non_interactive_enrol_instance_enabled
+        supports_non_interactive_enrol
       }
     }
     learning_object {

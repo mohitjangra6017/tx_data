@@ -62,7 +62,7 @@ final class request_non_interactive_enrol implements mutation_resolver, has_midd
         }
 
         // If self enrol configuration has been customised, you cannot do self enrol
-        if (!$interactor->can_non_interactive_enrol()) {
+        if (!$interactor->supports_non_interactive_enrol()) {
             throw new coding_exception('Not support non interactive enrol');
         }
 

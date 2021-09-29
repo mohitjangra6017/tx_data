@@ -2,7 +2,7 @@ type mod_contentmarketplace_content_marketplace_interactor {
   """
   Whether the user is a admin or not.
   """
-  is_admin: Boolean!
+  has_view_capability: Boolean!
 
   """
   Whether the user can enroll or not.
@@ -27,19 +27,8 @@ type mod_contentmarketplace_content_marketplace_interactor {
   """
   Whether user can direct enrol via click button
   """
-  can_non_interactive_enrol: mod_contentmarketplace_can_non_interactive_enrol_result!
-}
-
-type mod_contentmarketplace_can_non_interactive_enrol_result {
-  redirect_url: String
-  """
-  Return enabled enrol instance count.
-  """
-  enrol_instance_count: Int!
-  """
-  Check whether at least one enrol instance supports non interactive enrol or not.
-  """
-  enabled: Boolean!
+  non_interactive_enrol_instance_enabled: Boolean!
+  supports_non_interactive_enrol: Boolean!
 }
 
 type mod_contentmarketplace_content_marketplace {
@@ -85,6 +74,7 @@ type mod_contentmarketplace_content_marketplace {
   completion_enabled: Boolean!
 
   interactor: mod_contentmarketplace_content_marketplace_interactor!
+  redirect_enrol_url: String!
 }
 
 """
