@@ -331,6 +331,14 @@ body.path-question-type .mform fieldset.hidden {
   @extend .alert-success;
 }
 
+.que .content .comment {
+  display: block;
+}
+
+.core_question__commentText p {
+  display: inline;
+}
+
 .que .history {
   @include bs-well();
 }
