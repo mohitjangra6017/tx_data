@@ -142,7 +142,9 @@ if (empty($action)) { // Not displaying PDF
 
     echo html_writer::start_div('mod_certificate__getCertificate');
     echo $OUTPUT->render($button);
-    if ($view_generator_exists) {
+
+    // Conditionally display the html view button (empty if force download).
+    if ($view_generator_exists && !empty($html_button)) {
         echo $OUTPUT->render($html_button);
     }
     echo html_writer::end_div();
