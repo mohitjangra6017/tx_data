@@ -327,32 +327,33 @@ class facetoface_notification extends data_object {
         $query = new query_notifications($sessionid, $this);
 
         foreach ($recipients as $recipient => $value) {
+            if ((int)$value !== 1) {
+                continue;
+            }
             switch ($recipient) {
                 case 'upcoming_events':
-                    if ((int)$value == 1) {
-                        $query->with_filter(new event_time_filter(event_time::FUTURE));
-                    }
+                    // Filter for "Booked (upcoming events)".
+                    $query->with_filter(new event_time_filter(event_time::FUTURE));
+                    $query->with_status('booked');
                     break;
                 case 'events_in_progress':
-                    if ((int)$value == 1) {
-                        $query->with_filter(new event_time_filter(event_time::INPROGRESS));
-                    }
+                    // Filter for "Booked (events in progress)".
+                    $query->with_filter(new event_time_filter(event_time::INPROGRESS));
+                    $query->with_status('booked');
                     break;
                 case 'past_events':
-                    if ((int)$value == 1) {
-                        $query->with_filter(new event_time_filter(event_time::PAST));
-                    }
+                    // Filter for "Booked (past events)".
+                    $query->with_filter(new event_time_filter(event_time::PAST));
+                    $query->with_status('booked');
                     break;
                 default:
                     // 'fully_attended', 'partially_attended', 'unable_to_attend',
                     // 'no_show', 'waitlisted', 'user_cancelled',
                     // 'requested', 'requestedrole', 'requestedadmin'
-                    if ((int)$value == 1) {
-                        $query->with_status($recipient);
-                        if ($recipient == 'requested') {
-                            $query->with_status('requestedrole');
-                            $query->with_status('requestedadmin');
-                        }
+                    $query->with_status($recipient);
+                    if ($recipient === 'requested') {
+                        $query->with_status('requestedrole');
+                        $query->with_status('requestedadmin');
                     }
                     break;
             }

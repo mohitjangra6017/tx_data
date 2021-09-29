@@ -30,9 +30,11 @@ require_once($CFG->dirroot.'/mod/facetoface/lib.php');
 require_once($CFG->dirroot.'/mod/facetoface/tests/facetoface_testcase.php');
 
 use mod_facetoface\signup;
+use mod_facetoface\signup\state\booked;
+use mod_facetoface\signup\state\user_cancelled;
+use mod_facetoface\signup\state\waitlisted;
 use mod_facetoface\signup_helper;
 use mod_facetoface\seminar_event;
-use mod_facetoface\attendance\attendance_helper;
 use mod_facetoface\task\send_notifications_task;
 
 class mod_facetoface_send_notification_task_manual_testcase extends mod_facetoface_facetoface_testcase {
@@ -43,18 +45,15 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
     public function test_send_upcoming_notifications() {
         global $DB;
 
-        $seed = $this->seed_data();
+        $this->seed_data();
 
         $sink = $this->redirectEmails();
         $cron = new send_notifications_task();
         $cron->testing = true;
 
-        // Signup, and clear automated message (booking confirmation).
-        $signup = signup::create($seed['users'][0]->id, $seed['seminarevent']);
-        signup_helper::signup($signup);
+        // Clear automated messages (booking confirmation etc.).
         $cron->execute();
-        $this->executeAdhocTasks();
-
+        self::executeAdhocTasks();
         $sink->clear();
 
         // Make notification manual
@@ -80,10 +79,11 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $DB->update_record('facetoface_notification', $notificationrec);
 
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
 
         $messages = $sink->get_messages();
         $sink->clear();
+        // Make sure only the booked user got the message.
         $this->assertCount(1, $messages);
         $message = current($messages);
         $this->assertEquals('TEST', $message->subject);
@@ -91,7 +91,7 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
 
         // Confirm that messages sent only once
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
         $this->assertEmpty($sink->get_messages());
         $sink->close();
     }
@@ -108,11 +108,9 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $cron = new send_notifications_task();
         $cron->testing = true;
 
-        // Signup, and clear automated message (booking confirmation).
-        $signup = signup::create($seed['users'][0]->id, $seed['seminarevent']);
-        signup_helper::signup($signup);
+        // Clear automated message (booking confirmation).
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
 
         $sink->clear();
 
@@ -144,10 +142,11 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $DB->update_record('facetoface_notification', $notificationrec);
 
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
 
         $messages = $sink->get_messages();
         $sink->clear();
+        // Make sure only the booked user got the message.
         $this->assertCount(1, $messages);
         $message = current($messages);
         $this->assertEquals('TEST', $message->subject);
@@ -155,7 +154,7 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
 
         // Confirm that messages sent only once
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
         $this->assertEmpty($sink->get_messages());
         $sink->close();
     }
@@ -169,11 +168,9 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $cron = new send_notifications_task();
         $cron->testing = true;
 
-        // Signup, and clear automated message (booking confirmation).
-        $signup = signup::create($seed['users'][0]->id, $seed['seminarevent']);
-        signup_helper::signup($signup);
+        // Clear automated message (booking confirmation).
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
 
         $sink->clear();
 
@@ -205,10 +202,11 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         $DB->update_record('facetoface_notification', $notificationrec);
 
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
 
         $messages = $sink->get_messages();
         $sink->clear();
+        // Make sure only the booked user got the message.
         $this->assertCount(1, $messages);
         $message = current($messages);
         $this->assertEquals('TEST', $message->subject);
@@ -216,7 +214,7 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
 
         // Confirm that messages sent only once
         $cron->execute();
-        $this->executeAdhocTasks();
+        self::executeAdhocTasks();
         $this->assertEmpty($sink->get_messages());
         $sink->close();
     }
@@ -224,9 +222,9 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
     /**
      * Prepare course, seminar, event, session, three users enrolled on course.
      */
-    protected function seed_data() {
-        $course1 = $this->getDataGenerator()->create_course();
-        $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
+    protected function seed_data(): array {
+        $course1 = self::getDataGenerator()->create_course();
+        $facetofacegenerator = self::getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetofacedata = array(
             'name' => 'facetoface1',
             'course' => $course1->id
@@ -242,7 +240,7 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
 
         $sessiondata = array(
             'facetoface' => $facetoface1->id,
-            'capacity' => 3,
+            'capacity' => 1,
             'allowoverbook' => 1,
             'sessiondates' => array($sessiondate),
             'mincapacity' => '1',
@@ -250,18 +248,38 @@ class mod_facetoface_send_notification_task_manual_testcase extends mod_facetofa
         );
         $sessionid = $facetofacegenerator->add_session($sessiondata);
 
-        $student1 = $this->getDataGenerator()->create_user(['email' => 'test@example.com']);
-        $student2 = $this->getDataGenerator()->create_user();
-        $student3 = $this->getDataGenerator()->create_user();
+        $student1 = self::getDataGenerator()->create_user(['email' => 'test@example.com']);
+        $student2 = self::getDataGenerator()->create_user();
+        $student3 = self::getDataGenerator()->create_user();
 
-        $this->getDataGenerator()->enrol_user($student1->id, $course1->id, 'student');
-        $this->getDataGenerator()->enrol_user($student2->id, $course1->id, 'student');
-        $this->getDataGenerator()->enrol_user($student3->id, $course1->id, 'student');
+        self::getDataGenerator()->enrol_user($student1->id, $course1->id, 'student');
+        self::getDataGenerator()->enrol_user($student2->id, $course1->id, 'student');
+        self::getDataGenerator()->enrol_user($student3->id, $course1->id, 'student');
+
+        $seminarevent = new seminar_event($sessionid);
+
+        // Signup one user.
+        $signup1 = signup::create($student1->id, $seminarevent);
+        signup_helper::signup($signup1);
+        $this->assertInstanceOf(booked::class, $signup1->get_state());
+
+        // Signup another user and cancel immediately.
+        $signup2 = signup::create($student2->id, $seminarevent);
+        signup_helper::signup($signup2);
+        signup_helper::user_cancel($signup2);
+        $this->assertInstanceOf(user_cancelled::class, $signup2->get_state());
+
+        // Have another user on the waiting list.
+        $signup3 = signup::create($student3->id, $seminarevent);
+        signup_helper::signup($signup3);
+        $this->assertInstanceOf(waitlisted::class, $signup3->get_state());
 
         return [
             'course' => $course1,
-            'seminarevent' => new seminar_event($sessionid),
+            'seminarevent' => $seminarevent,
             'users' => [$student1, $student2, $student3]
         ];
     }
+
+
 }
