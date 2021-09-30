@@ -1,0 +1,39 @@
+/* This file is part of Totara Enterprise Extensions.*/
+/**/
+/* Copyright (C) 2020 onwards Totara Learning Solutions LTD*/
+/**/
+/* Totara Enterprise Extensions is provided only to Totara*/
+/* Learning Solutions LTD's customers and partners, pursuant to*/
+/* the terms and conditions of a separate agreement with Totara*/
+/* Learning Solutions LTD or its affiliate.*/
+/**/
+/* If you do not have an agreement with Totara Learning Solutions*/
+/* LTD, you may not access, use, modify, or distribute this software.*/
+/* Please contact [licensing@totaralearning.com] for more information.*/
+/**/
+/* @author    Kevin Hottinger <kevin.hottinger@totaralearning.com>*/
+/* @module tuickage   tui*/
+
+:root {
+  --progresstracker-container-bg-color: var(--color-neutral-1);
+
+  /* states related to Achievement*/
+  --progresstracker-color-pending: var(--color-neutral-6);
+  --progresstracker-color-current: var(--color-prompt-info);
+  --progresstracker-color-achieved: var(--color-tertiary);
+  --progresstracker-color-complete: var(--color-prompt-warning);
+
+  /* states related to Workflows*/
+  --progresstracker-color-ready: var(--color-neutral-6);
+  --progresstracker-color-done: var(--color-prompt-success);
+  --progresstracker-color-done--inverse: var(--color-neutral-1);
+  --progresstracker-color-locked: var(--color-neutral-6);
+  --progresstracker-color-locked--inverse: var(--color-neutral-1);
+  --progresstracker-color-optional: var(--color-neutral-6);
+  --progresstracker-color-optional--inverse: var(--color-neutral-1);
+  --progresstracker-color-selected: var(--color-neutral-6);
+  --progresstracker-color-selected--inverse: var(--color-neutral-1);
+}
+
+
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9jbGllbnQvY29tcG9uZW50L3R1aS9zcmMvZ2xvYmFsX3N0eWxlcy92YXJpYWJsZXMvY29sb3JzL3Byb2dyZXNzdHJhY2tlci5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiJjbGllbnQvY29tcG9uZW50L3R1aS9idWlsZC9nbG9iYWxfc3R5bGVzL3ZhcmlhYmxlcy9jb2xvcnMvcHJvZ3Jlc3N0cmFja2VyLmRldmVsb3BtZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBUaGlzIGZpbGUgaXMgcGFydCBvZiBUb3RhcmEgRW50ZXJwcmlzZSBFeHRlbnNpb25zLiovXG4vKiovXG4vKiBDb3B5cmlnaHQgKEMpIDIwMjAgb253YXJkcyBUb3RhcmEgTGVhcm5pbmcgU29sdXRpb25zIExURCovXG4vKiovXG4vKiBUb3RhcmEgRW50ZXJwcmlzZSBFeHRlbnNpb25zIGlzIHByb3ZpZGVkIG9ubHkgdG8gVG90YXJhKi9cbi8qIExlYXJuaW5nIFNvbHV0aW9ucyBMVEQncyBjdXN0b21lcnMgYW5kIHBhcnRuZXJzLCBwdXJzdWFudCB0byovXG4vKiB0aGUgdGVybXMgYW5kIGNvbmRpdGlvbnMgb2YgYSBzZXBhcmF0ZSBhZ3JlZW1lbnQgd2l0aCBUb3RhcmEqL1xuLyogTGVhcm5pbmcgU29sdXRpb25zIExURCBvciBpdHMgYWZmaWxpYXRlLiovXG4vKiovXG4vKiBJZiB5b3UgZG8gbm90IGhhdmUgYW4gYWdyZWVtZW50IHdpdGggVG90YXJhIExlYXJuaW5nIFNvbHV0aW9ucyovXG4vKiBMVEQsIHlvdSBtYXkgbm90IGFjY2VzcywgdXNlLCBtb2RpZnksIG9yIGRpc3RyaWJ1dGUgdGhpcyBzb2Z0d2FyZS4qL1xuLyogUGxlYXNlIGNvbnRhY3QgW2xpY2Vuc2luZ0B0b3RhcmFsZWFybmluZy5jb21dIGZvciBtb3JlIGluZm9ybWF0aW9uLiovXG4vKiovXG4vKiBAYXV0aG9yICAgIEtldmluIEhvdHRpbmdlciA8a2V2aW4uaG90dGluZ2VyQHRvdGFyYWxlYXJuaW5nLmNvbT4qL1xuLyogQG1vZHVsZSB0dWlja2FnZSAgIHR1aSovXG5cbjpyb290IHtcbiAgLS1wcm9ncmVzc3RyYWNrZXItY29udGFpbmVyLWJnLWNvbG9yOiB2YXIoLS1jb2xvci1uZXV0cmFsLTEpO1xuXG4gIC8qIHN0YXRlcyByZWxhdGVkIHRvIEFjaGlldmVtZW50Ki9cbiAgLS1wcm9ncmVzc3RyYWNrZXItY29sb3ItcGVuZGluZzogdmFyKC0tY29sb3ItbmV1dHJhbC02KTtcbiAgLS1wcm9ncmVzc3RyYWNrZXItY29sb3ItY3VycmVudDogdmFyKC0tY29sb3ItcHJvbXB0LWluZm8pO1xuICAtLXByb2dyZXNzdHJhY2tlci1jb2xvci1hY2hpZXZlZDogdmFyKC0tY29sb3ItdGVydGlhcnkpO1xuICAtLXByb2dyZXNzdHJhY2tlci1jb2xvci1jb21wbGV0ZTogdmFyKC0tY29sb3ItcHJvbXB0LXdhcm5pbmcpO1xuXG4gIC8qIHN0YXRlcyByZWxhdGVkIHRvIFdvcmtmbG93cyovXG4gIC0tcHJvZ3Jlc3N0cmFja2VyLWNvbG9yLXJlYWR5OiB2YXIoLS1jb2xvci1uZXV0cmFsLTYpO1xuICAtLXByb2dyZXNzdHJhY2tlci1jb2xvci1kb25lOiB2YXIoLS1jb2xvci1wcm9tcHQtc3VjY2Vzcyk7XG4gIC0tcHJvZ3Jlc3N0cmFja2VyLWNvbG9yLWRvbmUtLWludmVyc2U6IHZhcigtLWNvbG9yLW5ldXRyYWwtMSk7XG4gIC0tcHJvZ3Jlc3N0cmFja2VyLWNvbG9yLWxvY2tlZDogdmFyKC0tY29sb3ItbmV1dHJhbC02KTtcbiAgLS1wcm9ncmVzc3RyYWNrZXItY29sb3ItbG9ja2VkLS1pbnZlcnNlOiB2YXIoLS1jb2xvci1uZXV0cmFsLTEpO1xuICAtLXByb2dyZXNzdHJhY2tlci1jb2xvci1vcHRpb25hbDogdmFyKC0tY29sb3ItbmV1dHJhbC02KTtcbiAgLS1wcm9ncmVzc3RyYWNrZXItY29sb3Itb3B0aW9uYWwtLWludmVyc2U6IHZhcigtLWNvbG9yLW5ldXRyYWwtMSk7XG4gIC0tcHJvZ3Jlc3N0cmFja2VyLWNvbG9yLXNlbGVjdGVkOiB2YXIoLS1jb2xvci1uZXV0cmFsLTYpO1xuICAtLXByb2dyZXNzdHJhY2tlci1jb2xvci1zZWxlY3RlZC0taW52ZXJzZTogdmFyKC0tY29sb3ItbmV1dHJhbC0xKTtcbn1cbiJdLCJzb3VyY2VSb290IjoiIn0=
