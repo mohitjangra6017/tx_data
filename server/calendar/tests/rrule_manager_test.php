@@ -2240,9 +2240,6 @@ class core_calendar_rrule_manager_testcase extends advanced_testcase {
         $startdatetime = $this->change_event_startdate($twentiethmonday->format('Ymd\T090000'), 'US/Eastern');
 
         $startdate = new DateTime($startdatetime->format('Y-m-d'));
-
-        $offset = $startdatetime->diff($startdate, true);
-
         $interval = new DateInterval('P1Y');
 
         $rrule = 'FREQ=YEARLY;BYDAY=20MO';
