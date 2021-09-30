@@ -24,6 +24,9 @@
 
 namespace core_course\user_learning;
 
+use core_course\data_provider\course as course_provider;
+use core_course\entity\filter\course_filter_factory;
+use totara_core\data_provider\provider;
 use totara_core\user_learning\item_base;
 use totara_core\user_learning\item_has_image;
 use \totara_core\user_learning\item_has_progress;
@@ -316,5 +319,14 @@ class item extends item_base implements item_has_progress, item_has_image {
      */
     public function get_type() {
         return 'course';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_data_provider(): ?provider {
+        return course_provider::create(
+            new course_filter_factory()
+        );
     }
 }

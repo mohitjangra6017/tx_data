@@ -70,17 +70,20 @@ class totara_reportbuilder_post_config_visibility_where_testcase extends advance
         // Note that we're not really checking what the result of this function call is - that should be done
         // directly on totara_visibility_where. Just make sure that 'base' and 'available' are part of the result.
         list($wheresql, $params) = $report->post_config_visibility_where('program', 'base', $user->id); // No exception.
+
+        $matches = [];
+
         $this->assertGreaterThan(0, strpos($wheresql, 'base.visible = 1 AND'));
-        $this->assertGreaterThan(0, strpos($wheresql, 'WHERE vh_ctx.contextlevel = :level'));
-        $this->assertEquals(45, $params['level']);
+        $this->assertEquals(1, preg_match('/WHERE vh_ctx.contextlevel = :(uq_level_[0-9]+)/', $wheresql, $matches));
+        $this->assertEquals(45, $params[$matches[1]]);
         $this->assertGreaterThan(0, strpos($wheresql, 'base.availablefrom = 0 OR base.availablefrom < '));
         $this->assertGreaterThan(0, strpos($wheresql, 'base.availableuntil = 0 OR base.availableuntil > '));
 
         // Check that certifications gives the same result.
         list($wheresql, $params) = $report->post_config_visibility_where('certification', 'base', $user->id);
         $this->assertGreaterThan(0, strpos($wheresql, 'base.visible = 1 AND'));
-        $this->assertGreaterThan(0, strpos($wheresql, 'WHERE vh_ctx.contextlevel = :level'));
-        $this->assertEquals(45, $params['level']);
+        $this->assertEquals(1, preg_match('/WHERE vh_ctx.contextlevel = :(uq_level_[0-9]+)/', $wheresql, $matches));
+        $this->assertEquals(45, $params[$matches[1]]);
         $this->assertGreaterThan(0, strpos($wheresql, 'base.availablefrom = 0 OR base.availablefrom < '));
         $this->assertGreaterThan(0, strpos($wheresql, 'base.availableuntil = 0 OR base.availableuntil > '));
 

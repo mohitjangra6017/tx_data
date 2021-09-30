@@ -94,7 +94,7 @@ trait has_filters {
      *
      * @return $this
      */
-    protected function apply_filters() {
+    public function apply_filters() {
         if ($this->filters_applied) {
             return $this;
         }

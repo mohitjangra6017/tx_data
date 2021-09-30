@@ -22,6 +22,7 @@ type performelement_linked_review_content_item {
   content: String
   selector_id: core_id!
   selector: core_user!
+  meta_data: String
   created_at(format: core_date_format = TIMESTAMP): core_date!
 }
 
@@ -29,7 +30,11 @@ type performelement_linked_review_content_item {
 Input required for updating the linked content.
 """
 input performelement_linked_review_update_linked_content_input {
-  content_ids: [core_id!]!
+  content: String!
+  """
+  @deprecated since Totara 15.0, please pass content only
+  """
+  content_ids: [core_id!]
   section_element_id: core_id!
   participant_instance_id: core_id!
 }

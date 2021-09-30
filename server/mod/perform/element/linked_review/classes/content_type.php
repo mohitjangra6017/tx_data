@@ -23,8 +23,10 @@
 
 namespace performelement_linked_review;
 
+use coding_exception;
 use context;
 use core\collection;
+use core\orm\query\builder;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\models\activity\subject_instance;
 use performelement_linked_review\models\linked_review_content;
@@ -169,6 +171,28 @@ abstract class content_type {
     abstract public static function get_participant_content_component(): string;
 
     /**
+     * Get the content type name for this content type, usually identical to the identifier
+     * but can be overridden.
+     *
+     * @param array $content
+     * @return string
+     */
+    public function get_content_type_name(array $content) {
+        return static::get_identifier();
+    }
+
+    /**
+     * Returns additional metadata for the given type to be stored with the content
+     *
+     * @param int $user_id the user_id this content is for
+     * @param array $content
+     * @return array
+     */
+    public function get_metadata(int $user_id, array $content): array {
+        return [];
+    }
+
+    /**
      * This function is responsible for loading the actual items when requested by the
      *
      * @see \performelement_linked_review\webapi\resolver\query\content_items query.
@@ -228,6 +252,37 @@ abstract class content_type {
      */
     public static function is_for_access_hook(component_access_check $hook): bool {
         return false;
+    }
+
+    /**
+     * Validate the content, can be overridden if different logic is needed
+     *
+     * @param array $content
+     * @throws coding_exception
+     */
+    public static function validate_content(array $content): void {
+        $content_ids = [];
+        foreach ($content as $item) {
+            if (is_int($item)) {
+                $content_ids[] = $item;
+            } else {
+                $content_id = $item['id'] ?? null;
+                if (empty($content_id)) {
+                    throw new coding_exception('Missing content id');
+                }
+                $content_ids[] = $content_id;
+            }
+        }
+
+        $content_table = static::get_table_name();
+        $content_count = builder::table($content_table)->where_in('id', $content_ids)->count();
+        if ($content_count !== count($content_ids)) {
+            throw new coding_exception(
+                'Not all the specified content IDs actually exist. ' .
+                'Specified IDs: ' . json_encode($content_ids) .
+                ', Number of IDs in the ' . $content_table . ' table: ' . $content_count
+            );
+        }
     }
 
 }

@@ -24,6 +24,8 @@
 
 namespace totara_core\user_learning;
 
+use totara_core\data_provider\provider;
+
 /**
  * User learning item interface.
  *
@@ -78,5 +80,18 @@ interface item {
      * @return string
      */
     public function get_type();
+
+    /**
+     * A unique identifier, by default a composite of the id and the type
+     * @return string
+     */
+    public function get_unique_id(): string;
+
+    /**
+     * Get data provider.
+     *
+     * @return provider|null
+     */
+    public static function get_data_provider(): ?provider;
 
 }

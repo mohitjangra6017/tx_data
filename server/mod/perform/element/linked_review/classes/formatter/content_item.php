@@ -41,6 +41,7 @@ class content_item extends entity_model_formatter {
             'content' => function ($value) {
                 return json_encode($value);
             },
+            'meta_data' => null,
             'selector_id' => null,
             'selector' => null,
             'created_at' => date_field_formatter::class,

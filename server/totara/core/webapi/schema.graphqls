@@ -57,6 +57,10 @@ type totara_core_learning_item {
   Learning item image URL
   """
   image_src: String
+  """
+  Unique identifier, a composite of id and type
+  """
+  unique_id: String!
 }
 
 """
@@ -114,9 +118,50 @@ type totara_core_settings_navigation_tree {
   open_ids: [String!]!
 }
 
+enum totara_core_user_learning_item_type {
+  COURSE
+  PROGRAM
+  CERTIFICATION
+}
+
+enum totara_core_user_learning_item_progress {
+  COMPLETED
+  IN_PROGRESS
+  NOT_STARTED
+  NOT_TRACKED
+}
+
+input totara_core_user_learning_items_filters {
+  ids: [ID!]
+  search: String
+  type: totara_core_user_learning_item_type
+  progress: totara_core_user_learning_item_progress
+}
+
+type totara_core_learning_type_filter_option {
+  """
+  Learning type (one of 'course', 'program', 'certification')
+  """
+  type: String!
+}
+
+input totara_core_user_learning_items_input {
+  user_id: core_id
+  filters: totara_core_user_learning_items_filters
+  result_size: Int
+  cursor: String
+}
+
+type totara_core_user_learning_items_result implements core_pageable_result {
+  items: [totara_core_learning_item!]!
+  total: Int!
+  next_cursor: String!
+}
+
 extend type Query {
   """
-  Return all learning items assigned to the current user
+  Return all learning items assigned to the current user.
+  Only returns the current learning, not completed ones.
   """
   totara_core_my_current_learning: [totara_core_learning_item]!
 
@@ -127,6 +172,20 @@ extend type Query {
     context_id: core_id!
     page_url: param_url!
   ): totara_core_settings_navigation_tree!
+
+  """
+  Return all learning items of a user.
+  """
+  totara_core_user_learning_items(
+    input: totara_core_user_learning_items_input!
+  ): totara_core_user_learning_items_result!
+
+  """
+  Return all selected learning items of a user.
+  """
+  totara_core_user_learning_items_selected(
+    input: totara_core_user_learning_items_input!
+  ): totara_core_user_learning_items_result!
 }
 
 extend type Mutation {

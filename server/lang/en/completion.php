@@ -279,6 +279,7 @@ $string['nouserstoarchive'] = 'There are no users that have completed this cours
 $string['archiveusersaffected'] = '{$a} users will be affected';
 $string['usersarchived'] = '{$a} users completion records have been successfully archived';
 $string['statusnottracked'] = 'Not tracked';
+$string['statusnotstarted'] = 'Not started';
 $string['statusnocriteria'] = 'No criteria';
 $string['tooltipcourseaggregate'] = '<strong>{$a}</strong> of the following criteria need to be met to complete this course';
 $string['tooltipcompletionself'] = 'You must mark yourself as complete';

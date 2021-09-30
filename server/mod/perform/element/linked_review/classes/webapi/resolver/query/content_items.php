@@ -45,6 +45,7 @@ use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\util;
 use performelement_linked_review\content_type;
 use performelement_linked_review\content_type_factory;
+use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\models\linked_review_content as linked_review_content_model;
 
 final class content_items implements query_resolver, has_middleware {
@@ -129,8 +130,20 @@ final class content_items implements query_resolver, has_middleware {
             $created_at
         );
         foreach ($loaded_content_items as $content_id => $loaded_content_data) {
-            /** @var linked_review_content_model $linked_item_model */
-            $linked_item_model = $content_items->find('content_id', $content_id);
+            $linked_item_model = $content_items->find(function (linked_review_content $item) use ($content_id) {
+                [$content_id, $content_type] =
+                    strpos($content_id, '-') !== false
+                        ? explode('-', $content_id)
+                        : [$content_id, null];
+
+                $result = $content_id == $item->content_id;
+                if ($content_type) {
+                    $result = $result && $content_type == $item->content_type;
+                }
+
+                return $result;
+            });
+
             if ($linked_item_model) {
                 $linked_item_model->set_content($loaded_content_data);
             } else {

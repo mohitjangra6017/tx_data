@@ -23,7 +23,7 @@
     <div class="tui-linkedReviewSelectedContent__items">
       <div
         v-for="content in selectedContent"
-        :key="content.id"
+        :key="getId(content)"
         class="tui-linkedReviewSelectedContent__item"
       >
         <Card
@@ -38,7 +38,7 @@
             <CloseButton
               :aria-label="removeText"
               :size="300"
-              @click="deleteContent(content.id)"
+              @click="deleteContent(getId(content))"
             />
           </div>
         </Card>
@@ -132,6 +132,11 @@ export default {
     required: Boolean,
     sectionElementId: String,
     userId: Number,
+    additionalContent: Array,
+    getId: {
+      type: Function,
+      default: content => ('id' in content ? content.id : null),
+    },
   },
 
   data() {
@@ -224,7 +229,7 @@ export default {
      */
     deleteContent(contentId) {
       this.selectedContent = this.selectedContent.filter(
-        item => item.id !== contentId
+        item => this.getId(item) !== contentId
       );
       this.selectedIds = this.selectedIds.filter(e => e !== contentId);
     },
@@ -238,7 +243,7 @@ export default {
           mutation: updateReviewContentMutation,
           variables: {
             input: {
-              content_ids: this.selectedContent.map(content => content.id),
+              content: JSON.stringify(this.prepareContent()),
               participant_instance_id: this.participantInstanceId,
               section_element_id: this.sectionElementId,
             },
@@ -256,6 +261,28 @@ export default {
             this.$emit('update');
           }
         });
+    },
+
+    /**
+     * prepare additional content to send to the backend
+     */
+    prepareContent() {
+      return this.selectedContent.map(content => {
+        // We always want the id
+        let newContent = {
+          id: content.id,
+        };
+
+        if (this.additionalContent) {
+          this.additionalContent.forEach(additional => {
+            if (additional in content) {
+              newContent[additional] = content[additional];
+            }
+          });
+        }
+
+        return newContent;
+      });
     },
 
     /**

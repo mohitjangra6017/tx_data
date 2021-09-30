@@ -25,6 +25,8 @@
 
 namespace totara_core\user_learning;
 
+use totara_core\data_provider\provider;
+
 /**
  * User Learning Item base class.
  *
@@ -55,6 +57,13 @@ abstract class item_base implements item, designation {
     public $url_view;
     public $progress;
     public $duedate;
+
+    /**
+     * Composite between type and id
+     *
+     * @var string
+     */
+    protected $unique_id;
 
     /**
      * The learning item record passed into the contructor.
@@ -234,5 +243,29 @@ abstract class item_base implements item, designation {
         }
 
         return $record;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_unique_id(): string {
+        return $this->id.'-'.$this->get_type();
+    }
+
+    /**
+     * @param $user_or_id
+     * @param \stdClass $learning_item_record
+     *
+     * @return static
+     */
+    public static function create($user_or_id, \stdClass $learning_item_record): self {
+        return new static($user_or_id, $learning_item_record);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_data_provider(): ?provider {
+        return null;
     }
 }

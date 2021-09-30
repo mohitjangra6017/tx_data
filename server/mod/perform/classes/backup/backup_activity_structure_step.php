@@ -190,6 +190,7 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
                 'selector_id',
                 'content_id',
                 'content_type',
+                'meta_data',
                 'created_at'
             ]
         );

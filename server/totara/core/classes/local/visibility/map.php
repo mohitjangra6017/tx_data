@@ -300,13 +300,14 @@ abstract class map {
      */
     final public function sql_view_hidden_roles(int $userid, $usercontext): sql {
         global $CFG;
-        
+
         $table_map = $this->get_map_table_name();
         $field = $this->get_instance_field_name();
         $level = $this->get_context_level();
 
         $roleassignments = \totara_core\access::get_role_assignments_subquery($userid);
 
+        $param_level = \moodle_database::get_unique_param('level');
         $sql = new sql(
             "SELECT map.{$field} AS id, COUNT(map.roleid) AS roles
                  FROM {{$table_map}} map
@@ -317,8 +318,8 @@ abstract class map {
                        JOIN (
                            {$roleassignments}
                        ) vh_ra ON vh_ra.contextid = vh_cm.parentid
-                      WHERE vh_ctx.contextlevel = :level",
-            ['level' => $level]
+                      WHERE vh_ctx.contextlevel = :{$param_level}",
+            [$param_level => $level]
         );
 
         // Mix in multitenancy snippet here if required.

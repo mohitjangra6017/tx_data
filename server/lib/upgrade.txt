@@ -32,6 +32,7 @@ information provided here is intended especially for developers.
   - phone2
   - address
 * Upgraded jQuery to 3.6.0
+* Changed function scope to public for \core\orm\entity\filter\has_filters::apply_filters.
 
 === 14.0 ===
 

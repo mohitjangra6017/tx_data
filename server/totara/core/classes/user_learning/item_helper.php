@@ -24,6 +24,10 @@
 
 namespace totara_core\user_learning;
 
+use core\orm\entity\entity;
+use stdClass;
+use totara_core\data_provider\provider;
+
 /**
  * User learning item interface.
  *
@@ -235,6 +239,59 @@ class item_helper {
             }
         }
         return $items;
+    }
+
+    /**
+     * @param string $type
+     * @param entity $entity
+     *
+     * @return item_base|null
+     */
+    public static function create(string $type, int $user_id, entity $entity): ?item_base {
+        return self::create_from_record($type, $user_id, $entity->to_record());
+    }
+
+    /**
+     * @param string $type
+     * @param int $user_id
+     * @param stdClass $record
+     *
+     * @return item_base|null
+     */
+    public static function create_from_record(string $type, int $user_id, stdClass $record): ?item_base {
+        $classes = \core_component::get_namespace_classes(
+            'user_learning',
+            'totara_core\user_learning\item_base'
+        );
+
+        foreach ($classes as $class) {
+            if (strpos($class, "$type\\user_learning\\item")) {
+                /** @var item_base $class */
+                return $class::create($user_id, $record);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $type
+     * @return provider|null
+     */
+    public static function get_data_provider(string $type): ?provider {
+        $classes = \core_component::get_namespace_classes(
+            'user_learning',
+            'totara_core\user_learning\item_base'
+        );
+
+        foreach ($classes as $class) {
+            if (strpos($class, "$type\\user_learning\\item") !== false) {
+                /** @var item_base $class */
+                return $class::get_data_provider();
+            }
+        }
+
+        return null;
     }
 
 }

@@ -57,7 +57,11 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
         $content_id1 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
         $content_id2 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
         $content_id3 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
-        $content_ids = [$content_id1, $content_id2, $content_id3];
+        $content = [
+            ['id' => $content_id1],
+            ['id' => $content_id2],
+            ['id' => $content_id3]
+        ];
 
         $content_type = json_decode($element->data, true)['content_type'] ?? null;
         $this->assertNotEmpty(trim($content_type));
@@ -65,7 +69,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         $args = [
             'input' => [
-                'content_ids' => $content_ids,
+                'content' => json_encode($content),
                 'section_element_id' => $section_element->id,
                 'participant_instance_id' => $participant_instance1->id,
             ],
@@ -78,13 +82,13 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
         /** @var linked_review_content_entity[]|collection $linked_content */
         $linked_content = linked_review_content_entity::repository()->get();
         $this->assertEquals(3, $linked_content->count());
-        $this->assertEquals(count($content_ids), $linked_content->count());
-        foreach ($linked_content as $content) {
-            $this->assertEquals($section_element->id, $content->section_element_id);
-            $this->assertEquals($participant_instance1->subject_instance_id, $content->subject_instance_id);
-            $this->assertContainsEquals($content->content_id, $content_ids);
-            $this->assertEquals($content->content_type, $content_type);
-            $this->assertGreaterThan(0, $content->created_at);
+        $this->assertEquals(count($content), $linked_content->count());
+        foreach ($linked_content as $actual_content) {
+            $this->assertEquals($section_element->id, $actual_content->section_element_id);
+            $this->assertEquals($participant_instance1->subject_instance_id, $actual_content->subject_instance_id);
+            $this->assertContainsEquals($actual_content->content_id, array_column($content, 'id'));
+            $this->assertEquals($content_type, $actual_content->content_type);
+            $this->assertGreaterThan(0, $actual_content->created_at);
         }
     }
 
@@ -102,7 +106,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         $args = [
             'input' => [
-                'content_ids' => [],
+                'content' => json_encode([]),
                 'section_element_id' => $short_text_section_element->id,
                 'participant_instance_id' => $participant_instance->id,
             ],
@@ -125,7 +129,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         $args = [
             'input' => [
-                'content_ids' => [],
+                'content' => json_encode([]),
                 'section_element_id' => $section_element->id,
                 'participant_instance_id' => $participant_instance->id,
             ],
@@ -148,7 +152,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         $args = [
             'input' => [
-                'content_ids' => [],
+                'content' => json_encode([]),
                 'section_element_id' => $section_element->id,
                 'participant_instance_id' => $participant_instance->id,
             ],
@@ -170,7 +174,12 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         $args = [
             'input' => [
-                'content_ids' => [-1, -2, -3, -4],
+                'content' => json_encode([
+                    ['id' => -1],
+                    ['id' => -2],
+                    ['id' => -3],
+                    ['id' => -4]
+                ]),
                 'section_element_id' => $section_element->id,
                 'participant_instance_id' => $participant_instance->id,
             ],
@@ -207,7 +216,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         $args = [
             'input' => [
-                'content_ids' => [$first_content_id],
+                'content' => json_encode([['id' => $first_content_id]]),
                 'section_element_id' => $section_element->id,
                 'participant_instance_id' => $participant_instance1->id,
             ],
@@ -229,7 +238,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
         self::setUser($user2);
         $args = [
             'input' => [
-                'content_ids' => [$last_content_id],
+                'content' => json_encode([['id' => $last_content_id]]),
                 'section_element_id' => $section_element->id,
                 'participant_instance_id' => $participant_instance2->id,
             ],

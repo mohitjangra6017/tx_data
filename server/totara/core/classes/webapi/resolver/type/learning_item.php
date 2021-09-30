@@ -30,6 +30,7 @@ use totara_core\formatter\learning_item_formatter;
 use totara_core\user_learning\item;
 use totara_core\user_learning\item_base;
 use totara_core\user_learning\item_has_dueinfo;
+use totara_core\user_learning\item_has_image;
 use totara_core\user_learning\item_has_progress;
 
 class learning_item implements type_resolver {
@@ -110,9 +111,10 @@ class learning_item implements type_resolver {
         }
 
         if ($field == 'image_src') {
-            if (empty($item->image_src)) {
-                $item->image_src = null; // For consistency.
+            if ($item instanceof item_has_image) {
+                return $item->get_image();
             }
+            return null;
         }
 
         $formatter = new learning_item_formatter($item, $context);

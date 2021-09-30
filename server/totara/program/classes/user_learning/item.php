@@ -27,12 +27,14 @@ namespace totara_program\user_learning;
 defined('MOODLE_INTERNAL') || die();
 
 use totara_core\advanced_feature;
+use totara_core\data_provider\provider;
 use \totara_core\user_learning\item_base;
 use totara_core\user_learning\item_has_image;
 use \totara_core\user_learning\item_has_progress;
 use \totara_core\user_learning\item_has_dueinfo;
 use \totara_core\user_learning\designation_primary;
-use \totara_program\user_learning\program_common;
+use totara_program\data_provider\program;
+use totara_program\entity\filter\program_filter_factory;
 
 class item extends item_base implements item_has_progress, item_has_dueinfo, item_has_image {
 
@@ -370,5 +372,14 @@ class item extends item_base implements item_has_progress, item_has_dueinfo, ite
      */
     public function get_type() {
         return 'program';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_data_provider(): ?provider {
+        return program::create(
+            new program_filter_factory()
+        );
     }
 }

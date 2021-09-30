@@ -162,11 +162,12 @@ abstract class base implements resolver {
 
         $sql = self::tenant_id_sql($context, 'ctx');
 
+        $param_level = \moodle_database::get_unique_param('level');
         return (new sql("EXISTS (
                 SELECT 1
                   FROM {context} ctx
                  WHERE {$tablealias}.id = ctx.instanceid
-                   AND ctx.contextlevel = :level", ['level' => $this->get_context_level()]))
+                   AND ctx.contextlevel = :{$param_level}", [$param_level => $this->get_context_level()]))
             ->append($sql, ' AND ')
             ->append(')');
     }
@@ -230,12 +231,13 @@ abstract class base implements resolver {
             return new sql('');
         }
 
+        $param_tenant_id = \moodle_database::get_unique_param('tenant_id');
         if (isguestuser($context->instanceid) or !$context->instanceid) {
             $sql = $ctx_tablealias . '.tenantid IS NULL';
         } else if (!empty($CFG->tenantsisolated)) {
-            $sql = new sql($ctx_tablealias . '.tenantid = :tenantid', ['tenantid' => $context->tenantid]);
+            $sql = new sql($ctx_tablealias . ".tenantid = :{$param_tenant_id}", [$param_tenant_id => $context->tenantid]);
         } else {
-            $sql = new sql('( ' . $ctx_tablealias . '.tenantid = :tenantid OR ' . $ctx_tablealias . '.tenantid IS NULL )', ['tenantid' => $context->tenantid]);
+            $sql = new sql('( ' . $ctx_tablealias . ".tenantid = :{$param_tenant_id} OR " . $ctx_tablealias . '.tenantid IS NULL )', [$param_tenant_id => $context->tenantid]);
         }
 
         return $sql;

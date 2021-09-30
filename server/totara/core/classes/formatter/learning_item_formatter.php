@@ -53,6 +53,7 @@ class learning_item_formatter extends formatter {
             'description_format' => null,
             'url_view' => null,
             'image_src' => null,
+            'unique_id' => null,
         ];
 
         return $map;
@@ -108,7 +109,7 @@ class learning_item_formatter extends formatter {
 
     protected function has_field(string $field): bool {
         // Special fields where we do not have a public property
-        if ($field == 'itemtype' || $field == 'itemcomponent') {
+        if ($field == 'itemtype' || $field == 'itemcomponent' || $field == 'unique_id') {
             return true;
         }
         return parent::has_field($field);
@@ -121,6 +122,9 @@ class learning_item_formatter extends formatter {
         }
         if ($field == 'itemcomponent') {
             return $this->object->get_component();
+        }
+        if ($field == 'unique_id') {
+            return $this->object->get_unique_id();
         }
 
         return parent::get_field($field);

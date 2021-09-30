@@ -29,7 +29,6 @@ use core\entity\user;
 use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;
-use JsonSerializable;
 use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
@@ -38,10 +37,10 @@ use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\subject_instance;
 use moodle_exception;
+use performelement_linked_review\content_type_factory;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
 use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\linked_review;
-use stdClass;
 
 /**
  * Class element_subject_instance_review_content
@@ -91,6 +90,7 @@ class linked_review_content extends model {
         'selector_id',
         'created_at',
         'responses',
+        'meta_data',
     ];
 
     protected $model_accessor_whitelist = [
@@ -129,25 +129,30 @@ class linked_review_content extends model {
     /**
      * Create multiple new content links to a section element.
      *
-     * @param array $content_ids
+     * @param array $content array of content ids or content data containing the id
      * @param int $section_element_id
      * @param int $participant_instance_id
      * @param bool $validate Whether to validate the inputted IDs.
      * @return collection
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public static function create_multiple(
-        array $content_ids,
+        array $content,
         int $section_element_id,
         int $participant_instance_id,
         bool $validate = true
     ): collection {
         if ($validate) {
-            self::validate_input($content_ids, $section_element_id, $participant_instance_id);
+            self::validate_input($content, $section_element_id, $participant_instance_id);
         }
 
-        return collection::new($content_ids)
-            ->map(static function (int $content_id) use ($section_element_id, $participant_instance_id) {
-                return self::create($content_id, $section_element_id, $participant_instance_id, false);
+        return collection::new($content)
+            ->map(static function ($content) use ($section_element_id, $participant_instance_id) {
+                if (is_int($content)) {
+                    $content = ['id' => $content];
+                }
+                return self::create_from_content($content, $section_element_id, $participant_instance_id, false);
             });
     }
 
@@ -158,16 +163,41 @@ class linked_review_content extends model {
      * @param int $section_element_id
      * @param int $participant_instance_id
      * @param bool $validate Whether to validate the inputted IDs.
+     * @param string|null $item_type
      * @return static
      */
     public static function create(
         int $content_id,
         int $section_element_id,
         int $participant_instance_id,
+        bool $validate = true,
+        ?string $item_type = ''
+    ): self {
+        $content = [
+            'id' => $content_id,
+            'itemtype' => $item_type,
+        ];
+
+        return self::create_from_content($content, $section_element_id, $participant_instance_id, $validate);
+    }
+
+    /**
+     * Create a new content link to a section element from a content object.
+     *
+     * @param array $content
+     * @param int $section_element_id
+     * @param int $participant_instance_id
+     * @param bool $validate Whether to validate the inputted IDs.
+     * @return static
+     */
+    public static function create_from_content(
+        array $content,
+        int $section_element_id,
+        int $participant_instance_id,
         bool $validate = true
     ): self {
         if ($validate) {
-            self::validate_input([$content_id], $section_element_id, $participant_instance_id);
+            self::validate_input([$content], $section_element_id, $participant_instance_id);
         }
 
         $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
@@ -181,9 +211,20 @@ class linked_review_content extends model {
             throw new coding_exception('element plugin is not a linked_review type');
         }
 
+        $content_type_instance = content_type_factory::get_from_identifier($content_type, $participant_instance->get_context());
+        $content_type = $content_type_instance->get_content_type_name($content);
+
+        $content_id = $content['id'] ?? null;
+        if (empty($content_id)) {
+            throw new coding_exception('Missing content id');
+        }
+
+        $meta_data = $content_type_instance->get_metadata($participant_instance->subject_instance->subject_user_id, $content);
+
         $entity = new linked_review_content_entity();
         $entity->content_id = $content_id;
         $entity->content_type = $content_type;
+        $entity->meta_data = json_encode($meta_data);
         $entity->section_element_id = $section_element_id;
         $entity->subject_instance_id = $participant_instance->subject_instance_id;
         $entity->selector_id = $participant_instance->participant_id;
@@ -294,14 +335,12 @@ class linked_review_content extends model {
     /**
      * Validate the values inputted when saving and throw errors if they are invalid.
      *
-     * @param array $content_ids
+     * @param array $content array of content ids or content data containing the id
      * @param int $section_element_id
      * @param int $participant_instance_id
-     * @throws coding_exception
-     * @throws moodle_exception
      */
     private static function validate_input(
-        array $content_ids,
+        array $content,
         int $section_element_id,
         int $participant_instance_id
     ): void {
@@ -326,18 +365,10 @@ class linked_review_content extends model {
             throw new moodle_exception('nopermissions', 'error');
         }
 
-        // Make sure the content IDs actually point to content.;
+        // Make sure the content IDs actually point to content.
         /** @var linked_review $element_plugin */
         $element_plugin = $element->get_element_plugin();
-        $content_table = $element_plugin->get_content_type($element)::get_table_name();
-        $content_count = builder::table($content_table)->where_in('id', $content_ids)->count();
-        if ($content_count !== count($content_ids)) {
-            throw new coding_exception(
-                'Not all the specified content IDs actually exist. ' .
-                'Specified IDs: ' . json_encode($content_ids) .
-                ', Number of IDs in the ' . $content_table . ' table: ' . $content_count
-            );
-        }
+        $element_plugin->get_content_type($element)::validate_content($content);
     }
 
     /**

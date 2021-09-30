@@ -90,57 +90,97 @@ function prog_get_all_programs($userid, $sort = '', $limitfrom = '', $limitnum =
                                $showhidden = false, $onlyprograms = false, $onlyactive = true, $onlycertifications = false) {
     global $DB;
 
-    // Construct sql query.
-    $count = 'SELECT COUNT(*) ';
-    $select = 'SELECT p.*, p.fullname AS progname, pc.timedue AS duedate, pc.status AS status ';
-    list($insql, $params) = $DB->get_in_or_equal(array(PROGRAM_EXCEPTION_RAISED, PROGRAM_EXCEPTION_DISMISSED),
-            SQL_PARAMS_NAMED, 'param', false);
-    $from = "FROM {prog} p
-       INNER JOIN {context} ctx ON (p.id = ctx.instanceid AND ctx.contextlevel = :contextlevel)
-       INNER JOIN {prog_completion} pc
-               ON p.id = pc.programid AND pc.coursesetid = 0 ";
-
-    $where = "WHERE pc.userid = :userid
-              AND EXISTS(SELECT id
-                           FROM {prog_user_assignment} pua
-                          WHERE pua.exceptionstatus {$insql}
-                            AND pc.programid = pua.programid
-                            AND pc.userid = pua.userid
-                        ) ";
-    $progtype = 'program';
-    if ($onlyactive) {
-        $where .= " AND pc.status <> :statuscomplete";
-        $params['statuscomplete'] = STATUS_PROGRAM_COMPLETE;
-    }
-    if ($onlyprograms) {
-        $where .= " AND p.certifid IS NULL";
-    }
-    if ($onlycertifications) {
-        $where .= " AND p.certifid IS NOT NULL";
-        $progtype = 'certification';
-    }
-
-    $params['contextlevel'] = CONTEXT_PROGRAM;
-    $params['userid'] = $userid;
-
-    list($visibilitysql, $visibilityparams) = totara_visibility_where(
+    [$select, $from, $where, $sort, $params] = prog_get_all_programs_sql(
         $userid,
-        'p.id',
-        'p.visible',
-        'p.audiencevisible',
-        'p',
-        $progtype,
-        false,
-        $showhidden
+        $sort,
+        $showhidden,
+        $onlyprograms,
+        $onlyactive,
+        $onlycertifications
     );
-    $params = array_merge($params, $visibilityparams);
-    $where .= " AND {$visibilitysql} ";
 
     if ($returncount) {
+        $count = 'SELECT COUNT(*) ';
         return $DB->count_records_sql($count.$from.$where, $params);
     } else {
         return $DB->get_records_sql($select.$from.$where.$sort, $params, $limitfrom, $limitnum);
     }
+}
+
+/**
+ * Return a list of a user's programs or a count
+ *
+ * @global object $DB
+ * @param int $user_id
+ * @param string $sort The order in which to sort the programs
+ * @param bool $show_hidden Whether to include hidden programs in records returned when using normal visibility
+ * @param bool $only_programs Only return programs (excludes certifications)
+ * @param bool $only_active Only return active programs.
+ * @param bool $only_certifications Only return certifications (excludes programs)
+ *
+ * @return array
+ */
+function prog_get_all_programs_sql(
+    int $user_id,
+    string $sort = '',
+    bool $show_hidden = false,
+    bool $only_programs = false,
+    bool $only_active = true,
+    bool $only_certifications = false
+): array {
+    global $DB;
+
+    // Get unique parameters.
+    $param_context_level = \moodle_database::get_unique_param('context_level');
+    $param_user_id = \moodle_database::get_unique_param('user_id');
+
+    // Construct sql query.
+    $select = 'SELECT p.*, p.fullname AS progname, pc.timedue AS duedate, pc.status AS status ';
+    list($in_sql, $params) = $DB->get_in_or_equal(array(PROGRAM_EXCEPTION_RAISED, PROGRAM_EXCEPTION_DISMISSED),
+        SQL_PARAMS_NAMED, 'param', false);
+    $from = "FROM {prog} p
+       INNER JOIN {context} ctx ON (p.id = ctx.instanceid AND ctx.contextlevel = :{$param_context_level})
+       INNER JOIN {prog_completion} pc
+               ON p.id = pc.programid AND pc.coursesetid = 0 ";
+
+    $where = "WHERE pc.userid = :{$param_user_id}
+              AND EXISTS(SELECT id
+                           FROM {prog_user_assignment} pua
+                          WHERE pua.exceptionstatus {$in_sql}
+                            AND pc.programid = pua.programid
+                            AND pc.userid = pua.userid
+                        ) ";
+    $prog_type = 'program';
+    if ($only_active) {
+        $param_status_complete = \moodle_database::get_unique_param('status_complete');
+        $where .= " AND pc.status <> :{$param_status_complete}";
+        $params[$param_status_complete] = STATUS_PROGRAM_COMPLETE;
+    }
+    if ($only_programs) {
+        $where .= " AND p.certifid IS NULL";
+    }
+    if ($only_certifications) {
+        $where .= " AND p.certifid IS NOT NULL";
+        $prog_type = 'certification';
+    }
+
+    $params[$param_context_level] = CONTEXT_PROGRAM;
+    $params[$param_user_id] = $user_id;
+
+    list($visibility_sql, $visibility_params) = totara_visibility_where(
+        $user_id,
+        'p.id',
+        'p.visible',
+        'p.audiencevisible',
+        'p',
+        $prog_type,
+        false,
+        $show_hidden
+    );
+    $params = array_merge($params, $visibility_params);
+    $where .= " AND {$visibility_sql} ";
+
+    return [$select, $from, $where, $sort, $params];
 }
 
 /**

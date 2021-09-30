@@ -23,6 +23,7 @@
 
 namespace performelement_linked_review\webapi\resolver\mutation;
 
+use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
@@ -41,7 +42,17 @@ class update_linked_review_content implements mutation_resolver, has_middleware 
      * @inheritDoc
      */
     public static function resolve(array $args, execution_context $ec) {
-        $content_ids = $args['input']['content_ids'];
+        $content = $args['input']['content'] ?? null;
+        if (!empty($args['input']['content_ids'])) {
+            debugging('The content_ids input field for mutation performelement_linked_review_update_linked_review_content is deprecated please only pass content', DEBUG_DEVELOPER);
+            $content = array_map(
+                function ($content_id) {
+                    return ['id' => $content_id];
+                },
+                $args['input']['content_ids']
+            );
+        }
+
         $section_element_id = $args['input']['section_element_id'];
         $participant_instance_id = $args['input']['participant_instance_id'];
 
@@ -49,11 +60,19 @@ class update_linked_review_content implements mutation_resolver, has_middleware 
             $section_element_id, $participant_instance_id
         );
 
+        $content = self::parse_content($content);
+
         $can_update = false;
         $description = '';
         if ($linked_review_contents->count() == 0) {
             // Currently you can only create the content items once per instance for a linked review question
-            linked_review_content::create_multiple($content_ids, $section_element_id, $participant_instance_id);
+            linked_review_content::create_multiple(
+                $content,
+                $section_element_id,
+                $participant_instance_id,
+                true,
+                $content
+            );
             $can_update = true;
         } else {
             $user = core_user::get_user($linked_review_contents->first()->selector_id, '*', MUST_EXIST);
@@ -70,6 +89,29 @@ class update_linked_review_content implements mutation_resolver, has_middleware 
                 'description' => $description,
             ],
         ];
+    }
+
+    /**
+     * Parse the content to an array, making sure we have at least an id field
+     *
+     * @param string $content
+     * @return array
+     */
+    private static function parse_content(string $content): array {
+        // Now the review type can pass additional content,
+        // by default we at least have the id, let's validate it
+        $content = json_decode($content, true);
+        if (!is_array($content)) {
+            throw new coding_exception('Content should be a json encoded array');
+        }
+
+        foreach ($content as $item) {
+            if (!isset($item['id'])) {
+                throw new coding_exception('Invalid content given. Need at least the id.');
+            }
+        }
+
+        return $content;
     }
 
     /**

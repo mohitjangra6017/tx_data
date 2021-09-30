@@ -881,97 +881,31 @@ function enrol_user_sees_own_courses($user = null) {
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return array
  */
-function enrol_get_all_users_courses($userid, $onlyactive = false, $fields = NULL, $sort = 'visible DESC,sortorder ASC', $limitfrom = 0, $limitnum = 0) {
-    global $DB, $CFG;
+function enrol_get_all_users_courses(
+    $userid,
+    $onlyactive = false,
+    $fields = NULL,
+    $sort = 'visible DESC,sortorder ASC',
+    $limitfrom = 0,
+    $limitnum = 0
+) {
+    global $DB;
 
-    // Guest account does not have any courses
-    if (isguestuser($userid) or empty($userid)) {
-        return(array());
+    $sql = enrol_get_all_users_courses_sql(
+        $userid,
+        $onlyactive,
+        $fields,
+        $sort
+    );
+    if (empty($sql)) {
+        return [];
     }
 
-    // Totara: enforce tenant restrictions.
-    if (!$usercontext = context_user::instance($userid, IGNORE_MISSING)) {
-        return(array());
-    }
-    $tenantjoin = "";
-    if (!empty($CFG->tenantsenabled)) {
-        if ($usercontext->tenantid) {
-            if ($CFG->tenantsisolated) {
-                $tenantjoin = "JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = " . CONTEXT_COURSE . " AND ctx.tenantid = " . $usercontext->tenantid;
-            } else {
-                $tenantjoin = "JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = " . CONTEXT_COURSE . " AND (ctx.tenantid IS NULL OR ctx.tenantid = " . $usercontext->tenantid . ")";
-            }
-        }
-    }
-
-    // Allowed prefixes and field names.
-    $allowedprefixesandfields = array('c' => array_keys($DB->get_columns('course')),
-        'ul' => array_keys($DB->get_columns('user_lastaccess')),
-        'ue' => array_keys($DB->get_columns('user_enrolments')));
-
-    $basefields = array('id', 'category', 'sortorder',
-            'shortname', 'fullname', 'idnumber',
-            'startdate', 'visible',
-            'defaultgroupingid',
-            'groupmode', 'groupmodeforce');
-
-    if (empty($fields)) {
-        $fields = $basefields;
-    } else if (is_string($fields)) {
-        // turn the fields from a string to an array
-        $fields = explode(',', $fields);
-        $fields = array_map('trim', $fields);
-        $fields = array_unique(array_merge($basefields, $fields));
-    } else if (is_array($fields)) {
-        $fields = array_unique(array_merge($basefields, $fields));
-    } else {
-        throw new coding_exception('Invalid $fileds parameter in enrol_get_my_courses()');
-    }
-    if (in_array('*', $fields)) {
-        $fields = array('*');
-    }
-
-    $orderby = enrol_get_cleaned_order_by_sql($sort, $allowedprefixesandfields);
-
-    $params = array('siteid'=>SITEID);
-
-    if ($onlyactive) {
-        $subwhere = "WHERE ue.status = :active AND e.status = :enabled AND ue.timestart < :now1 AND (ue.timeend = 0 OR ue.timeend > :now2)";
-        list($now1, $now2) = enrol_round_time_for_query();
-        $params['now1']    = $now1; // improves db caching
-        $params['now2']    = $now2;
-        $params['active']  = ENROL_USER_ACTIVE;
-        $params['enabled'] = ENROL_INSTANCE_ENABLED;
-    } else {
-        $subwhere = "";
-    }
-
-    $coursefields = 'c.' .join(',c.', $fields);
-    $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
-    $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
-    $params['contextlevel'] = CONTEXT_COURSE;
-
-    // TOTARA: We don't use totara_visibility_where here because the default expectation is that users will be able to see
-    // the courses they are enrolled in.
-    // Therefore we check visibility individually as that is quicker than totara_visibility_where.
-
-    //note: we can not use DISTINCT + text fields due to Oracle and MS limitations, that is why we have the subselect there
-    $sql = "SELECT $coursefields $ccselect
-              FROM {course} c
-              JOIN (SELECT DISTINCT e.courseid
-                      FROM {enrol} e
-                      JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)
-               $tenantjoin
-                 $subwhere
-                   ) en ON (en.courseid = c.id)
-           $ccjoin
-             WHERE c.id <> :siteid AND c.containertype = :containertype
-          $orderby";
-    $params['userid']  = $userid;
-    $params['containertype'] = \container_course\course::get_type();
+    // Destruct the sql.
+    [$select, $joins, $where, $order_by, $params] = $sql;
 
     // TOTARA: add pagination
-    $courses = $DB->get_records_sql($sql, $params, $limitfrom, $limitnum);
+    $courses = $DB->get_records_sql("{$select} {$joins} {$where} {$order_by}", $params, $limitfrom, $limitnum);
     foreach ($courses as $courseid => $course) {
         context_helper::preload_from_record($course);
         if ($onlyactive && !totara_course_is_viewable($course, $userid)) {
@@ -980,6 +914,118 @@ function enrol_get_all_users_courses($userid, $onlyactive = false, $fields = NUL
     }
 
     return $courses;
+}
+
+/**
+ * Returns list of courses user is enrolled into with capability checks
+ * - $fields is an array of fieldnames to ADD
+ *   so name the fields you really need, which will
+ *   be added and unique
+ *
+ * Totara: This function will only return all the course containers of a user.
+ *
+ * @param int $user_id
+ * @param bool $only_active return only active enrolments in courses user may see
+ * @param string|array $fields
+ * @param string $sort
+ *
+ * @return array
+ */
+function enrol_get_all_users_courses_sql(
+    int $user_id,
+    bool $only_active = false,
+    $fields = NULL,
+    string $sort = 'visible DESC,sortorder ASC'
+) {
+    global $DB, $CFG;
+
+    // Guest account does not have any courses
+    if (isguestuser($user_id) or empty($user_id)) {
+        return(array());
+    }
+
+    // Totara: enforce tenant restrictions.
+    if (!$user_context = context_user::instance($user_id, IGNORE_MISSING)) {
+        return(array());
+    }
+    $tenant_join = "";
+    if (!empty($CFG->tenantsenabled)) {
+        if ($user_context->tenantid) {
+            if ($CFG->tenantsisolated) {
+                $tenant_join = "JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = " . CONTEXT_COURSE . " AND ctx.tenantid = " . $user_context->tenantid;
+            } else {
+                $tenant_join = "JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = " . CONTEXT_COURSE . " AND (ctx.tenantid IS NULL OR ctx.tenantid = " . $user_context->tenantid . ")";
+            }
+        }
+    }
+
+    // Allowed prefixes and field names.
+    $allowed_prefixes_and_fields = array('c' => array_keys($DB->get_columns('course')),
+        'ul' => array_keys($DB->get_columns('user_lastaccess')),
+        'ue' => array_keys($DB->get_columns('user_enrolments')));
+
+    $base_fields = array('id', 'category', 'sortorder',
+        'shortname', 'fullname', 'idnumber',
+        'startdate', 'visible',
+        'defaultgroupingid',
+        'groupmode', 'groupmodeforce');
+
+    if (empty($fields)) {
+        $fields = $base_fields;
+    } else if (is_string($fields)) {
+        // turn the fields from a string to an array
+        $fields = explode(',', $fields);
+        $fields = array_map('trim', $fields);
+        $fields = array_unique(array_merge($base_fields, $fields));
+    } else if (is_array($fields)) {
+        $fields = array_unique(array_merge($base_fields, $fields));
+    } else {
+        throw new coding_exception('Invalid $fields parameter in enrol_get_my_courses()');
+    }
+    if (in_array('*', $fields)) {
+        $fields = array('*');
+    }
+
+    $order_by = enrol_get_cleaned_order_by_sql($sort, $allowed_prefixes_and_fields);
+
+    $params = array('site_id'=>SITEID);
+
+    if ($only_active) {
+        $sub_where = "WHERE ue.status = :active AND e.status = :enabled AND ue.timestart < :now1 AND (ue.timeend = 0 OR ue.timeend > :now2)";
+        list($now1, $now2) = enrol_round_time_for_query();
+        $params['now1']    = $now1; // improves db caching
+        $params['now2']    = $now2;
+        $params['active']  = ENROL_USER_ACTIVE;
+        $params['enabled'] = ENROL_INSTANCE_ENABLED;
+    } else {
+        $sub_where = "";
+    }
+
+    $course_fields = 'c.' .join(',c.', $fields);
+    $cc_select = ', ' . context_helper::get_preload_record_columns_sql('ctx');
+    $cc_join = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :context_level)";
+    $params['context_level'] = CONTEXT_COURSE;
+
+    // TOTARA: We don't use totara_visibility_where here because the default expectation is that users will be able to see
+    // the courses they are enrolled in.
+    // Therefore we check visibility individually as that is quicker than totara_visibility_where.
+
+    //note: we can not use DISTINCT + text fields due to Oracle and MS limitations, that is why we have the subselect there
+
+    $select = "SELECT {$course_fields} {$cc_select} FROM {course} c";
+    $joins = "JOIN (
+                SELECT DISTINCT e.courseid
+                FROM {enrol} e
+                JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :user_id)
+                $tenant_join
+                $sub_where
+              ) en ON (en.courseid = c.id)
+              $cc_join";
+    $where = "WHERE c.id <> :site_id AND c.containertype = :container_type";
+    $params['user_id']  = $user_id;
+    $params['container_type'] = \container_course\course::get_type();
+
+    return [$select, $joins, $where, $order_by, $params];
 }
 
 /**

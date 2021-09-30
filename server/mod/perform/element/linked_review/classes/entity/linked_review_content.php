@@ -39,6 +39,7 @@ use mod_perform\entity\activity\subject_instance;
  * @property int $subject_instance_id
  * @property int $selector_id
  * @property string $content_type
+ * @property string $meta_data additional metadata stored as json, en- and decoding happens automatically
  * @property int $content_id
  * @property int $created_at
  * @property-read user $selector
@@ -89,4 +90,5 @@ class linked_review_content extends entity {
     public function responses(): has_many {
         return $this->has_many(linked_review_content_response::class, 'linked_review_content_id');
     }
+
 }
