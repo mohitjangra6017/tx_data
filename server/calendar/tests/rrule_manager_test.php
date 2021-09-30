@@ -2267,7 +2267,7 @@ class core_calendar_rrule_manager_testcase extends advanced_testcase {
             $expecteddate->modify('January 1');
             $expecteddate->add($interval);
             $expecteddate->modify("+20 Monday");
-            $expecteddate->add($offset);
+            $expecteddate->modify('T090000');
         }
     }
 
