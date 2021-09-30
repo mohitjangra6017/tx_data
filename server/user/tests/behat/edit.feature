@@ -63,17 +63,3 @@ Feature: Basic editing of users
     When I press "Cancel"
     Then I should see "First User"
     And I should see "Legacy notification preferences"
-
-  Scenario: Admin/manager can create a new password for others but not for yourself
-    Given the following "users" exist:
-      | username | firstname | lastname | email             |
-      | user1    | First     | User     | user1@example.com |
-    And I log in as "admin"
-    When I follow "Preferences" in the user menu
-    And I follow "Edit profile"
-    Then I should not see "New password"
-
-    And I navigate to "Manage users" node in "Site administration > Users"
-    And I click on "First User" "link"
-    When I click on "Edit profile" "link" in the ".block_totara_user_profile_category_contact" "css_element"
-    Then I should see "New password"
