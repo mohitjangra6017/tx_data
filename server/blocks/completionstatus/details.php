@@ -82,6 +82,7 @@ if (!$info->user_has_completion_status($user->id)) {
 // Display page.
 
 $PAGE->set_context(context_course::instance($course->id));
+$PAGE->set_course($course);
 
 // Print header.
 $page = get_string('completionprogressdetails', 'block_completionstatus');
