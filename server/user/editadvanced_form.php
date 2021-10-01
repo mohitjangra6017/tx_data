@@ -119,15 +119,18 @@ class user_editadvanced_form extends moodleform {
             $mform->addElement('checkbox', 'createpassword', get_string('createpassword', 'auth'));
             $mform->disabledIf('createpassword', 'auth', 'in', $cannotchangepass);
 
-            if (!empty($CFG->passwordpolicy)) {
-                $mform->addElement('static', 'passwordpolicyinfo', '', print_password_policy());
-            }
-            $mform->addElement('passwordunmask', 'newpassword', get_string('newpassword'), 'size="20"');
-            $mform->addHelpButton('newpassword', 'newpassword');
-            $mform->setType('newpassword', core_user::get_property_type('password'));
-            $mform->disabledIf('newpassword', 'createpassword', 'checked');
+            // Remove the ability to change their own password while editing their profile
+            if (isset($USER->newadminuser) || ($userid == -1 || ($userid != $USER->id && !is_siteadmin($user)))) {
+                if (!empty($CFG->passwordpolicy)) {
+                    $mform->addElement('static', 'passwordpolicyinfo', '', print_password_policy());
+                }
 
-            $mform->disabledIf('newpassword', 'auth', 'in', $cannotchangepass);
+                $mform->addElement('passwordunmask', 'newpassword', get_string('newpassword'), 'size="20"');
+                $mform->addHelpButton('newpassword', 'newpassword');
+                $mform->setType('newpassword', core_user::get_property_type('password'));
+                $mform->disabledIf('newpassword', 'createpassword', 'checked');
+                $mform->disabledIf('newpassword', 'auth', 'in', $cannotchangepass);
+            }
 
             // Check if the user has active external tokens.
             if ($userid != -1 and empty($CFG->passwordchangetokendeletion)) {
