@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021052500;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2021052500;        // Requires this Totara version
+$plugin->version   = 2021100100;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2021100100;        // Requires this Totara version
 $plugin->component = 'block_section_links'; // Full name of the plugin (used for diagnostics)

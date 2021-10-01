@@ -24,8 +24,8 @@ defined('MOODLE_INTERNAL') || die();
 
 // Totara OAuth2 provider
 
-$plugin->version  = 2021090200;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021052500;       // Requires this Totara version.
+$plugin->version  = 2021100100;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021100100;       // Requires this Totara version.
 $plugin->component = 'totara_oauth2';  // To check on upgrade, that module sits in correct place
 
 $plugin->dependencies = [

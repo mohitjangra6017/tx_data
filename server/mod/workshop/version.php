@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021052500;        // The current module version (YYYYMMDDXX)
-$plugin->requires  = 2021052500;        // Requires this Totara version.
+$plugin->version   = 2021100100;        // The current module version (YYYYMMDDXX)
+$plugin->requires  = 2021100100;        // Requires this Totara version.
 $plugin->component = 'mod_workshop';
 $plugin->cron      = 60;                // Give as a chance every minute.

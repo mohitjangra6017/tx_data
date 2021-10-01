@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021052500;
-$plugin->requires  = 2021052500;
+$plugin->version   = 2021100100;
+$plugin->requires  = 2021100100;
 $plugin->component = 'ltiservice_gradebookservices';
 $plugin->backported = 'v3.8.1'; // TOTARA: backported from this release

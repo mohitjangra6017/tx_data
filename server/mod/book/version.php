@@ -25,6 +25,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'mod_book'; // Full name of the plugin (used for diagnostics)
-$plugin->version   = 2021052500; // The current module version (Date: YYYYMMDDXX)
-$plugin->requires  = 2021052500; // Requires this Totara version
+$plugin->version   = 2021100100; // The current module version (Date: YYYYMMDDXX)
+$plugin->requires  = 2021100100; // Requires this Totara version
 $plugin->cron      = 0;          // Period for cron to check this module (secs)

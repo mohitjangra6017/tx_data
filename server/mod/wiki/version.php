@@ -33,7 +33,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021052500;       // The current module version (Date: YYYYMMDDXX)
-$plugin->requires  = 2021052500;    // Requires this Totara version
+$plugin->version   = 2021100100;       // The current module version (Date: YYYYMMDDXX)
+$plugin->requires  = 2021100100;    // Requires this Totara version
 $plugin->component = 'mod_wiki';       // Full name of the plugin (used for diagnostics)
 $plugin->cron      = 0;
