@@ -70,6 +70,7 @@ $string['date_posted'] = 'Date posted';
 $string['decline'] = 'Decline';
 $string['declined'] = 'Declined';
 $string['decline_member'] = 'Decline member request {$a}';
+$string['delete_discussion_title'] = "Delete discussion";
 $string['delete_discussion_warning_msg'] = "Your discussion post will be deleted. Any comments, replies, and likes will also be deleted.";
 $string['delete_workspace'] = 'Delete workspace';
 $string['delete_warning_msg'] = 'This will result in <strong>permanent deletion of workspace, discussions and files</strong>. Resources and playlists shared to the workspace\'s library will continue to exist in other areas of this site.';

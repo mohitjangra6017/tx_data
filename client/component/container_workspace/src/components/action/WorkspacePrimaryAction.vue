@@ -28,7 +28,7 @@
       @request-close="modal.leaveConfirm = false"
     >
       <WorkspaceWarningModal
-        :title="$str('delete_warning_title', 'container_workspace')"
+        :title="$str('leave_workspace', 'container_workspace')"
         :message-content="getContentMessage"
         :confirm-button-text="$str('leave', 'container_workspace')"
         @confirm="leaveWorkspace"

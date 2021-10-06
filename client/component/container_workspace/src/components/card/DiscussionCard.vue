@@ -22,7 +22,7 @@
         :message-content="
           $str('delete_discussion_warning_msg', 'container_workspace')
         "
-        :title="$str('delete_warning_title', 'container_workspace')"
+        :title="$str('delete_discussion_title', 'container_workspace')"
         :confirm-button-text="$str('confirm', 'core')"
         @confirm="deleteDiscussion"
       />
@@ -503,7 +503,7 @@ export default {
       "copied_to_clipboard",
       "pinned_post",
       "delete_discussion_warning_msg",
-      "delete_warning_title",
+      "delete_discussion_title",
       "error:delete_discussion",
       "report_discussion",
       "error:report_discussion",
