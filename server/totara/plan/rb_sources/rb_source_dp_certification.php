@@ -479,14 +479,14 @@ class rb_source_dp_certification extends rb_base_source {
                 'base',
                 'idnumber',
                 get_string('programidnumber', 'totara_program'),
-                'text'
+                'number'
         );
 
         $filteroptions[] = new rb_filter_option(
                 'base',
                 'certifid',
                 get_string('certificationid', 'rb_source_dp_certification'),
-                'int'
+                'number'
         );
 
         $filteroptions[] = new rb_filter_option(
