@@ -28,9 +28,8 @@ define(["core/config", 'core/ajax'], function(config, ajax) {
         return new Promise(
             function(resolve) {
                 var el = widget.querySelector('.tw-containerCourse-enrolmentBanner__enrolButton');
-                var courseId = el.getAttribute('data-course-id');
-
                 if (el) {
+                    var courseId = el.getAttribute('data-course-id');
                     // Adding sesskey to the URL.
                     el.addEventListener(
                         'click',
