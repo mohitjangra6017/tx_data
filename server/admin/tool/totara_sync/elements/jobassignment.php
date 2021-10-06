@@ -928,6 +928,6 @@ class totara_sync_element_jobassignment extends totara_sync_element {
                              AND s.appraiseridnumber != ''";
         }
 
-        return implode(", ", $select) . "\n" . implode(" \n", $from);
+        return implode(", ", $select) . "\n" . implode(" \n", $from) . ' ORDER BY s.ID ASC';
     }
 }
