@@ -23,6 +23,7 @@
 
 namespace availability_hierarchy_organisation;
 
+use totara_core\advanced_feature;
 use totara_reportbuilder\rb\display\format_string;
 
 defined('MOODLE_INTERNAL') || die();
@@ -46,6 +47,10 @@ class frontend extends \core_availability\frontend {
      */
     protected function allow_add($course, \cm_info $cm = null, \section_info $section = null) {
         $context = \context_system::instance();
+
+        if (advanced_feature::is_disabled('organisations')) {
+            return false;
+        }
 
         if (has_capability('totara/hierarchy:vieworganisation', $context)) {
             return true;

@@ -73,3 +73,29 @@ Feature: Adding position assignment activity access restriction
 
     Then I should see "Test Page 1" in the "region-main" "region"
     And I should not see "Test Page 2" in the "region-main" "region"
+
+  @javascript
+  Scenario: Test position assignment condition when hierarchy positions feature is disabled
+    Given I log in as "admin"
+    And I am on "Course 1" course homepage with editing mode on
+
+    And I add a "Page" to section "1"
+    And I set the following fields to these values:
+      | Name         | Test Page 1      |
+      | Description  | Some description |
+      | Page content | page content     |
+    And I expand all fieldsets
+    And I click on "Add restriction..." "button"
+    And I should see "Assigned to Position" in the "Add restriction..." "dialogue"
+    And I click on "Cancel" "button" in the "Add restriction..." "dialogue"
+    And I press "Save and return to course"
+
+    Then I disable the "positions" advanced feature
+    And I add a "Page" to section "1"
+    And I set the following fields to these values:
+      | Name         | Test Page 2            |
+      | Description  | Some other description |
+      | Page content | page other content     |
+    And I expand all fieldsets
+    And I click on "Add restriction..." "button"
+    And I should not see "Assigned to Position" in the "Add restriction..." "dialogue"
