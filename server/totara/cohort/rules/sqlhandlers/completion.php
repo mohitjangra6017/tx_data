@@ -294,25 +294,31 @@ class cohort_rule_sqlhandler_completion_date_program extends cohort_rule_sqlhand
  */
 class cohort_rule_sqlhandler_completion_date_certification extends cohort_rule_sqlhandler_completion_date {
     protected function construct_sql_snippet($certnum, $comparison, $lov) {
-        global $DB;
-        $sqlhandler = new stdClass();
-        list($sqlin, $params) = $DB->get_in_or_equal($lov, SQL_PARAMS_NAMED, 'cdp'.$this->ruleid);
-        $sqlhandler->sql = "{$certnum} =
-                  (
-                    SELECT count(DISTINCT(p.id))
+        $sqlchunks = [];
+        foreach ($lov as $certifid) {
+            $certifid = intval($certifid);
+
+            $sqlchunks[] = "(
+                EXISTS (
+                    SELECT 1
                       FROM {prog} p
                       JOIN {certif} c ON c.id = p.certifid
                  LEFT JOIN {certif_completion} cc ON cc.certifid = c.id
                  LEFT JOIN {certif_completion_history} cch ON cch.certifid = c.id
-                     WHERE p.id {$sqlin}
+                     WHERE p.id = {$certifid}
                        AND (
                             (cc.userid = u.id AND cc.timecompleted != 0 AND  cc.timecompleted {$comparison})
                             OR
                             (cch.userid = u.id AND cch.timecompleted != 0 AND cch.timecompleted {$comparison})
                            )
-                 )";
+                 )
+            )";
+        }
 
-        $sqlhandler->params = $params;
+        $sqlhandler = new stdClass();
+        $sqlhandler->sql = implode(' AND ', $sqlchunks);
+        $sqlhandler->params = [];
+
         return $sqlhandler;
     }
 }
