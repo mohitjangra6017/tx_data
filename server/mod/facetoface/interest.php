@@ -25,6 +25,8 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
+require_login();
+
 $f = required_param('f', PARAM_INT); // Facetoface ID.
 
 $seminar = new \mod_facetoface\seminar($f);
@@ -46,8 +48,6 @@ $PAGE->set_url('/mod/facetoface/interest.php', array('id' => $cm->id));
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_cm($cm);
-
-require_login();
 
 $mform = new \mod_facetoface\form\interest(null, array('f' => $seminar->get_id(), 'declare' => $declare));
 if ($mform->is_cancelled()) {
