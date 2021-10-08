@@ -654,6 +654,23 @@ const linkPlugins = [
     },
   },
   {
+    key: 'vimeo-private',
+    type: 'media',
+    name: 'Vimeo private',
+    matches: [
+      {
+        // Example:
+        // https://vimeo.com/78716671/e123ceeg2
+        match: /^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)\/([0-9,a-f]+)/,
+        details: match => ({ id: match[1], privatestring: match[2] }),
+      },
+    ],
+    async nodeAttrs({ url }) {
+      const ogInfo = await getLinkMetadata(url);
+      return getVideoAttrs(ogInfo);
+    },
+  },
+  {
     key: 'image',
     type: 'media',
     name: 'Image',

@@ -57,6 +57,25 @@ class media_vimeo_testcase extends advanced_testcase {
     }
 
     /**
+     * Test supported link types
+     */
+    public function test_supported() {
+        $manager = core_media_manager::instance();
+
+        // Format: standard vimeo
+        $url = new moodle_url('http://vimeo.com/1176321');
+        $embed_content = $manager->embed_url($url);
+        $this->assertStringContainsString('</iframe>', $embed_content);
+        $this->assertStringContainsString('https://player.vimeo.com/video/1176321', $embed_content);
+
+        // Format: private vimeo
+        $url = new moodle_url('http://vimeo.com/1176321/ac42fea33');
+        $embed_content = $manager->embed_url($url);
+        $this->assertStringContainsString('</iframe>', $embed_content);
+        $this->assertStringContainsString('https://player.vimeo.com/video/1176321?h=ac42fea33', $embed_content);
+    }
+
+    /**
      * Test embedding without media filter (for example for displaying URL resorce).
      */
     public function test_embed_url() {

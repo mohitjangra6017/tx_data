@@ -114,6 +114,14 @@ export default {
           return 'https://www.youtube.com/embed/' + details.id + '?rel=0';
         case 'vimeo':
           return 'https://player.vimeo.com/video/' + details.id + '?portrait=0';
+        case 'vimeo-private':
+          return (
+            'https://player.vimeo.com/video/' +
+            details.id +
+            '?h=' +
+            details.privatestring +
+            '&portrait=0'
+          );
       }
       return null;
     },
