@@ -77,7 +77,7 @@ class contentmarketplace_goone_learning_object_model_testcase extends testcase {
     public function mocked_go1_learning_objects_provider(): array {
         return [
             'Learning object ID 29271' => [29271],
-            'Learning object ID 191657' => [191657],
+            'Learning object ID 191657' => [1916572],
             'Learning object ID 1868492' => [1868492],
         ];
     }
