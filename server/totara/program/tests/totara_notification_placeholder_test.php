@@ -142,7 +142,7 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
             ->update([
                 'completiontime' => null,
                 'completionoffsetamount' => 1,
-                'completionoffsetunit' => utils::DURATION_MONTH,
+                'completionoffsetunit' => utils::TIME_SELECTOR_MONTHS,
                 'completionevent' => COMPLETION_EVENT_PROGRAM_COMPLETION,
             ]);
         assignment::clear_instance_cache();
