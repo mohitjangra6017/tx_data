@@ -112,3 +112,4 @@ $string['warningdisablemarketplace:body:html'] = '<p>Items from the marketplace 
 $string['warningdisablemarketplace:title'] = 'Disable LinkedIn Learning content';
 $string['warningenablemarketplace:body:html'] = 'Items from the marketplace will be available to course creators for inclusion in newly created courses.';
 $string['warningenablemarketplace:title'] = 'Enable LinkedIn Learning content';
+$string['xapi_description'] = "LinkedIn Learning xAPI integration sends learner activity data back to your Totara site.";
