@@ -147,6 +147,287 @@ class totara_job_webapi_resolver_mutation_create_assignment_testcase extends adv
         }
     }
 
+    public function test_resolve_managerjaid() {
+        global $DB;
+
+        $this->setAdminUser();
+        $user = $this->getDataGenerator()->create_user();
+        $badmanagerjaid = 1;
+        while ($DB->record_exists('job_assignment', array('id' => $badmanagerjaid))) {
+            $badpositionid++;
+        }
+
+        // Non existent manager job assignment.
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j1', 'managerjaid' => $badmanagerjaid
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The managers job assignment does not exists.', $ex->getMessage());
+        }
+
+        // Setting yourself as manager.
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id, 'idnumber' => 'j1'
+        ]);
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j1', 'managerjaid' => $jaid
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The user cannot be assigned as their own manager.', $ex->getMessage());
+        }
+
+        // Create a manager and test it worked as expected.
+        $manager = $this->getDataGenerator()->create_user();
+        $managerjaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $manager->id, 'idnumber' => 'j1'
+        ]);
+
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j2', 'managerjaid' => $managerjaid]);
+
+        self::assertIsNumeric($jaid);
+        self::assertCount(1, job_assignment::get_all($user->id, true));
+        $job = job_assignment::get_with_id($jaid);
+        self::assertInstanceOf(job_assignment::class, $job);
+        self::assertSame($job->userid, $user->id);
+        self::assertSame($job->idnumber, 'j2');
+        self::assertSame($job->managerid, $manager->id);
+    }
+
+    public function test_resolve_tempmanagerjaid() {
+        global $DB;
+
+        $this->setAdminUser();
+        $user = $this->getDataGenerator()->create_user();
+        $tempmanager  = $this->getDataGenerator()->create_user();
+        $badtempmanagerjaid = 1;
+        while ($DB->record_exists('job_assignment', array('id' => $badtempmanagerjaid))) {
+            $badpositionid++;
+        }
+
+        // Non existent temporary manager job assignment.
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id,
+                'idnumber' => 'j1',
+                'tempmanagerjaid' => $badtempmanagerjaid,
+                'tempmanagerexpirydate' => time() + DAYSECS
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The temporary managers job assignment does not exists.', $ex->getMessage());
+        }
+
+        // Setting yourself as temporary manager.
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id, 'idnumber' => 'j1'
+        ]);
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id,
+                'idnumber' => 'j1',
+                'tempmanagerjaid' => $jaid,
+                'tempmanagerexpirydate' => time() + DAYSECS
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The user cannot be assigned as their own temporary manager.', $ex->getMessage());
+        }
+
+        // No expiry date.
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $tempmanager->id, 'idnumber' => 'j2'
+        ]);
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id,
+                'idnumber' => 'j2',
+                'tempmanagerjaid' => $jaid
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('A temporary manager expiry date is required.', $ex->getMessage());
+        }
+
+        // Expiry date in the past.
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id,
+                'idnumber' => 'j2',
+                'tempmanagerjaid' => $jaid,
+                'tempmanagerexpirydate' => time() - DAYSECS
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The temporary manager expiry date can not be in the past.', $ex->getMessage());
+        }
+
+        // Now with out any issues..
+        $jobid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id,
+            'idnumber' => 'j2',
+            'tempmanagerjaid' => $jaid,
+            'tempmanagerexpirydate' => time() + DAYSECS
+        ]);
+        self::assertIsNumeric($jobid);
+        self::assertCount(1, job_assignment::get_all($user->id, true));
+        $job = job_assignment::get_with_id($jobid);
+        self::assertInstanceOf(job_assignment::class, $job);
+        self::assertSame($job->userid, $user->id);
+        self::assertSame($job->idnumber, 'j2');
+        self::assertSame($job->tempmanagerid, $tempmanager->id);
+    }
+
+    public function test_resolve_position() {
+        global $DB;
+
+        $this->setAdminUser();
+        $user = $this->getDataGenerator()->create_user();
+
+        /** @var \totara_hierarchy\testing\generator $generator */
+        $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $framework = $generator->create_pos_frame([]);
+        $typeid = $generator->create_pos_type([]);
+        $position1 = $generator->create_pos(['frameworkid' => $framework->id, 'typeid' => $typeid]);
+        $badpositionid = 1;
+        while ($DB->record_exists('pos', array('id' => $badpositionid))) {
+            $badpositionid++;
+        }
+
+        // Non existent position.
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j1', 'positionid' => $badpositionid
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The position does not exist.', $ex->getMessage());
+        }
+
+        // Now use correct position.
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id, 'idnumber' => 'j1', 'positionid' => $position1->id
+        ]);
+        self::assertIsNumeric($jaid);
+        self::assertCount(1, job_assignment::get_all($user->id));
+        $job = job_assignment::get_with_id($jaid);
+        self::assertInstanceOf(job_assignment::class, $job);
+        self::assertSame($job->userid, $user->id);
+        self::assertSame($job->idnumber, 'j1');
+        self::assertSame($job->positionid, $position1->id);
+    }
+
+    public function test_resolve_organisation() {
+        global $DB;
+
+        $this->setAdminUser();
+        $user = $this->getDataGenerator()->create_user();
+
+        /** @var \totara_hierarchy\testing\generator $generator */
+        $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $framework = $generator->create_org_frame([]);
+        $typeid = $generator->create_org_type([]);
+        $organisation1 = $generator->create_org(['frameworkid' => $framework->id, 'typeid' => $typeid]);
+        $badorganisationid = 1;
+        while ($DB->record_exists('org', array('id' => $badorganisationid))) {
+            $badorganisationid++;
+        }
+
+        // Non existent organisation.
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j1', 'organisationid' => $badorganisationid
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The organisation does not exist.', $ex->getMessage());
+        }
+
+        // Now use correct organisation.
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id, 'idnumber' => 'j1', 'organisationid' => $organisation1->id
+        ]);
+        self::assertIsNumeric($jaid);
+        self::assertCount(1, job_assignment::get_all($user->id));
+        $job = job_assignment::get_with_id($jaid);
+        self::assertInstanceOf(job_assignment::class, $job);
+        self::assertSame($job->userid, $user->id);
+        self::assertSame($job->idnumber, 'j1');
+        self::assertSame($job->organisationid, $organisation1->id);
+    }
+
+    public function test_resolve_appraiser() {
+        global $DB;
+
+        $this->setAdminUser();
+        $user = $this->getDataGenerator()->create_user();
+        $appraiser = $this->getDataGenerator()->create_user();
+        $baduserid = 3;
+        while ($DB->record_exists('user', array('id' => $baduserid))) {
+            $baduserid++;
+        }
+
+        // Non existent appraiser.
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j1', 'appraiserid' => $baduserid
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The appraiser does not exist.', $ex->getMessage());
+        }
+
+        // Now use correct appraiser.
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id, 'idnumber' => 'j1', 'appraiserid' => $appraiser->id
+        ]);
+        self::assertIsNumeric($jaid);
+        self::assertCount(1, job_assignment::get_all($user->id));
+        $job = job_assignment::get_with_id($jaid);
+        self::assertInstanceOf(job_assignment::class, $job);
+        self::assertSame($job->userid, $user->id);
+        self::assertSame($job->idnumber, 'j1');
+        self::assertSame($job->appraiserid, $appraiser->id);
+    }
+
+    public function test_resolve_start_end_dates() {
+        global $DB;
+
+        $this->setAdminUser();
+        $user = $this->getDataGenerator()->create_user();
+
+        // Use start date greater than end date.
+        $start = time() + DAYSECS;
+        $end = time() - DAYSECS;
+        try {
+            $this->resolve_graphql_mutation('totara_job_create_assignment', [
+                'userid' => $user->id, 'idnumber' => 'j1', 'startdate' => $start, 'enddate' => $end
+            ]);
+            $this->fail('Exception expected.');
+        } catch (\moodle_exception $ex) {
+            self::assertStringContainsString('The start date can not be greater than the end date.', $ex->getMessage());
+        }
+
+        // Correct dates
+        $start = time() - DAYSECS;
+        $end = time() + DAYSECS;
+        $jaid = $this->resolve_graphql_mutation('totara_job_create_assignment', [
+            'userid' => $user->id, 'idnumber' => 'j1', 'startdate' => $start, 'enddate' => $end
+        ]);
+        self::assertIsNumeric($jaid);
+        self::assertCount(1, job_assignment::get_all($user->id));
+        $job = job_assignment::get_with_id($jaid);
+        self::assertInstanceOf(job_assignment::class, $job);
+        self::assertSame($job->userid, $user->id);
+        self::assertSame($job->idnumber, 'j1');
+        self::assertSame((int)$job->startdate, $start);
+        self::assertSame((int)$job->enddate, $end);
+    }
+
     /**
      * Integration test of the AJAX mutation through the GraphQL stack.
      */

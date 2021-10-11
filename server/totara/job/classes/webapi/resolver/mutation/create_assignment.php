@@ -30,6 +30,9 @@ use core\webapi\resolver\has_middleware;
 use totara_core\advanced_feature;
 use \totara_job\job_assignment;
 use totara_job\webapi\resolver\helper;
+use hierarchy_organisation\entity\organisation;
+use hierarchy_position\entity\position;
+use core\entity\user;
 
 /**
  * Mutation to create a job assignment.
@@ -46,7 +49,7 @@ class create_assignment implements mutation_resolver, has_middleware {
      * @return int
      */
     public static function resolve(array $args, execution_context $ec) {
-        global $CFG;
+        global $CFG, $USER;
 
         require_once($CFG->dirroot . '/totara/job/lib.php');
 
@@ -62,18 +65,88 @@ class create_assignment implements mutation_resolver, has_middleware {
         $jobassignment->fullname = $args['fullname'] ?? null;
         $jobassignment->shortname = $args['shortname'] ?? null;
         $jobassignment->description = $args['description'] ?? null;
-        if (!advanced_feature::is_disabled('positions')) {
-            $jobassignment->positionid = $args['positionid'] ?? null;
+
+        // Position.
+        if (isset($args['positionid']) && !advanced_feature::is_disabled('positions')) {
+            if (!position::repository()->find($args['positionid'])) {
+                throw new \coding_exception('The position does not exist.');
+            }
+            $jobassignment->positionid = $args['positionid'];
         }
-        if (!advanced_feature::is_disabled('organisations')) {
-            $jobassignment->organisationid = $args['organisationid'] ?? null;
+
+        // Organisation.
+        if (isset($args['organisationid']) && !advanced_feature::is_disabled('organisations')) {
+            if (!organisation::repository()->find($args['organisationid'])) {
+                throw new \coding_exception('The organisation does not exist.');
+            }
+            $jobassignment->organisationid = $args['organisationid'];
+        }
+
+        // Start and end dates.
+        if (isset($args['startdate']) && isset($args['enddate']) && $args['startdate'] > $args['enddate']) {
+            throw new \coding_exception('The start date can not be greater than the end date.');
         }
         $jobassignment->startdate = $args['startdate'] ?? null;
         $jobassignment->enddate = $args['enddate'] ?? null;
-        $jobassignment->managerjaid = $args['managerjaid'] ?? null;
-        $jobassignment->tempmanagerjaid = $args['tempmanagerjaid'] ?? null;
-        $jobassignment->tempmanagerexpirydate = $args['tempmanagerexpirydate'] ?? null;
-        $jobassignment->appraiserid = $args['appraiserid'] ?? null;
+
+        $delegatemanager = false;
+        if (!empty($CFG->enabletempmanagers)) {
+            if (has_capability('totara/core:delegateusersmanager', \context_user::instance($user->id))) {
+                $delegatemanager = true;
+            } else if ($USER->id == $user->id && has_capability('totara/core:delegateownmanager', \context_user::instance($user->id))) {
+                $delegatemanager = true;
+            }
+        }
+
+        if (!$delegatemanager && (isset($args['managerjaid']) || isset($args['tempmanagerjaid']))) {
+            throw new \coding_exception('You do not have permission to delegate a manager.');
+        }
+
+        // Manager.
+        if (isset($args['managerjaid'])) {
+            $job = job_assignment::get_with_id($args['managerjaid'], false);
+            if (!$job) {
+                throw new \coding_exception('The managers job assignment does not exists.');
+            }
+            if ($user->id == $job->userid) {
+                throw new \coding_exception('The user cannot be assigned as their own manager.');
+            }
+            $jobassignment->managerjaid = $args['managerjaid'] ?? null;
+        }
+
+        // Temporary manager.
+        if (isset($args['tempmanagerjaid'])) {
+            if (!isset($args['tempmanagerexpirydate'])) {
+                throw new \coding_exception('A temporary manager expiry date is required.');
+            }
+
+            $job = job_assignment::get_with_id($args['tempmanagerjaid'], false);
+            if (!$job) {
+                throw new \coding_exception('The temporary managers job assignment does not exists.');
+            }
+            if ($user->id == $job->userid) {
+                throw new \coding_exception('The user cannot be assigned as their own temporary manager.');
+            }
+            $jobassignment->tempmanagerjaid = $args['tempmanagerjaid'] ?? null;
+
+            if ($args['tempmanagerexpirydate'] < time()) {
+                throw new \coding_exception('The temporary manager expiry date can not be in the past.');
+            }
+            $jobassignment->tempmanagerexpirydate = $args['tempmanagerexpirydate'] ?? null;
+        }
+
+        // Appraiser.
+        if (isset($args['appraiserid'])) {
+            if (!user::repository()->find($args['appraiserid'])) {
+                throw new \coding_exception('The appraiser does not exist.');
+            } else if ($args['appraiserid'] == $jobassignment->userid) {
+                throw new \coding_exception('The user can not be their own appraiser!');
+            } else if (isguestuser($args['appraiserid'])) {
+                throw new \coding_exception('Guest user can not be an appraiser!');
+            }
+            $jobassignment->appraiserid = $args['appraiserid'];
+        }
+
         $jobassignment->totarasync = $args['totarasync'] ?? null;
 
         $job = job_assignment::create($jobassignment);
