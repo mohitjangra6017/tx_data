@@ -88,9 +88,6 @@ class hierarchy_goal_goal_helper_testcase extends testcase {
         $target_date2 = $now + WEEKSECS + DAYSECS;
         $target_date3 = $now + WEEKSECS + (2 * DAYSECS);
         $target_date4 = $now + WEEKSECS + (3 * DAYSECS);
-        $an_hour_ago = $now - HOURSECS;
-        $a_day_ago = $now - DAYSECS;
-        $a_week_ago = $now - WEEKSECS;
 
         // Create personal goals.
         $generator = self::getDataGenerator();
@@ -103,6 +100,11 @@ class hierarchy_goal_goal_helper_testcase extends testcase {
         // Trigger created events to have target date history records created.
         personal_created::create_from_instance($goal1)->trigger();
         personal_created::create_from_instance($goal2)->trigger();
+
+        $now = time(); // Reset $now in case we have already switched to the next second.
+        $an_hour_ago = $now - HOURSECS;
+        $a_day_ago = $now - DAYSECS;
+        $a_week_ago = $now - WEEKSECS;
 
         // Goal 1
         self::assertEquals($target_date1, goal_helper::get_goal_target_date_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $now));
