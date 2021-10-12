@@ -28,7 +28,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 global $CFG, $PAGE, $OUTPUT;
 require_once($CFG->libdir . '/adminlib.php');
 
-if (!local::is_enabled() && array_key_exists('enablecontentmarketplaces', $CFG->config_php_settings)) {
+if (!local::is_enabled() || array_key_exists('enablecontentmarketplaces', $CFG->config_php_settings)) {
     // If hardcoded off in config, don't even show this page.
     throw new moodle_exception('error:disabledmarketplaces', 'totara_contentmarketplace');
 }

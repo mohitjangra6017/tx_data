@@ -24,6 +24,7 @@
 namespace totara_contentmarketplace\quickaccessmenu;
 
 use lang_string;
+use totara_contentmarketplace\local;
 use totara_core\quickaccessmenu\group;
 use totara_core\quickaccessmenu\item;
 use totara_core\quickaccessmenu\provider;
@@ -33,6 +34,10 @@ class general implements provider {
      * @return array
      */
     public static function get_items(): array {
+        if (!local::is_enabled()) {
+            return [];
+        }
+
         return [
             item::from_provider(
                 'manage_content_marketplaces',

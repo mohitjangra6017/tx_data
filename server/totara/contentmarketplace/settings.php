@@ -49,9 +49,8 @@ $ADMIN->add(
     )
 );
 
-if ($has_setting_config) {
-    $marketplaceenabled = local::is_enabled();
-
+$marketplaceenabled = local::is_enabled();
+if ($has_setting_config && $marketplaceenabled) {
     $ADMIN->add('contentmarketplace', new admin_externalpage(
         'manage_content_marketplaces',
         get_string('manage_content_marketplaces', 'totara_contentmarketplace'),
@@ -76,25 +75,25 @@ if ($has_setting_config) {
         $beforesibling
     );
 
+    // Load the settings for sub plugins.
+    $manager = core_plugin_manager::instance();
+    $sub_plugins = $manager->get_subplugins_of_plugin('totara_contentmarketplace');
+
+    /** @var contentmarketplace $plugin */
+    foreach ($sub_plugins as $plugin) {
+        if ($plugin->is_enabled()) {
+            $plugin->load_settings($ADMIN, 'contentmarketplace', $has_setting_config);
+        }
+    }
+
     // Clean up after ourselves, the admin tree is big enough without us leaving things around.
     unset($wm);
-    unset($marketplaceenabled);
     unset($beforesibling);
-}
-
-// Load the settings for sub plugins.
-$manager = core_plugin_manager::instance();
-$sub_plugins = $manager->get_subplugins_of_plugin('totara_contentmarketplace');
-
-/** @var contentmarketplace $plugin */
-foreach ($sub_plugins as $plugin) {
-    if ($plugin->is_enabled()) {
-        $plugin->load_settings($ADMIN, 'contentmarketplace', $has_setting_config);
-    }
+    unset($manager);
+    unset($sub_plugins);
 }
 
 // Clearing these local variables just in case some other scripts that get included might prefer to these.
-unset($manager);
-unset($sub_plugins);
 unset($content_marketplace_capabilities);
 unset($has_setting_config);
+unset($marketplaceenabled);

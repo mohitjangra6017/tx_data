@@ -33,7 +33,6 @@ use moodle_exception;
 use moodle_url;
 use totara_contentmarketplace\local;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
-use totara_contentmarketplace\views\override_catalog_import_nav_breadcrumbs;
 use totara_mvc\controller;
 use totara_contentmarketplace\explorer as explorer_model;
 use totara_mvc\tui_view;
