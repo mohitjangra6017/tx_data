@@ -154,6 +154,67 @@ class totara_engage_webapi_shareto_recipients_testcase extends advanced_testcase
     }
 
     /**
+     * @return void
+     */
+    public function test_shareto_recipients_when_workspace_deleted(): void {
+        $this->setAdminUser();
+
+        $gen = $this->getDataGenerator();
+        /** @var \container_workspace\testing\generator $workspacegen */
+        $workspacegen = $gen->get_plugin_generator('container_workspace');
+
+        $user1 = $gen->create_user();
+        $user2 = $gen->create_user();
+        $w1 = $workspacegen->create_workspace();
+        $w2 = $workspacegen->create_workspace('search workspace');
+
+        $result = $this->execute_query([
+            'itemid' => 0,
+            'search' => '',
+            'component' => 'engage_article',
+            'access' => access::get_code(access::PUBLIC),
+            'theme' => 'ventura',
+        ]);
+
+        $this->assertIsArray($result);
+
+        $ids = array_map(
+            function ($recipient): int {
+                return $recipient['instanceid'];
+            },
+            $result
+        );
+
+        $this->assertContainsEquals($user1->id, $ids);
+        $this->assertContainsEquals($user2->id, $ids);
+        $this->assertContainsEquals($w1->id, $ids);
+        $this->assertContainsEquals($w2->id, $ids);
+
+        // Remove the workspace.
+        $w2->delete();
+
+        $result = $this->execute_query([
+            'itemid' => 0,
+            'search' => '',
+            'component' => 'engage_article',
+            'access' => access::get_code(access::PUBLIC),
+            'theme' => 'ventura',
+        ]);
+
+        $ids = array_map(
+            function ($recipient): int {
+                return $recipient['instanceid'];
+            },
+            $result
+        );
+
+        $this->assertContainsEquals($user1->id, $ids);
+        $this->assertContainsEquals($user2->id, $ids);
+        $this->assertContainsEquals($w1->id, $ids);
+        $this->assertNotContainsEquals($w2->id, $ids);
+    }
+
+    /**
      * @param array $args
      * @return mixed|null
      */

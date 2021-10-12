@@ -157,6 +157,7 @@ class library extends recipient {
             ->select_raw('DISTINCT course.id')
             ->join(['enrol', 'e'], 'id', 'courseid')
             ->join(['user_enrolments', 'ue'], 'e.id', 'enrolid')
+            ->join(['workspace', 'ws'], 'id', 'ws.course_id')
             ->when(true, function (builder $builder) {
                 global $CFG, $USER;
                 require_once($CFG->dirroot . "/totara/coursecatalog/lib.php");
@@ -169,6 +170,7 @@ class library extends recipient {
             ->where('ue.status', ENROL_USER_ACTIVE)
             ->where('ue.userid', $USER->id)
             ->where('fullname', 'ilike', $search)
+            ->where('ws.to_be_deleted', '0')
             ->limit(20);
 
         $records = $builder->fetch();

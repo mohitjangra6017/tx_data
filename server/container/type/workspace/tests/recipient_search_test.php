@@ -266,4 +266,33 @@ class totara_engage_workspace_search_testcase extends advanced_testcase {
         );
     }
 
+    public function test_search_workspaces_when_workspace_deleted(): void {
+        $owner = $this->getDataGenerator()->create_user();
+        self::setUser($owner);
+        /** @var \container_workspace\testing\generator $workspace_generator */
+        $workspace_generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
+
+        $workspace1 = $workspace_generator->create_workspace(
+            'public workspace member',
+            'description',
+            null,
+            $owner->id
+        );
+
+        $workspace2 = $workspace_generator->create_workspace(
+            'public workspace member',
+            'description',
+            null,
+            $owner->id
+        );
+
+        $result = library::search('', null);
+        $this->assertCount(2, $result);
+
+        $workspace2->delete();
+
+        $result = library::search('', null);
+        $this->assertCount(1, $result);
+    }
+
 }
