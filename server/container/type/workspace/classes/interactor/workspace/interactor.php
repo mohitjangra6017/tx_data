@@ -27,6 +27,7 @@ use container_workspace\loader\member\loader;
 use container_workspace\notification\workspace_notification;
 use container_workspace\tracker\tracker;
 use container_workspace\workspace;
+use context_user;
 use core_container\factory;
 use totara_engage\engage_core;
 
@@ -341,6 +342,11 @@ final class interactor {
 
         if ($this->can_administrate()) {
             return true;
+        }
+
+        $context = context_user::instance($this->user_id);
+        if (!has_capability('container/workspace:workspacesview', $context, $this->user_id)) {
+            return false;
         }
 
         // Check for tenancy first before checking whether you had been joined

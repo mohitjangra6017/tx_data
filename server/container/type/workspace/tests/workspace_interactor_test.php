@@ -373,4 +373,33 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
         unassign_capability($capability, $role);
     }
 
+    /**
+     * @return void
+     */
+    public function test_authenticated_user_can_view_workspace(): void {
+        $generator = $this->getDataGenerator();
+
+        // Login as admin user.
+        self::setAdminUser();
+        /** @var \container_workspace\testing\generator $workspace_generator */
+        $workspace_generator = $generator->get_plugin_generator('container_workspace');
+        $workspace = $workspace_generator->create_workspace();
+
+        $user = $generator->create_user();
+        $user_context = context_user::instance($user->id);
+
+        // Login as system user.
+        self::setUser($user);
+
+        $interactor = new interactor($workspace, $user->id);
+        self::assertTrue($interactor->can_view_workspace());
+
+        // Remove capability.
+        $roles = get_archetype_roles('user');
+        $role = reset($roles);
+        assign_capability('container/workspace:workspacesview', CAP_PREVENT, $role->id, $user_context->id);
+
+        self::assertFalse($interactor->can_view_workspace());
+    }
+
 }

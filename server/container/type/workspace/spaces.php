@@ -26,9 +26,10 @@ use container_workspace\query\workspace\source;
 use container_workspace\query\workspace\sort;
 use totara_core\advanced_feature;
 use container_workspace\query\workspace\access;
+use totara_tui\output\component;
 
 require_once(__DIR__ . "/../../../config.php");
-global $PAGE, $OUTPUT;
+global $PAGE, $OUTPUT, $USER;
 
 require_login();
 advanced_feature::require('container_workspace');
@@ -58,10 +59,18 @@ if (null !== $access && access::is_valid_code($access)) {
     $parameters['selected-access'] = strtoupper($access);
 }
 
-$tui = new \totara_tui\output\component(
-    'container_workspace/pages/SpacesPage',
-    $parameters
-);
+$context = context_user::instance($USER->id);
+if (!has_capability('container/workspace:workspacesview', $context, $USER->id)) {
+    $PAGE->set_title(get_string('error:view_workspace', 'container_workspace'));
+    $tui = new component('container_workspace/pages/WorkspaceEmptyPage');
+
+} else {
+    $tui = new component(
+        'container_workspace/pages/SpacesPage',
+        $parameters
+    );
+}
+
 $tui->register($PAGE);
 
 echo $OUTPUT->header();

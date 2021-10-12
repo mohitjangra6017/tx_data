@@ -29,12 +29,13 @@ use container_workspace\totara\menu\your_spaces;
 use core\notification;
 use core\output\notification as output_notification;
 use totara_core\advanced_feature;
+use totara_tui\output\component;
 
 require_once(__DIR__ . "/../../../config.php");
 require_login();
 advanced_feature::require('container_workspace');
 
-global $PAGE, $OUTPUT;
+global $PAGE, $OUTPUT, $USER;
 
 // Get the flag of notification to check the notification is fired or not.
 $hold_notification = optional_param('hold_notification', false, PARAM_BOOL);
@@ -95,14 +96,21 @@ if ($hold_notification) {
     $notifications = notification::fetch();
 }
 
-$props = [
-    'show-recommended' => advanced_feature::is_enabled('ml_recommender'),
-];
+$context = context_user::instance($USER->id);
+if (!has_capability('container/workspace:workspacesview', $context, $USER->id)) {
+    $PAGE->set_title(get_string('error:view_workspace', 'container_workspace'));
+    $component = new component('container_workspace/pages/WorkspaceEmptyPage');
+} else {
+    $props = [
+        'show-recommended' => advanced_feature::is_enabled('ml_recommender'),
+    ];
 
-$component = new \totara_tui\output\component(
-    'container_workspace/pages/EmptySpacesPage',
-    $props
-);
+    $component = new component(
+        'container_workspace/pages/EmptySpacesPage',
+        $props
+    );
+}
+
 $component->register($PAGE);
 
 echo $OUTPUT->header();

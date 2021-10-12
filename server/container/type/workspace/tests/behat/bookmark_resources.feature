@@ -50,8 +50,9 @@ Feature: Bookmark workspace library resources
   Scenario: Guest should not be able to bookmark resources in grid as an authenticated user
     Given I log in as "admin"
     And the following "permission overrides" exist:
-      | capability                | permission | role  | contextlevel | reference |
-      | totara/engage:viewlibrary | Allow      | guest | User         | guest     |
+      | capability                         | permission | role  | contextlevel | reference |
+      | totara/engage:viewlibrary          | Allow      | guest | User         | guest     |
+      | container/workspace:workspacesview | Allow      | guest | User         | guest     |
     And I set the following administration settings values:
       | Guest login button | Show |
     When I log out
