@@ -178,13 +178,13 @@ class webapi_resolver_query_user_evidence_items_testcase extends testcase {
      * @param int $user_id
      * @param null $filters
      * @param null $cursor
-     * @param int $limit
+     * @param int $result_size
      * @return array
      */
-    private function get_query_options($user_id, $filters = null, $cursor = null, $limit = 2) {
+    private function get_query_options($user_id, $filters = null, $cursor = null, $result_size = 2) {
         $options = [
             'input' => [
-                'limit' => $limit,
+                'result_size' => $result_size,
                 'cursor' => $cursor,
                 'user_id' => $user_id,
             ],

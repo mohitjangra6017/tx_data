@@ -65,7 +65,7 @@ class user_evidence_items implements query_resolver, has_middleware {
 
         return evidence_provider::create()
             ->set_filters($args['input']['filters'])
-            ->set_page_size($args['input']['limit'] ?? null)
+            ->set_page_size($args['input']['result_size'] ?? null)
             ->fetch_paginated(
                 $args['input']['cursor'] ?? null,
                 static function (evidence_entity $evidence) {
