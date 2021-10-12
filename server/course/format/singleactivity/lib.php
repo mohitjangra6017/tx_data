@@ -153,7 +153,7 @@ class format_singleactivity extends format_base {
         $fetchtypes = $fetchtypes || ($foreditform && !isset($courseformatoptions['activitytype']['label']));
 
         if ($fetchtypes) {
-            $availabletypes = $this->get_supported_activities();
+            $availabletypes = $this->get_supported_activities(true);
             if ($this->course) {
                 // The course exists. Test against the course.
                 $testcontext = context_course::instance($this->course->id);
@@ -337,16 +337,17 @@ class format_singleactivity extends format_base {
         }
         return $this->activity;
     }
-
     /**
      * Get the activities supported by the format.
      *
      * Here we ignore the modules that do not have a page of their own, like the label.
      *
+     * @param bool $execute_hook Whether to execute the container hook to remove unsupported modules
+     *
      * @return array array($module => $name of the module).
      */
-    public static function get_supported_activities() {
-        $availabletypes = \container_course\course_helper::get_all_modules(false, false, false);
+    public static function get_supported_activities(bool $execute_hook = false) {
+        $availabletypes = \container_course\course_helper::get_all_modules(false, false, $execute_hook);
         foreach ($availabletypes as $module => $name) {
             if (plugin_supports('mod', $module, FEATURE_NO_VIEW_LINK, false)) {
                 unset($availabletypes[$module]);

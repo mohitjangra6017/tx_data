@@ -1,4 +1,4 @@
-@core_course @format_singleactivity
+@core_course @format_singleactivity @javascript
 Feature: Courses can be created in Single Activity mode
   In order to create a single activity course
   As a manager
@@ -38,3 +38,14 @@ Feature: Courses can be created in Single Activity mode
     And I should not see "Forum" in the "Type of activity" "field"
     And I press "Save and display"
     And I should see "Adding a new Quiz"
+
+  Scenario: Can not see content marketplace option when creating the course
+    Given I am on a totara site
+    And I log in as "admin"
+    And I go to the courses management page
+    And I should see the "Course categories and courses" management page
+    And I click on "Create new course" "link" in the "#course-listing" "css_element"
+    And I set the following fields to these values:
+      | Format | Single activity format |
+    Then I should see "Forum" in the "Type of activity" "field"
+    And I should not see "External content marketplace" in the "Type of activity" "field"
