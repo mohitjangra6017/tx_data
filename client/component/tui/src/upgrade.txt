@@ -36,6 +36,8 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Converted AttachmentNode to a thin wrapper over the new FileCard component
   * Template changes
+* Updated components SettingsFormBrand.vue and EditorTextarea.vue to allow locking the format of the editor
+  * Template changes
 
 === 14.0 ===
 

@@ -44,6 +44,7 @@ export default {
     ariaLabelledby,
     ariaDescribedby,
     ariaInvalid,
+    lockFormat,
   }) {
     return {
       disabled,
@@ -51,6 +52,7 @@ export default {
       ariaLabelledby,
       ariaDescribedby,
       ariaInvalid,
+      lockFormat,
     };
   },
 

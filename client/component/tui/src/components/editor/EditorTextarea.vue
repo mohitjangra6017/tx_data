@@ -26,6 +26,7 @@
     :aria-invalid="ariaInvalid"
   >
     <Select
+      v-if="!lockFormat"
       :aria-label="$str('format', 'core')"
       :value="format"
       :options="formatOptions"
@@ -69,6 +70,7 @@ export default {
     ariaLabelledby: String,
     ariaDescribedby: String,
     ariaInvalid: String,
+    lockFormat: Boolean,
   },
 
   data() {

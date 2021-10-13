@@ -104,6 +104,7 @@ export default {
     ariaLabelledby: String,
     ariaDescribedby: String,
     ariaInvalid: String,
+    lockFormat: Boolean,
   },
 
   data() {
@@ -172,6 +173,7 @@ export default {
         ariaLabelledby: this.ariaLabelledby,
         ariaDescribedby: this.ariaDescribedby,
         ariaInvalid: this.ariaInvalid,
+        lockFormat: this.lockFormat,
       };
     },
 
@@ -277,6 +279,7 @@ export default {
           ariaLabelledby: fixedConfig.ariaLabelledby,
           ariaDescribedby: fixedConfig.ariaDescribedby,
           ariaInvalid: fixedConfig.ariaInvalid,
+          lockFormat: fixedConfig.lockFormat,
         }),
       ]);
 

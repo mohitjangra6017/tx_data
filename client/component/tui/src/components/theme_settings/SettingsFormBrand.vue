@@ -111,6 +111,7 @@
                 "
                 :aria-labelledby="labelId"
                 variant="standard"
+                :lock-format="true"
                 @input="update"
               />
             </FormField>
@@ -148,6 +149,7 @@
                 "
                 :aria-labelledby="labelId"
                 variant="standard"
+                :lock-format="true"
                 @input="update"
               />
             </FormField>
