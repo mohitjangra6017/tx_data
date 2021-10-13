@@ -92,6 +92,7 @@ trait report_trait {
                 'dbdatatype' => 'char',
                 'outputformat' => 'text',
                 'displayfunc' => 'course_marketplace_provider',
+                'iscompound' => true
             ]
         );
     }
