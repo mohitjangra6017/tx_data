@@ -25,6 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 use totara_core\advanced_feature;
 use totara_comment\comment_helper;
 use totara_engage\access\access;
+use totara_reportbuilder\report_helper;
 
 /**
  * @group totara_reportbuilder
@@ -341,7 +342,18 @@ class totara_playlist_rb_playlistengagement_report_testcase extends advanced_tes
 
         advanced_feature::enable('engage_resources');
         advanced_feature::disable('container_workspace');
+        advanced_feature::disable('ml_recommender');
         $this->assertFalse($report_source_class::is_source_ignored());
         $this->assertFalse($report_embedded_class::is_report_ignored());
+    }
+
+    /**
+     * Make sure the report can be created with ml_recommender disabled.
+     * There used to be a bug where this resulted in an exception.
+     */
+    public function test_playlistengagement_report_create_with_disabled_ml_recommender(): void {
+        self::setAdminUser();
+        advanced_feature::disable('ml_recommender');
+        report_helper::create('playlistengagement');
     }
 }

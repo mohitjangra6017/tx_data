@@ -369,15 +369,18 @@ class rb_source_playlistengagement extends rb_base_source {
             ],
             [
                 'type' => 'playlistengagement',
-                'value' => 'views',
-                'heading' => get_string('views', 'rb_source_playlistengagement')
-            ],
-            [
-                'type' => 'playlistengagement',
                 'value' => 'topics',
                 'heading' => get_string('topics', 'rb_source_playlistengagement')
             ],
         ];
+
+        if (advanced_feature::is_enabled('ml_recommender')) {
+            $cols[] = [
+                'type' => 'playlistengagement',
+                'value' => 'views',
+                'heading' => get_string('views', 'rb_source_playlistengagement')
+            ];
+        }
 
         if (advanced_feature::is_enabled('container_workspace')) {
             $cols[] = [
