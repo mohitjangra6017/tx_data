@@ -115,7 +115,7 @@ abstract class resource_provider implements queryable {
         $builder = builder::table(engage_resource::TABLE, 'er');
         $builder->select(
             [
-                new raw_field("{$unique} AS uniqueid"),
+                new raw_field("DISTINCT {$unique} AS uniqueid"),
                 "er.id AS instanceid",
                 "er.name AS name",
                 new raw_field("NULL AS summary"),
