@@ -181,6 +181,7 @@ if (empty($SITE->fullname)) {
                 $groups['-1'] = get_string('quickaccessmenu:createnewgroup', 'totara_core');
 
                 $singleselect = new \single_select($url, 'addtomenu', $groups, '', array('' => get_string('quickaccessmenu:addtomenu', 'totara_core')));
+                $singleselect->set_label(get_string('quickaccessmenu:addtomenu', 'totara_core'), ['class' => 'sr-only']);
                 $singleselect->method = 'post';
                 $singleselect->class = $singleselect->class . ' addtomenu';
                 $buttonhtml .= $OUTPUT->render($singleselect);

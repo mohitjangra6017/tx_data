@@ -594,6 +594,7 @@ final class helper {
                 $groups['-1'] = get_string('quickaccessmenu:createnewgroup', 'totara_core');
 
                 $input = new \single_select($url, 'group', $groups, '', array('' => get_string('quickaccessmenu:addtomenu', 'totara_core')));
+                $input->set_label(get_string('quickaccessmenu:addtomenu', 'totara_core'), ['class' => 'sr-only']);
                 $input->method = 'post';
                 $input->class = $input->class . ' addtomenu';
             }
