@@ -721,4 +721,61 @@ class totara_reportbuilder_upgradelib_testcase extends advanced_testcase {
 
         $this->assertEqualsCanonicalizing($new_saved, unserialize($actual_saved->search));
     }
+
+    public function test_totara_reportbuilder_migrate_svggraph_category() {
+        global $DB;
+
+        $this->assertEquals('none', $this->rbgraph->category); // this is wrong, should be {$type}-{$value}
+        // Update
+        $DB->update_record('report_builder_graph', (object)['id' => $this->rbgraph->id, 'category' => 'manager-middlename']);
+        $graph = $DB->get_record('report_builder_graph', array('id' => $this->rbgraph->id));
+        $this->assertEquals('manager-middlename', $graph->category);
+
+        totara_reportbuilder_migrate_svggraph_category('user', 'manager', 'middlename', 'user', 'shortname');
+        $graph = $DB->get_record('report_builder_graph', array('id' => $this->rbgraph->id));
+        $this->assertEquals('user-shortname', $graph->category);
+        // different source, should not change the original
+        totara_reportbuilder_migrate_svggraph_category('abc', 'user', 'shortname', 'manager', 'middlename');
+        $graph = $DB->get_record('report_builder_graph', array('id' => $this->rbgraph->id));
+        $this->assertEquals('user-shortname', $graph->category);
+        // different old type, should not change the original
+        totara_reportbuilder_migrate_svggraph_category('user', 'abc', 'shortname', 'manager', 'middlename');
+        $graph = $DB->get_record('report_builder_graph', array('id' => $this->rbgraph->id));
+        $this->assertEquals('user-shortname', $graph->category);
+        // different old value, should not change the original
+        totara_reportbuilder_migrate_svggraph_category('user', 'user', 'abc', 'manager', 'middlename');
+        $graph = $DB->get_record('report_builder_graph', array('id' => $this->rbgraph->id));
+        $this->assertEquals('user-shortname', $graph->category);
+        // missing a new type
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("all params must have a valid value");
+        totara_reportbuilder_migrate_svggraph_category('user', 'user', 'shortname', '', 'middlename');
+    }
+
+    public function test_totara_reportbuilder_migrate_default_sort_columns_by_source() {
+        global $DB;
+
+        $this->assertEquals('user_fullname', $this->report->defaultsortcolumn);
+
+        totara_reportbuilder_migrate_default_sort_columns_by_source('user', 'user', 'fullname', 'manager', 'middlename');
+        $rbreport = $DB->get_record('report_builder', array('id' => $this->report->id));
+        $this->assertEquals('manager_middlename', $rbreport->defaultsortcolumn);
+
+        // different source, should not change the original
+        totara_reportbuilder_migrate_default_sort_columns_by_source('abc', 'manager', 'middlename', 'user', 'fullname');
+        $rbreport = $DB->get_record('report_builder', array('id' => $this->report->id));
+        $this->assertEquals('manager_middlename', $rbreport->defaultsortcolumn);
+        // different old type, should not change the original
+        totara_reportbuilder_migrate_default_sort_columns_by_source('user', 'abc', 'middlename', 'user', 'fullname');
+        $rbreport = $DB->get_record('report_builder', array('id' => $this->report->id));
+        $this->assertEquals('manager_middlename', $rbreport->defaultsortcolumn);
+        // different old value, should not change the original
+        totara_reportbuilder_migrate_default_sort_columns_by_source('user', 'manager', 'abc', 'user', 'fullname');
+        $rbreport = $DB->get_record('report_builder', array('id' => $this->report->id));
+        $this->assertEquals('manager_middlename', $rbreport->defaultsortcolumn);
+        // missing a new type
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("all params must have a valid value");
+        totara_reportbuilder_migrate_default_sort_columns_by_source('user', 'manager', 'middlename', '', 'fullname');
+    }
 }

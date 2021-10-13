@@ -207,3 +207,43 @@ function facetoface_upgradelib_upgrade_existing_virtual_meetings() {
         }
     }
 }
+
+/**
+ * Replace 'sessiondate' with 'sessionstartdate' and 'datefinish' with 'sessionfinishdate' column values
+ * for 'rb_source_facetofcae_sessions' and 'rb_source_facetoface_signin' seminar report sources to make consistency and
+ * use it as a single column value for all seminar report sources
+ */
+function facetoface_upgradelib_migrate_reoportbuilder_date_fields() {
+    global $CFG;
+    require_once($CFG->dirroot.'/totara/reportbuilder/db/upgradelib.php');
+
+    reportbuilder_rename_data('columns', 'facetoface_signin', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    reportbuilder_rename_data('columns', 'facetoface_signin', 'date', 'datefinish', 'date', 'sessionfinishdate');
+    reportbuilder_rename_data('columns', 'facetoface_sessions', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    reportbuilder_rename_data('columns', 'facetoface_sessions', 'date', 'datefinish', 'date', 'sessionfinishdate');
+
+    reportbuilder_rename_data('filters', 'facetoface_signin', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    reportbuilder_rename_data('filters', 'facetoface_signin', 'date', 'datefinish', 'date', 'sessionfinishdate');
+    reportbuilder_rename_data('filters', 'facetoface_sessions', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    reportbuilder_rename_data('filters', 'facetoface_sessions', 'date', 'datefinish', 'date', 'sessionfinishdate');
+
+    reportbuilder_rename_data('search_cols', 'facetoface_signin', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    reportbuilder_rename_data('search_cols', 'facetoface_signin', 'date', 'datefinish', 'date', 'sessionfinishdate');
+    reportbuilder_rename_data('search_cols', 'facetoface_sessions', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    reportbuilder_rename_data('search_cols', 'facetoface_sessions', 'date', 'datefinish', 'date', 'sessionfinishdate');
+
+    totara_reportbuilder_migrate_saved_searches('facetoface_signin', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    totara_reportbuilder_migrate_saved_searches('facetoface_signin', 'date', 'datefinish', 'date', 'sessionfinishdate');
+    totara_reportbuilder_migrate_saved_searches('facetoface_sessions', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    totara_reportbuilder_migrate_saved_searches('facetoface_sessions', 'date', 'datefinish', 'date', 'sessionfinishdate');
+
+    totara_reportbuilder_migrate_default_sort_columns_by_source('facetoface_signin', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    totara_reportbuilder_migrate_default_sort_columns_by_source('facetoface_signin', 'date', 'datefinish', 'date', 'sessionfinishdate');
+    totara_reportbuilder_migrate_default_sort_columns_by_source('facetoface_sessions', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    totara_reportbuilder_migrate_default_sort_columns_by_source('facetoface_sessions', 'date', 'datefinish', 'date', 'sessionfinishdate');
+
+    totara_reportbuilder_migrate_svggraph_category('facetoface_signin', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    totara_reportbuilder_migrate_svggraph_category('facetoface_signin', 'date', 'datefinish', 'date', 'sessionfinishdate');
+    totara_reportbuilder_migrate_svggraph_category('facetoface_sessions', 'date', 'sessiondate', 'date', 'sessionstartdate');
+    totara_reportbuilder_migrate_svggraph_category('facetoface_sessions', 'date', 'datefinish', 'date', 'sessionfinishdate');
+}

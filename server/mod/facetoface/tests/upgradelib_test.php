@@ -257,4 +257,149 @@ class mod_facetoface_upgradelib_testcase extends advanced_testcase {
         $roomdate_vm = new room_dates_virtualmeeting($id);
         return [$room, $roomdate_vm];
     }
+
+    public function test_facetoface_upgradelib_migrate_reoportbuilder_date_fields() {
+        global $DB, $CFG;
+        require_once($CFG->dirroot.'/totara/reportbuilder/db/upgradelib.php');
+
+        $this->setAdminUser();
+        $this->user = $user = get_admin();
+
+        $report = new stdclass();
+        $report->fullname = 'Test Seminar Sign-in';
+        $report->shortname = 'f2f_signin';
+        $report->source = 'facetoface_signin';
+        $report->hidden = 0;
+        $report->accessmode = 0;
+        $report->contentmode = 0;
+        $report->description = '';
+        $report->recordsperpage = 40;
+        $report->defaultsortcolumn = 'date_sessiondate';
+        $report->defaultsortorder = 4;
+        $report->embedded = 0;
+        $report->id = $DB->insert_record('report_builder', $report);
+
+        $rbcolumn = new stdClass();
+        $rbcolumn->reportid = $report->id;
+        $rbcolumn->type = 'date';
+        $rbcolumn->value = 'sessiondate';
+        $rbcolumn->heading = 'Session Start Date';
+        $rbcolumn->sortorder = 1;
+        $rbcolumn->hidden = 0;
+        $rbcolumn->customheading = 1;
+        $rbcolumn->id = $DB->insert_record('report_builder_columns', $rbcolumn);
+
+        $contcol = new stdClass();
+        $contcol->reportid = $report->id;
+        $contcol->type = 'date';
+        $contcol->value = 'datefinish';
+        $contcol->heading = 'Session Finish Date';
+        $contcol->sortorder = 1;
+        $contcol->hidden = 0;
+        $contcol->customheading = 1;
+        $contcol->id = $DB->insert_record('report_builder_columns', $contcol);
+
+        $rbfilter = new stdClass();
+        $rbfilter->reportid = $report->id;
+        $rbfilter->type = 'date';
+        $rbfilter->value = 'sessiondate';
+        $rbfilter->filtername = 'Session Start Date';
+        $rbfilter->advanced = 0;
+        $rbfilter->sortorder = 1;
+        $rbfilter->id = $DB->insert_record('report_builder_filters', $rbfilter);
+
+        $contfil = new stdClass();
+        $contfil->reportid = $report->id;
+        $contfil->type = 'date';
+        $contfil->value = 'datefinish';
+        $contfil->filtername = 'Session Finish Date';
+        $contfil->advanced = 0;
+        $contfil->sortorder = 1;
+        $contfil->id = $DB->insert_record('report_builder_filters', $contfil);
+
+        $rbsaved = new stdClass();
+        $rbsaved->reportid = $report->id;
+        $rbsaved->userid = $user->id;
+        $rbsaved->name = 'Saved Search';
+
+        $rbsaved->search = serialize(
+            array(
+                'date-sessiondate' => array(
+                    'after' => 0,
+                    'before' => 1633950000,
+                    'before_applied' => true,
+                    'daysafter' => 0,
+                    'daysbefore' => 0,
+                    'notset' => 0
+                )
+            )
+        );
+        $rbsaved->ispublic = 1;
+        $rbsaved->id = $DB->insert_record('report_builder_saved', $rbsaved);
+
+        $contsave = new stdClass();
+        $contsave->reportid = $report->id;
+        $contsave->userid = $user->id;
+        $contsave->name = 'Control Saved';
+        $contsave->search = serialize(
+            array(
+                'date-datefinish' => array(
+                    'after' => 0,
+                    'before' => 1633950000,
+                    'before_applied' => true,
+                    'daysafter' => 0,
+                    'daysbefore' => 0,
+                    'notset' => 0
+                )
+            )
+        );
+        $contsave->ispublic = 1;
+        $contsave->id = $DB->insert_record('report_builder_saved', $contsave);
+
+        $rbgraph = new stdClass();
+        $rbgraph->reportid = $report->id;
+        $rbgraph->type = 'column';
+        $rbgraph->stacked = false;
+        $rbgraph->maxrecords = 500;
+        $rbgraph->category = 'date-datefinish';
+        $rbgraph->series = json_encode(['session-capacity']);
+        $rbgraph->settings = '';
+        $rbgraph->id = $DB->insert_record('report_builder_graph', $rbgraph);
+
+        /**
+         * Now test replace 'sessiondate' with 'sessionstartdate' and 'datefinish' with 'sessionfinishdate' column values
+         * for 'rb_source_facetoface_signin' seminar report source
+         */
+        facetoface_upgradelib_migrate_reoportbuilder_date_fields();
+
+        $rbreport = $DB->get_record('report_builder', array('id' => $report->id));
+        $this->assertEquals('date_sessionstartdate', $rbreport->defaultsortcolumn);
+
+        $column = $DB->get_record('report_builder_columns', array('id' => $rbcolumn->id));
+        $this->assertEquals('sessionstartdate', $column->value);
+
+        $control = $DB->get_record('report_builder_columns', array('id' => $contcol->id));
+        $this->assertEquals('sessionfinishdate', $control->value);
+
+        $filter = $DB->get_record('report_builder_filters', array('id' => $rbfilter->id));
+        $this->assertEquals('sessionstartdate', $filter->value);
+
+        $control = $DB->get_record('report_builder_filters', array('id' => $contfil->id));
+        $this->assertEquals('sessionfinishdate', $control->value);
+
+        $saved = $DB->get_record('report_builder_saved', array('id' => $rbsaved->id));
+        $search = unserialize($saved->search);
+        foreach ($search as $key => $value) {
+            $this->assertEquals('date-sessionstartdate', $key);
+        }
+
+        $control = $DB->get_record('report_builder_saved', array('id' => $contsave->id));
+        $search = unserialize($control->search);
+        foreach ($search as $key => $value) {
+            $this->assertEquals('date-sessionfinishdate', $key);
+        }
+
+        $graph = $DB->get_record('report_builder_graph', array('id' => $rbgraph->id));
+        $this->assertEquals('date-sessionfinishdate', $graph->category);
+    }
 }

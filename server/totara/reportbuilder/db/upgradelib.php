@@ -556,3 +556,62 @@ function reportbuilder_migrate_competency_evidence_to_competency_status_perform(
         array_merge($id_params, ['new_source' => 'competency_status'])
     );
 }
+
+/**
+ * Replace old category with a new category column value in report_builder_graph table
+ *
+ * @param string $source value of 'source' column of the 'report_builder' table
+ * @param string $oldtype current value of 'type' column of the 'report_builder_columns' table
+ * @param string $oldvalue current value of 'value' column of the 'report_builder_columns' table
+ * @param string $newtype new 'type' value to replace the current 'type' value
+ * @param string $newvalue new 'value' value to replace the current 'value' value
+ * @return bool
+ */
+function totara_reportbuilder_migrate_svggraph_category(string $source, string $oldtype, string $oldvalue, string $newtype, string $newvalue) {
+    global $DB;
+    if (empty($source) || empty($oldtype) || empty($oldvalue) || empty($newtype) || empty($newvalue)) {
+        throw new coding_exception('all params must have a valid value');
+    }
+    $sourcesql = ' WHERE rb.source = :source AND rbg.category = :category';
+    $params = array('source' => $source);
+    $params['category'] = "{$oldtype}-{$oldvalue}";
+    $sql = "
+        SELECT rbg.*
+          FROM {report_builder_graph} rbg
+          JOIN {report_builder} rb ON rb.id = rbg.reportid
+        {$sourcesql}
+    ";
+    $categories = $DB->get_records_sql($sql, $params);
+    foreach ($categories as $category) {
+        $todb = new \stdClass();
+        $todb->id = $category->id;
+        $todb->category = "{$newtype}-{$newvalue}";
+        $DB->update_record('report_builder_graph', $todb);
+    }
+
+    return true;
+}
+
+/**
+ * Replace old defaultsortcolumn with a new defaultsortcolumn column value in report_builder table
+ *
+ * @param string $source value of 'source' column of the 'report_builder' table
+ * @param string $oldtype current value of 'type' column of the 'report_builder_columns' table
+ * @param string $oldvalue current value of 'value' column of the 'report_builder_columns' table
+ * @param string $newtype new 'type' value to replace the current 'type' value
+ * @param string $newvalue new 'value' value to replace the current 'value' value
+ * @return bool
+ */
+function totara_reportbuilder_migrate_default_sort_columns_by_source(string $source, string $oldtype, string $oldvalue, string $newtype, string $newvalue) {
+    global $DB;
+    if (empty($source) || empty($oldtype) || empty($oldvalue) || empty($newtype) || empty($newvalue)) {
+        throw new coding_exception('all params must have a valid value');
+    }
+    $sql = "UPDATE {report_builder} SET defaultsortcolumn = :newsort WHERE source = :source AND defaultsortcolumn = :oldsort";
+    $params = array('source' => $source);
+    $params['newsort'] = "{$newtype}_{$newvalue}";
+    $params['oldsort'] = "{$oldtype}_{$oldvalue}";
+    $DB->execute($sql, $params);
+
+    return true;
+}

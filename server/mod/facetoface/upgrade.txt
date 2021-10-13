@@ -10,6 +10,10 @@ information provided here is intended especially for developers.
   - if $number is any integer, only that number of reservations for the manager/event are removed. This is the original behavior.
   - if $number is null, then *all* reservations for the manager/event are removed. This is effectively the behavior originally
     in mod_facetoface\reservations::delete()
+* replaced 'sessiondate' with 'sessionstartdate' column value for 'rb_source_facetofcae_sessions' and 'rb_source_facetoface_signin' seminar report sources to make consistency and
+  use it as a single column value for all seminar report sources
+* replaced 'datefinish' with 'sessionfinishdate' column value for 'rb_source_facetofcae_sessions' and 'rb_source_facetoface_signin' seminar report sources to make consistency and
+  use it as a single column value for all seminar report sources
 
 === 14.0 ===
 
