@@ -9,7 +9,7 @@ Feature: Manage the LinkedIn Learning content marketplace plugin
     When I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
     Then I should not see "Enabled" in the "LinkedIn Learning" "table_row"
     And I should not see "Settings" in the "LinkedIn Learning" "table_row"
-    And I should see "Online Training Courses for Creative, Technology, Business Skills." in the "LinkedIn Learning" "table_row"
+    And I should see "Online training courses for creative, technology, and business skills." in the "LinkedIn Learning" "table_row"
     And I should not see "Browse LinkedIn Learning content" in the "LinkedIn Learning" "table_row"
     When I click on "Enable" "link" in the "LinkedIn Learning" "table_row"
     Then I should see "Enable LinkedIn Learning content" in the ".modal" "css_element"
