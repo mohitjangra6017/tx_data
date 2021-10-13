@@ -12,26 +12,15 @@
   LTD, you may not access, use, modify, or distribute this software.
   Please contact [licensing@totaralearning.com] for more information.
 
-  @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
+  @author Arshad Anwer <arshad.anwer@totaralearning.com>
   @package mod_contentmarketplace
 -->
 
 <template>
-  <BannerLayout
-    :banner-image-url="bannerImageUrl"
-    class="tui-marketplaceLayoutBannerSidepanelTwoColumn"
-    :loading="loadingFullPage"
-  >
+  <BannerLayout :banner-image-url="bannerImageUrl" :loading="loadingFullPage">
     <!-- Page modal area -->
     <template v-slot:modals>
       <slot name="modals" />
-    </template>
-
-    <!-- Side content area -->
-    <template v-slot:side-panel="{ outerStacked }">
-      <aside class="tui-marketplaceLayoutBannerSidepanelTwoColumn__sidePanel">
-        <slot name="side-panel" :stacked="outerStacked" />
-      </aside>
     </template>
 
     <!-- Banner image content area -->
@@ -45,7 +34,7 @@
     <template v-slot:main-content>
       <Loader
         :loading="loadingMainContent"
-        class="tui-marketplaceLayoutBannerSidepanelTwoColumn__inner"
+        class="tui-marketplaceLayoutBannerTwoColumn__inner"
       >
         <Responsive
           :breakpoints="[
@@ -57,16 +46,16 @@
           @responsive-resize="resize"
         >
           <Grid
-            class="tui-marketplaceLayoutBannerSidepanelTwoColumn__grid"
+            class="tui-marketplaceLayoutBannerTwoColumn__grid"
             :class="{
-              'tui-marketplaceLayoutBannerSidepanelTwoColumn__grid--stacked': stacked,
+              'tui-marketplaceLayoutBannerTwoColumn__grid--stacked': stacked,
             }"
             :direction="gridDirection"
             :max-units="24"
           >
             <!-- Left content -->
             <GridItem
-              class="tui-marketplaceLayoutBannerSidepanelTwoColumn__main"
+              class="tui-marketplaceLayoutBannerTwoColumn__main"
               :units="gridUnitsLeft"
             >
               <slot name="feedback-banner" />
@@ -74,9 +63,7 @@
               <slot name="user-overview" />
 
               <!-- Header content -->
-              <div
-                class="tui-marketplaceLayoutBannerSidepanelTwoColumn__heading"
-              >
+              <div class="tui-marketplaceLayoutBannerTwoColumn__heading">
                 <slot name="content-nav" />
 
                 <PageHeading :title="title">
@@ -91,7 +78,7 @@
 
             <!-- Right side content -->
             <GridItem
-              class="tui-marketplaceLayoutBannerSidepanelTwoColumn__side"
+              class="tui-marketplaceLayoutBannerTwoColumn__side"
               :units="gridUnitsRight"
             >
               <slot name="side-content" />
@@ -104,7 +91,7 @@
 </template>
 
 <script>
-import BannerLayout from 'mod_contentmarketplace/components/outer_layouts/OuterLayoutBannerSidepanel';
+import BannerLayout from 'mod_contentmarketplace/components/outer_layouts/OuterLayoutBanner';
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
 import Loader from 'tui/components/loading/Loader';
@@ -226,7 +213,7 @@ export default {
 </script>
 
 <style lang="scss">
-.tui-marketplaceLayoutBannerSidepanelTwoColumn {
+.tui-marketplaceLayoutBannerTwoColumn {
   &__heading {
     @include tui-stack-vertical(var(--gap-2));
   }
@@ -246,13 +233,6 @@ export default {
 
   &__main {
     @include tui-stack-vertical(var(--gap-9));
-  }
-
-  &__sidePanel {
-    height: 100%;
-    padding: var(--gap-4);
-    background: var(--color-neutral-3);
-    @include tui-wordbreak--hard();
   }
 }
 </style>
