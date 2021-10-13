@@ -34,26 +34,34 @@ final class program_view implements mutation_resolver, has_middleware {
      * @inheritDoc
      */
     public static function resolve(array $args, execution_context $ec) {
-        global $DB;
+        global $CFG;
+        require_once($CFG->dirroot . '/totara/program/lib.php');
 
         // Get program module and program (provided by middleware)
         $programid = $args['program_id'] ?? null;
 
-        if (!empty($programid)) {
-            // Load program.
-            $program = $DB->get_record('prog', array('id' => $programid), 'id', IGNORE_MISSING);
+        if (empty($programid)) {
+            throw new \invalid_parameter_exception('programid');
         }
 
-        if (empty($programid) || empty($program)) {
+        // Load the program and check its validity.
+        try {
+            $program = new \program($programid);
+        } catch (\ProgramException $e) {
+            throw new \invalid_parameter_exception('programid');
+        }
+
+        // Check whether the user can view the program.
+        if (!$program->is_viewable()) {
             throw new \invalid_parameter_exception('programid');
         }
 
         $context = \context_program::instance($program->id);
-        $ec->set_relevant_context($context, 0);
+        $ec->set_relevant_context($context);
 
         // Trigger event.
         $data = array('id' => $program->id, 'other' => array('section' => 'general'));
-        $event = \totara_program\event\program_viewed::create_from_data($data)->trigger();
+        \totara_program\event\program_viewed::create_from_data($data)->trigger();
 
         return true;
     }

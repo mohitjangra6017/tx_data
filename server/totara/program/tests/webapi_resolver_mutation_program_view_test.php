@@ -88,6 +88,25 @@ class webapi_resolver_mutation_program_view_testcase extends advanced_testcase {
     }
 
     /**
+     * Test the expected exception when calling the program_view mutation without access to the program.
+     */
+    public function test_resolve_program_view_no_access() {
+        $user = self::getDataGenerator()->create_user();
+        self::setUser($user);
+
+        $pgen = self::getDataGenerator()->get_plugin_generator('totara_program');
+        $program = $pgen->create_program(['visible' => 0]);
+
+        try {
+            $args = ['program_id' => $program->id];
+            $this->resolve_graphql_mutation(self::MUTATION, $args);
+            self::fail('Expected an exception');
+        } catch (exception $ex) {
+            self::assertSame('Invalid parameter value detected (programid)', $ex->getMessage());
+        }
+    }
+
+    /**
      * Test resolve program view with valid programid arg
      *
      * @throws coding_exception
@@ -118,7 +137,7 @@ class webapi_resolver_mutation_program_view_testcase extends advanced_testcase {
         $this->assertSame('viewed', $event->action);
         $this->assertSame($user->id, $event->userid);
         $this->assertSame(0, $event->courseid);
-        $this->assertSame((string) $program->id, $event->objectid);
+        $this->assertSame($program->id, $event->objectid);
 
         $expected = ['section' => 'general'];
         $this->assertSame($expected, $event->other);
