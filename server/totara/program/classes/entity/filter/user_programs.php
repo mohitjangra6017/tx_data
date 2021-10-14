@@ -44,7 +44,7 @@ class user_programs extends filter {
         );
 
         $where .= " AND prog.id = p.id";
-        $this->builder->where_raw(" EXISTS ({$select} {$from} {$where} {$sort})", $params);
+        $this->builder->where_raw(" EXISTS ({$select} {$from} {$where})", $params);
     }
 
 

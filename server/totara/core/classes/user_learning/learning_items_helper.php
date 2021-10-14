@@ -31,7 +31,6 @@ use core\pagination\cursor;
 use core\pagination\offset_cursor;
 use stdClass;
 use totara_core\data_provider\provider;
-use totara_core\entity\learning_item;
 
 abstract class learning_items_helper {
 

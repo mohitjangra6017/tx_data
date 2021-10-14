@@ -46,7 +46,7 @@ class user_courses extends filter {
         [$visibility_sql, $visibility_params] = totara_visibility_where($this->value);
 
         $where .= " AND course.id = c.id";
-        $this->builder->where_raw(" EXISTS (SELECT c.id FROM {course} c {$joins} {$where} {$order_by})", $params)
+        $this->builder->where_raw(" EXISTS (SELECT c.id FROM {course} c {$joins} {$where})", $params)
             ->where_raw($visibility_sql, $visibility_params);
     }
 
