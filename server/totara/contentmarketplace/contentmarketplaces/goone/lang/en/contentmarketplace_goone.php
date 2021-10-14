@@ -75,7 +75,7 @@ $string['pay_per_seat'] = 'Pay per seat courses';
 $string['pay_per_seat:admin'] = 'Request sent to admin';
 $string['pay_per_seat:learner'] = 'Learner pays';
 $string['pay_per_seat_help'] = 'When a course is not included in your subscription, how should learners access the course?';
-$string['plugin_description_html'] = 'Compliance and professional development made easy. Access over 100K courses. <a href="https://www.go1.com/totara-partners" target="_blank">Find out more</a>';
+$string['plugin_description_html'] = 'Compliance and professional development made easy. Access over 100K courses. <a href="https://www.go1.com/affiliate/totara" target="_blank">Find out more</a>';
 $string['pluginname'] = 'Go1';
 $string['portalurl'] = 'Portal URL';
 $string['price:free'] = 'Free';
