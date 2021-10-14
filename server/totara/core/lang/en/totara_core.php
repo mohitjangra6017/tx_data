@@ -412,6 +412,7 @@ $string['itemsselected'] = 'Items selected: {$a}';
 $string['lasterroroccuredat'] = 'Last error occurred at {$a}';
 $string['learn'] = 'Learn';
 $string['learning'] = 'Learning';
+$string['learning_removed'] = 'This learning item no longer exists';
 $string['learning_type_certification'] = 'Certification';
 $string['learning_type_course'] = 'Course';
 $string['learning_type_program'] = 'Program';

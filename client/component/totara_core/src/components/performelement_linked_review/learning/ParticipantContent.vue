@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-linkedReviewViewCurrentLearning">
+  <div v-if="hasContent" class="tui-linkedReviewViewCurrentLearning">
     <div v-if="!preview" class="tui-linkedReviewViewCurrentLearning__date">
       {{ createdAt }}
     </div>
@@ -59,6 +59,12 @@
       </div>
     </Card>
   </div>
+  <p
+    v-else
+    class="tui-linkedReviewViewCurrentLearning tui-linkedReviewViewCurrentLearning--deleted"
+  >
+    {{ $str('learning_removed', 'totara_core') }}
+  </p>
 </template>
 
 <script>
@@ -116,6 +122,15 @@ export default {
       }
 
       return typeName;
+    },
+
+    /**
+     * Does this  learning item have content
+     *
+     * @returns bool whether the "no content" message needs to be displayed
+     */
+    hasContent() {
+      return this.content.id || this.content.itemtype;
     },
   },
 
@@ -221,6 +236,7 @@ export default {
 {
   "core_completion": ["statusnottracked"],
   "totara_core": [
+    "learning_removed",
     "learning_type_certification",
     "learning_type_course",
     "learning_type_program",
