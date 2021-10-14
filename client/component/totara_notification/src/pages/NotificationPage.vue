@@ -352,12 +352,20 @@ export default {
      * Delete notifications
      */
     async deleteNotification() {
+      // If the modal is in the process of closing, skip
+      if (!this.deleteModal.open) {
+        return;
+      }
+
+      this.deleting = true;
       await this.handleDeleteNotification(this.targetDeletePreference);
       this.deleteModal.open = false;
       notify({
         type: 'success',
         message: this.$str('delete_success', 'totara_notification'),
       });
+
+      this.deleting = false;
     },
 
     /**

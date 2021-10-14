@@ -384,10 +384,11 @@
           :styleclass="{ primary: true }"
           :text="$str('save', 'totara_core')"
           :aria-label="$str('save', 'totara_core')"
+          :loading="saving"
           type="submit"
         />
 
-        <Cancel @click="$emit('cancel')" />
+        <Cancel :disabled="saving" @click="$emit('cancel')" />
       </ButtonGroup>
     </FormRow>
   </Uniform>
@@ -665,6 +666,7 @@ export default {
         this.parentValue,
         this.preferredEditorFormat
       ),
+      saving: false,
       scheduleTypes: SCHEDULE_TYPES,
     };
   },
@@ -878,6 +880,7 @@ export default {
      * @param {Object} formValue
      */
     async submitForm(formValue) {
+      this.saving = true;
       if (!this.errors) {
         this.errors = null;
       }
@@ -904,6 +907,7 @@ export default {
           };
         });
 
+        this.saving = false;
         return;
       }
 
