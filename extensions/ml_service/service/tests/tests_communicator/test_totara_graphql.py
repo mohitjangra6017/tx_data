@@ -23,7 +23,7 @@ from service.communicator.totara_graphql import TotaraGraphql
 
 class TestTotaraGraphql(unittest.TestCase):
     """
-    The test object to test the units of the Totara Graphql object in
+    The test object to test the units of the TotaraGraphql class in
     `service.communicator.totara_graphql`
     """
 
@@ -49,12 +49,13 @@ class TestTotaraGraphql(unittest.TestCase):
         self.assertEqual(
             first=mock_sender.call_args,
             second=unittest.mock.call(
-                self.test_totara_url + "/totara/webapi/ajax.php",
+                url=self.test_totara_url + "/totara/webapi/ajax.php",
                 json={
                     "operationName": "test_operation",
                     "variables": test_variables,
                     "extensions": {},
                 },
+                verify=False,
             ),
         )
 

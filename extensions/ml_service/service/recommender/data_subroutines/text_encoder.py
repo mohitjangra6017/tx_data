@@ -134,7 +134,7 @@ class TextEncoder:
 
         # Convert text to lower case
         doc = doc.lower()
-        
+
         doc = self.remove_stopwords(in_doc=doc)
         return doc
 

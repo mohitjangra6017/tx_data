@@ -15,3 +15,9 @@ Please contact [licensing@totaralearning.com] for more information.
 @author Amjad Ali <amjad.ali@totaralearning.com>
 @package ml_service
 """
+
+
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)

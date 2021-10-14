@@ -53,7 +53,11 @@ class TotaraGraphql:
             "extensions": {},
         }
 
-        r = post(self.totara_url + "/totara/webapi/ajax.php", json=payload)
+        r = post(
+            url=self.totara_url + "/totara/webapi/ajax.php",
+            json=payload,
+            verify=False,
+        )
         r.raise_for_status()
 
         json = r.json()

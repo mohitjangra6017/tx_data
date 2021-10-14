@@ -71,6 +71,7 @@ class TotaraFiles:
                     f"/{filename}"
                 ),
                 headers=self.make_headers(),
+                verify=False,
             )
 
             # Retry at least three times if the status code is 202, i.e., the content
@@ -84,6 +85,7 @@ class TotaraFiles:
                         f"/{filename}"
                     ),
                     headers=self.make_headers(),
+                    verify=False,
                 )
                 retry_counter += 1
 
