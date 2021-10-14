@@ -132,7 +132,7 @@ export default {
     }
   },
 
-  unmounted() {
+  beforeDestroy() {
     // clean up ahead of garbage collection as there may be multiple Responsive
     // components on the page
     if (this.$el instanceof Element && this.resizeObserverRef) {
