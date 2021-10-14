@@ -253,7 +253,7 @@ class course_modinfo {
      * @return array
      */
     public function get_used_module_names($plural = false) {
-        $modnames = \container_course\course_helper::get_all_modules($plural);
+        $modnames = \container_course\course_helper::get_all_modules($plural, false, false);
         $modnamesused = array();
         foreach ($this->get_cms() as $cmid => $mod) {
             if (!isset($modnamesused[$mod->modname]) && isset($modnames[$mod->modname]) && $mod->uservisible) {
