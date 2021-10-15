@@ -416,7 +416,7 @@ class rb_column_option {
     public function is_searchable() {
         return (($this->dbdatatype == 'char' || $this->dbdatatype == 'text') &&
                 $this->outputformat == 'text' &&
-                $this->grouping == 'none' && !$this->aggregate);
+                $this->grouping == 'none' && !$this->aggregate && !$this->iscompound);
     }
 
 } // end of rb_column_option class

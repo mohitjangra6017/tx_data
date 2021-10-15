@@ -44,22 +44,30 @@ class totara_reportbuilder_rb_column_testcase extends advanced_testcase {
      * @param string $type
      * @param string $format
      * @param string $grouping
+     * @param bool $iscompound
      * @param bool $expect
      */
-    public function test_is_searchable($type, $format, $grouping, $expect) {
-        $column = new rb_column_option('type', 'value', 'name', 'field',
-                array('dbdatatype' => $type, 'outputformat' => $format, 'grouping' => $grouping));
+    public function test_is_searchable($type, $format, $grouping, $iscompound, $expect) {
+        $options = [
+            'dbdatatype'   => $type,
+            'outputformat' => $format,
+            'grouping'     => $grouping,
+            'iscompound'   => $iscompound,
+        ];
+        $column = new rb_column_option('type', 'value', 'name', 'field', $options);
         $this->assertEquals($expect, $column->is_searchable());
     }
 
     public function is_searchable_provider() {
         return array(
-            array('char', 'text', 'none', true),
-            array('text', 'text', 'none', true),
-            array('char', 'text', 'yes', false),
-            array('char', 'date', 'none', false),
-            array('timestamp', 'text', 'none', false),
-            array('timestamp', 'text', 'yes', false)
+            array('char', 'text', 'none', false, true),
+            array('char', 'text', 'none', true, false),
+            array('text', 'text', 'none', false, true),
+            array('text', 'text', 'none', true, false),
+            array('char', 'text', 'yes', false, false),
+            array('char', 'date', 'none', false, false),
+            array('timestamp', 'text', 'none', false, false),
+            array('timestamp', 'text', 'yes', false, false)
         );
     }
 }
