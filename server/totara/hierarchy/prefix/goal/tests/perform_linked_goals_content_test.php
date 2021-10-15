@@ -353,12 +353,17 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
         $new_scale_value = scale_value::repository()->where('name', 'Finished')->one(true);
         // Make sure the new status doesn't have the same timestamp as the historic status.
         self::waitForSecond();
+
+        // This needs to be run by manager to prevent permissions issues
+        self::setUser($manager_user);
         personal_goal_perform_status::create(
             $goal1->id,
             $new_scale_value->id,
             $data->manager_participant_instance1->id,
             $data->section_element->id
         );
+
+        self::setUser($user);
 
         $result = $content_type->load_content_items(
             $subject_instance_model,
@@ -590,6 +595,9 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
         $new_scale_value = scale_value::repository()->where('name', 'Finished')->one(true);
         // Make sure the new status doesn't have the same timestamp as the historic status.
         self::waitForSecond();
+
+        // Run with manager user
+        self::setUser($manager_user);
         company_goal_perform_status::create(
             $goal_assignment_goal1->id,
             $new_scale_value->id,
@@ -597,6 +605,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             $data->section_element->id
         );
 
+        self::setUser($user);
         $result = $content_type->load_content_items(
             $subject_instance_model,
             collection::new([['content_id' => $goal_assignment_goal1->id]]),
@@ -629,7 +638,6 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
         self::assertEquals($new_scale_value->id, $goal_record->scalevalueid);
 
         self::setUser($manager_user);
-
         $result = $content_type->load_content_items(
             $subject_instance_model,
             $content_items,

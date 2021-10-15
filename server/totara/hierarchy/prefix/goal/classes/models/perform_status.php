@@ -31,10 +31,12 @@ use core\orm\query\builder;
 use dml_missing_record_exception;
 use goal;
 use mod_perform\constants;
+use mod_perform\entity\activity\participant_instance as participant_instance_entity;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\section_relationship;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\participant_instance;
+use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\subject_instance;
 use moodle_exception;
@@ -162,7 +164,7 @@ abstract class perform_status extends model {
         $status_changer_relationship = $participant_instance->core_relationship_id;
 
         if (!static::can_change($participant_instance, $section_element)) {
-            throw new moodle_exception('nopermissions');
+            throw new moodle_exception('nopermissions', '' ,'', get_string('goal_status_update', 'hierarchy_goal'));
         }
 
         if (!static::is_goal_assignment_valid($goal_assignment_id, $section_element_id, $subject_instance->id)) {
@@ -260,6 +262,8 @@ abstract class perform_status extends model {
      * @return bool
      */
     public static function can_change(participant_instance $participant_instance, section_element $section_element): bool {
+        $user = user::logged_in();
+
         /** @var linked_review $linked_review_plugin */
         $linked_review_plugin = $section_element->element->element_plugin;
         if (!$linked_review_plugin instanceof linked_review) {
@@ -277,9 +281,12 @@ abstract class perform_status extends model {
 
         return participant_section::repository()
             ->join([section_relationship::TABLE, 'sr'], 'section_id', 'section_id')
+            ->join([participant_instance_entity::TABLE, 'pi'], 'participant_instance_id', 'id')
             ->where('sr.core_relationship_id', $content_settings['status_change_relationship'])
             ->where('participant_instance_id', $participant_instance->id)
             ->where('section_id', $section_element->section_id)
+            ->where('pi.participant_source', participant_source::INTERNAL)
+            ->where('pi.participant_id', $user->id)
             ->exists();
     }
 

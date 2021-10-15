@@ -67,6 +67,7 @@ $string['goal_status'] = 'Goal status';
 $string['goal_status_answered_by_other'] = 'This will be answered by a {$a}';
 $string['goal_status_response_subject'] = '{$a} response';
 $string['goal_status_select'] = 'Select goal status';
+$string['goal_status_update'] = 'Goal status update';
 $string['goal_status_updated'] = 'Goal status updated';
 $string['goal_status_updated_error'] = 'Unable to update goal status';
 $string['goal_updated_by'] = 'Status update by: {$a->user} ({$a->relationship})';

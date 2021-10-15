@@ -61,6 +61,7 @@ class hierarchy_goal_userdata_perform_goal_status_testcase extends perform_linke
 
         self::assertEquals(0, perform_status_entity::repository()->count());
 
+        self::setUser($data->subject_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,
@@ -130,6 +131,7 @@ class hierarchy_goal_userdata_perform_goal_status_testcase extends perform_linke
 
         self::assertEquals(0, perform_status_entity::repository()->count());
 
+        self::setUser($data->manager_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,
@@ -209,6 +211,7 @@ class hierarchy_goal_userdata_perform_goal_status_testcase extends perform_linke
 
         self::assertEquals(0, perform_status_entity::repository()->count());
 
+        self::setUser($data->subject_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,
@@ -250,6 +253,7 @@ class hierarchy_goal_userdata_perform_goal_status_testcase extends perform_linke
 
         self::assertEquals(0, perform_status_entity::repository()->count());
 
+        self::setUser($data->manager_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,

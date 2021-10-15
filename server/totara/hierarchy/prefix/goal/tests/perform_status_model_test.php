@@ -59,6 +59,7 @@ class hierarchy_goal_perform_status_model_testcase extends perform_linked_goals_
             '/The specified goal assignment with ID -1 of type ' . $goal_type . ' has not been linked to the performance activity/'
         );
 
+        self::setUser($data->manager_user);
         $perform_status_class::create(
             - 1,
             $scale_value->id,
@@ -80,6 +81,7 @@ class hierarchy_goal_perform_status_model_testcase extends perform_linked_goals_
         $scale_value = $data->scale->values->first();
         $subject_instance_id = $data->manager_participant_instance1->subject_instance_id;
 
+        self::setUser($data->manager_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,
@@ -117,6 +119,7 @@ class hierarchy_goal_perform_status_model_testcase extends perform_linked_goals_
             "/The specified scale value with ID -1 is not valid for the goal with ID {$data->goal1->id}/"
         );
 
+        self::setUser($data->manager_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             - 1,
@@ -139,6 +142,8 @@ class hierarchy_goal_perform_status_model_testcase extends perform_linked_goals_
         $now = time();
 
         self::assertEquals(0, perform_status::repository()->count());
+
+        self::setUser($data->manager_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,
@@ -193,6 +198,38 @@ class hierarchy_goal_perform_status_model_testcase extends perform_linked_goals_
         $this->expectExceptionMessage(
             "Could not update goal status for assignment {$data->goal1_assignment->id}, type {$goal_type}"
         );
+
+        self::setUser($data->manager_user);
+        $perform_status_class::create(
+            $data->goal1_assignment->id,
+            $scale_value->id,
+            $data->manager_participant_instance1->id,
+            $data->section_element->id
+        );
+    }
+
+    /**
+     * @dataProvider goal_type_data_provider
+     * @param int $goal_type
+     * @param string|perform_status_model $perform_status_class
+     */
+    public function test_can_update_permissions(
+        int $goal_type,
+        string $perform_status_class
+    ): void {
+        $data = $this->create_activity_data($goal_type);
+        $scale_value = $data->scale->values->first();
+
+        self::setUser($data->manager_user);
+        $perform_status_class::create(
+            $data->goal1_assignment->id,
+            $scale_value->id,
+            $data->manager_participant_instance1->id,
+            $data->section_element->id
+        );
+
+        self::expectExceptionMessage('Sorry, but you do not currently have permissions to do that (Goal status update)');
+        self::setUser($data->subject_user);
         $perform_status_class::create(
             $data->goal1_assignment->id,
             $scale_value->id,
