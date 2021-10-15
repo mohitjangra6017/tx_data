@@ -276,7 +276,7 @@ export default {
     try {
       firstGridItem.data.class.push('tui-grid-item--first');
     } catch (e) {
-      console.error('No first GridItem has been identified!', e);
+      console.warn('No first GridItem has been identified!', e);
     }
 
     // apply default classNames to Grid node, plus any conditionally required
