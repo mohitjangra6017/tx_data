@@ -6,7 +6,7 @@ Feature: Search for content in the Go1 content marketplace
   Background:
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I navigate to "Plugins > Content marketplace > Manage content marketplaces" in site administration
     And I should see "Disabled" in the ".contentmarketplace_goone" "css_element"
     When I click on "Set up" "link" in the ".contentmarketplace_goone" "css_element"
     And I switch to "setup" window
@@ -18,7 +18,7 @@ Feature: Search for content in the Go1 content marketplace
     And I switch to the main window
     And I click on "Continue" "button"
     And I click on "Save and explore Go1" "button"
-    And I should see "Explore Content Marketplace: Go1"
+    And I should see "Explore content marketplace: Go1"
     And I should see "82,137 results"
     And "All 82,137" "radio" in the "Availability" "fieldset" should be visible
     And "Subscription 319" "radio" in the "Availability" "fieldset" should be visible

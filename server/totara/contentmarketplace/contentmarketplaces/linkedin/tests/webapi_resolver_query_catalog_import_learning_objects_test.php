@@ -416,7 +416,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $plugin->disable();
         $this->expectException(moodle_exception::class);
-        $this->expectExceptionMessage('LinkedIn Learning Content Marketplace disabled');
+        $this->expectExceptionMessage('LinkedIn Learning content marketplace disabled');
         $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
     }
 

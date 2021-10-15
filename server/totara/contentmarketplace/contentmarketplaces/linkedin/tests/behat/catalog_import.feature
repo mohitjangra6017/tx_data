@@ -332,7 +332,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I should not see "Course C"
     And I should not see "Category A"
 
-    When I click on "Explore Content Marketplace" "link"
+    When I click on "Explore content marketplace" "link"
     Then I should see "LinkedIn Learning catalogue"
     And I should see "Appears in 1 course" on row "1" of the tui select table
     And I should see "Appears in 1 course" on row "2" of the tui select table

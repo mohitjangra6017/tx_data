@@ -7,7 +7,7 @@ Feature: Visit a workflow and experience the different possible behaviours
     And I log in as "admin"
     And I set the following administration settings values:
       | catalogtype | enhanced |
-    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I navigate to "Plugins > Content marketplace > Manage content marketplaces" in site administration
     And I click on "Set up" "link" in the ".contentmarketplace_goone" "css_element"
     And I switch to "setup" window
     And I should see "Allow Totara to access Go1"
@@ -22,10 +22,10 @@ Feature: Visit a workflow and experience the different possible behaviours
     When I click on "Continue" "button"
     Then I should see "All content (82,137)"
     When I click on "Save and explore Go1" "button"
-    Then I should see "Explore Content Marketplace: Go1"
+    Then I should see "Explore content marketplace: Go1"
     And I should see "82,137 results"
     When I am on site homepage
-    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I navigate to "Plugins > Content marketplace > Manage content marketplaces" in site administration
 
   @javascript @_switch_window
   Scenario: Pass through a workflow with multiple available options

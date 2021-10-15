@@ -165,7 +165,7 @@ class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
                 'modsettingfacetoface' => 'Seminars',
                 'gradessettings' => 'Grades',
                 'managetemplates' => 'Learning Plans',
-                'manage_content_marketplaces' => 'Content Marketplace'
+                'manage_content_marketplaces' => 'Content marketplace'
             ],
             group::PERFORM => [
                 'mod_perform_manage_activities' => 'Activity management',
@@ -221,7 +221,7 @@ class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
                 'managecertifications' => 'Certifications',
                 'gradessettings' => 'Grades',
                 'managetemplates' => 'Learning Plans',
-                'manage_content_marketplaces' => 'Content Marketplace'
+                'manage_content_marketplaces' => 'Content marketplace'
             ],
             group::PERFORM => [
                 'mod_perform_manage_activities' => 'Activity management',
@@ -1108,7 +1108,7 @@ class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
               'managecertifications' => 'Certifications',
               'gradessettings'       => 'Grades',
               'managetemplates'      => 'Learning Plans',
-              'manage_content_marketplaces' => 'Content Marketplace'
+              'manage_content_marketplaces' => 'Content marketplace'
             ],
             group::PERFORM => [
                 'goalmanage'         => 'Goals',
@@ -1142,7 +1142,7 @@ class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
                 'managecertifications' => 'Certifications',
                 'gradessettings'       => 'Grades',
                 'managetemplates'      => 'Learning Plans',
-                'manage_content_marketplaces' => 'Content Marketplace'
+                'manage_content_marketplaces' => 'Content marketplace'
             ],
             group::PERFORM => [
                 'goalmanage'         => 'Goals',
@@ -1184,7 +1184,7 @@ class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
                 'managecertifications' => 'Certifications',
                 'gradessettings'       => 'Grades',
                 'managetemplates'      => 'Learning Plans',
-                'manage_content_marketplaces' => 'Content Marketplace'
+                'manage_content_marketplaces' => 'Content marketplace'
             ],
             group::PERFORM => [
                 'goalmanage'         => 'Goals',
@@ -1215,7 +1215,7 @@ class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
                 'managecertifications' => 'Certifications',
                 'gradessettings'       => 'Grades',
                 'managetemplates'      => 'Learning Plans',
-                'manage_content_marketplaces' => 'Content Marketplace'
+                'manage_content_marketplaces' => 'Content marketplace'
             ],
             group::PERFORM => [
                 'goalmanage'         => 'Goals',

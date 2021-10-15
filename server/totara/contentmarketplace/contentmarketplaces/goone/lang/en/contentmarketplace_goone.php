@@ -40,7 +40,7 @@ $string['collections'] = 'Collections';
 $string['content_creators'] = 'Content creators';
 $string['content_creators_help'] = 'Content creators are anyone with permissions to create courses';
 $string['content_settings'] = 'Content settings';
-$string['content_settings_description'] = 'When exploring Content Marketplace, which Go1 content should these users be able to access?';
+$string['content_settings_description'] = 'When exploring content marketplace, which Go1 content should these users be able to access?';
 $string['continue'] = 'Continue';
 $string['course_creation'] = 'Course creation';
 $string['course_creation_help'] = 'Include all content in a single course, or create a new course for each content item?';
@@ -55,7 +55,7 @@ $string['enableddate'] = 'Enabled date';
 $string['error:invalid_token'] = 'There is an authentication problem when connecting to the Go1 servers. The Go1 content marketplace will need to be set up again.';
 $string['error:rest_client_timeout'] = 'Communication with Go1 server timed out. Please try again in a moment.';
 $string['error:unavailable_learning_object'] = 'Attempted to use unavailable learning object. Please return to the Go1 content marketplace.';
-$string['explorego1marketplace'] = 'Go1 Content Marketplace';
+$string['explorego1marketplace'] = 'Go1 content marketplace';
 $string['explorego1marketplacedesc'] = 'Explore content from the Go1 marketplace';
 $string['filter:availability'] = 'Availability';
 $string['filter:language'] = 'Languages';
@@ -66,7 +66,7 @@ $string['go1plantype'] = 'Go1 {$a}';
 $string['langwithcode'] = '{$a->lang} ({$a->country})';
 $string['learners'] = 'Learners';
 $string['managesubscription'] = 'Manage subscription';
-$string['no_content'] = 'No Content Marketplace';
+$string['no_content'] = 'No content marketplace';
 $string['notapplicable'] = 'N/A';
 $string['numberactiveusers'] = 'Number of active users';
 $string['numberlicensedusers'] = 'Number of licensed users';
@@ -105,11 +105,11 @@ $string['specific_collection'] = 'Specific collection';
 $string['subscribed_content'] = 'Subscribed content ({$a})';
 $string['subscription_details'] = 'Subscription details';
 $string['unknownlanguage'] = 'Unknown';
-$string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the Go1 Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
+$string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the Go1 content marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
 <p>Users who have previously already started Go1 activities will continue to have access to that content, but they will not be able to start new Go1 activities.</p>
 <p>Are you sure you wish to proceed?</p>';
 $string['warningdisablemarketplace:title'] = 'Disable Go1 content';
-$string['warningenablemarketplace:body:html'] = 'You are about to enable the Go1 Content Marketplace. If you proceed, items from the marketplace will be available to course creators for inclusion in newly created courses.';
+$string['warningenablemarketplace:body:html'] = 'You are about to enable the Go1 content marketplace. If you proceed, items from the marketplace will be available to course creators for inclusion in newly created courses.';
 $string['warningenablemarketplace:title'] = 'Enable Go1 content';
 
 

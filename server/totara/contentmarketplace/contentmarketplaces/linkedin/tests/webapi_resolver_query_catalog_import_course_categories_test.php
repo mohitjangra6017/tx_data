@@ -55,7 +55,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_course_ca
         $this->setAdminUser();
         
         self::expectException(moodle_exception::class);
-        self::expectExceptionMessage('LinkedIn Learning Content Marketplace disabled');
+        self::expectExceptionMessage('LinkedIn Learning content marketplace disabled');
         $this->resolve_graphql_query(self::QUERY);
     }
 
@@ -68,7 +68,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_course_ca
 
         $this->setUser($user_one);
         self::expectException(required_capability_exception::class);
-        self::expectExceptionMessage('Sorry, but you do not currently have permissions to do that (Add Content Marketplace)');
+        self::expectExceptionMessage('Sorry, but you do not currently have permissions to do that (Add content marketplace)');
         $this->resolve_graphql_query(self::QUERY);
     }
 

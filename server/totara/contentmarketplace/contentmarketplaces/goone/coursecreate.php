@@ -111,7 +111,7 @@ function storedfile($name, $packageid, $scorm) {
     $record->filearea = 'draft';
     $record->itemid = $itemid;
     $record->license = "allrightsreserved";
-    $record->author = "Content Marketplace";
+    $record->author = "Content marketplace";
     $record->contextid = $usercontext->id;
     $record->timecreated = $now;
     $record->timemodified = $now;

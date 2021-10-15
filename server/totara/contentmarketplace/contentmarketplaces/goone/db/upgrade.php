@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * GO1 Content Marketplace plugin upgrade.
+ * GO1 content marketplace plugin upgrade.
  *
  * @param int $oldversion the version we are upgrading from
  * @return bool always true

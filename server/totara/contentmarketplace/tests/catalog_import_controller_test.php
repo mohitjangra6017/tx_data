@@ -79,7 +79,7 @@ class totara_contentmarketplace_catalog_import_controller_testcase extends testc
 
         $_GET['marketplace'] = 'goone';
 
-        self::expectExceptionMessage('Sorry, but you do not currently have permissions to do that (Add Content Marketplace)');
+        self::expectExceptionMessage('Sorry, but you do not currently have permissions to do that (Add content marketplace)');
         self::expectException(required_capability_exception::class);
         $controller = new catalog_import();
         $controller->action();
@@ -93,7 +93,7 @@ class totara_contentmarketplace_catalog_import_controller_testcase extends testc
         $_GET['marketplace'] = 'linkedin';
 
         self::expectException(moodle_exception::class);
-        self::expectExceptionMessage('LinkedIn Learning Content Marketplace disabled');
+        self::expectExceptionMessage('LinkedIn Learning content marketplace disabled');
         $controller = new catalog_import();
         $controller->action();
     }
@@ -106,7 +106,7 @@ class totara_contentmarketplace_catalog_import_controller_testcase extends testc
         $_GET['marketplace'] = 'goone';
 
         self::expectException(moodle_exception::class);
-        self::expectExceptionMessage('Go1 Content Marketplace disabled');
+        self::expectExceptionMessage('Go1 content marketplace disabled');
         $controller = new catalog_import();
         $controller->action();
     }

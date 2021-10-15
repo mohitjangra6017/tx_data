@@ -217,13 +217,13 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('noblocks');
 $PAGE->set_url('/totara/contentmarketplace/tests/fixtures/test_filters.php');
 
-$PAGE->set_title("Content Marketplace filter testing page");
-$PAGE->set_heading("Content Marketplace filter testing page");
+$PAGE->set_title("Content marketplace filter testing page");
+$PAGE->set_heading("Content marketplace filter testing page");
 
 $PAGE->requires->js_amd_inline($js);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading('Content Marketplace filter testing page');
+echo $OUTPUT->heading('Content marketplace filter testing page');
 
 if ($displaydebugging) {
     // This is intentionally hard coded - this page is not in the navigation and should only ever be used by developers.

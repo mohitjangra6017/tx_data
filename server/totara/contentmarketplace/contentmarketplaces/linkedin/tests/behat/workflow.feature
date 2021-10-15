@@ -22,22 +22,22 @@ Feature: Test the LinkedIn Learning content marketplace plugin workflow
     Given I am on a totara site
     And I log in as "admin"
     When I click on "Find Learning" in the totara menu
-    Then I should see "Explore Content Marketplace"
+    Then I should see "Explore content marketplace"
     And I log out
 
     And I log in as "user1"
     When I click on "Find Learning" in the totara menu
-    Then I should not see "Explore Content Marketplace"
+    Then I should not see "Explore content marketplace"
     And I should not see "Create Course"
     And I log out
 
     And I log in as "user2"
     When I click on "Find Learning" in the totara menu
-    Then I should see "Explore Content Marketplace"
+    Then I should see "Explore content marketplace"
     And I should see "Create Course"
     And I log out
 
     And I log in as "user3"
     When I click on "Find Learning" in the totara menu
-    Then I should see "Explore Content Marketplace"
+    Then I should see "Explore content marketplace"
     And I should see "Create Course"

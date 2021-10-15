@@ -23,4 +23,4 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Contentmarketplace Linkedin activity';
+$string['pluginname'] = 'LinkedIn content marketplace activity';
