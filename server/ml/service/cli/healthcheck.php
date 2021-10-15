@@ -49,8 +49,8 @@ Example:
 );
 
 if ($unrecognised) {
-    $unrecognised = implode(PHP_EOL.'  ', $unrecognised);
-    cli_error('Unrecognised parameter: ' .  $unrecognised);
+    $unrecognised = implode(PHP_EOL . '  ', $unrecognised);
+    cli_error('Unrecognised parameter: ' . $unrecognised);
 }
 
 if ($options['help']) {
@@ -60,33 +60,36 @@ if ($options['help']) {
 
 $healthcheck = healthcheck::make();
 
-cli_heading('Checking Machine Learning service health...');
+cli_heading(get_string('healthcheck_title', 'ml_service'));
+cli_writeln("");
 $healthcheck->check_health();
 
-cli_writeln('ml_service_url set to ' . $healthcheck->get_service_url());
-cli_writeln('ml_service_key is ' . ($healthcheck->is_service_key_set() ? 'set' : 'not set'));
-cli_writeln("");
-
-cli_write('Totara to Service connection... ');
-cli_writeln($healthcheck->as_label($healthcheck->get_totara_to_service()));
-cli_write('Service to Totara connection... ');
-cli_writeln($healthcheck->as_label($healthcheck->get_service_to_totara()));
-cli_writeln("");
-
-$other_info = $healthcheck->get_other_info();
-if (!empty($other_info)) {
-    cli_heading("Machine Learning Service Information");
-    foreach ($other_info as $key => $line) {
-        cli_writeln("$key: $line");
+cli_heading(get_string('healthcheck_subtitle_totara', 'ml_service'));
+$totara_info = $healthcheck->get_totara_info();
+if (!empty($totara_info)) {
+    foreach ($totara_info as $line) {
+        cli_writeln($line);
     }
     cli_writeln("");
 }
 
-$errors = $healthcheck->get_error_messages();
-if (!empty($errors)) {
-    cli_heading("Service reports the following:");
-    foreach ($errors as $error) {
-        cli_error($error);
+$other_info = $healthcheck->get_service_info();
+cli_heading(get_string('healthcheck_subtitle_service', 'ml_service'));
+if (!empty($other_info)) {
+    foreach ($other_info as $key => $line) {
+        if (!is_numeric($key)) {
+            cli_write("$key: ");
+        }
+        cli_writeln($line);
     }
+    cli_writeln("");
 }
 
+$troubleshooting = $healthcheck->get_troubleshooting();
+if (!empty($troubleshooting)) {
+    cli_heading(get_string('healthcheck_subtitle_troubleshooting', 'ml_service'));
+    foreach ($troubleshooting as $error) {
+        cli_writeln('• ' . $error);
+    }
+    cli_error('');
+}

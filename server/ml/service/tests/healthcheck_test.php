@@ -36,9 +36,12 @@ class ml_service_healthcheck_testcase extends testcase {
      */
     public function invalid_state_data(): array {
         return [
-            [null, 'abcd12345'],
-            ['http://example.com', null],
-            [null, null],
+            [null, 'abcd12345', true],
+            ['http://example.com', null, true],
+            [null, null, true],
+            [null, 'abcd12345', false],
+            ['http://example.com', null, false],
+            [null, null, false],
         ];
     }
 
@@ -46,32 +49,49 @@ class ml_service_healthcheck_testcase extends testcase {
      * @dataProvider invalid_state_data
      * @param string|null $url
      * @param string|null $key
+     * @param bool $data_export
      * @return void
      */
-    public function test_invalid_state(?string $url, ?string $key): void {
+    public function test_invalid_state(?string $url, ?string $key, bool $data_export): void {
         global $CFG;
 
         // Mocking the API object
         $mock_api = $this->createMock(api::class);
 
         $healthcheck = healthcheck::make($mock_api);
+        $this->set_data_export_state($healthcheck, $data_export);
 
-        self::assertNull($healthcheck->get_totara_to_service());
-        self::assertNull($healthcheck->get_service_to_totara());
-        self::assertEmpty($healthcheck->get_error_messages());
-        self::assertEmpty($healthcheck->get_other_info());
+        self::assertEquals(healthcheck::STATE_UNKNOWN, $healthcheck->get_state_totara_to_service());
+        self::assertSame(healthcheck::STATE_UNKNOWN, $healthcheck->get_state_service_to_totara());
+        self::assertEmpty($healthcheck->get_troubleshooting());
+        self::assertEmpty($healthcheck->get_service_info());
 
         // Assert no configured service
         $CFG->ml_service_url = $url;
         $CFG->ml_service_key = $key;
         $healthcheck->check_health();
 
-        self::assertFalse($healthcheck->get_totara_to_service());
-        self::assertNull($healthcheck->get_service_to_totara());
-        self::assertEmpty($healthcheck->get_other_info());
-        self::assertEqualsCanonicalizing([
-            get_string('error_no_config_defined', 'ml_service')
-        ], $healthcheck->get_error_messages());
+        self::assertSame(healthcheck::STATE_UNHEALTHY, $healthcheck->get_state_totara_to_service());
+        self::assertSame(healthcheck::STATE_UNKNOWN, $healthcheck->get_state_service_to_totara());
+
+        $exp = [
+            ($url ? '$CFG->ml_service_url is set to ' . $url : '$CFG->ml_service_url is not set'),
+            ($key ? '$CFG->ml_service_key is set' : '$CFG->ml_service_key is not set'),
+        ];
+        if ($data_export) {
+            $exp[] = 'Data export has been run';
+        }
+
+        self::assertEqualsCanonicalizing($exp, $healthcheck->get_totara_info());
+        self::assertEmpty($healthcheck->get_service_info());
+
+        $exp = [
+            'The ml_service_url or ml_service_key configuration option have not been defined.',
+        ];
+        if (!$data_export) {
+            $exp[] = 'Data export has not been run. Please check the script server/ml/recommender/cli/export_data.php';
+        }
+        self::assertEqualsCanonicalizing($exp, $healthcheck->get_troubleshooting());
     }
 
     /**
@@ -86,6 +106,7 @@ class ml_service_healthcheck_testcase extends testcase {
         $CFG->ml_service_key = 'abcd1234';
 
         $healthcheck = healthcheck::make($mock_api);
+        $this->set_data_export_state($healthcheck, true);
 
         $failed_response = new response(
             json_encode(['error' => 'Error message']),
@@ -97,13 +118,13 @@ class ml_service_healthcheck_testcase extends testcase {
             ->willReturn($failed_response);
 
         $healthcheck->check_health();
-        self::assertFalse($healthcheck->get_totara_to_service());
-        self::assertNull($healthcheck->get_service_to_totara());
-        self::assertEmpty($healthcheck->get_other_info());
+        self::assertSame(healthcheck::STATE_UNHEALTHY, $healthcheck->get_state_totara_to_service());
+        self::assertSame(healthcheck::STATE_UNKNOWN, $healthcheck->get_state_service_to_totara());
         self::assertEqualsCanonicalizing([
+            'Service to Totara connection... Unknown',
             'Error message',
-            'Service Status Code: 500',
-        ], $healthcheck->get_error_messages());
+        ], $healthcheck->get_service_info());
+        self::assertEmpty($healthcheck->get_troubleshooting());
     }
 
     /**
@@ -118,6 +139,7 @@ class ml_service_healthcheck_testcase extends testcase {
         $CFG->ml_service_key = 'abcd1234';
 
         $healthcheck = healthcheck::make($mock_api);
+        $this->set_data_export_state($healthcheck, true);
 
         $response = new response(
             json_encode([
@@ -137,17 +159,25 @@ class ml_service_healthcheck_testcase extends testcase {
             ->willReturn($response);
 
         $healthcheck->check_health();
-        self::assertTrue($healthcheck->get_totara_to_service());
-        self::assertFalse($healthcheck->get_service_to_totara());
+        self::assertSame(healthcheck::STATE_HEALTHY, $healthcheck->get_state_totara_to_service());
+        self::assertSame(healthcheck::STATE_UNHEALTHY, $healthcheck->get_state_service_to_totara());
         self::assertEqualsCanonicalizing([
+            '$CFG->ml_service_key is set',
+            '$CFG->ml_service_url is set to http://example.com',
+            'Data export has been run',
+            'Totara to Service connection... Healthy',
+        ], $healthcheck->get_totara_info());
+        self::assertEqualsCanonicalizing([
+            'Service to Totara connection... Unhealthy',
             'elapsed_seconds' => 9,
             'totara_ip' => '127.0.0.1',
-            'url' => 'http://example.com/totara/site'
-        ], $healthcheck->get_other_info());
-        self::assertEqualsCanonicalizing([
+            'url' => 'http://example.com/totara/site',
             'Error 1',
-            'Error 2'
-        ], $healthcheck->get_error_messages());
+            'Error 2',
+        ], $healthcheck->get_service_info());
+        self::assertEqualsCanonicalizing([
+            'The service reported problems and may not be healthy. Check the information above.',
+        ], $healthcheck->get_troubleshooting());
     }
 
     /**
@@ -162,12 +192,13 @@ class ml_service_healthcheck_testcase extends testcase {
         $CFG->ml_service_key = 'abcd1234';
 
         $healthcheck = healthcheck::make($mock_api);
+        $this->set_data_export_state($healthcheck, true);
 
         $response = new response(
             json_encode([
                 'success' => true,
                 'totara' => [
-                    'elapsed_seconds' => 9,
+                    'elapsed_seconds' => 12,
                     'totara_ip' => '127.0.0.1',
                     'url' => 'http://example.com/totara/site',
                 ]
@@ -180,13 +211,25 @@ class ml_service_healthcheck_testcase extends testcase {
             ->willReturn($response);
 
         $healthcheck->check_health();
-        self::assertTrue($healthcheck->get_totara_to_service());
-        self::assertTrue($healthcheck->get_service_to_totara());
+        self::assertSame(healthcheck::STATE_HEALTHY, $healthcheck->get_state_totara_to_service());
+        self::assertSame(healthcheck::STATE_HEALTHY, $healthcheck->get_state_service_to_totara());
         self::assertEqualsCanonicalizing([
-            'elapsed_seconds' => 9,
+            'Service to Totara connection... Healthy',
+            'elapsed_seconds' => 12,
             'totara_ip' => '127.0.0.1',
             'url' => 'http://example.com/totara/site'
-        ], $healthcheck->get_other_info());
-        self::assertEmpty($healthcheck->get_error_messages());
+        ], $healthcheck->get_service_info());
+        self::assertEmpty($healthcheck->get_troubleshooting());
+    }
+
+    /**
+     * @param healthcheck $healthcheck
+     * @param bool|null $state
+     */
+    private function set_data_export_state(healthcheck $healthcheck, ?bool $state): void {
+        $reflected = new ReflectionProperty($healthcheck, 'data_exported');
+        $reflected->setAccessible(true);
+        $reflected->setValue($healthcheck, $state);
+        $reflected->setAccessible(false);
     }
 }

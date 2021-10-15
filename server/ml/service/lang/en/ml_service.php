@@ -24,7 +24,21 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['error_no_config_defined'] = 'The ml_service_url or ml_service_key configuration option have not been defined.';
+$string['error_service_cannot_resolve'] = 'The service reports it cannot resolve Totara\'s domain name. Please check if it has been set correctly in the service.';
+$string['error_service_problems'] = 'The service reported problems and may not be healthy. Check the information above.';
+$string['error_service_running'] = 'Unable to connect to the service on {$a}. Please check if the Machine Learning Service is running.';
+$string['export_has_not_run'] = 'Data export has not been run. Please check the script {$a->script}';
+$string['export_has_run'] = 'Data export has been run';
+$string['healthcheck_title'] = 'Machine Learning Service Healthcheck';
+$string['healthcheck_subtitle_totara'] = 'Totara Information';
+$string['healthcheck_subtitle_service'] = 'Machine Learning Service Information';
+$string['healthcheck_subtitle_troubleshooting'] = 'Troubleshooting';
 $string['healthy'] = 'Healthy';
 $string['pluginname'] = 'Machine Learning Service';
+$string['service_config_not_set'] = '{$a->key} is not set';
+$string['service_config_set'] = '{$a->key} is set';
+$string['service_config_set_to'] = '{$a->key} is set to {$a->value}';
+$string['service_to_totara'] = 'Service to Totara connection... {$a}';
+$string['totara_to_service'] = 'Totara to Service connection... {$a}';
 $string['unhealthy'] = 'Unhealthy';
 $string['unknown'] = 'Unknown';

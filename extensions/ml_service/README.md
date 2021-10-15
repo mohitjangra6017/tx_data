@@ -50,10 +50,10 @@ When starting the service, the variables marked as required must be specified, o
      docker build -t ml_service .
    ```
 
-3. Create a folder to store the models in (for persistence)
+3. Create a folder to store the data in (for persistence)
 
    ```shell
-      mkdir /path/to/models
+      mkdir /path/to/data
    ```
 
 4. Finally, start the service with Docker
@@ -63,29 +63,6 @@ When starting the service, the variables marked as required must be specified, o
    ```
 
 5. The ML service should now be available on port 5000.
-
-### Docker Compose (Development/Testing Only)
-
-A docker-compose.yml file is available for development/testing. It should not be used in a production level system.
-
-1. Change directory into the `extensions/ml_service` folder.
-
-2. Copy the `env.dist` file and rename to `.env`. Edit the file and set the environmental variable as described in the env file. 
-
-3. Build the service with Docker Compose (if you have yet to)
-
-   ```shell
-     docker-compose build
-   ```
-
-4. Start the ml service
-
-   ```shell
-      docker-compose up -d mldev
-   ```
-
-5. Open [http://localhost:5000] in your browser
-6. The ML service should now be available on port 5000.
 
 ### <a name="linux"></a>Linux
 
@@ -237,3 +214,5 @@ command line script:
 ```shell
 php server/ml/service/cli/healthcheck.php
 ```
+
+The healthcheck script can be used to diagnose problems and identify next steps to take.
