@@ -4776,7 +4776,7 @@ class settings_navigation extends navigation_node {
         if ($user->deleted) {
             if (!has_capability('moodle/user:update', $coursecontext)) {
                 // We can't edit the user so just show the user deleted message.
-                $usersetting->add(get_string('userdeleted'), null, self::TYPE_SETTING);
+                $usersetting->add(get_string('usernotavailable', 'error'), null, self::TYPE_SETTING);
             } else {
                 // We can edit the user so show the user deleted message and link it to the profile.
                 if ($course->id == $SITE->id) {
@@ -4784,7 +4784,7 @@ class settings_navigation extends navigation_node {
                 } else {
                     $profileurl = new moodle_url('/user/profile.php', array('id'=>$user->id, 'course'=>$course->id));
                 }
-                $usersetting->add(get_string('userdeleted'), $profileurl, self::TYPE_SETTING);
+                $usersetting->add(get_string('usernotavailable', 'error'), $profileurl, self::TYPE_SETTING);
             }
             return true;
         }

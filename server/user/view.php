@@ -37,7 +37,11 @@ if (empty($id)) {
     $id = $USER->id;
 }
 
-$user = $DB->get_record('user', array('id' => $id), '*', MUST_EXIST);
+$user = $DB->get_record('user', array('id' => $id), '*');
+if ($user === false || $user->deleted) {
+    print_error('usernotavailable', 'error');
+}
+
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
 // Totara: Not logged-in users are not allowed into courses!
@@ -48,7 +52,7 @@ $coursecontext = context_course::instance($course->id);
 $PAGE->set_context($coursecontext);
 $PAGE->set_url('/user/profile.php', array('id' => $id, 'course' => $courseid));
 
-if ($user->deleted or $courseid == SITEID) {   // Since Moodle 2.0 all site-level profiles are shown by profile.php.
+if ($courseid == SITEID) {   // Since Moodle 2.0 all site-level profiles are shown by profile.php.
     // Totara: this is needed because in some places suchas in user_picture class we are not checking if courseid is SITEID.
     redirect($CFG->wwwroot.'/user/profile.php?id='.$id);  // Immediate redirect.
 }
@@ -71,7 +75,7 @@ if (!empty($CFG->forceloginforprofiles)) {
 // Check we are not trying to view guest's profile.
 if (isguestuser($user)) {
     // Can not view profile of guest - thre is nothing to see there.
-    print_error('invaliduserid');
+    print_error('usernotavailable', 'error');
 }
 
 $PAGE->set_course($course);

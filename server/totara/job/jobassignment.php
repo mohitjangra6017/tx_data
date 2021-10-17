@@ -58,8 +58,9 @@ if (empty($jobassignmentid)) {
     $currenturl = new moodle_url('/totara/job/jobassignment.php', array('jobassignmentid' => $jobassignmentid));
 }
 
-if (!$user = $DB->get_record('user', array('id' => $userid))) {
-    print_error('error:useridincorrect', 'totara_core');
+$user = $DB->get_record('user', array('id' => $userid));
+if ($user === false || $user->deleted) {
+    print_error('usernotavailable', 'error');
 }
 
 // Check permissions.

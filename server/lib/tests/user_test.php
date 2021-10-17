@@ -150,7 +150,7 @@ class core_user_testcase extends advanced_testcase {
         try {
             core_user::require_active_user($userexpected);
         } catch (moodle_exception $e) {
-            $this->assertEquals('userdeleted', $e->errorcode);
+            $this->assertEquals('usernotavailable', $e->errorcode);
         }
 
         // Use a not real user.
@@ -158,7 +158,7 @@ class core_user_testcase extends advanced_testcase {
         try {
             core_user::require_active_user($noreplyuser, true);
         } catch (moodle_exception $e) {
-            $this->assertEquals('invaliduser', $e->errorcode);
+            $this->assertEquals('usernotavailable', $e->errorcode);
         }
 
         // Get the guest user.

@@ -66,7 +66,7 @@ function useredit_setup_preference_page($userid, $courseid) {
 
     // The user profile we are editing.
     if (!$user = $DB->get_record('user', array('id' => $userid))) {
-        print_error('invaliduserid');
+        print_error('usernotavailable', 'error');
     }
 
     // Guest can not be edited.
@@ -96,7 +96,7 @@ function useredit_setup_preference_page($userid, $courseid) {
 
     if ($user->deleted) {
         echo $OUTPUT->header();
-        echo $OUTPUT->heading(get_string('userdeleted'));
+        echo $OUTPUT->heading(get_string('usernotavailable', 'error'));
         echo $OUTPUT->footer();
         die;
     }

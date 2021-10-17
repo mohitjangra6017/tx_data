@@ -33,8 +33,9 @@ $id  = required_param('id', PARAM_INT);
 $PAGE->set_url('/user/emailupdate.php', array('id' => $id, 'key' => $key));
 $PAGE->set_context(context_system::instance());
 
-if (!$user = $DB->get_record('user', array('id' => $id))) {
-    print_error('invaliduserid');
+$user = $DB->get_record('user', array('id' => $id));
+if ($user === false || $user->deleted) {
+    print_error('usernotavailable', 'error');
 }
 
 $preferences = get_user_preferences(null, null, $user->id);

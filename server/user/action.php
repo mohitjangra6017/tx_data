@@ -41,7 +41,13 @@ $PAGE->set_pagelayout('noblocks'); // All we need is to confirm delete/undelete 
 
 require_login();
 
-$user = $DB->get_record('user', array('id' => $id), '*', MUST_EXIST);
+$user = $DB->get_record('user', array('id' => $id), '*');
+if ($user === false) {
+    $user = (object)['id' => 0];
+    $returnurl = useredit_get_return_url($user, $returnto, null, $customreturn);
+    redirect($returnurl, get_string('usernotavailable', 'error'), null, \core\notification::ERROR);
+}
+
 $returnurl = useredit_get_return_url($user, $returnto, null, $customreturn);
 
 $fullname = fullname($user, true);
@@ -53,7 +59,7 @@ if ($action === 'confirm') {
     require_sesskey();
 
     if ($user->deleted) {
-        redirect($returnurl, get_string('userdeleted', 'core'), null, \core\notification::ERROR);
+        redirect($returnurl, get_string('usernotavailable', 'error'), null, \core\notification::ERROR);
     }
 
     /** @var auth_plugin_base $auth */
@@ -178,7 +184,7 @@ if ($action === 'suspend') {
     require_sesskey();
 
     if ($user->deleted) {
-        redirect($returnurl, get_string('userdeleted', 'core'), null, \core\notification::ERROR);
+        redirect($returnurl, get_string('usernotavailable', 'error'), null, \core\notification::ERROR);
     }
     if (is_siteadmin($user->id)) {
         redirect($returnurl, 'The admin user cannot be suspended', null, \core\notification::ERROR);
@@ -197,7 +203,7 @@ if ($action === 'unsuspend') {
     require_sesskey();
 
     if ($user->deleted) {
-        redirect($returnurl, get_string('userdeleted', 'core'), null, \core\notification::ERROR);
+        redirect($returnurl, get_string('usernotavailable', 'error'), null, \core\notification::ERROR);
     }
 
     user_unsuspend_user($user->id);
@@ -210,7 +216,7 @@ if ($action === 'unlock') {
     require_sesskey();
 
     if ($user->deleted) {
-        redirect($returnurl, get_string('userdeleted', 'core'), null, \core\notification::ERROR);
+        redirect($returnurl, get_string('usernotavailable', 'error'), null, \core\notification::ERROR);
     }
 
     login_unlock_account($user);

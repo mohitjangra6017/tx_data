@@ -327,12 +327,8 @@ class core_user {
      */
     public static function require_active_user($user, $checksuspended = false, $checknologin = false) {
 
-        if (!self::is_real_user($user->id)) {
-            throw new moodle_exception('invaliduser', 'error');
-        }
-
-        if ($user->deleted) {
-            throw new moodle_exception('userdeleted');
+        if (!self::is_real_user($user->id) || $user->deleted) {
+            throw new moodle_exception('usernotavailable', 'error');
         }
 
         if (empty($user->confirmed)) {

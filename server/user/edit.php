@@ -56,10 +56,10 @@ if ($course->id != SITEID) {
 if (isguestuser()) {
     print_error('guestnoeditprofile');
 }
-
 // The user profile we are editing.
-if (!$user = $DB->get_record('user', array('id' => $userid))) {
-    print_error('invaliduserid');
+$user = $DB->get_record('user', array('id' => $userid));
+if ($user === false) {
+    print_error('usernotavailable', 'error');
 }
 
 // Guest can not be edited.
@@ -86,7 +86,7 @@ if ($editurl = $userauth->edit_profile_url($user->id)) {
 if ($user->deleted) {
     $PAGE->set_context(context_system::instance());
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('userdeleted'));
+    echo $OUTPUT->notification(get_string('usernotavailable', 'error'));
     echo $OUTPUT->footer();
     die;
 }
@@ -117,13 +117,6 @@ if ($user->id == $USER->id) {
     if (is_siteadmin($user) and !is_siteadmin($USER)) {  // Only admins may edit other admins.
         print_error('useradmineditadmin', 'error', useredit_get_return_url($user, $returnto, $course, $customreturn));
     }
-}
-
-if ($user->deleted) {
-    echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('userdeleted'));
-    echo $OUTPUT->footer();
-    die;
 }
 
 $PAGE->set_pagelayout('admin');

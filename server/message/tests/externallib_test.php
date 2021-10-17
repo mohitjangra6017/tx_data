@@ -998,7 +998,7 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
             $result = core_message_external::delete_message($m1to2, $user2->id, false);
             $this->fail('Exception expected due invalid user.');
         } catch (moodle_exception $e) {
-            $this->assertEquals('userdeleted', $e->errorcode);
+            $this->assertEquals('usernotavailable', $e->errorcode);
         }
 
         // Now, as an admin, try to delete any message.

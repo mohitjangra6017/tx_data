@@ -77,11 +77,7 @@ $user = $DB->get_record('user', array('id' => $userid));
 if (!$user || $user->deleted) {
     $PAGE->set_context(context_system::instance());
     echo $OUTPUT->header();
-    if (!$user) {
-        echo $OUTPUT->notification(get_string('invaliduser', 'error'));
-    } else {
-        echo $OUTPUT->notification(get_string('userdeleted'));
-    }
+    echo $OUTPUT->notification(get_string('usernotavailable', 'error'));
     echo $OUTPUT->footer();
     die;
 }

@@ -85,7 +85,15 @@ if ($id == -1) {
         redirect($redirecturl);
     }
 
-    $user = $DB->get_record('user', array('id' => $id), '*', MUST_EXIST);
+    $user = $DB->get_record('user', array('id' => $id), '*');
+    if ($user === false || $user->deleted) {
+        $PAGE->set_context(context_system::instance());
+        echo $OUTPUT->header();
+        echo $OUTPUT->notification(get_string('usernotavailable', 'error'));
+        echo $OUTPUT->footer();
+        die;
+    }
+
     $PAGE->set_context(context_user::instance($user->id));
     $PAGE->navbar->includesettingsbase = true;
     if ($user->id != $USER->id) {
@@ -113,13 +121,6 @@ if ($user->id != $USER->id and is_siteadmin($user) and !is_siteadmin($USER)) {  
 
 if (isguestuser($user->id)) { // The real guest user can not be edited.
     print_error('guestnoeditprofileother');
-}
-
-if ($user->deleted) {
-    echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('userdeleted'));
-    echo $OUTPUT->footer();
-    die;
 }
 
 // Load user preferences.
