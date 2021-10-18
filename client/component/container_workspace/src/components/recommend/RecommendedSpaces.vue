@@ -16,7 +16,10 @@
   @module container_workspace
 -->
 <template>
-  <div class="tui-recommendedSpaces">
+  <div
+    v-if="!$apollo.loading && 0 !== workspaces.length"
+    class="tui-recommendedSpaces"
+  >
     <div class="tui-recommendedSpaces__head">
       <h2 class="tui-recommendedSpaces__title">
         <span>{{ $str('recommended_spaces', 'container_workspace') }}</span>
@@ -32,7 +35,6 @@
     </div>
 
     <SpaceCardsGrid
-      v-if="!$apollo.loading && 0 !== workspaces.length"
       :max-grid-units="maxGridUnits"
       :workspaces="workspaces"
       class="tui-recommendedSpaces__grid"
