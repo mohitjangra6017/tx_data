@@ -163,7 +163,7 @@ class personal_goal_assignment extends goal_assignment_content_type {
             'target_date' => ($target_date > 0)
                 ? (new date_field_formatter(date_format::FORMAT_DATE, $this->context))->format($target_date)
                 : null,
-            'can_view_goal_details' => $this->can_view_goal_details($subject_instance),
+            'can_view_goal_details' => $this->can_view_goal_details($subject_instance, $personal_goal),
             'can_change_status' => $can_change_status,
             'can_view_status' => $can_view_status,
             'status_change' => $existing_status_change
@@ -176,10 +176,16 @@ class personal_goal_assignment extends goal_assignment_content_type {
      * Can the current user view the goals details
      *
      * @param subject_instance $subject_instance
+     * @param personal_goal_entity|null $personal_goal
      * @return bool
      */
-    private function can_view_goal_details(subject_instance $subject_instance): bool {
+    private function can_view_goal_details(subject_instance $subject_instance, ?personal_goal_entity $personal_goal = null): bool {
         global $USER;
+
+        // Can't view details of a deleted goal.
+        if ($personal_goal && $personal_goal->deleted) {
+            return false;
+        }
 
         if (has_capability('totara/hierarchy:viewallgoals', context_system::instance())) {
             $can_view_goal_details = true;
