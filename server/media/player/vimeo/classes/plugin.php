@@ -33,48 +33,21 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class media_vimeo_plugin extends core_media_player_external {
-    /**
-     * Stores whether the private regex was matched last time when
-     * {@link list_supported_urls()} was called
-     * @var bool
-     */
-    protected $isprivate = false;
-
-    public function list_supported_urls(array $urls, array $options = array()) {
-        // These only work with a SINGLE url (there is no fallback).
-        if (count($urls) == 1) {
-            $url = reset($urls);
-
-            // Check against playlist regex.
-            if (preg_match($this->get_regex_private(), $url->out(false), $this->matches)) {
-                $this->isprivate = true;
-                return array($url);
-            }
-
-            // Check against regex.
-            if (preg_match($this->get_regex(), $url->out(false), $this->matches)) {
-                $this->isprivate = false;
-                return array($url);
-            }
-        }
-
-        return array();
-    }
 
     protected function embed_external(moodle_url $url, $name, $width, $height, $options) {
-        $videoid = $this->matches[1];
+        $video_id = $this->matches[1];
         $info = trim($name);
         if (empty($info) or strpos($info, 'http') === 0) {
             $info = get_string('pluginname', 'media_vimeo');
         }
 
-        if ($this->isprivate) {
-            $videoid = $this->matches[2];
-            $privateid = $this->matches[3];
+        // If there's another extension send this through as well
+        if (!empty($this->matches[3])) {
+            $private_id = $this->matches[3];
 
-            $iframe_url = "https://player.vimeo.com/video/$videoid?h=$privateid";
+            $iframe_url = "https://player.vimeo.com/video/$video_id?h=$private_id";
         } else {
-            $iframe_url = "https://player.vimeo.com/video/$videoid";
+            $iframe_url = "https://player.vimeo.com/video/$video_id";
         }
 
         // Note: resizing via url is not supported, user can click the fullscreen
@@ -105,15 +78,9 @@ class media_vimeo_plugin extends core_media_player_external {
         $start = '~^https?://vimeo\.com/';
         // Middle bit: either watch?v= or v/.
         $middle = '([0-9]+)';
-        return $start . $middle . core_media_player_external::END_LINK_REGEX_PART;
-    }
-
-    protected function get_regex_private() {
-        // Initial part of link.
-        $start = '~^https?://vimeo\.com/';
-        // Middle bit: either watch?v= or v/.
-        $middle = '(([0-9]+)/([0-9,a-f]*)?)';
-        return $start . $middle . core_media_player_external::END_LINK_REGEX_PART;
+        // Could be a private url with another hash at the end
+        $end = '(\/([a-zA-Z0-9]*))?';
+        return $start . $middle . $end . core_media_player_external::END_LINK_REGEX_PART;
     }
 
     public function get_embeddable_markers() {

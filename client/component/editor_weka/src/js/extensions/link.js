@@ -636,6 +636,23 @@ const linkPlugins = [
     },
   },
   {
+    key: 'vimeo-private',
+    type: 'media',
+    name: 'Vimeo private',
+    matches: [
+      {
+        // Example:
+        // https://vimeo.com/78716671/e123ceeg2
+        match: /^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)\/([0-9a-zA-Z]+)/,
+        details: match => ({ id: match[1], privateString: match[2] }),
+      },
+    ],
+    async nodeAttrs({ url }) {
+      const ogInfo = await getLinkMetadata(url);
+      return getVideoAttrs(ogInfo);
+    },
+  },
+  {
     key: 'vimeo',
     type: 'media',
     name: 'Vimeo',
@@ -646,23 +663,6 @@ const linkPlugins = [
         // https://vimeo.com/260405189
         match: /^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)/,
         details: match => ({ id: match[1] }),
-      },
-    ],
-    async nodeAttrs({ url }) {
-      const ogInfo = await getLinkMetadata(url);
-      return getVideoAttrs(ogInfo);
-    },
-  },
-  {
-    key: 'vimeo-private',
-    type: 'media',
-    name: 'Vimeo private',
-    matches: [
-      {
-        // Example:
-        // https://vimeo.com/78716671/e123ceeg2
-        match: /^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)\/([0-9,a-f]+)/,
-        details: match => ({ id: match[1], privatestring: match[2] }),
       },
     ],
     async nodeAttrs({ url }) {

@@ -268,18 +268,21 @@ final class link_media extends base_link implements block_node {
             }
         }
 
-        if (preg_match('/^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)/', $url, $match)) {
+        if (preg_match('/^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)(\/([a-zA-Z0-9]*))?/', $url, $match)) {
             if ($for == 'filters') {
+                $extension = !empty($match[3]) ? "?h={$match[3]}" : '';
+
                 // rely on filter API to turn it into a playable video
                 return [
                     'type' => 'video',
-                    'url' => 'https://vimeo.com/' . $match[1],
+                    'url' => 'https://vimeo.com/' . $match[1] . $extension,
                     'image' => $this->image, // Return vimeo images.
                 ];
             } else {
+                $extension = !empty($match[3]) ? "?portrait=0&h={$match[3]}" : '?portrait=0';
                 return [
                     'type' => 'iframe',
-                    'url' => 'https://player.vimeo.com/video/' . $match[1] . '?portrait=0',
+                    'url' => 'https://player.vimeo.com/video/' . $match[1] . $extension,
                     'image' => $this->image, // Return vimeo images.
                 ];
             }

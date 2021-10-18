@@ -109,21 +109,26 @@ export default {
 
     iframeUrl() {
       const { details } = this;
+      let url = null;
+
       switch (this.pluginKey) {
         case 'youtube':
-          return 'https://www.youtube.com/embed/' + details.id + '?rel=0';
+          url = 'https://www.youtube.com/embed/' + details.id + '?rel=0';
+          break;
         case 'vimeo':
-          return 'https://player.vimeo.com/video/' + details.id + '?portrait=0';
+          url = 'https://player.vimeo.com/video/' + details.id + '?portrait=0';
+          break;
         case 'vimeo-private':
-          return (
+          url =
             'https://player.vimeo.com/video/' +
             details.id +
             '?h=' +
-            details.privatestring +
-            '&portrait=0'
-          );
+            details.privateString +
+            '&portrait=0';
+          break;
       }
-      return null;
+
+      return url;
     },
 
     summaryText() {
