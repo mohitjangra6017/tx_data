@@ -28,6 +28,7 @@ if (!defined('MOODLE_INTERNAL')) {
 
 use totara_certification\theme\file\certification_image;
 use totara_core\advanced_feature;
+use totara_notification\external_helper;
 use totara_program\exception\manager as exception_manager;
 use totara_program\theme\file\program_image;
 use totara_program\utils;
@@ -364,6 +365,13 @@ class program {
 
         // Delete the program context instance.
         $context = \context_program::instance($this->id);
+
+        $area = 'program';
+        $component = 'totara_program';
+        if (!empty($this->certifid)) {
+            $component = 'totara_certification';
+        }
+        external_helper::remove_notification_preferences($context->id, $component, $area, $this->id);
         context_helper::delete_instance(CONTEXT_PROGRAM, $this->id);
 
         // delete the program itself

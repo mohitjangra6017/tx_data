@@ -22,8 +22,11 @@
  */
 namespace totara_notification\repository;
 
+use coding_exception;
 use core\orm\entity\repository;
 use core\orm\lazy_collection;
+use core\orm\query\builder;
+use totara_core\extended_context;
 
 /**
  * Repository for table "ttr_notification_queue"
@@ -44,5 +47,36 @@ class notification_queue_repository extends repository {
 
         $this->builder->where('scheduled_time', '<=', $current_time);
         return $this->builder->get_lazy();
+    }
+
+    /**
+     * Remove all queued notifications that belong to the given context or its descendants
+     *
+     * @param extended_context $extended_context
+     */
+    public function dequeue(extended_context $extended_context): void {
+        // If it is not a natural context then it can have no descendents, so just delete in that context.
+        if (!$extended_context->is_natural_context()) {
+            $this->builder->where('context_id', $extended_context->get_context_id())
+                ->where('component', $extended_context->get_component())
+                ->where('area', $extended_context->get_area())
+                ->where('item_id', $extended_context->get_item_id())
+                ->delete();
+            return;
+        }
+
+        $db = builder::get_db();
+        $context = $extended_context->get_context();
+        $context_ids = $db->get_fieldset_select(
+            'context',
+            'id',
+            "path LIKE " . $db->sql_concat(':path', "'%'"),
+            [
+                'path' => $context->path,
+            ]
+        );
+
+        // Remove all records where they belong to one of the descendant contexts, including the given context.
+        $this->builder->where_in('context_id', $context_ids)->delete();
     }
 }

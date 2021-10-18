@@ -23,7 +23,11 @@
 
 namespace totara_notification;
 
+use core\orm\query\builder;
+use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_queue;
+use totara_notification\entity\notification_preference;
+use totara_notification\entity\notification_queue;
 use totara_notification\resolver\notifiable_event_resolver;
 
 /**
@@ -49,5 +53,30 @@ class external_helper {
         $queue->set_extended_context($resolver->get_extended_context());
 
         $queue->save();
+    }
+
+    /**
+     * When target item has been deleted, we need to remove records from notification preference and queue table.
+     *
+     * @param int $context_id
+     * @param string $component
+     * @param string $area
+     * @param int $item_id
+     */
+    public static function remove_notification_preferences(
+        int $context_id,
+        string $component = '',
+        string $area = '',
+        int $item_id = 0
+    ): void {
+        $extend_context = extended_context::make_with_id($context_id, $component, $area, $item_id);
+        $db = builder::get_db();
+        $transaction = $db->start_delegated_transaction();
+
+        notification_preference::repository()->delete_custom_by_context($extend_context);
+        notifiable_event_queue::repository()->dequeue($extend_context);
+        notification_queue::repository()->dequeue($extend_context);
+
+        $transaction->allow_commit();
     }
 }

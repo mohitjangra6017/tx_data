@@ -21,6 +21,17 @@
  * @package totara_program
  */
 
+use core\json_editor\helper\document_helper;
+use core\json_editor\node\paragraph;
+use totara_core\extended_context;
+use totara_notification\entity\notifiable_event_queue;
+use totara_notification\entity\notification_queue;
+use totara_notification\task\process_event_queue_task;
+use totara_notification\testing\generator as notification_generator;
+use totara_program\totara_notification\recipient\subject;
+use totara_program\totara_notification\resolver\unassigned as program_unassigned_resolver;
+use totara_program\event\program_unassigned as program_unassigned_event;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -2433,5 +2444,69 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $expected2->certifid = null;
 
         $this->assertEquals($expected2, $result);
+    }
+
+    public function test_notification_preference_removed_when_program_deleted(): void {
+        global $DB;
+
+        self::setAdminUser();
+        /** @var program $program1 */
+        $program1 = $this->program_generator->create_program();
+        /** @var program $program2 */
+        $program2 = $this->program_generator->create_program();
+
+        $context = context_program::instance($program1->id);
+
+        // Create notification preference.
+        $notification_generator = notification_generator::instance();
+        $notification_generator->create_notification_preference(
+            program_unassigned_resolver::class,
+            extended_context::make_with_id($context->id, 'totara_program', 'program', $program1->id),
+            [
+                'schedule_offset' => 0,
+                'recipient' => subject::class,
+                'body_format' => FORMAT_JSON_EDITOR,
+                'body' => document_helper::json_encode_document(
+                    document_helper::create_document_from_content_nodes([
+                        paragraph::create_json_node_from_text('Test notification body')
+                    ])
+                ),
+                'subject' => 'Test notification subject',
+                'subject_format' => FORMAT_PLAIN,
+            ]
+        );
+
+        // Remove the 'assigned' notifiable event queue record.
+        $DB->delete_records('notifiable_event_queue');
+
+        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        $event = program_unassigned_event::create([
+            'objectid' => $program1->id,
+            'context' => $context,
+        ]);
+        $event->trigger();
+
+        $event = program_unassigned_event::create([
+            'objectid' => $program2->id,
+            'context' => $context,
+        ]);
+        $event->trigger();
+
+        self::assertEquals(2, $DB->count_records(notifiable_event_queue::TABLE));
+        // Run tasks.
+        (new process_event_queue_task())->execute();
+
+        // Includes the two built-in notifications.
+        self::assertEquals(5, $DB->count_records(notification_queue::TABLE));
+
+        // Delete the program;
+        $program1->delete();
+
+        // Related program1 data is removed from notifiable event table.
+        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(2, $DB->count_records(notification_queue::TABLE));
+        self::assertTrue($DB->record_exists(notification_queue::TABLE, ['item_id' => $program2->id]));
     }
 }

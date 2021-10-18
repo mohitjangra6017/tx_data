@@ -22,8 +22,11 @@
  */
 namespace totara_notification\repository;
 
+use coding_exception;
 use context_system;
+use core\entity\context;
 use core\orm\entity\repository;
+use core\orm\query\builder;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference;
 
@@ -81,11 +84,43 @@ class notification_preference_repository extends repository {
     }
 
     /**
-     * delete custom notifications
+     * Delete a custom notification and all descendants
      *
      * @param int $id
      */
     public function delete_custom(int $id): void {
         $this->builder->or_where('id', $id)->or_where('ancestor_id', $id)->delete();
+    }
+
+    /**
+     * Delete all custom notifications that existing in the given context or a descendant context
+     *
+     * @param extended_context $extended_context
+     */
+    public function delete_custom_by_context(extended_context $extended_context): void {
+        // If it is not a natural context then it can have no descendents, so just delete in that context.
+        if (!$extended_context->is_natural_context()) {
+            $this->builder->where('context_id', $extended_context->get_context_id())
+                ->where('component', $extended_context->get_component())
+                ->where('area', $extended_context->get_area())
+                ->where('item_id', $extended_context->get_item_id())
+                ->delete();
+            return;
+        }
+
+        // Find all contexts that are descendants of the given context, including itself.
+        $db = builder::get_db();
+        $context = $extended_context->get_context();
+        $context_ids = $db->get_fieldset_select(
+            'context',
+            'id',
+            "path LIKE " . $db->sql_concat(':path', "'%'"),
+            [
+                'path' => $context->path,
+            ]
+        );
+
+        // Remove all records where they belong to one of the descendant contexts, including the given context.
+        $this->builder->where_in('context_id', $context_ids)->delete();
     }
 }
