@@ -123,6 +123,10 @@ final class comment_observer {
                 // to set message setting for engage_article.
                 'component' => 'totara_engage',
                 'resourcetype' => get_string('message_resource', 'totara_engage'),
+                'resource_info' => [
+                    'stringkey' => 'message_resource',
+                    'component' => 'totara_engage'
+                ],
                 'commenter' =>   $comment->get_userid(),
                 'name' => $article->get_name(),
                 'is_comment' => !$comment->is_reply()

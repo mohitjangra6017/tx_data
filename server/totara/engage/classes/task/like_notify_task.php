@@ -67,6 +67,17 @@ final class like_notify_task extends adhoc_task {
 
         cron_setup_user($recipient);
 
+        $resourcetype = $data->resourcetype; // Default to pre-translated string, just in case.
+        if (property_exists($data, 'resource_info') && !empty($data->resource_info)) {
+            $stringkey = $data->resource_info->stringkey ?? null;
+            $component = $data->resource_info->component ?? null;
+
+            if (!empty($stringkey) && !empty($component)) {
+                // However when possible get the resourcetype string here for better translation.
+                $resourcetype = get_string($stringkey, $component);
+            }
+        }
+
         $url = new \moodle_url($data->url);
 
         // Initialize message body.
@@ -74,7 +85,7 @@ final class like_notify_task extends adhoc_task {
         $message_body->fullname = fullname($liker);
         $message_body->name = $data->name;
         $message_body->url = $url;
-        $message_body->type = $data->resourcetype;
+        $message_body->type = $resourcetype;
 
         $template = like_message::create($message_body);
         $message_body = $OUTPUT->render($template);
@@ -82,7 +93,7 @@ final class like_notify_task extends adhoc_task {
         // Initialize message subject.
         $subject = new \stdClass();
         $subject->fullname = fullname($liker);
-        $subject->name = $data->resourcetype;
+        $subject->name = $resourcetype;
 
         $message = new message();
         $message->courseid = SITEID;

@@ -64,7 +64,19 @@ final class comment_notify_task extends adhoc_task {
             debugging('Skipped sending notification from non-existent commenter with id ' . $data->commenter);
             return;
         }
+
         cron_setup_user($recipient);
+
+        $resourcetype = $data->resourcetype; // Default to pre-translated string, just in case.
+        if (property_exists($data, 'resource_info') && !empty($data->resource_info)) {
+            $stringkey = $data->resource_info->stringkey ?? null;
+            $component = $data->resource_info->component ?? null;
+
+            if (!empty($stringkey) && !empty($component)) {
+                // However when possible get the resourcetype string here for better translation.
+                $resourcetype = get_string($stringkey, $component);
+            }
+        }
 
         $url = new \moodle_url($data->url);
 
@@ -84,7 +96,7 @@ final class comment_notify_task extends adhoc_task {
         $subject = new \stdClass();
         $subject->fullname = fullname($commenter);
         if ($data->is_comment) {
-            $subject->resourcetype = $data->resourcetype;
+            $subject->resourcetype = $resourcetype;
             $subject_content = get_string('comment_message_subject', 'totara_engage', $subject);
         } else {
             $subject_content = get_string('reply_message_subject', 'totara_engage', $subject);

@@ -56,7 +56,11 @@ final class reaction_observer {
                     'liker' => $liker_id,
                     'owner' => $article->get_userid(),
                     'name' => $article->get_name(),
-                    'resourcetype' => get_string('message_survey', 'engage_survey')
+                    'resourcetype' => get_string('message_survey', 'engage_survey'),
+                    'resource_info' => [
+                        'stringkey' => 'message_survey',
+                        'component' => 'engage_survey'
+                    ],
                 ]);
 
                 manager::queue_adhoc_task($task);

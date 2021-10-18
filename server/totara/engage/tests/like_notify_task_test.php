@@ -36,7 +36,10 @@ class totara_engage_like_notify_task_testcase extends advanced_testcase {
             $fake_language,
             [
                 'totara_engage' => [
-                    'like_message_subject' => 'Fake language subject string'
+                    'like_message_subject' => 'Fake language subject string ({$a->name})'
+                ],
+                'engage_survey' => [
+                    'message_survey' => 'Fake Survey'
                 ]
             ]
         );
@@ -50,7 +53,11 @@ class totara_engage_like_notify_task_testcase extends advanced_testcase {
             'liker' => $user_one->id,
             'owner' => $user_two->id,
             'name' => 'Resource test name',
-            'resourcetype' => 'resource'
+            'resourcetype' => 'resource',
+            'resource_info' => [
+                'stringkey' => 'message_survey',
+                'component' => 'engage_survey'
+            ]
         ]);
 
         manager::queue_adhoc_task($task);
@@ -64,6 +71,6 @@ class totara_engage_like_notify_task_testcase extends advanced_testcase {
         $message = reset($messages);
 
         self::assertEquals($user_two->id, $message->useridto);
-        self::assertEquals('Fake language subject string', $message->subject);
+        self::assertEquals('Fake language subject string (Fake Survey)', $message->subject);
     }
 }

@@ -36,7 +36,8 @@ class totara_engage_comment_notify_task_testcase extends advanced_testcase {
             $fake_language,
             [
                 'totara_engage' => [
-                    'comment_message_subject' => 'Fake language subject string'
+                    'comment_message_subject' => 'Fake language subject string ({$a->resourcetype})',
+                    'message_resource' => 'Fake Resource'
                 ]
             ]
         );
@@ -50,6 +51,10 @@ class totara_engage_comment_notify_task_testcase extends advanced_testcase {
             'owner' => $user_one->id,
             'component' => 'totara_playlist',
             'resourcetype' => 'playlist',
+            'resource_info' => [
+                'stringkey' => 'message_resource',
+                'component' => 'totara_engage'
+            ],
             'commenter' =>   $user_two->id,
             'name' => 'Playlist test name',
             'is_comment' => true
@@ -66,6 +71,6 @@ class totara_engage_comment_notify_task_testcase extends advanced_testcase {
         $message = reset($messages);
 
         self::assertEquals($user_one->id, $message->useridto);
-        self::assertEquals('Fake language subject string', $message->subject);
+        self::assertEquals('Fake language subject string (Fake Resource)', $message->subject);
     }
 }
