@@ -42,7 +42,7 @@ $tasks = [
         'minute' => 'R',
         'hour' => '4',
         'day' => '*',
-        'dayofweek' => 'R',
+        'dayofweek' => '*',
         'month' => '*'
     ]
 ];
