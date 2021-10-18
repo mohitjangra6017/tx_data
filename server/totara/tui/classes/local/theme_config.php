@@ -126,20 +126,25 @@ final class theme_config extends \theme_config {
         $scss_options->set_themes($this->get_tui_theme_chain());
         $scss_options->set_legacy($this->legacybrowser);
 
-        if (!during_initial_install() && isset($tenant_id)) {
-            $scss_options->set_theme_settings(new \core\theme\settings($this, $tenant_id));
+        $scss_options->set_minify(true);
+        $scss_options->set_sourcemap_enabled(false);
+
+        if (!during_initial_install()) {
+            if (isset($tenant_id)) {
+                $scss_options->set_theme_settings(new \core\theme\settings($this, $tenant_id));
+            }
+
+            if (get_config('totara_tui', 'development_mode')) {
+                // Impossible to get here during PHPUnit tests.
+                // @codeCoverageIgnoreStart
+                $scss_options->set_minify(false);
+                $scss_options->set_sourcemap_enabled(true);
+                // @codeCoverageIgnoreEnd
+            }
         }
 
         if ($this->skip_scss_compilation) {
             $scss_options->set_skip_compile(true);
-        }
-
-        if (get_config('totara_tui', 'development_mode')) {
-            $scss_options->set_minify(false);
-            $scss_options->set_sourcemap_enabled(true);
-        } else {
-            $scss_options->set_minify(true);
-            $scss_options->set_sourcemap_enabled(false);
         }
 
         return new scss($scss_options);
