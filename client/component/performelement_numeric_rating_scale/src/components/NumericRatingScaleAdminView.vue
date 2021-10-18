@@ -42,7 +42,7 @@
       </FormRow>
       <FormRow>
         <ElementDescription
-          v-if="data.descriptionEnabled"
+          v-if="isDataExist"
           :aria-region-label="
             $str('scale_description', 'performelement_numeric_rating_scale')
           "
@@ -70,6 +70,14 @@ export default {
   },
   props: {
     data: Object,
+  },
+
+  computed: {
+    isDataExist() {
+      return (
+        this.data && this.data.descriptionEnabled && this.data.descriptionHtml
+      );
+    },
   },
 };
 </script>
