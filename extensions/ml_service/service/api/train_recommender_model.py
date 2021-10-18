@@ -226,7 +226,7 @@ class TrainRecommenderModel:
                 sep=",",
                 dtype={
                     "TIMESTAMP": str,
-                    "QUERY": str,
+                    "ALGORITHM": str,
                     "TENANT_ID": str,
                     "MSG": str,
                     "EPOCHS": str,

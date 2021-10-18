@@ -56,6 +56,7 @@ class TestTotaraGraphql(unittest.TestCase):
                     "extensions": {},
                 },
                 verify=False,
+                timeout=1.5,
             ),
         )
 

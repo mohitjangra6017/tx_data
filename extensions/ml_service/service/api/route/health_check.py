@@ -24,6 +24,7 @@ import requests.exceptions
 from urllib import parse
 
 from service.communicator.totara_graphql import TotaraGraphql
+from service.recommender.recommender_health_check import RecommenderHealthCheck
 
 
 def resolve_with_errors(errors: list, totara_info: dict):
@@ -56,6 +57,8 @@ class HealthCheck(View):
         """
         self.time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.totara_url = current_app.config.get("TOTARA_URL")
+        self.logs_dir = current_app.config.get("LOGS_DIR")
+        self.recommender_model = current_app.recommender
 
     def dispatch_request(self):
         """
@@ -69,6 +72,11 @@ class HealthCheck(View):
 
         # Check that we're able to resolve the totara hostname
         totara_hostname = parse.urlparse(self.totara_url).hostname
+
+        if not totara_hostname:
+            return resolve_with_errors(
+                ["Unable to get Totara instance hostname"], totara_info
+            )
 
         try:
             totara_info["totara_ip"] = socket.gethostbyname(totara_hostname)
@@ -90,6 +98,10 @@ class HealthCheck(View):
             return resolve_with_errors(
                 [f"Unable to communicate with Totara: {str(e)}"], totara_info
             )
+        except requests.exceptions.ConnectTimeout as cto:
+            return resolve_with_errors(
+                [f"Unable to communicate with Totara: {str(cto)}"], totara_info
+            )
 
         auth_info = current_app.config.get("auth_info", {})
         totara_info = {**totara_info, **auth_info}
@@ -98,11 +110,16 @@ class HealthCheck(View):
             return resolve_with_errors(
                 [
                     (
-                        "Could not connect to Totara instance. Please check your URL is "
-                        "correct."
+                        "Could not connect to Totara instance. Please check your URL is"
+                        " correct."
                     )
                 ],
                 totara_info,
             )
+
+        # To get some information on the recommendation model
+        r = RecommenderHealthCheck(self.recommender_model, self.logs_dir)
+        recommender_health = r.recommender_health()
+        totara_info = {**totara_info, **recommender_health}
 
         return make_response(jsonify({"success": True, "totara": totara_info}))

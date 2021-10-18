@@ -57,6 +57,7 @@ class TotaraGraphql:
             url=self.totara_url + "/totara/webapi/ajax.php",
             json=payload,
             verify=False,
+            timeout=1.5,
         )
         r.raise_for_status()
 

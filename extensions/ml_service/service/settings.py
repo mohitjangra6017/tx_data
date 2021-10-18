@@ -56,5 +56,7 @@ class Testing(Config):
 
     APP_MODE = "Testing"
     TESTING = True
+    TOTARA_URL = "http://totarahost.com"
     TOTARA_KEY = "secretkey"
     MODELS_DIR = "/testing/mock/dir"
+    LOGS_DIR = "/testing/mock/dir"

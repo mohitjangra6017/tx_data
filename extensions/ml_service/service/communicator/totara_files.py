@@ -17,6 +17,7 @@ Please contact [licensing@totaralearning.com] for more information.
 """
 
 import hashlib
+import re
 import time
 
 from requests import get
@@ -54,7 +55,16 @@ class TotaraFiles:
 
         return headers
 
-    def download(self, filename: str):
+    def validate_schema(self) -> bool:
+        """
+        To check if the URL provided for Totara has the valid http or https schema
+
+        :return: Whether the Totaral URL has valid schema
+        :rtype bool:
+        """
+        return bool(re.match(pattern=r"https?://", string=self.totara_url.lower()))
+
+    def download(self, filename: str) -> dict:
         """
         This method takes file name as argument and returns the content of the file
         after fetching that from Totara
@@ -64,6 +74,9 @@ class TotaraFiles:
         :return: Contents of the file and status after fetching from Totara
         :rtype: dict
         """
+        if not self.validate_schema():
+            return {"status": "fail", "content": ""}
+
         try:
             r = get(
                 url=(
@@ -72,6 +85,7 @@ class TotaraFiles:
                 ),
                 headers=self.make_headers(),
                 verify=False,
+                timeout=30,
             )
 
             # Retry at least three times if the status code is 202, i.e., the content
@@ -86,6 +100,7 @@ class TotaraFiles:
                     ),
                     headers=self.make_headers(),
                     verify=False,
+                    timeout=30,
                 )
                 retry_counter += 1
 

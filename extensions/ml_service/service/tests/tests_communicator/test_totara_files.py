@@ -63,6 +63,47 @@ class TestTotaraFiles(unittest.TestCase):
             ),
         )
 
+    def test_validate_schema(self) -> None:
+        """
+        To verify that the validate_schema method of the 'TotaraFiles' can detect
+        invalid schemas provided with the Totara URL
+        """
+        self.totara_files.totara_url = "https://valid/schema"
+        valid_schema_1_response = self.totara_files.validate_schema()
+
+        self.totara_files.totara_url = "http://valid/schema"
+        valid_schema_2_response = self.totara_files.validate_schema()
+
+        self.totara_files.totara_url = "128.55.41.99 notreal.local"
+        invalid_schema_response = self.totara_files.validate_schema()
+
+        # Revert the totara_url of TotaraFiles class back to the original testing URL
+        self.totara_files.totara_url = self.test_totara_url
+
+        self.assertTrue(
+            expr=valid_schema_1_response,
+            msg=(
+                "The response of the 'validate_schema' method of the TotaraFiles class "
+                "was expected to be 'True' which is 'False' currently"
+            ),
+        )
+
+        self.assertTrue(
+            expr=valid_schema_2_response,
+            msg=(
+                "The response of the 'validate_schema' method of the TotaraFiles class "
+                "was expected to be 'True' which is 'False' currently"
+            ),
+        )
+
+        self.assertFalse(
+            expr=invalid_schema_response,
+            msg=(
+                "The response of the 'validate_schema' method of the TotaraFiles class "
+                "was expected to be 'False' which is 'True' currently"
+            ),
+        )
+
     @patch(target="service.communicator.totara_files.get")
     def test_download_200(self, mock_get) -> None:
         """
@@ -82,6 +123,7 @@ class TestTotaraFiles(unittest.TestCase):
             ),
             headers=self.totara_files.make_headers(),
             verify=False,
+            timeout=30,
         )
         self.assertEqual(
             first=mock_get.call_args,
@@ -126,6 +168,7 @@ class TestTotaraFiles(unittest.TestCase):
             ),
             headers=self.totara_files.make_headers(),
             verify=False,
+            timeout=30,
         )
         self.assertEqual(
             first=mock_get.call_args,
@@ -166,6 +209,7 @@ class TestTotaraFiles(unittest.TestCase):
             ),
             headers=self.totara_files.make_headers(),
             verify=False,
+            timeout=30,
         )
         self.assertEqual(
             first=mock_get.call_args,
@@ -208,6 +252,7 @@ class TestTotaraFiles(unittest.TestCase):
             ),
             headers=self.totara_files.make_headers(),
             verify=False,
+            timeout=30,
         )
         self.assertEqual(
             first=mock_get.call_args,
@@ -220,6 +265,27 @@ class TestTotaraFiles(unittest.TestCase):
             ),
         )
         expected_response = {"status": "fail", "content": test_exception}
+        self.assertDictEqual(
+            d1=downloaded_content,
+            d2=expected_response,
+            msg=(
+                "The response of the 'download' method of 'TotaraFiles' class is\n"
+                f"{downloaded_content}\n"
+                f"while the expected response was\n"
+                f"{expected_response}"
+            ),
+        )
+
+    def test_download_invalid_schema(self) -> None:
+        """
+        To test the response of the `download` method is as expected when the Totara URL
+        does not have a valid schema
+        """
+        test_file = "test_file.csv"
+        self.totara_files.totara_url = "128.55.41.99 notreal.local"
+        downloaded_content = self.totara_files.download(filename=test_file)
+        self.totara_files.totara_url = self.test_totara_url
+        expected_response = {"status": "fail", "content": ""}
         self.assertDictEqual(
             d1=downloaded_content,
             d2=expected_response,
