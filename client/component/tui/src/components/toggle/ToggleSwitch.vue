@@ -173,8 +173,6 @@ export default {
       height: var(--form-toggle-dot-size);
       border-radius: 50%;
       box-shadow: var(--shadow-2);
-      transition: left var(--transition-toggle-duration)
-        var(--transition-toggle-function);
       content: '';
     }
 
