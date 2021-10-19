@@ -23,6 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core\orm\query\builder;
+use mobile_findlearning\filter_handler;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_catalog\task\refresh_catalog_data;
 use totara_engage\access\access;
@@ -36,7 +38,7 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
 
     protected function tearDown(): void {
         // Make sure to clear the filter caches when we're done.
-        \mobile_findlearning\filter_handler::phpunit_reset();
+        filter_handler::phpunit_reset();
     }
 
     /**
@@ -137,6 +139,8 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
         $task = new refresh_catalog_data();
         $task->execute();
 
+        $this->wait_for_mssql_fts_index(20);
+
         return ['u1' => $user1, 'u2' => $user2];
     }
 
@@ -212,6 +216,8 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
             $this->assertSame($expect['name'], $item->sorttext);
         }
 
+        filter_handler::phpunit_reset();
+
         // Check the second/final page.
         $limit = $result->limitfrom;
         $result = $this->resolve_graphql_query(
@@ -235,6 +241,8 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
         $this->assertEquals('20', $result->maxcount); // The total number of unchecked records.
         $this->assertEquals('20', $result->limitfrom); // The number of checked records.
         $this->assertTrue($result->endofrecords); // Whether this page is the last.
+
+        filter_handler::phpunit_reset();
 
         // Now check the results when filtering the data.
         $result = $this->resolve_graphql_query(
@@ -298,6 +306,8 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
             $this->assertSame($expect['name'], $item->sorttext);
         }
 
+        filter_handler::phpunit_reset();
+
         // Now check the results when filtering the data.
         $result = $this->resolve_graphql_query(
             'mobile_findlearning_filter_catalog',
@@ -319,12 +329,7 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
         $this->assertEquals('3', $result->limitfrom); // The number of checked records, theres 2 we couldn't see.
         $this->assertTrue($result->endofrecords); // Whether this page is the last.
 
-        foreach ($result->objects as $item) {
-            $expect = array_shift($expected);
-            $this->assertSame($expect['type'], $item->objecttype);
-            $this->assertSame($expect['name'], $item->sorttext);
-        }
-
+        $this->assert_has_expected_result($expected, $result->objects);
     }
 
     /**
@@ -367,6 +372,8 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
         $this->assertEquals('12', $result->limitfrom); // The number of checked records.
         $this->assertFalse($result->endofrecords); // Whether this page is the last.
 
+        filter_handler::phpunit_reset();
+
         // Now check the results when filtering the data.
         $result = $this->resolve_graphql_query(
             'mobile_findlearning_filter_catalog',
@@ -388,19 +395,13 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
         $this->assertEquals('3', $result->limitfrom); // The number of checked records, theres 2 we couldn't see.
         $this->assertTrue($result->endofrecords); // Whether this page is the last.
 
-        foreach ($result->objects as $item) {
-            $expect = array_shift($expected);
-            $this->assertSame($expect['type'], $item->objecttype);
-            $this->assertSame($expect['name'], $item->sorttext);
-        }
+        $this->assert_has_expected_result($expected, $result->objects);
     }
 
     /**
      * Test the results of the embedded mobile query through the GraphQL stack.
      */
     public function test_embedded_query() {
-        global $CFG;
-
         $users = $this->create_faux_catalog_items();
         $this->setUser($users['u1']->id);
 
@@ -447,6 +448,8 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
 
         // Now again but with a filter.
         try {
+            filter_handler::phpunit_reset();
+
             $result = \totara_webapi\graphql::execute_operation(
                 \core\webapi\execution_context::create('mobile', 'mobile_findlearning_filter_catalog'),
                 [
@@ -468,18 +471,76 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
                 2 => ['type' => 'playlist', 'name' => 'Beta playlist'],
             ];
 
+            $this->assertSameSize($expected, $page['items']);
+
+            // As the order of the items can vary between different database FTS implementations
+            // we do this in an order agnostic way
             foreach ($page['items'] as $item) {
-                $expect = array_shift($expected);
-                $this->assertSame($expect['type'], $item['itemType']);
-                $this->assertSame($expect['name'], $item['title']);
+                foreach ($expected as $key => $expected_item) {
+                    if ($expected_item['type'] == $item['itemType']
+                        && $expected_item['name'] == $item['title']) {
+                        unset($expected[$key]);
+                    }
+                }
                 $this->assertMatchesRegularExpression('|^https://www\.example\.com/.*|', $item['mobileImage']);
             }
+
+            $this->assertEmpty($expected, 'The actual result differs from the expected result');
 
             $this->assertEquals('3', $page['maxCount']); // The total number of unchecked records.
             $this->assertEquals('3', $page['pointer']); // The number of checked records.
             $this->assertTrue($page['finalPage']); // Whether this page is the last.
         } catch (\moodle_exception $ex) {
             $this->fail($ex->getMessage());
+        }
+    }
+
+    /**
+     * Assert that the results contains the expected items
+     *
+     * @param array $expected
+     * @param array $actual
+     * @return void
+     */
+    private function assert_has_expected_result(array $expected, array $actual): void {
+        $this->assertSameSize($expected, $actual);
+
+        // As the order of the items can vary between different database FTS implementations
+        // we do this in an order agnostic way
+        foreach ($actual as $item) {
+            foreach ($expected as $key => $expected_item) {
+                if ($expected_item['type'] == $item->objecttype
+                    && $expected_item['name'] == $item->sorttext) {
+                    unset($expected[$key]);
+                }
+            }
+        }
+
+        $this->assertEmpty($expected, 'The actual result differs from the expected result');
+    }
+
+    /**
+     * As Mssql full text search index generation is slow we need to make sure
+     * we wait until it's ready
+     *
+     * @param int $expected_count
+     * @return void
+     * @throws dml_exception
+     */
+    private function wait_for_mssql_fts_index(int $expected_count): void {
+        if (builder::get_db()->get_dbfamily() != 'mssql') {
+            return;
+        }
+
+        $sql = "
+            SELECT FULLTEXTCATALOGPROPERTY(cat.name, 'ItemCount') AS [item_count]
+            FROM sys.fulltext_catalogs AS cat
+        ";
+
+        $current_count = 0;
+        while ($current_count < $expected_count) {
+            $current_count = builder::get_db()->get_field_sql($sql);
+            $this->waitForSecond();
         }
     }
 }
