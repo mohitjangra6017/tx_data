@@ -618,12 +618,16 @@ if (" . ($expected ? '!' : '') . "domNode) {
     private function find_and_compare_file_attachment(NodeElement $parent, string $file_name): ?NodeElement {
         $attachments = $parent->findAll('css', '.tui-fileCard');
         foreach ($attachments as $attachment) {
-            $file_name_node = $attachment->find('css', '.tui-fileCard__filename');
+            $file_name_node = $attachment->find('css', '.tui-fileCard__filename-text');
+            $file_extension_node = $attachment->find('css', '.tui-fileCard__filename-ext');
             if ($file_name_node === null) {
                 throw new coding_exception('filename not present on weka attachment node');
             }
+            if ($file_extension_node === null) {
+                throw new coding_exception('file extension not present on weka attachment node');
+            }
 
-            if ($file_name_node->getText() === $file_name) {
+            if ($file_name_node->getText() . $file_extension_node->getText() === $file_name) {
                 return $attachment;
             }
         }

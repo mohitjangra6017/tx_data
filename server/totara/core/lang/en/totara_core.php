@@ -354,6 +354,7 @@ $string['facetoface'] = 'Seminar';
 $string['feature_not_available'] = 'Feature {$a} is not available.';
 $string['filesize'] = '{$a->size} {$a->unit}';
 $string['filewithname'] = 'File {$a}';
+$string['file_extension'] = '.{$a}';
 $string['filtershide'] = 'Hide filters';
 $string['filtersshow'] = 'Show filters';
 $string['filter_audiences'] = 'Filter audiences';

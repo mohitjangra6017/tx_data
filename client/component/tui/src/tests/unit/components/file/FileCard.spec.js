@@ -29,8 +29,8 @@ describe('FilterSidePanel.vue', () => {
         filename: 'something.png',
       },
       mocks: {
-        $str: function(key, component) {
-          return key + ',' + component;
+        $str: function(_key, _component, extension) {
+          return extension;
         },
       },
     });

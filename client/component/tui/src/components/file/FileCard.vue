@@ -36,14 +36,13 @@
     />
 
     <div class="tui-fileCard__info">
-      <div
-        class="tui-fileCard__filename"
-        :data-file-extension="fileExtension"
-        :class="[truncate && `tui-fileCard__filename--truncate`]"
-      >
-        <p ref="filenameText" class="tui-fileCard__filenameText">
-          {{ filename }}
-        </p>
+      <div class="tui-fileCard__filename">
+        <div class="tui-fileCard__filename-text">
+          {{ fileName }}
+        </div>
+        <div class="tui-fileCard__filename-ext">
+          {{ fileExtension }}
+        </div>
       </div>
 
       <p class="tui-fileCard__fileSize">
@@ -56,7 +55,6 @@
 <script>
 import FileIcon from 'tui/components/icons/files/compute/FileIcon';
 import FileSize from 'tui/components/file/FileSize';
-import { isRtl } from 'tui/i18n';
 
 export default {
   components: {
@@ -94,12 +92,6 @@ export default {
     },
   },
 
-  data() {
-    return {
-      truncate: true,
-    };
-  },
-
   computed: {
     /**
      * Gets the extenstion of the file (if present)
@@ -114,26 +106,28 @@ export default {
       }
 
       let parts = this.filename.split(separator);
-      return parts.pop();
+      return this.$str('file_extension', 'totara_core', parts.pop());
     },
-  },
 
-  mounted() {
-    if (isRtl()) {
-      this.truncate = false;
-    } else {
-      this.$nextTick().then(() => {
-        const el = this.$refs.filenameText;
-        if (el.offsetWidth >= el.scrollWidth) {
-          this.truncate = false;
-        }
-      });
-    }
+    /**
+     * Gets the name of the file with or without the extension where appropriate
+     *
+     * @returns {String}
+     */
+    fileName() {
+      const separator = '.';
+      if (!this.filename.includes(separator)) {
+        return this.filename;
+      }
+
+      let parts = this.filename.split(separator);
+      return parts.shift();
+    },
   },
 
   methods: {
     /**
-     * Downloads the file bu setting the windows URL
+     * Downloads the file by setting the windows URL
      */
     downloadFile() {
       if (!this.downloadUrl) {
@@ -148,7 +142,8 @@ export default {
 <lang-strings>
   {
     "totara_core": [
-      "filewithname"
+      "filewithname",
+      "file_extension"
     ]
   }
 </lang-strings>
@@ -176,7 +171,8 @@ export default {
   border-radius: var(--card-border-radius);
 
   &__info {
-    width: calc(100% - 3.2rem - var(--gap-2) - 2.2em);
+    flex-direction: column;
+    overflow: hidden;
   }
 
   &__fileSize {
@@ -186,23 +182,17 @@ export default {
   }
 
   &__filename {
-    position: relative;
+    display: flex;
 
-    &Text {
+    &-text {
       margin: 0;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
 
-    &--truncate {
-      &:after {
-        position: absolute;
-        top: 0;
-        left: 100%;
-        width: 2.2em;
-        content: attr(data-file-extension);
-      }
+    &-ext {
+      flex-shrink: 0;
     }
   }
 
