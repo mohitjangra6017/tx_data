@@ -1,15 +1,8 @@
 @totara @totara_contentmarketplace @contentmarketplace_linkedin @javascript
 Feature: Configure linkedin settings
   Scenario: Configure linkedin learning client id and secret
-    Given I am on a totara site
-    And I log in as "admin"
-    # This steps needs to be update once we move the content marketplace navigation node.
-    When I navigate to "Plugins > Content marketplace > Manage content marketplaces" in site administration
-    Then I should see "LinkedIn Learning"
-    And I should not see "LinkedIn Learning settings"
-    When I follow "Enable LinkedIn Learning"
-    And I click on "Enable" "button"
-    Then I should see "LinkedIn Learning settings"
+    Given I set up the "linkedin" content marketplace plugin
+    When I log in as "admin"
     And I navigate to "Plugins > Content marketplace > LinkedIn Learning settings" in site administration
     And I should see "Client ID"
     And I should see "Client secret"
@@ -21,15 +14,13 @@ Feature: Configure linkedin settings
     And the field "Client secret" matches value "clientsecret"
 
   Scenario: System user assigned on site manager can manage plugin
-    Given I am on a totara site
+    Given I set up the "linkedin" content marketplace plugin
     And the following "users" exist:
       | username | firstname | lastname | email             |
       | user1    | user      | one      | user1@example.com |
     And the following "system role assigns" exist:
       | user     | role    |
       | user1    | manager |
-    And I log in as "user1"
+    When I log in as "user1"
     And I navigate to "Plugins > Content marketplace > Manage content marketplaces" in site administration
-    And I follow "Enable LinkedIn Learning"
-    When I click on "Enable" "button"
     Then I should see "LinkedIn Learning settings"

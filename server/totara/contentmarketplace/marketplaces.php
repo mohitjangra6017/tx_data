@@ -91,9 +91,6 @@ if (!empty($id)) {
     exit;
 }
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('manage_content_marketplaces', 'totara_contentmarketplace'));
-
 $table = new html_table();
 $table->head = [
     get_string('contentmarketplace', 'totara_contentmarketplace'),
@@ -166,6 +163,8 @@ foreach ($plugins as $plugin) {
     $table->rowclasses[] = $plugin->component;
 }
 
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('manage_content_marketplaces', 'totara_contentmarketplace'));
 echo $OUTPUT->render_from_template('totara_contentmarketplace/setup_description', []);
 echo $OUTPUT->render($table);
 echo $OUTPUT->footer();

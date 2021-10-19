@@ -37,6 +37,9 @@ $string['appears_in'] = 'Appears in';
 $string['asset_type_course_plural'] = 'Courses';
 $string['asset_type_video_plural'] = 'Videos';
 $string['assign_to_category'] = 'Assign to category';
+$string['beta_registration'] = 'This feature is a beta with access limited to registered participants. You must <a href="https://help.totaralearning.com/linkedin-learning-beta">register for the beta to receive an access code</a>.';
+$string['beta_registration_access_code'] = 'LinkedIn Learning access code';
+$string['beta_registration_access_code_invalid'] = 'Invalid access code';
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';
 $string['catalog_filter_asset_type'] = 'Type';
 $string['catalog_filter_subjects'] = 'Subjects';
@@ -107,9 +110,9 @@ $string['timespan_format_minutes_seconds'] = '{$a->minutes}m {$a->seconds}s';
 $string['timespan_format_seconds'] = '{$a->seconds}s';
 $string['update'] = 'Update';
 $string['userdataitemcompletion'] = 'LinkedIn Learning activity completion';
-$string['warningdisablemarketplace:body:html'] = '<p>Items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
+$string['warningdisablemarketplace:body:html'] = '<p>LinkedIn Learning content will no longer be available for course creators to include in new courses.</p>
 <p>Users who have previously already started LinkedIn Learning activities will continue to have access to that content, but they will not be able to start new LinkedIn Learning activities.</p>';
-$string['warningdisablemarketplace:title'] = 'Disable LinkedIn Learning content';
-$string['warningenablemarketplace:body:html'] = 'Items from the marketplace will be available to course creators for inclusion in newly created courses.';
-$string['warningenablemarketplace:title'] = 'Enable LinkedIn Learning content';
+$string['warningdisablemarketplace:title'] = 'Disable LinkedIn Learning content marketplace';
+$string['warningenablemarketplace:body:html'] = 'LinkedIn Learning content will be available for course creators to include in new courses.';
+$string['warningenablemarketplace:title'] = 'Enable LinkedIn Learning content marketplace';
 $string['xapi_description'] = "LinkedIn Learning xAPI integration sends learner activity data back to your Totara site.";

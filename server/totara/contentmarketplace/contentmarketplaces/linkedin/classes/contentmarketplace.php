@@ -27,6 +27,7 @@ namespace contentmarketplace_linkedin;
 use moodle_url;
 use totara_contentmarketplace\local\contentmarketplace\contentmarketplace as contentmarketplace_parent;
 use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugininfo;
+use totara_tui\output\component;
 
 final class contentmarketplace extends contentmarketplace_parent {
 
@@ -77,6 +78,26 @@ final class contentmarketplace extends contentmarketplace_parent {
         $section_name = $plugin_info->get_settings_section_name();
 
         return new moodle_url("/admin/settings.php", ['section' => $section_name]);
+    }
+
+    /**
+     * Return the Vue component for rendering a special modal that requests a beta access code before the plugin can be enabled.
+     * @deprecated since Totara 15.0
+     *
+     * @param string $label
+     * @return string HTML snippet with the setup code.
+     */
+    public function get_setup_html($label): string {
+        // \contentmarketplace_linkedin\contentmarketplace::get_setup_html() is deprecated and should not be used
+        // This is only necessary for the LinkedIn Learning integration beta, and will be removed in Totara 16.0
+        global $OUTPUT;
+
+        if (!contentmarketplace_plugininfo::plugin($this->name)->has_never_been_enabled()) {
+            // Plugin has been configured in the past, so don't need to show the beta setup link.
+            return '';
+        }
+
+        return $OUTPUT->render(new component('contentmarketplace_linkedin/components/EnableBeta'));
     }
 
 }

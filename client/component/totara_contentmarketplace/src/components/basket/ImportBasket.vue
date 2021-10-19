@@ -67,7 +67,8 @@
         />
 
         <Button
-          :disabled="empty || creatingContent"
+          :disabled="empty"
+          :loading="creatingContent"
           :styleclass="{ primary: true }"
           :text="$str('basket_create_courses', 'totara_contentmarketplace')"
           @click="$emit('create-courses')"
