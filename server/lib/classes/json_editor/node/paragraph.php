@@ -177,8 +177,8 @@ final class paragraph extends node implements block_node {
      */
     public function to_html(formatter $formatter): string {
         if (empty($this->contents)) {
-            // Just printing empty tag p.
-            return html_writer::empty_tag('p');
+            // place a '<br/>' inside to match prosemirrors approach (and some other editors)
+            return html_writer::tag('p', html_writer::empty_tag('br'));
         }
 
         // This is for debugging.
