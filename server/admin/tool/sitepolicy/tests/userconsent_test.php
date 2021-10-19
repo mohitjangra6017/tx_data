@@ -104,7 +104,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'providetext' => 'yes',
             'withheldtext' => 'no',
             'mandatory' => 'first'
-            ];
+        ];
 
         $generator->create_multiversion_policy($options);
 
@@ -134,7 +134,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'providetext' => 'yes',
             'withheldtext' => 'no',
             'mandatory' => 'first'
-            ];
+        ];
 
         $generator->create_multiversion_policy($options);
 
@@ -166,7 +166,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'providetext' => 'yes',
             'withheldtext' => 'no',
             'mandatory' => 'first'
-            ];
+        ];
 
         $sitepolicy = $generator->create_multiversion_policy($options);
         $activeversion = policyversion::from_policy_latest($sitepolicy, policyversion::STATUS_PUBLISHED);
@@ -269,7 +269,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'providetext' => 'yes',
             'withheldtext' => 'no',
             'mandatory' => 'first'
-            ];
+        ];
 
         $sitepolicy = $generator->create_multiversion_policy($options);
         $version = policyversion::from_policy_latest($sitepolicy);
@@ -333,7 +333,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'providetext' => 'yes',
             'withheldtext' => 'no',
             'mandatory' => 'first'
-            ];
+        ];
 
         $sitepolicy = $generator->create_multiversion_policy($options);
         $version = policyversion::from_policy_latest($sitepolicy);
@@ -509,7 +509,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'mandatory' => 'first',
             'hasconsented' => true,
             'consentuser' => 3
-            ];
+        ];
 
         $generator->create_multiversion_policy($options);
 
@@ -518,6 +518,80 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
 
         $consents = userconsent::get_userconsenttable(3);
         $this->assertEquals(2, count($consents));
+    }
+
+    /**
+     * Test is_consent_needed
+     */
+    public function test_is_consent_needed() {
+        global $DB, $USER;
+
+        /** @var \tool_sitepolicy_generator $generator */
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
+
+        $options = [
+            'hasdraft' => false,
+            'numpublished' => 1,
+            'allarchived' => false,
+            'authorid' => 2,
+            'languages' => 'es,en,nl',
+            'langprefix' => ',en,nl',
+            'title' => 'Test policy',
+            'statement' => 'Policy statement',
+            'statementformat' => FORMAT_PLAIN,
+            'numoptions' => 2,
+            'consentstatement' => 'Consent statement',
+            'providetext' => 'yes',
+            'withheldtext' => 'no',
+            'mandatory' => 'first'
+        ];
+
+        $sitepolicy = $generator->create_multiversion_policy($options);
+        $version = policyversion::from_policy_latest($sitepolicy);
+
+        $existingoptions = $DB->get_records('tool_sitepolicy_consent_options', ['policyversionid' => $version->get_id()]);
+        $oneoption = reset($existingoptions);
+        $this->assertEquals(2, count($existingoptions));
+
+        // Normal user
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        // Site policies not enabled
+        $this->assertFalse(userconsent::is_consent_needed($user->id));
+
+        // Site policies enabled
+        set_config('enablesitepolicies', 1);
+        $this->assertTrue(userconsent::is_consent_needed($user->id));
+
+        // Guest user
+        $this->setGuestUser();
+        $this->assertTrue(userconsent::is_consent_needed($USER->id));
+
+        // Testing here only with Google web crawlers. More crawlers can be found in core_useragent_testcase::user_agents_providers
+        $crawlers = [
+            'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+            'Googlebot/2.1 (+http://www.googlebot.com/bot.html)',
+            'Googlebot-Image/1.0',
+            'Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)',
+        ];
+
+        // Not yet open for google
+        foreach ($crawlers as $useragent) {
+            \core_useragent::instance(true, $useragent);
+            $this->assertTrue(userconsent::is_consent_needed($USER->id));
+        }
+
+        // Now open to google
+        set_config('opentogoogle', 1);
+        foreach ($crawlers as $useragent) {
+            \core_useragent::instance(true, $useragent);
+            $this->assertFalse(userconsent::is_consent_needed($USER->id));
+        }
+
+        // Just verifying that normal guest still needs to consent
+        \core_useragent::instance(true, null);
+        $this->assertTrue(userconsent::is_consent_needed($USER->id));
     }
 
     /**
@@ -544,7 +618,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
             'providetext' => 'yes',
             'withheldtext' => 'no',
             'mandatory' => 'first'
-            ];
+        ];
 
         $sitepolicy = $generator->create_multiversion_policy($options);
         $activeversion = policyversion::from_policy_latest($sitepolicy, policyversion::STATUS_PUBLISHED);

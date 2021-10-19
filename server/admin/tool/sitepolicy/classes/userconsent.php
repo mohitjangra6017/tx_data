@@ -432,6 +432,10 @@ class userconsent {
         }
 
         if (isguestuser()) {
+            if (!empty($CFG->opentogoogle) && \core_useragent::is_web_crawler()) {
+                return false;
+            }
+
             return empty($SESSION->tool_sitepolicy_consented);
         }
 
