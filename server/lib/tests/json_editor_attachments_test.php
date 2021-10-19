@@ -51,11 +51,9 @@ class core_json_editor_attachments_testcase extends advanced_testcase {
      * @return void
      */
     public function test_validate_schema_with_missing_key(): void {
-        $result = attachments::validate_schema([
-            'type' => attachments::get_type(),
-            'missing_key' => 'missing_key'
-        ]);
+        $result = attachments::validate_schema([]);
 
+        $this->assertDebuggingCalled();
         $this->assertFalse($result);
     }
 
@@ -65,7 +63,6 @@ class core_json_editor_attachments_testcase extends advanced_testcase {
     public function test_validate_schema_with_extra_keys(): void {
         $result = attachments::validate_schema([
             'type' => attachments::get_type(),
-            'content' => [],
             'extra_key' => ['extra_keys']
         ]);
 

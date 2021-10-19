@@ -47,7 +47,6 @@ final class attachments extends node implements block_node {
         $innernode->attachments = [];
 
         if (!array_key_exists('content', $node) || !is_array($node['content'])) {
-            debugging("No property 'content' found for the node", DEBUG_DEVELOPER);
             return $innernode;
         }
 
@@ -57,7 +56,7 @@ final class attachments extends node implements block_node {
         foreach ($node['content'] as $single) {
             $attachment = $schema->get_node($single['type'], $single);
             if (!($attachment instanceof attachment)) {
-                debugging("Invalid children node within the parent node '{$parent}'", DEBUG_DEVELOPER);
+                debugging("Invalid child node within the parent node '{$parent}'", DEBUG_DEVELOPER);
                 continue;
             }
 
@@ -72,32 +71,33 @@ final class attachments extends node implements block_node {
      * @return bool
      */
     public static function validate_schema(array $raw_node): bool {
-        if (!array_key_exists('content', $raw_node) || !is_array($raw_node['content'])) {
-            // Make sure that the property 'content' is existing.
-            return false;
+        if (array_key_exists('content', $raw_node)) {
+            if (!is_array($raw_node['content'])) {
+                return false;
+            }
+
+            // Check if all the nodes are actually attachment node.
+            $contents = $raw_node['content'];
+            $attachment_type = attachment::get_type();
+
+            foreach ($contents as $raw_node_content) {
+                if (!isset($raw_node_content['type'])) {
+                    // The child node within this collection node is invalid.
+                    return false;
+                }
+
+                if ($raw_node_content['type'] !== $attachment_type) {
+                    return false;
+                }
+
+                if (!attachment::validate_schema($raw_node_content)) {
+                    // Run it thru actual children.
+                    return false;
+                }
+            }
         }
 
-        // Check if all the nodes are actually attachment node.
-        $contents = $raw_node['content'];
-        $attachment_type = attachment::get_type();
-
-        foreach ($contents as $raw_node_content) {
-            if (!isset($raw_node_content['type'])) {
-                // The child node within this collection node is invalid.
-                return false;
-            }
-
-            if ($attachment_type !== $raw_node_content['type']) {
-                return false;
-            }
-
-            if (!attachment::validate_schema($raw_node_content)) {
-                // Run it thru actual children.
-                return false;
-            }
-        }
-
-        return node_helper::check_keys_match_against_data($raw_node, ['type', 'content']);
+        return node_helper::check_keys_match_against_data($raw_node, ['type'], ['content']);
     }
 
     /**
@@ -106,33 +106,33 @@ final class attachments extends node implements block_node {
      */
     public static function clean_raw_node(array $raw_node): ?array {
         $cleaned_raw_node = parent::clean_raw_node($raw_node);
-        if (null === $cleaned_raw_node) {
+        if ($cleaned_raw_node === null) {
             return null;
         }
 
-        if (!is_array($cleaned_raw_node['content'])) {
-            // Sometimes it can be null.
-            $cleaned_raw_node['content'] = [];
-        }
+        if (!empty($cleaned_raw_node['content']) && is_array($cleaned_raw_node['content'])) {
+            // Reset to numeric keys - just in case.
+            $cleaned_raw_node['content'] = array_values($cleaned_raw_node['content']);
 
-        // Reset to numeric keys - just in case.
-        $cleaned_raw_node['content'] = array_values($cleaned_raw_node['content']);
+            $contents = $cleaned_raw_node['content'];
+            $attachment_type = attachment::get_type();
 
-        $contents = $cleaned_raw_node['content'];
-        $attachment_type = attachment::get_type();
+            foreach ($contents as $i => $raw_node_content) {
+                if ($raw_node_content['type'] !== $attachment_type) {
+                    throw new \coding_exception("Invalid node structure for attachments");
+                }
 
-        foreach ($contents as $i => $raw_node_content) {
-            if ($attachment_type !== $raw_node_content['type']) {
-                throw new \coding_exception("Invalid node structure for attachments");
+                $cleaned_raw_node_content = attachment::clean_raw_node($raw_node_content);
+                if ($cleaned_raw_node_content === null) {
+                    // Something is wrong - we skip the whole process
+                    return null;
+                }
+
+                $cleaned_raw_node['content'][$i] = $cleaned_raw_node_content;
             }
-
-            $cleaned_raw_node_content = attachment::clean_raw_node($raw_node_content);
-            if (null === $cleaned_raw_node_content) {
-                // Something is wrong - we skip the whole process
-                return null;
-            }
-
-            $cleaned_raw_node['content'][$i] = $cleaned_raw_node_content;
+        } else {
+            // no content, remove
+            unset($cleaned_raw_node['content']);
         }
 
         return $cleaned_raw_node;
