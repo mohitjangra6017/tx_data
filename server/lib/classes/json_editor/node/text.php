@@ -138,7 +138,7 @@ final class text extends node implements inline_node {
                 if ('link' == $cleaned_type && isset($mark['attrs'])) {
                     // This is an assumption that if the text mark is a link. As the href needs to have a value
                     // in order to make the link works, otherwise it is just an invalid json node.
-                    $mark['attrs']['href'] = clean_param($mark['attrs']['href'], PARAM_URL);
+                    $mark['attrs']['href'] = self::clean_url($mark['attrs']['href']);
                 }
 
                 $cleaned_marks[] = $mark;
@@ -171,9 +171,7 @@ final class text extends node implements inline_node {
 
                 case 'link':
                     $url = $mark['attrs']['href'] ?? null;
-                    if ($url) {
-                        $url = clean_param($url, PARAM_URL);
-                    }
+                    $url = self::clean_url($url);
                     $str = html_writer::tag('a', $str, ['href' => $url]);
                     break;
 
@@ -209,9 +207,7 @@ final class text extends node implements inline_node {
 
                 case 'link':
                     $url = $mark['attrs']['href'] ?? null;
-                    if ($url) {
-                        $url = clean_param($url, PARAM_URL);
-                    }
+                    $url = self::clean_url($url);
                     $str = "{$str} ({$url})";
                     break;
 

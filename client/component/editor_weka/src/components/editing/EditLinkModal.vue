@@ -178,13 +178,14 @@ export default {
      * @param uri {string}
      */
     fixUrl(uri) {
-      const purposefulStarts = ['/', '#', 'http://', 'https://'];
+      try {
+        new URL(uri);
+      } catch (e) {
+        // Assuming a relative link, leave it.
+        if (uri.startsWith('/') || uri.startsWith('#')) {
+          return uri;
+        }
 
-      const uriHasPurposefulStart = purposefulStarts.some(purposefulStart =>
-        uri.startsWith(purposefulStart)
-      );
-
-      if (!uriHasPurposefulStart) {
         // We are using http rather than https because most sites are configured
         // to automatically upgrade to https if it is available,
         // however the reverse is not true (https -> http).

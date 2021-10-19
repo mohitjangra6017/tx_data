@@ -196,4 +196,24 @@ abstract class node {
         $raw_node['type'] = clean_string($raw_node['type']);
         return $raw_node;
     }
+
+    /**
+     * Clean url which also includes mailto: links
+     *
+     * @param string|null $url
+     * @return string|null
+     */
+    protected static function clean_url(?string $url): ?string {
+        if ($url === null || $url === '') {
+            return $url;
+        }
+
+        if (parse_url($url, PHP_URL_SCHEME) === 'mailto') {
+            $url = fix_utf8($url);
+        } else {
+            $url = clean_param($url, PARAM_URL);
+        }
+
+        return $url;
+    }
 }

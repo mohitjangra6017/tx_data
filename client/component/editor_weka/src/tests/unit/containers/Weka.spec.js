@@ -16,7 +16,7 @@
  * @module editor_weka
  */
 
-import { shallowMount } from '@vue/test-utils';
+import { mount, shallowMount } from '@vue/test-utils';
 import Toolbar from 'editor_weka/components/toolbar/Toolbar';
 import Weka from 'editor_weka/components/Weka';
 import Vue from 'vue';
@@ -65,11 +65,14 @@ const EXTENSIONS = [
  *
  * @param {Object} option
  * @param {Number} instanceId
- * @param {Boolean} compact
+ * @param {Boolean} compact=false
+ * @param {Boolean} useFullMount=false
  * @return {Wrapper<Vue>}
  */
-const factory = (option, instanceId, compact) => {
-  return shallowMount(Weka, {
+const factory = (option, instanceId, compact, useFullMount) => {
+  const mountFunction = useFullMount ? mount : shallowMount;
+
+  return mountFunction(Weka, {
     propsData: {
       options: option,
       usageIdentifier: {
@@ -77,7 +80,7 @@ const factory = (option, instanceId, compact) => {
         area: 'default',
         instanceId: instanceId,
       },
-      compact: compact,
+      compact,
       ariaLabel: 'Weka label',
     },
     mocks: {
@@ -123,5 +126,46 @@ describe('editor_weka/components/Weka.vue', () => {
     wrapper.setData({ toolbarItems: [{ foo: 'bar' }] });
     await Vue.nextTick();
     expect(wrapper.find(Toolbar).exists()).toBeTrue();
+  });
+
+  it('pasting links', async () => {
+    const wrapper = factory(null, 15, false, true);
+    await new Promise(resolve => {
+      wrapper.vm.$on('ready', resolve);
+    });
+
+    const e = {
+      clipboardData: {
+        getData() {
+          return 'http://example.com user@example.com\r\nhttps://example.com mailto:admin@example.com';
+        },
+      },
+    };
+
+    const proseMirror = wrapper.find('.ProseMirror');
+    expect(proseMirror.text()).toBe('');
+
+    proseMirror.trigger('paste', e);
+
+    expect(proseMirror.text()).not.toBe('');
+
+    const links = proseMirror.findAll('a');
+
+    const httpLink = links.wrappers[0];
+    expect(httpLink.text()).toBe('http://example.com');
+    expect(httpLink.attributes('href')).toBe('http://example.com');
+
+    const emailLink = links.wrappers[1];
+    expect(emailLink.text()).toBe('user@example.com');
+    expect(emailLink.attributes('href')).toBe('mailto:user@example.com');
+
+    const httpsLink = links.wrappers[2];
+    expect(httpsLink.text()).toBe('https://example.com');
+    expect(httpsLink.attributes('href')).toBe('https://example.com');
+
+    // Full mailto link, does not get special treatment, the email part of the url will be converted to a link only.
+    const fullMailtoUrl = links.wrappers[3];
+    expect(fullMailtoUrl.text()).toBe('admin@example.com');
+    expect(fullMailtoUrl.attributes('href')).toBe('mailto:admin@example.com');
   });
 });

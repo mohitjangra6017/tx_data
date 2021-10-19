@@ -39,11 +39,19 @@ const factory = (url, save) => {
 describe('editor_weka/components/editing/EditLinkModal.vue', () => {
   it('Should fix links if they are invalid', () => {
     const cases = [
-      ['www.example.com', 'http://www.example.com'], // No scheme, add it.
-      ['http://www.example.com', 'http://www.example.com'], // Has a scheme, leave it.
-      ['https://www.example.com', 'https://www.example.com'], // Has a scheme, leave it.
+      ['www.example.com', 'http://www.example.com'], // Incomplete url, try fix it.
+      ['http://www.example.com', 'http://www.example.com'], //  Valid http url
+      ['https://www.example.com', 'https://www.example.com'], // Valid https url.
+      [
+        'mailto:developer1@totaralearning.com',
+        'mailto:developer1@totaralearning.com',
+      ], // Valid mailto url
+      [
+        'mailto://developer1@totaralearning.com',
+        'mailto://developer1@totaralearning.com',
+      ], // Valid mailto url with slashes.
       ['/relative/on/purpose', '/relative/on/purpose'], // Looks relative on purpose, leave it.
-      ['#hash-on-purpose', '#hash-on-purpose'], // Looks like a hash fragment on purpose, leave it.
+      ['#hash-on-purpose', '#hash-on-purpose'], // Looks like a relative hash fragment link, leave it.
     ];
 
     const test = ([inLink, expectedOutLink]) => {

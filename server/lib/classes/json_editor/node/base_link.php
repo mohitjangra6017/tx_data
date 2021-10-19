@@ -93,7 +93,7 @@ abstract class base_link extends node {
         $attrs = $cleaned_raw_node['attrs'];
 
         $url = $attrs['url'];
-        $cleaned_url = clean_param($url, PARAM_URL);
+        $cleaned_url = self::clean_url($url);
 
         if (empty($cleaned_url)) {
             return null;

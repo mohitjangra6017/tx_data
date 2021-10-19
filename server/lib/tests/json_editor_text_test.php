@@ -65,7 +65,7 @@ class core_json_editor_text_testcase extends advanced_testcase {
             text::validate_schema([
                 'type' => text::get_type(),
                 'text' => 'ddd',
-                'marks' => [1, 2, 3 , 4]
+                'marks' => [1, 2, 3, 4]
             ])
         );
     }
@@ -112,6 +112,52 @@ class core_json_editor_text_testcase extends advanced_testcase {
 
         $cleaned = text::clean_raw_node($data);
         $this->assertSame($data, $cleaned);
+    }
+
+
+    /**
+     * @dataProvider test_clean_raw_node_link_marks_provider
+     * @param string $href
+     * @param bool $expect_allowed
+     * @throws coding_exception
+     */
+    public function test_clean_raw_node_with_link_mark(string $href, bool $expect_allowed): void {
+        $data = [
+            'type' => text::get_type(),
+            'text' => 'Something special',
+            'marks' => [
+                [
+                    'type' => 'link',
+                    'attrs' => [
+                        'href' => $href,
+                    ],
+                ],
+            ],
+        ];
+
+        $cleaned = text::clean_raw_node($data);
+
+        if ($expect_allowed) {
+            $this->assertSame($data, $cleaned);
+        } else {
+            $this->assertEquals('', $cleaned['marks'][0]['attrs']['href']);
+        }
+    }
+
+    public function test_clean_raw_node_link_marks_provider(): array
+    {
+        return [
+            'http' => ['http://example.com', true],
+            'https' => ['https://example.com', true],
+            'partial' =>['example.com', true],
+            'mailto' => ['mailto:jaron.steenson@totaralearning.com', true],
+            'mailto with slashes' => ['mailto://jaron.steenson@totaralearning.com', true], // Not actually a valid mailto url.
+            'mailto with query strings' => ['mailto:jaron.steenson@totaralearning.com?subject=Hello', true],
+            'mailto with no address' => ['mailto:?to=&subject=mailto%20with%20examples&body=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMailto', true],
+            'mailto multiple address' => ['mailto:someone@example.com,someoneelse@example.com', true],
+            'javascript' => ['javascript:alert(1)', false],
+            'javascript with slashes' => ['javascript://alert(1)', false], // Won't actually run js in most browsers.
+        ];
     }
 
     /**
@@ -168,69 +214,4 @@ class core_json_editor_text_testcase extends advanced_testcase {
         );
     }
 
-    /**
-     * @return void
-     */
-    public function test_clean_valid_raw_node_with_link(): void {
-        $valid_text_node = [
-            'type' => text::get_type(),
-            'text' => 'This is the text',
-            'marks' => [
-                [
-                    'type' => 'link',
-                    'attrs' => [
-                        'href' => 'http://example.com'
-                    ]
-                ]
-            ]
-        ];
-
-        $cleaned_valid_text_node = text::clean_raw_node($valid_text_node);
-        $this->assertArrayHasKey('marks', $cleaned_valid_text_node);
-        $this->assertCount(1, $cleaned_valid_text_node['marks']);
-
-        $marks = $cleaned_valid_text_node['marks'];
-        $mark = reset($marks);
-
-        $this->assertArrayHasKey('type', $mark);
-        $this->assertEquals('link', $mark['type']);
-
-        $this->assertArrayHasKey('attrs', $mark);
-        $this->assertArrayHasKey('href', $mark['attrs']);
-
-        $this->assertEquals('http://example.com', $mark['attrs']['href']);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_clean_invalid_raw_node_with_link(): void {
-        $valid_text_node = [
-            'type' => text::get_type(),
-            'text' => 'This is the text',
-            'marks' => [
-                [
-                    'type' => 'link',
-                    'attrs' => [
-                        'href' => 'mailto://admin@example.com'
-                    ]
-                ]
-            ]
-        ];
-
-        $cleaned_valid_text_node = text::clean_raw_node($valid_text_node);
-        $this->assertArrayHasKey('marks', $cleaned_valid_text_node);
-        $this->assertCount(1, $cleaned_valid_text_node['marks']);
-
-        $marks = $cleaned_valid_text_node['marks'];
-        $mark = reset($marks);
-
-        $this->assertArrayHasKey('type', $mark);
-        $this->assertEquals('link', $mark['type']);
-
-        $this->assertArrayHasKey('attrs', $mark);
-        $this->assertArrayHasKey('href', $mark['attrs']);
-
-        $this->assertEmpty($mark['attrs']['href']);
-    }
 }

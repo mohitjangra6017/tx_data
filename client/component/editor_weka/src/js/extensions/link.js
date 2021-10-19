@@ -39,6 +39,7 @@ import { pick } from 'tui/util';
 import { notify } from 'tui/notifications';
 
 const linkRegexGlobal = /\bhttps?:\/\/[-a-zA-Z0-9@:%._+~#=]+\b(?:[-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
+const emailRegexGlobal = /\b[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?/g;
 
 const cardTypes = ['link_block', 'link_media'];
 
@@ -52,6 +53,7 @@ class LinkExtension extends BaseExtension {
 
     this.isMedia = this.isMedia.bind(this);
     this._convertPastedUrl = this._convertPastedUrl.bind(this);
+    this._convertPastedEmail = this._convertPastedEmail.bind(this);
     this._getSelectionRange = this._getSelectionRange.bind(this);
   }
 
@@ -175,13 +177,23 @@ class LinkExtension extends BaseExtension {
       new Plugin({
         props: {
           transformPasted: slice => {
-            return new Slice(
-              parsePastedLinks(slice.content, {
+            let content = parsePastedLinks(
+              slice.content,
+              {
                 convert: this._convertPastedUrl,
-              }),
-              slice.openStart,
-              slice.openEnd
+              },
+              linkRegexGlobal
             );
+
+            content = parsePastedLinks(
+              content,
+              {
+                convert: this._convertPastedEmail,
+              },
+              emailRegexGlobal
+            );
+
+            return new Slice(content, slice.openStart, slice.openEnd);
           },
         },
       }),
@@ -263,7 +275,14 @@ class LinkExtension extends BaseExtension {
    */
   replaceWithTextLink(getRange, { url }) {
     this.editor.execute((state, dispatch) => {
-      const content = state.schema.text(url, [
+      let text = url;
+
+      // Change email link text to just the email address.
+      if (url.startsWith('mailto:')) {
+        text = url.substring('mailto:'.length);
+      }
+
+      const content = state.schema.text(text, [
         state.schema.mark('link', { href: url }),
       ]);
       const range = getRange();
@@ -325,29 +344,35 @@ class LinkExtension extends BaseExtension {
     const mark = this._getLinkMark(getRange);
     if (!mark) return;
     const media = mark && this.isMedia(mark.attrs.href);
-    return this.showActionDropdown(getRange().from, {
-      actions: [
-        {
-          label: langString('go_to_link_label', 'editor_weka'),
-          action: () => this._openLinkMarkAt(getRange),
-        },
-        {
-          label: langString('edit', 'core'),
-          action: () => this._editMarkAt(getRange),
-        },
-        {
-          label: media
-            ? langString('display_as_embedded_media', 'editor_weka')
-            : langString('display_as_card', 'editor_weka'),
-          action: () =>
-            this._markToCardAt(media ? 'link_media' : 'link_block', getRange),
-        },
-        {
-          label: langString('remove', 'core'),
-          action: () => this._removeMarkAt(getRange),
-        },
-      ],
+    const email = mark && mark.attrs.href.startsWith('mailto:');
+
+    const actions = [
+      {
+        label: langString('go_to_link_label', 'editor_weka'),
+        action: () => this._openLinkMarkAt(getRange),
+      },
+      {
+        label: langString('edit', 'core'),
+        action: () => this._editMarkAt(getRange),
+      },
+    ];
+
+    if (!email) {
+      actions.push({
+        label: media
+          ? langString('display_as_embedded_media', 'editor_weka')
+          : langString('display_as_card', 'editor_weka'),
+        action: () =>
+          this._markToCardAt(media ? 'link_media' : 'link_block', getRange),
+      });
+    }
+
+    actions.push({
+      label: langString('remove', 'core'),
+      action: () => this._removeMarkAt(getRange),
     });
+
+    return this.showActionDropdown(getRange().from, { actions });
   }
 
   /**
@@ -437,7 +462,13 @@ class LinkExtension extends BaseExtension {
    * @returns {LinkUpdateData}
    */
   async _prepareLinkUpdate(details) {
-    const { type, url, text } = details;
+    let { type, url, text } = details;
+
+    // Force mailto links to text nodes.
+    if (url.startsWith('mailto:')) {
+      return this._createEmailLinkUpdate(details);
+    }
+
     if (cardTypes.includes(type)) {
       const schema = this.editor.state.schema;
       const pluginMatch =
@@ -476,6 +507,31 @@ class LinkExtension extends BaseExtension {
     } else {
       return new LinkUpdateData({ type: 'link', url, text });
     }
+  }
+
+  /**
+   * @internal
+   * @param {string} url
+   * @param {?string} text
+   * @return {LinkUpdateData}
+   */
+  _createEmailLinkUpdate({ url, text }) {
+    if (!text) {
+      text = url.substring('mailto:'.length);
+    }
+
+    return new LinkUpdateData({ type: 'link', url, text });
+  }
+
+  /**
+   * Convert an email to either a link mark or a link node
+   *
+   * @internal
+   * @param {string} email
+   * @returns {Node|Mark}
+   */
+  _convertPastedEmail(email) {
+    return this._convertPastedUrl(`mailto:${email}`);
   }
 
   /**
@@ -693,9 +749,10 @@ const linkPlugins = [
  * @internal
  * @param {Fragment} fragment ProseMirror Fragment
  * @param {object} ctx Context object containing { convert() }
+ * @param {RegExp} regex The regex to find links, note this must include the /g global flag
  * @returns {Fragment} New fragment
  */
-function parsePastedLinks(fragment, ctx) {
+function parsePastedLinks(fragment, ctx, regex) {
   const nodes = [];
   fragment.forEach(function(child) {
     if (child.isText) {
@@ -703,8 +760,8 @@ function parsePastedLinks(fragment, ctx) {
       let pos = 0;
       let match;
 
-      linkRegexGlobal.lastIndex = 0;
-      while ((match = linkRegexGlobal.exec(text))) {
+      regex.lastIndex = 0;
+      while ((match = regex.exec(text))) {
         const start = match.index;
         const end = start + match[0].length;
 
@@ -730,7 +787,7 @@ function parsePastedLinks(fragment, ctx) {
         nodes.push(child.cut(pos));
       }
     } else {
-      nodes.push(child.copy(parsePastedLinks(child.content, ctx)));
+      nodes.push(child.copy(parsePastedLinks(child.content, ctx, regex)));
     }
   });
 

@@ -20,6 +20,7 @@ import 'core-js/features/string/ends-with'
 import 'core-js/features/string/from-code-point'
 import 'core-js/features/string/includes'
 import 'core-js/features/symbol'
+import 'core-js/features/url'
 
 // Intentionally do not use core-js polyfill for Promises, at least core-js
 // 3.10.1 - 3.15.1 introduce a bug in the Promise polyfill that might be a race
