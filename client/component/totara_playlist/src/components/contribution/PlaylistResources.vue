@@ -35,6 +35,7 @@
           :playlist-id="pageProps.playlistId"
           :title="playlist.name"
           :owned="playlist.owned"
+          @update-playlist="updatePlaylist"
         />
       </template>
       <template v-slot:bookmark>
@@ -172,6 +173,11 @@ export default {
           bookmarked: this.bookmarked,
         },
       });
+    },
+
+    updatePlaylist(event) {
+      // We want to propagate the title change as it could be used in other areas
+      this.$emit('updateTitle', event.name);
     },
 
     resourceReordered(obj) {

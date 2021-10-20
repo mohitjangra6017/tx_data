@@ -38,7 +38,7 @@
         <NavigationPanel
           :selected-id="id"
           :values="pageProps"
-          :title="title"
+          :title="itemTitle"
           :units="units"
           :grid-direction="gridDirection"
           :redirection="pageProps.redirection"
@@ -54,6 +54,7 @@
           :page-props="pageProps"
           :units="units"
           :grid-direction="gridDirection"
+          @updateTitle="updateTitle"
         />
       </template>
       <!-- /column -->
@@ -119,6 +120,7 @@ export default {
 
   data() {
     return {
+      itemTitle: this.title,
       libraryBreakpoints: [
         { name: 'xs', boundaries: [0, 364] },
         { name: 's', boundaries: [365, 768] },
@@ -195,6 +197,16 @@ export default {
       if (!has.call(this.$options.components, component)) {
         this.$options.components[component] = tui.asyncComponent(tuicomponent);
       }
+    },
+
+    /**
+     * In case the title gets updated by a sub-component we allow for the change to be propagated up
+     * updated and propagated to other components in here.
+     *
+     * @param {String} title
+     */
+    updateTitle(title) {
+      this.itemTitle = title;
     },
   },
 };

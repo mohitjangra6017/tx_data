@@ -21,7 +21,9 @@
  * @package totara_playlist
  */
 
+use core\format;
 use totara_core\advanced_feature;
+use totara_playlist\formatter\playlist_formatter;
 use totara_playlist\playlist;
 use totara_playlist\event\playlist_viewed;
 use totara_engage\access\access_manager;
@@ -70,10 +72,12 @@ if (!$playlist->is_available()) {
     $back_button = nav_helper::build_back_button($playlist->get_userid(), $source);
     $interactor = playlist_interactor::create_from_accessible($playlist);
 
+    $playlist_formatter = new playlist_formatter($playlist);
+
     if ($library_view) {
         $tui = new component('totara_engage/pages/LibraryView', [
             'id' => "playlist_{$id}",
-            'title' => $playlist->get_name(),
+            'title' => $playlist_formatter->format('name', format::FORMAT_PLAIN),
             'content' => [
                 'component' => 'PlaylistResourcesContent',
                 'tuicomponent' => 'totara_playlist/components/contribution/PlaylistResources',
