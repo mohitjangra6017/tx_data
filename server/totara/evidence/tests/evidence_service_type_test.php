@@ -28,7 +28,6 @@ use totara_core\phpunit\webservice_utils;
 use totara_evidence\customfield_area\evidence;
 use totara_evidence\entity;
 use totara_evidence\models;
-use totara_evidence\models\evidence_type as evidence_type_model;
 
 global $CFG;
 require_once($CFG->dirroot . '/totara/evidence/tests/evidence_testcase.php');
@@ -75,7 +74,19 @@ class totara_evidence_service_type_testcase extends totara_evidence_testcase {
                 'id' => $type['id']
             ]);
             $this->assert_webservice_success($response);
-            $this->assertEquals($type, $response['data']);
+
+            // There is no guarantee the system returns the $response['data']['fields']
+            // value with the same order as the type['fields'] value. This is why this
+            // attribute has to be validated separately - need to be sorted first.
+            $expected_fields = $type['fields'];
+            unset($type['fields']);
+
+            $actual = $response['data'];
+            $actual_fields = $actual['fields'];
+            unset($actual['fields']);
+
+            $this->assertEquals($type, $actual);
+            $this->assertEqualsCanonicalizing($expected_fields, $actual_fields);
         }
     }
 
