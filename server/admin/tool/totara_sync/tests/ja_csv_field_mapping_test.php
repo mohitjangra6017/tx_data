@@ -148,4 +148,51 @@ class ja_csv_field_mapping_test extends totara_sync_csv_testcase {
         $this->assertEquals('JAID1', $ja->idnumber);
         $this->assertEquals($user1->id, $ja->userid);
     }
+
+    public function test_ja_csv_with_date_fields_mapped() {
+        global $DB;
+        $user1 = $this->getDataGenerator()->create_user(['firstname' => 'User', 'lastname' => 'One', 'idnumber' => 'USER1']);
+
+        $configcsv = [
+            'import_deleted' => '1',
+            'import_enddate' => '1',
+            'import_idnumber' => '1',
+            'import_startdate' => '1',
+            'import_timemodified' => '1',
+            'import_useridnumber' => '1',
+
+            'fieldmapping_enddate' => 'custom_end_date',
+            'fieldmapping_startdate' => 'custom_start_date',
+            'fieldmapping_timemodified' => 'custom_timemodified',
+        ];
+
+        foreach ($configcsv as $k => $v) {
+            set_config($k, $v, 'totara_sync_source_jobassignment_csv');
+        }
+
+        $data = file_get_contents(__DIR__ . '/fixtures/ja_field_mapping_3.csv');
+        $filepath = $this->filedir . '/csv/ready/jobassignment.csv';
+        file_put_contents($filepath, $data);
+
+        $jas = $DB->get_records('job_assignment');
+        $this->assertCount(0, $jas);
+
+        $element = new totara_sync_element_jobassignment();
+        $element->set_config('allow_update', '1');
+        $element->set_config('allow_create', '1');
+        $result = $element->sync();
+        $this->assertTrue($result);
+
+        $jas = $DB->get_records('job_assignment');
+        $this->assertCount(1, $jas);
+
+        $job_assignment = reset($jas);
+        $csvdateformat = get_string('csvdateformatdefault', 'totara_core');
+        $expected_start_date = totara_date_parse_from_format($csvdateformat, '01/01/2010', true);
+        $expected_end_date = totara_date_parse_from_format($csvdateformat, '31/12/2050', true);
+        $expected_timemodified = totara_date_parse_from_format($csvdateformat, '01/04/2021', true);
+        $this->assertEquals($expected_start_date, $job_assignment->startdate);
+        $this->assertEquals($expected_end_date, $job_assignment->enddate);
+        $this->assertEquals($expected_timemodified, $job_assignment->synctimemodified);
+    }
 }

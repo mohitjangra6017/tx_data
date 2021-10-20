@@ -146,9 +146,9 @@ class totara_sync_source_jobassignment_database extends totara_sync_source_jobas
             $datefields = array('startdate', 'enddate', 'tempmanagerexpirydate');
             $database_dateformat = get_config('totara_sync_source_jobassignment_database', 'database_dateformat');
             foreach ($datefields as $datefield) {
-                if ($this->is_importing_field($datefield) && !empty($extdbrow[$datefield])) {
+                if ($this->is_importing_field($datefield) && !empty($dbrow[$datefield])) {
                     // Try to parse the contents - if parse fails assume a unix timestamp and leave unchanged.
-                    $parsed_date = totara_date_parse_from_format($database_dateformat, trim($extdbrow[$datefield]), true);
+                    $parsed_date = totara_date_parse_from_format($database_dateformat, trim($dbrow[$datefield]), true);
                     if ($parsed_date) {
                         $dbrow[$datefield] = $parsed_date;
                     } elseif (!is_numeric($dbrow[$datefield])) {
@@ -167,11 +167,11 @@ class totara_sync_source_jobassignment_database extends totara_sync_source_jobas
                 }
             }
 
-            if (empty($extdbrow['timemodified'])) {
+            if (empty($dbrow['timemodified'])) {
                 $dbrow['timemodified'] = 0;
             } else {
                 // Try to parse the contents - if parse fails assume a unix timestamp and leave unchanged.
-                $parsed_date = totara_date_parse_from_format($database_dateformat, trim($extdbrow['timemodified']), true);
+                $parsed_date = totara_date_parse_from_format($database_dateformat, trim($dbrow['timemodified']), true);
                 if ($parsed_date) {
                     $dbrow['timemodified'] = $parsed_date;
                 }

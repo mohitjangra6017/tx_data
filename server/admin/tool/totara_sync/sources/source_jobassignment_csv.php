@@ -162,11 +162,11 @@ class totara_sync_source_jobassignment_csv extends totara_sync_source_jobassignm
 
             $dbrow = $this->clean_fields($dbrow);
 
-            if (empty($csvrow['timemodified'])) {
+            if (empty($dbrow['timemodified'])) {
                 $dbrow['timemodified'] = 0;
             } else {
                 // Try to parse the contents - if parse fails assume a unix timestamp and leave unchanged.
-                $parsed_date = totara_date_parse_from_format($csvdateformat, trim($csvrow['timemodified']), true);
+                $parsed_date = totara_date_parse_from_format($csvdateformat, trim($dbrow['timemodified']), true);
                 if ($parsed_date) {
                     $dbrow['timemodified'] = $parsed_date;
                 }
@@ -175,9 +175,9 @@ class totara_sync_source_jobassignment_csv extends totara_sync_source_jobassignm
             // Date fields.
             $datefields = array('startdate', 'enddate', 'tempmanagerexpirydate');
             foreach ($datefields as $datefield) {
-                if ($this->is_importing_field($datefield) && !empty($csvrow[$datefield])) {
+                if ($this->is_importing_field($datefield) && !empty($dbrow[$datefield])) {
                     // Try to parse the contents - if parse fails assume a unix timestamp and leave unchanged.
-                    $parsed_date = totara_date_parse_from_format($csvdateformat, trim($csvrow[$datefield]), true);
+                    $parsed_date = totara_date_parse_from_format($csvdateformat, trim($dbrow[$datefield]), true);
                     if ($parsed_date) {
                         $dbrow[$datefield] = $parsed_date;
                     } elseif (!is_numeric($dbrow[$datefield])) {
