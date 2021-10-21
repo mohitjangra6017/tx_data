@@ -33,7 +33,12 @@ $goalpersonalid = required_param('id', PARAM_INT);
 require_login();
 
 // Set up the variables for a personal goal.
-$goalpersonal = goal::get_goal_item(array('id' => $goalpersonalid), goal::SCOPE_PERSONAL);
+$goalpersonal = goal::get_goal_item(array('id' => $goalpersonalid), goal::SCOPE_PERSONAL, IGNORE_MISSING, true);
+
+if ($goalpersonal->deleted) {
+    print_error('error:goalnotfound', 'totara_hierarchy');
+}
+
 customfield_load_data($goalpersonal, 'goal_user', 'goal_user');
 
 $userid = $goalpersonal->userid;
