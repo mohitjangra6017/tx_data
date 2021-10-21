@@ -8,9 +8,14 @@ Feature: Recommendations will not appear in workspaces when recommenders engine 
     And the following "users" exist:
       | username | firstname | lastname | email             |
       | user1    | User      | One      | user1@example.com |
+      | user2    | User      | Two      | user2@example.com |
     And the following "workspaces" exist in "container_workspace" plugin:
-      | name             | summary   | owner |
-      | Test Workspace 1 | Workspace | user1 |
+      | name                  | summary   | owner |
+      | Test Workspace 1      | Workspace | user1 |
+      | Recommended workspace | Workspace | user2 |
+    And the following "user recommendations" exist in "ml_recommender" plugin:
+      | component           | name                  | username |
+      | container_workspace | Recommended workspace | admin    |
 
   Scenario: Disabling the recommender plugin will hide the recently viewed block from view mode
     Given I log in as "admin"
