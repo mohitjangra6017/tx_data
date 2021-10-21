@@ -54,6 +54,7 @@
         <ParticipantUserHeader
           :user-name="subjectUser.fullname"
           :profile-picture="subjectUser.profileimageurlsmall"
+          :profile-picture-alt="subjectUser.profileimagealt"
           size="small"
           class="tui-participantContent__user-info"
         />

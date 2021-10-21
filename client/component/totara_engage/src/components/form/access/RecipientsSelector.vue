@@ -354,7 +354,7 @@ export default {
           case 'src':
             return recipient.other.imageurl || '';
           case 'alt':
-            return recipient.other.imagealt || '';
+            return recipient.other.imagealt || recipient.other.fullname;
           case 'fullname':
             return recipient.other.fullname;
         }

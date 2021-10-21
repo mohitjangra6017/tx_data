@@ -54,6 +54,7 @@ class external_participant extends model {
     protected $model_accessor_whitelist = [
         'fullname',
         'profileimageurlsmall',
+        'profileimagealt',
         'participant_instance'
     ];
 
@@ -143,6 +144,15 @@ class external_participant extends model {
 
     public function get_fullname(): string {
         return $this->entity->name;
+    }
+
+    /**
+     * Get the profile image alt text of an external participant.
+     *
+     * @return string
+     */
+    public function get_profileimagealt(): string {
+        return $this->get_fullname();
     }
 
     /**

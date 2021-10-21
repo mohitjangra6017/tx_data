@@ -21,7 +21,7 @@
   <div class="tui-workspaceDiscussionTab">
     <template v-if="canPostDiscussion">
       <PostDiscussionForm
-        :avatar-image-alt="user.profileimagealt || user.fullname"
+        :avatar-image-alt="user.profileimagealt"
         :avatar-image-src="user.profileimageurl"
         :submitting="submitting"
         :workspace-context-id="workspaceContextId"

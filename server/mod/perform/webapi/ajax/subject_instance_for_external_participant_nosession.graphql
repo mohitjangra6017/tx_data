@@ -25,6 +25,7 @@ query mod_perform_subject_instance_for_external_participant_nosession(
     subject_user {
       id
       fullname
+      profileimagealt
       profileimageurlsmall
     }
   }

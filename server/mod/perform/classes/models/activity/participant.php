@@ -25,6 +25,7 @@ namespace mod_perform\models\activity;
 
 use coding_exception;
 use core\entity\user;
+use core_user\profile\user_field_resolver;
 use user_picture;
 
 /**
@@ -35,6 +36,7 @@ use user_picture;
  * @property-read int $id
  * @property-read string $fullname
  * @property-read string $email
+ * @property-read string $profileimagealt
  * @property-read string $profileimageurlsmall
  */
 class participant {
@@ -58,7 +60,14 @@ class participant {
      *
      * @var array
      */
-    public static $fields = ['id', 'fullname', 'email', 'profileimageurlsmall', 'source'];
+    public static $fields = [
+        'id',
+        'fullname',
+        'email',
+        'profileimagealt',
+        'profileimageurlsmall',
+        'source'
+    ];
 
     /**
      * Fields that can be fetched strictly from this model.
@@ -104,6 +113,20 @@ class participant {
      */
     public function is_external(): bool {
         return $this->source === participant_source::EXTERNAL;
+    }
+
+    /**
+     * Get the user profile image alt text.
+     *
+     * @return string
+     */
+    public function get_profileimagealt(): string {
+        if ($this->source === participant_source::EXTERNAL) {
+            return $this->user->get_profileimagealt();
+        }
+
+        $field_resolver = user_field_resolver::from_record($this->user->to_record());
+        return $field_resolver->get_field_value('profileimagealt');
     }
 
     /**

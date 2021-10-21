@@ -15,6 +15,7 @@ query pathway_manual_role_ratings(
     latest_rating {
       rater {
         fullname
+        profileimagealt
         profileimageurl
       }
       scale_value {

@@ -291,20 +291,19 @@ final class user_field_resolver {
     protected function do_get_value(string $field) {
         global $PAGE, $USER;
 
+        $user_record = (object) $this->target_user_record;
+
         // The following fields require special handling.
         switch ($field) {
             case 'profileimageurl':
-                $user_record = (object) $this->target_user_record;
                 $picture = new \user_picture($user_record, 1);
                 return $picture->get_url($PAGE)->out(false);
 
             case 'profileimageurlsmall':
-                $user_record = (object) $this->target_user_record;
                 $picture = new \user_picture($user_record, 0);
                 return $picture->get_url($PAGE)->out(false);
 
             case 'fullname':
-                $user_record = (object) $this->target_user_record;
                 return fullname($user_record);
 
             case 'interests':
@@ -324,7 +323,9 @@ final class user_field_resolver {
 
                 return null;
             case 'profileimagealt':
-                return $this->target_user_record['imagealt'] ?? null;
+                return !empty($this->target_user_record['imagealt'])
+                    ? $this->target_user_record['imagealt']
+                    : fullname($user_record);
 
             case 'profileurl':
                 $user_id = $this->target_user_record['id'];
@@ -343,7 +344,6 @@ final class user_field_resolver {
                 return "mailto:{$email}";
 
             case 'timezone':
-                $user_record = (object) $this->target_user_record;
                 return core_date::get_localised_timezone(core_date::get_user_timezone($user_record));
 
             case 'country':

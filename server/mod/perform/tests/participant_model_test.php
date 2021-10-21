@@ -22,10 +22,11 @@
  * @category test
  */
 
+use mod_perform\entity\activity\external_participant as external_participant_entity;
+use mod_perform\models\activity\external_participant as external_participant_model;
 use mod_perform\models\activity\participant;
 use mod_perform\models\activity\participant_source;
 use core\entity\user;
-use mod_perform\models\activity\external_participant;
 
 /**
  * Tests the participant model.
@@ -40,36 +41,53 @@ class mod_perform_participant_model_testcase extends advanced_testcase {
             'firstname' => 'Hello',
             'lastname' => 'World',
             'email' => 'me@who.com',
+            'imagealt' => 'myaltimage text'
         ];
         $user = new user($this->getDataGenerator()->create_user($user_data), false, false);
 
         $participant = new participant($user);
 
-        $fullname = sprintf( '%s %s', $user_data['firstname'], $user_data['lastname']);
+        $fullname = sprintf('%s %s', $user_data['firstname'], $user_data['lastname']);
 
         $this->assertEquals($fullname, $participant->fullname);
         $this->assertEquals($user_data['email'], $participant->email);
+        $this->assertEquals('myaltimage text', $participant->profileimagealt);
+        $this->assertEquals(participant_source::SOURCE_TEXT[participant_source::INTERNAL], $participant->get_source());
+
+        $user_data2 = [
+            'firstname' => 'Firstname',
+            'lastname' => 'lastname',
+            'email' => 'firstname.lastname@totaralearning.com',
+        ];
+        $user2 = new user($this->getDataGenerator()->create_user($user_data2), false, false);
+
+        $participant = new participant($user2);
+
+        $fullname = sprintf('%s %s', $user_data2['firstname'], $user_data2['lastname']);
+
+        $this->assertEquals($fullname, $participant->fullname);
+        $this->assertEquals($user_data2['email'], $participant->email);
+        $this->assertEquals($fullname, $participant->profileimagealt);
         $this->assertEquals(participant_source::SOURCE_TEXT[participant_source::INTERNAL], $participant->get_source());
     }
 
     public function test_load_with_external_participant() {
         $name = 'Aug man';
         $email = 'august@year.com';
-        $external_participant = $this->getMockBuilder(external_participant::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
-        $external_participant->expects($this->any())
-            ->method('__get')
-            ->willReturnMap([
-                ['fullname', $name],
-                ['email', $email],
-            ]);
+        $external_participant_entity = new external_participant_entity();
+        $external_participant_entity->name = $name;
+        $external_participant_entity->email = $email;
+        $external_participant_entity->save();
 
-        $participant = new participant($external_participant, participant_source::EXTERNAL);
+        $participant = new participant(
+            external_participant_model::load_by_entity($external_participant_entity),
+            participant_source::EXTERNAL
+        );
 
         $this->assertEquals($name, $participant->fullname);
         $this->assertEquals($email, $participant->email);
+        $this->assertEquals($name, $participant->profileimagealt);
         $this->assertEquals(participant_source::SOURCE_TEXT[participant_source::EXTERNAL], $participant->get_source());
     }
 

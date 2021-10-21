@@ -45,6 +45,7 @@ query mod_perform_participant_section(
           participant_instance {
             participant {
               fullname
+              profileimagealt
               profileimageurlsmall
             }
           }

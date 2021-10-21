@@ -32,7 +32,7 @@
           <li v-for="({ user }, index) in like.reactions" :key="index">
             <Avatar
               :src="user.profileimageurl"
-              :alt="user.profileimagealt || ''"
+              :alt="user.profileimagealt"
               size="xsmall"
             />
 

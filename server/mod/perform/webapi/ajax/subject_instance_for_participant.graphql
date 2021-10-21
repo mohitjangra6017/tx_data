@@ -33,6 +33,7 @@ query mod_perform_subject_instance_for_participant(
     subject_user {
       id
       fullname
+      profileimagealt
       profileimageurlsmall
       card_display {
         profile_picture_alt

@@ -29,6 +29,7 @@ query mod_perform_view_only_section_responses(
           participant_instance {
             participant {
               fullname
+              profileimagealt
               profileimageurlsmall
             }
           }

@@ -16,6 +16,7 @@ query performelement_redisplay_subject_instance_previous_responses_nosession(
         participant_instance {
           participant {
             fullname
+            profileimagealt
             profileimageurlsmall
           }
         }

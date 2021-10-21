@@ -21,7 +21,7 @@
     <Avatar
       :src="profilePicture"
       :size="size"
-      :alt="userName"
+      :alt="profilePictureAlt"
       :aria-hidden="true"
       class="tui-participantUserHeader__avatar"
     />
@@ -46,6 +46,7 @@ export default {
 
   props: {
     profilePicture: String,
+    profilePictureAlt: String,
     regularWeight: Boolean,
     size: String,
     userName: String,

@@ -318,10 +318,14 @@ class core_webapi_resolver_type_user_testcase extends advanced_testcase {
     public function test_resolver_profileimagealt() {
         $args = ['format' => format::FORMAT_PLAIN];
         $user = $this->getDataGenerator()->create_user(['imagealt' => 'test']);
+        // This user does not have a alt text so it should fall back to the user's full name
+        $user2 = $this->getDataGenerator()->create_user(['firstname' => 'Firstname', 'lastname' => 'Lastname']);
         self::assertNull($this->resolve_graphql_type('core_user', 'profileimagealt', $user, $args));
+        self::assertNull($this->resolve_graphql_type('core_user', 'profileimagealt', $user2, $args));
 
         $this->setAdminUser();
         self::assertSame('test', $this->resolve_graphql_type('core_user', 'profileimagealt', $user, $args));
+        self::assertSame('Firstname Lastname', $this->resolve_graphql_type('core_user', 'profileimagealt', $user2, $args));
     }
 
     public function test_resolver_firstaccess() {

@@ -37,6 +37,7 @@ query mod_perform_my_subject_instances(
         }
         subject_user {
           fullname
+          profileimagealt
           profileimageurlsmall
         }
         participant_instances {
@@ -70,6 +71,7 @@ query mod_perform_my_subject_instances(
             participant_id
             participant {
               fullname
+              profileimagealt
               profileimageurlsmall
             }
             core_relationship {

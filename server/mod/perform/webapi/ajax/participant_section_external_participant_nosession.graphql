@@ -52,6 +52,7 @@ query mod_perform_participant_section_external_participant_nosession(
           participant_instance {
             participant {
               fullname
+              profileimagealt
               profileimageurlsmall
             }
           }

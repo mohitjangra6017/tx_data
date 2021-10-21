@@ -30,7 +30,7 @@
       <Loading v-if="loading" />
       <ul v-else class="tui-engageArticleNameListModal__content-list">
         <li v-for="profile in profiles" :key="profile.id">
-          <Avatar :src="profile.src" alt="" size="xsmall" />
+          <Avatar :src="profile.src" alt="profile.name" size="xsmall" />
           <a :href="profileUrl(profile.id)">
             {{ profile.name }}
           </a>

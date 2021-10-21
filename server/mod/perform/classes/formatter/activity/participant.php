@@ -23,6 +23,7 @@
 
 namespace mod_perform\formatter\activity;
 
+use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\formatter\formatter;
 use mod_perform\models\activity\participant as participant_model;
 
@@ -43,6 +44,7 @@ class participant extends formatter {
             'id' => null,
             'fullname' => null,
             'email' => null,
+            'profileimagealt' => string_field_formatter::class,
             'profileimageurlsmall' => null,
             'source' => null,
         ];

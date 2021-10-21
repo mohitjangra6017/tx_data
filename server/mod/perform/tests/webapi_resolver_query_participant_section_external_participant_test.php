@@ -196,6 +196,8 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
         $section_element_ids = array_column($section_element_responses, 'section_element_id');
         $this->assertContainsEquals($section_element->id, $section_element_ids);
 
+        $subject_user = $external_section->participant_instance->subject_instance->subject_user;
+
         $expected = [
             'section_element_id' => $section_element->id,
             'element' =>
@@ -234,8 +236,9 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
                         [
                             'participant_instance' => [
                                 'participant' => [
-                                    'fullname' => $external_section->participant_instance->subject_instance->subject_user->fullname,
-                                    'profileimageurlsmall' => self::get_default_image_url()
+                                    'fullname' => $subject_user->fullname,
+                                    'profileimageurlsmall' => self::get_default_image_url(),
+                                    'profileimagealt' => $subject_user->fullname,
                                 ]
                             ],
                             'response_data' => null,

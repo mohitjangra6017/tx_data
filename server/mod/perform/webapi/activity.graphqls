@@ -501,6 +501,10 @@ type mod_perform_participant {
   """
   email: String
   """
+  Alternative text of the user's profile image
+  """
+  profileimagealt: String
+  """
   URL of the user's profile image
   """
   profileimageurlsmall: String

@@ -41,6 +41,9 @@
               :profile-picture="
                 response.participant_instance.participant.profileimageurlsmall
               "
+              :profile-picture-alt="
+                response.participant_instance.participant.profileimagealt
+              "
               size="xxsmall"
             />
 

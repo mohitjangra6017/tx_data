@@ -86,8 +86,9 @@ class mod_perform_webapi_resolver_query_subject_instance_for_participant_testcas
                 'id' => self::$about_user_and_participating->subject_user->id,
                 'fullname' => self::$about_user_and_participating->subject_user->fullname,
                 'profileimageurlsmall' => $profile_image_small_url,
+                'profileimagealt' => self::$about_user_and_participating->subject_user->fullname,
                 'card_display' => [
-                    'profile_picture_alt' => null,
+                    'profile_picture_alt' => self::$about_user_and_participating->subject_user->fullname,
                     'profile_url' => $profile_url,
                     'profile_picture_url' => $profile_image_url,
                     'display_fields' => [

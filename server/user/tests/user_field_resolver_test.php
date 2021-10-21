@@ -151,4 +151,24 @@ class core_user_user_field_resolver_testcase extends advanced_testcase {
 
         $this->assertEquals('skype_id_with_me', $resolver->get_field_value('skype'));
     }
+
+    /**
+     * @return void
+     */
+    public function test_get_profileimagealt(): void {
+        $generator = $this->getDataGenerator();
+        $user_one = $generator->create_user(['imagealt' => 'Test alt text']);
+
+        $this->setUser($user_one);
+        $resolver = user_field_resolver::from_record($user_one);
+
+        $this->assertEquals('Test alt text', $resolver->get_field_value('profileimagealt'));
+
+        $user_two = $generator->create_user(['firstname' => 'Firstname', 'lastname' => 'Lastname']);
+
+        $this->setUser($user_two);
+        $resolver = user_field_resolver::from_record($user_two);
+
+        $this->assertEquals('Firstname Lastname', $resolver->get_field_value('profileimagealt'));
+    }
 }

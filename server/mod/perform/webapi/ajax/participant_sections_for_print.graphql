@@ -48,6 +48,7 @@ query mod_perform_participant_sections_for_print(
           participant_instance {
             participant {
               fullname
+              profileimagealt
               profileimageurlsmall
             }
           }

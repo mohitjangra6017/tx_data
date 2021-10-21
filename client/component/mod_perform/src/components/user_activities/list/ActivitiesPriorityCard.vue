@@ -24,7 +24,7 @@
     >
       <div class="tui-performUserActivitiesPriorityCard__top">
         <Avatar
-          :alt="subjectUser.fullname"
+          :alt="subjectUser.profileimagealt"
           :aria-hidden="true"
           :src="subjectUser.profileimageurlsmall"
           size="xsmall"

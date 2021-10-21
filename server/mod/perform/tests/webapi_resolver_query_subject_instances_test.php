@@ -129,6 +129,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
             'subject_user' => [
                 'fullname' => $subject_instance->subject_user->fullname,
                 'profileimageurlsmall' => $subject_user_profile_image_url,
+                'profileimagealt' => $subject_instance->subject_user->fullname,
             ],
             'job_assignment' => null,
             'participant_instances' => [
@@ -166,7 +167,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                         'participant_id' => $participant_id,
                         'participant' => [
                             'fullname' => $participant->fullname,
-                            'profileimageurlsmall' => $profile_image_url
+                            'profileimageurlsmall' => $profile_image_url,
+                            'profileimagealt' => $participant->fullname,
                         ],
                         'core_relationship' => [
                             'id' => $subject_relationship->id,
@@ -383,6 +385,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
             'subject_user' => [
                 'fullname' => $subject_instance->subject_user->fullname,
                 'profileimageurlsmall' => $subject_user_profile_image_url,
+                'profileimagealt' => $subject_instance->subject_user->fullname,
             ],
             'job_assignment' => null,
             'participant_instances' => [
@@ -436,7 +439,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                         'participant_id' => $participant_id,
                         'participant' => [
                             'fullname' => $participant->fullname,
-                            'profileimageurlsmall' => $profile_image_url
+                            'profileimageurlsmall' => $profile_image_url,
+                            'profileimagealt' => $participant->fullname,
                         ],
                         'core_relationship' => [
                             'id' => $subject_relationship->id,
@@ -456,7 +460,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                         'participant_id' => $external_participant->id,
                         'participant' => [
                             'fullname' => $external_participant->name,
-                            'profileimageurlsmall' => $default_image_url
+                            'profileimageurlsmall' => $default_image_url,
+                            'profileimagealt' => $external_participant->name,
                         ],
                         'core_relationship' => [
                             'id' => $external_relationship->id,
@@ -556,6 +561,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
             'subject_user' => [
                 'fullname' => $subject_instance->subject_user->fullname,
                 'profileimageurlsmall' => $subject_user_profile_image_url,
+                'profileimagealt' => $subject_instance->subject_user->fullname,
             ],
             'job_assignment' => null,
             'participant_instances' => [
@@ -602,7 +608,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                         'participant_id' => $participant_id,
                         'participant' => [
                             'fullname' => $participant->fullname,
-                            'profileimageurlsmall' => $profile_image_url
+                            'profileimageurlsmall' => $profile_image_url,
+                            'profileimagealt' => $participant->fullname,
                         ],
                         'core_relationship' => [
                             'id' => $subject_relationship->id,
@@ -828,6 +835,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                 'subject_user' => [
                     'fullname' => $subject_instance->subject_user->fullname,
                     'profileimageurlsmall' => $subject_user_profile_image_url,
+                    'profileimagealt' => $subject_instance->subject_user->fullname,
                 ],
                 'job_assignment' => null,
                 'participant_instances' => $expected_participant_instances
@@ -853,7 +861,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $manager_user->id,
                             'participant' => [
                                 'fullname' => $manager_user->fullname,
-                                'profileimageurlsmall' => $manager_user_profile_image_url
+                                'profileimageurlsmall' => $manager_user_profile_image_url,
+                                'profileimagealt' => $manager_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $manager_relationship->id,
@@ -883,7 +892,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $subject_user->id,
                             'participant' => [
                                 'fullname' => $subject_user->fullname,
-                                'profileimageurlsmall' => $subject_user_profile_image_url
+                                'profileimageurlsmall' => $subject_user_profile_image_url,
+                                'profileimagealt' => $subject_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $subject_relationship->id,
@@ -903,7 +913,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $manager_user->id,
                             'participant' => [
                                 'fullname' => $manager_user->fullname,
-                                'profileimageurlsmall' => $manager_user_profile_image_url
+                                'profileimageurlsmall' => $manager_user_profile_image_url,
+                                'profileimagealt' => $manager_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $manager_relationship->id,
@@ -933,7 +944,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $subject_user->id,
                             'participant' => [
                                 'fullname' => $subject_user->fullname,
-                                'profileimageurlsmall' => $subject_user_profile_image_url
+                                'profileimageurlsmall' => $subject_user_profile_image_url,
+                                'profileimagealt' => $subject_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $subject_relationship->id,
@@ -1003,7 +1015,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $manager_user->id,
                             'participant' => [
                                 'fullname' => $manager_user->fullname,
-                                'profileimageurlsmall' => $manager_user_profile_image_url
+                                'profileimageurlsmall' => $manager_user_profile_image_url,
+                                'profileimagealt' => $manager_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $manager_relationship->id,
@@ -1033,7 +1046,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $subject_user->id,
                             'participant' => [
                                 'fullname' => $subject_user->fullname,
-                                'profileimageurlsmall' => $subject_user_profile_image_url
+                                'profileimageurlsmall' => $subject_user_profile_image_url,
+                                'profileimagealt' => $subject_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $subject_relationship->id,
@@ -1053,7 +1067,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $manager_user->id,
                             'participant' => [
                                 'fullname' => $manager_user->fullname,
-                                'profileimageurlsmall' => $manager_user_profile_image_url
+                                'profileimageurlsmall' => $manager_user_profile_image_url,
+                                'profileimagealt' => $manager_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $manager_relationship->id,
@@ -1083,7 +1098,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends testc
                             'participant_id' => $subject_user->id,
                             'participant' => [
                                 'fullname' => $subject_user->fullname,
-                                'profileimageurlsmall' => $subject_user_profile_image_url
+                                'profileimageurlsmall' => $subject_user_profile_image_url,
+                                'profileimagealt' => $subject_user->fullname,
                             ],
                             'core_relationship' => [
                                 'id' => $subject_relationship->id,

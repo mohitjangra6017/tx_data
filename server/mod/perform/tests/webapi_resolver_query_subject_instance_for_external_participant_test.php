@@ -222,6 +222,7 @@ class mod_perform_webapi_resolver_query_subject_instance_for_external_participan
                 'id' => $subject_user->id,
                 'fullname' => $subject_user->fullname,
                 'profileimageurlsmall' => self::get_default_image_url()->out(true),
+                'profileimagealt' => $subject_user->fullname,
             ]
         ];
 

@@ -51,7 +51,7 @@
           <Cell size="5" valign="center">
             <Avatar
               :src="row.user.profileimageurl"
-              :alt="row.user.fullname"
+              :alt="row.user.profileimagealt"
               size="small"
               class="tui-bulkManualRatingRateUsersList__avatar"
             />

@@ -257,6 +257,7 @@ class mod_perform_webapi_resolver_query_view_only_section_responses_testcase ext
                             'participant' => [
                                 'profileimageurlsmall' => $profile_image_small_url,
                                 'fullname' => $subject_participant_user->fullname,
+                                'profileimagealt' => $subject_participant_user->fullname,
                             ]
                         ],
                         'response_data' => null,

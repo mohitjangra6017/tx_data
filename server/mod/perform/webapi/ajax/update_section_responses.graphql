@@ -34,6 +34,7 @@ mutation mod_perform_update_section_responses(
             participant_instance {
               participant {
                 fullname
+                profileimagealt
                 profileimageurlsmall
               }
             }

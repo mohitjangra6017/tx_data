@@ -84,6 +84,7 @@
                   : row.participant.fullname
               "
               :profile-picture="row.participant.profileimageurlsmall"
+              :profile-picture-alt="row.participant.profileimagealt"
               :regular-weight="!forCurrentUserInRole(row)"
               size="xxsmall"
             />

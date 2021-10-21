@@ -67,7 +67,7 @@
                   <!-- Rater avatar & name cell -->
                   <Avatar
                     :src="getProfilePhotoUrl(row)"
-                    :alt="getUserName(row)"
+                    :alt="getProfilePhotoAlt(row)"
                     size="xsmall"
                   />
                   <div class="tui-pathwayLearningPlanAchievement__rater-name">
@@ -248,6 +248,19 @@ export default {
       }
 
       return roleRating.latest_rating.rater.profileimageurl;
+    },
+
+    /**
+     * Provide URL for user avatar
+     *
+     * @return {String}
+     */
+    getProfilePhotoAlt(roleRating) {
+      if (this.raterPurged(roleRating)) {
+        return '';
+      }
+
+      return roleRating.latest_rating.rater.profileimagealt;
     },
 
     /**
