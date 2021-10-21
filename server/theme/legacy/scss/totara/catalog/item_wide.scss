@@ -98,6 +98,10 @@ $catalog_item_wide-image_ratio: $catalog_item_wide-image_height / $catalog_item_
         &_logo {
           height: 20px;
           max-width: 70px;
+
+          .ie & {
+            height: 100%;
+          }
         }
       }
     }
