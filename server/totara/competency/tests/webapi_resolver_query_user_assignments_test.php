@@ -232,10 +232,10 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
             ->to_array();
     }
 
-    private function get_query_options($user_id = null, $cursor = null, $limit = 2, $filters = null): array {
+    private function get_query_options($user_id = null, $cursor = null, $result_size = 2, $filters = null): array {
         $options = [
             'input' => [
-                'limit' => $limit,
+                'result_size' => $result_size,
                 'cursor' => $cursor,
                 'user_id' => $user_id,
             ]

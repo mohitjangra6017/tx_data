@@ -71,7 +71,7 @@ class user_assignments implements query_resolver, has_middleware {
         // Get competency assignments
         $result = assignments::for($user_id)
             ->set_filters($query_filters)
-            ->fetch_paginated($args['input']['cursor'] ?? null, $args['input']['limit'] ?? null)
+            ->fetch_paginated($args['input']['cursor'] ?? null, $args['input']['result_size'] ?? null)
             ->transform(static function (assignment_entity $assignment) {
                 return assignment_model::load_by_entity($assignment);
             })
