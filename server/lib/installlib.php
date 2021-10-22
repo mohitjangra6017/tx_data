@@ -363,9 +363,9 @@ function install_print_header($config, $stagename, $heading, $stagetext, $stagec
     echo '<h2>'.$heading.'</h2>';
 
     if ($stagetext !== '') {
-        echo '<div class="alert ' . $stageclass . '">';
+        echo '<div class="alert ' . $stageclass . '"><div>';
         echo $stagetext;
-        echo '</div>';
+        echo '</div></div>';
     }
     // main
     echo '<form id="installform" method="post" action="install.php">';
