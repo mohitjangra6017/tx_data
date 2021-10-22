@@ -199,15 +199,6 @@ function tm_message_send($eventdata) {
         $userstate = 'loggedoff';
     }
 
-    // Find out what processors are defined currently
-    // When a user doesn't have settings none gets return, if he doesn't want contact "" gets returned
-    $preferencename = 'message_provider_' . $eventdata->component . '_' . $eventdata->name . '_' . $userstate;
-
-    $processor = get_user_preferences($preferencename, null, $eventdata->userto->id);
-    if (empty($processor)) { //this user never had a preference, save default
-        tm_message_set_default_message_preferences($eventdata->userto);
-    }
-
     // Most likely all totara messages are outside the course, if not they need to be fixed.
     if (!isset($eventdata->courseid)) {
         $eventdata->courseid = SITEID;
@@ -1033,10 +1024,12 @@ function tm_message_mark_message_read(stdClass $message, int $timeread, ?bool $m
 /**
  * Set default message preferences.
  *
+ * * @deprecated Since Totara 12.31
  * @param stdClass $user - User to set message preferences
  * @return bool
  */
 function tm_message_set_default_message_preferences(stdClass $user): bool {
+    debugging('tm_message_set_default_message_preferences has been deprecated since Totara 12.31', DEBUG_DEVELOPER);
     global $DB;
 
     $defaultonlineprocessor = 'email';
