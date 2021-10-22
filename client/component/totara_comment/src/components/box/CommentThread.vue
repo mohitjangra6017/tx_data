@@ -29,6 +29,13 @@
     />
 
     <div class="tui-commentThread__comments">
+      <div
+        v-if="$apollo.queries.thread.loading"
+        class="tui-commentThread__loading"
+      >
+        <Loading />
+      </div>
+
       <template v-for="(comment, index) in thread.comments">
         <!-- The only we do not want to use index as the key here is that because  -->
         <Comment
@@ -80,6 +87,7 @@
 
 <script>
 import Comment from 'totara_comment/components/comment/Comment';
+import Loading from 'tui/components/icons/Loading';
 import { isValid, SIZE_LARGE } from 'totara_comment/size';
 import CommentActionLink from 'totara_comment/components/action/CommentActionLink';
 import apolloClient from 'tui/apollo_client';
@@ -91,6 +99,7 @@ export default {
   components: {
     Comment,
     CommentActionLink,
+    Loading,
   },
 
   props: {
@@ -387,6 +396,14 @@ export default {
     &--withBorderBottom {
       border-bottom: var(--border-width-thin) solid var(--color-neutral-5);
     }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--gap-4);
+    color: var(--color-neutral-6);
   }
 }
 </style>
