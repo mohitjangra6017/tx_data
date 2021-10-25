@@ -108,7 +108,11 @@ export default {
       query: clientProviders,
       variables() {
         return {
-          id: this.id,
+          input: {
+            filters: {
+              id: this.id,
+            },
+          },
         };
       },
 

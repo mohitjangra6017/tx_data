@@ -42,13 +42,39 @@ class totara_oauth2_webapi_resolver_query_client_providers_testcase extends test
         $result = $this->resolve_graphql_query(
             self::QUERY,
             [
-                'id' => $provider->id,
+                'input' => [
+                    'filters' => [
+                        'id' => $provider->id
+                    ]
+                ],
             ]
         );
 
         self::assertNotEmpty($result);
         $model = $result->first();
         self::assertEquals($provider->id, $model->id);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_client_providers_with_empty_id(): void {
+        self::setAdminUser();
+
+        $generator = generator::instance();
+        $generator->create_client_provider("client_id_one");
+
+        $result = $this->resolve_graphql_query(
+            self::QUERY,
+            [
+                'input' => [
+                    'filters' => []
+                ],
+            ]
+        );
+
+        self::assertNotEmpty($result);
+        self::assertEquals(1, count($result));
     }
 
     /**
@@ -68,7 +94,11 @@ class totara_oauth2_webapi_resolver_query_client_providers_testcase extends test
         $this->resolve_graphql_query(
             self::QUERY,
             [
-                'id' => $provider->id
+                'input' => [
+                    'filters' => [
+                        'id' => $provider->id
+                    ]
+                ],
             ]
         );
     }

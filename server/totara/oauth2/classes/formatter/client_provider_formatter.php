@@ -45,7 +45,8 @@ class client_provider_formatter extends entity_model_formatter {
             'client_secret' => null,
             'client_id' => null,
             'oauth_url' => null,
-            'xapi_url' => null
+            'xapi_url' => null,
+            'id' => null
         ];
     }
 }

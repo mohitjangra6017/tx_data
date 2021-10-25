@@ -1,4 +1,5 @@
 type totara_oauth2_client_provider {
+  id: core_id!
   client_id: String!
   client_secret: String!
   name: String!
@@ -7,6 +8,19 @@ type totara_oauth2_client_provider {
   oauth_url: String!
 }
 
+input totara_oauth2_client_providers_filter {
+  id: core_id
+}
+
+input totara_oauth2_client_providers_input {
+  filters: totara_oauth2_client_providers_filter!
+}
+
 extend type Query {
-  totara_oauth2_client_providers(id: core_id!): [totara_oauth2_client_provider]
+  """
+  Query to fetch oauth2 client providers based on filters.
+  """
+  totara_oauth2_client_providers(
+    input: totara_oauth2_client_providers_input!
+  ): [totara_oauth2_client_provider]
 }

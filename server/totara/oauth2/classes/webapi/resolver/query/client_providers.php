@@ -41,7 +41,8 @@ class client_providers implements query_resolver, has_middleware {
      * @param execution_context $ec
      */
     public static function resolve(array $args, execution_context $ec): collection {
-        return (new client_provider())->add_filters($args)->get();
+        $filters = $args['input']['filters'] ?? [];
+        return (new client_provider())->add_filters($filters)->get();
     }
 
     /**

@@ -101,4 +101,17 @@ class totara_oauth2_webapi_type_client_provider_testcase extends testcase {
 
         self::assertEquals($this->model->client_secret, $value);
     }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_field_id(): void {
+        $value = $this->resolve_graphql_type(
+            $this->get_graphql_name(client_provider::class),
+            'id',
+            $this->model
+        );
+
+        self::assertEquals($this->model->id, $value);
+    }
 }
