@@ -4298,7 +4298,7 @@ class settings_navigation extends navigation_node {
         } else if (!empty($course->showgrades) && can_access_course($course)) {
             $reportavailable = true;
         }
-        if ($reportavailable) {
+        if ($reportavailable && !isguestuser()) {
             $url = new moodle_url('/grade/report/index.php', array('id'=>$course->id));
             $coursenode->add(get_string('grades'), $url, self::TYPE_SETTING, null, 'grades', new pix_icon('i/grades', ''));
         }
