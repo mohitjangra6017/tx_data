@@ -6168,6 +6168,20 @@ class admin_page_managemods extends admin_externalpage {
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_setting_manageenrols extends admin_setting {
+
+    /**
+     * Plugins that should not be shown in the 'Manage enrol plugins' interface.
+     *
+     * Unfortunately, we have to hard code 'container_perform' here. There is no reasonable safe & clean way to ask
+     * this plugin itself if it should be hidden. It exists outside of the enrol/ folder and is not picked up by
+     * factory code. It is however picked up by existing direct DB lookup of the enrol table.
+     *
+     * @var string[]
+     */
+    private $hide_enrol_plugins = [
+        'container_perform',
+    ];
+
     /**
      * Calls parent::__construct with specific arguments
      */
@@ -6286,6 +6300,9 @@ class admin_setting_manageenrols extends admin_setting {
         $url = new moodle_url('/admin/enrol.php', array('sesskey'=>sesskey()));
         $printed = array();
         foreach($allenrols as $enrol => $unused) {
+            if (in_array($enrol, $this->hide_enrol_plugins)) {
+                continue;
+            }
             $plugininfo = $pluginmanager->get_plugin_info('enrol_'.$enrol);
             $version = get_config('enrol_'.$enrol, 'version');
             if ($version === false) {

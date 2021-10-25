@@ -502,4 +502,49 @@ class core_admintree_testcase extends advanced_testcase {
         $this->assertEquals('These entries are invalid: nonvalid site name', $adminsetting->write_setting('nonvalid site name'));
         $this->assertEquals('Empty lines are not valid', $adminsetting->write_setting("localhost\n"));
     }
+
+    /**
+     * Test hiding enrol plugins from the "Manage enrol plugins" interface.
+     */
+    public function test_manageenrols_hide_enrol_plugins(): void {
+        global $DB;
+
+        // 'totara_learningplan' should be in the list by default, but not 'container_perform'.
+        $manage_enrols = new admin_setting_manageenrols();
+        $manage_table = $manage_enrols->output_html('');
+        self::assertStringContainsString('totara_learningplan', $manage_table);
+        self::assertStringNotContainsString('container_perform', $manage_table);
+
+        // Create a record in the enrol table for 'container_perform' enrol plugin. It should still not show up because we exclude it.
+        $DB->insert_record('enrol', [
+            'enrol' => 'container_perform',
+            'courseid' => 1,
+        ]);
+        // Any other plugins found in the table should show up.
+        $DB->insert_record('enrol', [
+            'enrol' => 'mock_enrol_plugin',
+            'courseid' => 1,
+        ]);
+        $manage_table = $manage_enrols->output_html('');
+        self::assertStringContainsString('totara_learningplan', $manage_table);
+        self::assertStringContainsString('mock_enrol_plugin', $manage_table);
+        self::assertStringNotContainsString('container_perform', $manage_table);
+
+        // Change the list of excluded plugins to make sure it works.
+        $reflection = new ReflectionClass($manage_enrols);
+        $hide_enrol_plugins = $reflection->getProperty('hide_enrol_plugins');
+        $hide_enrol_plugins->setAccessible(true);
+
+        $hide_enrol_plugins->setValue($manage_enrols, []);
+        $manage_table = $manage_enrols->output_html('');
+        self::assertStringContainsString('totara_learningplan', $manage_table);
+        self::assertStringContainsString('container_perform', $manage_table);
+        self::assertStringContainsString('mock_enrol_plugin', $manage_table);
+
+        $hide_enrol_plugins->setValue($manage_enrols, ['totara_learningplan', 'container_perform', 'mock_enrol_plugin']);
+        $manage_table = $manage_enrols->output_html('');
+        self::assertStringNotContainsString('totara_learningplan', $manage_table);
+        self::assertStringNotContainsString('container_perform', $manage_table);
+        self::assertStringNotContainsString('mock_enrol_plugin', $manage_table);
+    }
 }

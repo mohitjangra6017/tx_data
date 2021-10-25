@@ -41,6 +41,11 @@ use totara_core\hook\enrol_plugins;
  * This enrollment plugin instead checks if the user has a participant instance for the container,
  * and if they do then they are designated as enrolled without creating any additional records.
  *
+ * If this gets refactored, please consider:
+ * - This plugin is deliberately not located in the enrol/ folder to hide it from the UI.
+ * - To hide it from the 'Manage enrol plugins' page, it also had to be hard coded in the class
+ *   admin_setting_manageenrols in lib/adminlib.php.
+ *
  * @package container_perform
  */
 class perform_enrollment extends enrol_plugin {
