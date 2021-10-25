@@ -167,7 +167,7 @@ type core_course_section {
   """
   Title of the course section
   """
-  title(format: core_format = HTML): String
+  title(format: core_format = PLAIN): String
   """
   The course modules in the section
   """
@@ -207,7 +207,7 @@ type core_course_module {
   """
   The name of the course module
   """
-  name(format: core_format = HTML): String!
+  name(format: core_format = PLAIN): String!
   """
   The view url of the course module
   """

@@ -13,7 +13,7 @@ query totara_mobile_course($courseid: core_id!, $guestpw: String) {
       format
       sections {
         id
-        title
+        title(format: PLAIN)
         available
         availablereason(format: PLAIN)
         summary(format: MOBILE)
@@ -22,7 +22,7 @@ query totara_mobile_course($courseid: core_id!, $guestpw: String) {
           id
           instanceid
           modtype
-          name
+          name(format: PLAIN)
           available
           availablereason(format: PLAIN)
           viewurl

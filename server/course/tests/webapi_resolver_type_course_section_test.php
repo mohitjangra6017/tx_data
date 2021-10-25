@@ -230,6 +230,18 @@ class totara_core_webapi_resolver_type_course_section_testcase extends advanced_
         $this->setAdminUser();
         $value = $this->resolve('title', $sections[0], ['format' => format::FORMAT_RAW]);
         $this->assertEquals($title, $value);
+
+        // Test special character encoding.
+        $data = new stdClass();
+        $data->name = 'Section & more';
+        $extra = $sections[0];
+        course_update_section($courses[0], $extra, $data);
+
+        $value = $this->resolve('title', $extra, ['format' => format::FORMAT_PLAIN]);
+        $this->assertEquals("Section & more", $value);
+
+        $value = $this->resolve('title', $extra, ['format' => format::FORMAT_HTML]);
+        $this->assertEquals("Section &#38; more", $value);
     }
 
     /**

@@ -195,6 +195,19 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
         $this->setAdminUser();
         $value = $this->resolve('shortname', $courses[0], ['format' => format::FORMAT_RAW]);
         $this->assertEquals($courses[0]->shortname, $value);
+
+        // Test special character encoding.
+        $extra = $this->getDataGenerator()->create_course([
+            'shortname' => 'c&more',
+            'fullname' => 'Course & more',
+            'summary' => 'Extra course'
+        ]);
+
+        $value = $this->resolve('shortname', $extra, ['format' => format::FORMAT_PLAIN]);
+        $this->assertEquals('c&more', $value);
+
+        $value = $this->resolve('shortname', $extra, ['format' => format::FORMAT_HTML]);
+        $this->assertEquals('c&#38;more', $value);
     }
 
     /**
@@ -229,6 +242,19 @@ class totara_core_webapi_resolver_type_course_testcase extends advanced_testcase
         $this->setAdminUser();
         $value = $this->resolve('fullname', $courses[0], ['format' => format::FORMAT_RAW]);
         $this->assertEquals($courses[0]->fullname, $value);
+
+        // Test special character encoding.
+        $extra = $this->getDataGenerator()->create_course([
+            'shortname' => 'c&more',
+            'fullname' => 'Course & more',
+            'summary' => 'Extra course'
+        ]);
+
+        $value = $this->resolve('fullname', $extra, ['format' => format::FORMAT_PLAIN]);
+        $this->assertEquals('Course & more', $value);
+
+        $value = $this->resolve('fullname', $extra, ['format' => format::FORMAT_HTML]);
+        $this->assertEquals('Course &#38; more', $value);
     }
 
     /**
