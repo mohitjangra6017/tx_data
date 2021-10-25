@@ -348,12 +348,17 @@ final class util {
         die;
     }
 
-    private static function get_mobile_logo_url(): string {
+    /**
+     * Returns the url for the mobile logo if configured on the site or null if not
+     *
+     * @return string|null
+     */
+    private static function get_mobile_logo_url(): ?string {
         $context = \context_system::instance();
 
         $logo = get_config('totara_mobile', 'logo');
         if (empty($logo)) {
-            return 'https://www.totaralearning.com/themes/custom/totara/images/logo-totara-og-image.jpg';
+            return null;
         }
 
         $fs = get_file_storage();
@@ -372,10 +377,9 @@ final class util {
                 false
             );
             return $url->out();
-        } else {
-            // There should be a logo according to the config setting, but the file isn't there so return the default.
-            return 'https://www.totaralearning.com/themes/custom/totara/images/logo-totara-og-image.jpg';
         }
+
+        return null;
     }
 
     /**

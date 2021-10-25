@@ -78,7 +78,7 @@ class totara_mobile_util_testcase extends advanced_testcase {
             'auth' => 'native',
             'siteMaintenance' => '0',
             'theme' => [
-                'urlLogo' => 'https://www.totaralearning.com/themes/custom/totara/images/logo-totara-og-image.jpg',
+                'urlLogo' => null,
                 'colorPrimary' => '#69BD45',
                 'colorText' => '#FFFFFF'
             ],
@@ -115,6 +115,31 @@ class totara_mobile_util_testcase extends advanced_testcase {
         // Test with a higher lower app version
         $expected_upgrade['app_version'] = '0.9.9.9';
         $this->assertEquals($expected_upgrade, util::get_site_info('0.9.9.9'));
+
+        // Now set a custom logo and make sure it's loaded correctly
+        $fs = get_file_storage();
+
+        $path = $CFG->dirroot.'/totara/mobile/tests/fixtures/fruit.jpg';
+
+        set_config('logo', '/fruit.jpg', 'totara_mobile');
+
+        $filerecord = [
+            'contextid' => \context_system::instance()->id,
+            'component' => 'totara_mobile',
+            'filearea' => 'logo',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => 'fruit.jpg',
+        ];
+
+        $fs->create_file_from_pathname($filerecord, $path);
+
+        $site_info = util::get_site_info(util::MIN_APP_VERSION);
+
+        $this->assertMatchesRegularExpression(
+            '/https:\/\/[a-z0-9\/\.]+\/1\/totara_mobile\/logo\/0\/fruit.jpg/',
+            $site_info['theme']['urlLogo']
+        );
     }
 
 }

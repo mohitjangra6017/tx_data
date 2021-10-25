@@ -40,7 +40,7 @@ Feature: Confirm site info request functionality
   Scenario: Check that the mobile app logo theme setting works as expected
     # Default setting
     When I am using the mobile emulator
-    Then I should see "\"urlLogo\": \"https://www.totaralearning.com/themes/custom/totara/images/logo-totara-og-image.jpg\"," in the "#site_info_response" "css_element"
+    Then I should see "\"urlLogo\": null," in the "#site_info_response" "css_element"
     # Custom setting - Pending an admin filepicker behat step
 
   Scenario: Check that the mobile primary colour theme setting works as expected
