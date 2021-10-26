@@ -24,7 +24,10 @@
         :initially-open="true"
         :show-button-control="false"
       >
-        <WorkspaceMenu :selected-workspace-id="discussion.workspace_id" />
+        <WorkspaceMenu
+          :selected-workspace-id="discussion.workspace_id"
+          @create-workspace="redirectToWorkspace"
+        />
       </SidePanel>
     </template>
 
@@ -263,6 +266,17 @@ export default {
           discussion: discussion,
         },
       });
+    },
+
+    /**
+     * Redirect to a newly created workspace.
+     * @param {Number} id
+     */
+    redirectToWorkspace({ id }) {
+      document.location.href = this.$url(
+        '/container/type/workspace/workspace.php',
+        { id }
+      );
     },
   },
 };
