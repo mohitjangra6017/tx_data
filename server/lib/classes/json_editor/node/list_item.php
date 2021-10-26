@@ -36,6 +36,12 @@ final class list_item extends base_list {
      */
     public function to_html(formatter $formatter): string {
         $content = parent::to_html($formatter);
+
+        // Required for firefox bug, description can be found in TL-30549
+        if ($content === '<p />' || $content === '<p></p>') {
+            return html_writer::tag('li', '');
+        } 
+        
         return html_writer::tag('li', $content);
     }
 
