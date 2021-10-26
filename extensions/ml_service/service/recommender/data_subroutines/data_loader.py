@@ -276,6 +276,19 @@ class DataLoader:
                 value is a list of item ids that the user has interacted with.
         :rtype: dict
         """
+        # Only keep the latest interactions and ratings
+        interactions_df["timestamp"] = interactions_df.timestamp.astype(int)
+        latest_records = interactions_df.groupby(
+            ["user_id", "item_id"]
+        ).timestamp.transform(max)
+        interactions_df = interactions_df.loc[
+            interactions_df.timestamp == latest_records
+        ]
+
+        interactions_df.drop_duplicates(
+            subset=["user_id", "item_id"], keep="first", inplace=True
+        )
+
         positive_interactions = interactions_df.copy()
         positive_interactions = positive_interactions[positive_interactions.rating == 1]
         users_interacted = positive_interactions.user_id.unique()

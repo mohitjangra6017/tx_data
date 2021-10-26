@@ -310,3 +310,27 @@ class TestDataLoader(unittest.TestCase):
                 self.assertIsInstance(loaded_data["user_features"], csr_matrix)
                 self.assertIsInstance(loaded_data["item_features"], csr_matrix)
             mock_open.assert_called()
+
+    def test_get_interactions_duplicates(self):
+        """
+        This method tests if the `__get_interactions` method of the `DataLoader` class
+        returns a tuple object, with first element as a list and the second element as a
+        dictionary. The length of the first element (list) is as expected, each element
+        of the returned first element (list) is a tuple, the length of each tuple in the
+        list is 3, the second element is a dictionary and the values of the dictionary
+        are the lists. This all is valid while the supplied interactions are duplicated
+        """
+        duplicated_interactions = pd.concat(objs=[self.interactions, self.interactions])
+
+        (
+            interactions,
+            positive_inter_map,
+        ) = self.data_loader._DataLoader__get_interactions(
+            interactions_df=duplicated_interactions
+        )
+        self.assertIsInstance(interactions, list)
+        self.assertEqual(self.interactions.shape[0], len(interactions))
+        self.assertEqual(len(random.choice(interactions)), 3)
+        self.assertIsInstance(random.choice(interactions), tuple)
+        self.assertIsInstance(positive_inter_map, dict)
+        self.assertIsInstance(random.choice(list(positive_inter_map.values())), list)

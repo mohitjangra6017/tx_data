@@ -17,6 +17,7 @@ Please contact [licensing@totaralearning.com] for more information.
 """
 
 import numpy as np
+import pandas as pd
 import random
 import unittest
 from scipy.sparse import coo_matrix, csr_matrix
@@ -409,5 +410,81 @@ class TestDataLoader(unittest.TestCase):
             msg=(
                 "The item with the key 'interactions' is not found in the "
                 "response from 'DataLoader.prepare_sparse_matrices'"
+            ),
+        )
+
+    def test_interactions_coo_duplicates(self) -> None:
+        """
+        This method tests if the `interactions_coo` method of the `DataLoader` class
+        returns the correct response if supplied interactions include duplicated records
+        """
+        item_map_df = self.items_data.copy()
+        item_map_df["internal_id"] = np.arange(len(item_map_df))
+        item_map = item_map_df.internal_id.to_dict()
+
+        user_map_df = self.users_data.copy()
+        user_map_df["internal_id"] = np.arange(len(user_map_df))
+        user_map = user_map_df.internal_id.to_dict()
+
+        duplicated_interactions = pd.concat(objs=[self.interactions, self.interactions])
+
+        data_loader = DataLoader(query="mf")
+        computed_int_coo = data_loader.interactions_coo(
+            interactions_df=duplicated_interactions,
+            user_map=user_map,
+            item_map=item_map,
+        )
+
+        self.assertIsInstance(
+            obj=computed_int_coo,
+            cls=dict,
+            msg=(
+                "The response from the 'DataLoader.interactions_coo' is an instance of "
+                f"{type(computed_int_coo)} while this was expected to be <class 'dict'>"
+            ),
+        )
+
+        self.assertIsInstance(
+            obj=computed_int_coo["interactions"],
+            cls=coo_matrix,
+            msg=(
+                "The value of the 'interactions' key of the response from the "
+                "'DataLoader.interactions_coo' is an instance of "
+                f"{type(computed_int_coo['interactions'])} while it was expected to be "
+                "of instance <class 'scipy.sparse.csr.coo_matrix'>"
+            ),
+        )
+
+        self.assertEqual(
+            first=computed_int_coo["interactions"].shape,
+            second=computed_int_coo["weights"].shape,
+            msg=(
+                "The shape of the 'interactions' sparse matrix from the "
+                "'DataLoader.interactions_coo' method has a shape "
+                f"{computed_int_coo['interactions'].shape} while the shape of the "
+                f"'weights' sparse matrix is {computed_int_coo['weights'].shape}"
+            ),
+        )
+
+        self.assertEqual(
+            first=computed_int_coo["interactions"].shape,
+            second=(len(set(self.users_data.index)), len(set(self.items_data.index))),
+            msg=(
+                "The shape of the 'interactions' sparse matrix from the "
+                "'DataLoader.interactions_coo' method has a shape "
+                f"{computed_int_coo['interactions'].shape} while it was expected "
+                f"to be ({len(set(self.users_data.index))}, "
+                f"{len(set(self.items_data.index))})"
+            ),
+        )
+
+        self.assertIsInstance(
+            obj=computed_int_coo["positive_interactions_map"],
+            cls=dict,
+            msg=(
+                "The value of the 'positive_interactions_map' key of the response from "
+                "the 'DataLoader.interactions_coo' is an instance of "
+                f"{type(computed_int_coo['positive_interactions_map'])} while it was "
+                "expected to be of instance <class 'dict'>"
             ),
         )

@@ -15,3 +15,8 @@ Please contact [licensing@totaralearning.com] for more information.
 @author Amjad Ali <amjad.ali@totaralearning.com>
 @package ml_service
 """
+
+import nltk
+
+
+nltk.download("stopwords")

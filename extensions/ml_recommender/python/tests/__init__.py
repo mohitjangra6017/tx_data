@@ -15,3 +15,9 @@ Please contact [licensing@totaralearning.com] for more information.
 @author Amjad Ali <amjad.ali@totaralearning.com>
 @package ml_recommender
 """
+
+from pathlib import Path
+import sys
+
+
+sys.path.append(str(Path(__file__).parent.parent))
