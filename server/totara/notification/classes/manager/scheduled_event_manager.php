@@ -84,16 +84,7 @@ class scheduled_event_manager {
             $max_schedule_offset = $resolver_schedule->get_maximum_offset();
 
             if (null === $min_schedule_offset && null === $max_schedule_offset) {
-                // We are checking if the resolver has associated notifiable event in order to prevent the
-                // further calculation if min and max are both empty. Meaning that there is no such scheduled
-                // notification preference created yet.
-
-                // This is a debugging for intentionally for the admin/devs. Therefore no localised string.
-                $this->trace->output("The resolver class '{$resolver_cls}' does not have any scheduled preference.");
-                $this->trace->output(
-                    "Furthermore the resolver does not implement interface for on event schedule, hence it is skipped."
-                );
-
+                // There are no built-in or custom notifications to process for this resolver.
                 continue;
             }
 

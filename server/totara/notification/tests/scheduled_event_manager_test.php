@@ -232,15 +232,13 @@ class totara_notification_scheduled_event_manager_testcase extends testcase {
         $output_messages = $trace->get_messages();
 
         self::assertNotEmpty($output_messages);
-        self::assertCount(4, $output_messages);
+        self::assertCount(2, $output_messages);
 
         $cls = scheduled_event_resolver::class;
         self::assertEquals(
             [
                 "Current time is '{$now}'",
                 "Last cron time is '{$last_cron}'",
-                "The resolver class '{$cls}' does not have any scheduled preference.",
-                "Furthermore the resolver does not implement interface for on event schedule, hence it is skipped.",
             ],
             $output_messages
         );
