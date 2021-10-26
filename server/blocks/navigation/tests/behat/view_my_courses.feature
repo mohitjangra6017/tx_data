@@ -89,6 +89,8 @@ Feature: View my courses in navigation block
     And I should not see "c2" in the "Navigation" "block"
     And I should not see "c31" in the "Navigation" "block"
     And I should not see "c32" in the "Navigation" "block"
+    And I should not see "performance-activities" in the "Navigation" "block"
+    And I should not see "Space category" in the "Navigation" "block"
     When I expand "cat3" node
     And I expand "cat31" node
     And I expand "cat1" node
@@ -102,3 +104,16 @@ Feature: View my courses in navigation block
     And I should not see "c2" in the "Navigation" "block"
     And I should see "c31" in the "Navigation" "block"
     And I should not see "c32" in the "Navigation" "block"
+
+  @javascript
+  Scenario: Logged user can not see system category
+    Given the following config values are set as admin:
+      | navshowmycoursecategories | 1 |
+      | navshowallcourses         | 1 |
+    And I log in as "student1"
+    When I am on "Dashboard" page
+    Then I should see "cat1" in the "Navigation" "block"
+    And I should see "cat3" in the "Navigation" "block"
+    And I should not see "cat2" in the "Navigation" "block"
+    And I should not see "performance-activities" in the "Navigation" "block"
+    And I should not see "Space category" in the "Navigation" "block"

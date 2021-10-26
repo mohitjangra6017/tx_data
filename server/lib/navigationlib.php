@@ -1607,7 +1607,7 @@ class global_navigation extends navigation_node {
                 $sql = "SELECT c.id, c.sortorder, c.visible, c.audiencevisible, c.fullname, c.shortname, c.category, {$ccselect}
                           FROM {course} c
                      LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)
-                         WHERE c.category {$categoryids}
+                         WHERE c.category {$categoryids} AND c.containertype = 'container_course'
                       ORDER BY c.sortorder ASC";
                 $coursesrs = $DB->get_recordset_sql($sql, $categoryparams);
                 foreach ($coursesrs as $course) {
@@ -1641,7 +1641,7 @@ class global_navigation extends navigation_node {
                     $sql = "SELECT c.id, c.sortorder, c.visible, c.audiencevisible, c.fullname, c.shortname, c.category, {$ccselect}
                               FROM {course} c
                          LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)
-                             WHERE c.category = :categoryid
+                             WHERE c.category = :categoryid AND c.containertype = 'container_course'
                           ORDER BY c.sortorder ASC";
                     $courseparams = array('categoryid' => $categoryid, 'contextlevel' => CONTEXT_COURSE);
                     $coursesrs = $DB->get_recordset_sql($sql, $courseparams, 0, $limit * 5);
@@ -1677,7 +1677,7 @@ class global_navigation extends navigation_node {
             $sql = "SELECT c.id, c.sortorder, c.visible, c.audiencevisible, c.fullname, c.shortname, c.category, {$ccselect}
                       FROM {course} c
                  LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)
-                     WHERE c.id {$courseids}
+                     WHERE c.id {$courseids} AND c.containertype = 'container_course'
                   ORDER BY c.sortorder ASC";
             $coursesrs = $DB->get_recordset_sql($sql, $courseparams);
             foreach ($coursesrs as $course) {
@@ -1752,7 +1752,8 @@ class global_navigation extends navigation_node {
         $sqlselect = "SELECT cc.*, $catcontextsql
                       FROM {course_categories} cc
                       JOIN {context} ctx ON cc.id = ctx.instanceid";
-        $sqlwhere = "WHERE ctx.contextlevel = ".CONTEXT_COURSECAT;
+        // Totara: exclude system categories to be fetched
+        $sqlwhere = "WHERE ctx.contextlevel = ".CONTEXT_COURSECAT . " AND cc.issystem <> 1";
         $sqlorder = "ORDER BY cc.depth ASC, cc.sortorder ASC, cc.id ASC";
         $params = array();
 
