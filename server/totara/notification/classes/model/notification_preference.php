@@ -273,7 +273,8 @@ class notification_preference {
      * @return string
      */
     public function get_body(): string {
-        if (!empty($this->entity->body)) {
+        // We look to parent/built in only if the value's null.
+        if (!is_null($this->entity->body)) {
             return $this->entity->body;
         }
 
@@ -281,9 +282,7 @@ class notification_preference {
             return $this->parent->get_body();
         }
 
-        /** @var lang_string $lang_string */
-        $lang_string = $this->get_property_from_built_in_notification('body');
-        return $lang_string->__toString();
+        return $this->get_property_from_built_in_notification('body');
     }
 
     /**
@@ -291,7 +290,8 @@ class notification_preference {
      * @return string
      */
     public function get_subject(): string {
-        if (!empty($this->entity->subject)) {
+        // We look to parent/built in only if the value's null.
+        if (!is_null($this->entity->subject)) {
             return $this->entity->subject;
         }
 
@@ -299,9 +299,7 @@ class notification_preference {
             return $this->parent->get_subject();
         }
 
-        /** @var lang_string $lang_string */
-        $lang_string = $this->get_property_from_built_in_notification('subject');
-        return is_null($lang_string)? '' : $lang_string->__toString();
+        return $this->get_property_from_built_in_notification('subject');
     }
 
     /**
@@ -310,9 +308,7 @@ class notification_preference {
      */
     public function get_subject_format(): int {
         $value = $this->entity->subject_format;
-        if (null !== $value) {
-            // Note that we are using NULL here instead of empty because text format
-            // can be 0 (ZERO) which is FORMAT_MOODLE :supprise:
+        if (!is_null($value)) {
             return $value;
         }
 
@@ -353,7 +349,7 @@ class notification_preference {
      * @return string
      */
     public function get_title(): string {
-        if (!empty($this->entity->title)) {
+        if (!is_null($this->entity->title)) {
             return $this->entity->title;
         }
 
@@ -361,8 +357,7 @@ class notification_preference {
             return $this->parent->get_title();
         }
 
-        $title = $this->get_property_from_built_in_notification('title');
-        return is_null($title) ? '' : $title;
+        return $this->get_property_from_built_in_notification('title');
     }
 
     /**
@@ -388,9 +383,7 @@ class notification_preference {
      */
     public function get_body_format(): int {
         $value = $this->entity->body_format;
-        if (null !== $value) {
-            // Note that we are using NULL here instead of empty because text format
-            // can be 0 (ZERO) which is FORMAT_MOODLE :supprise:
+        if (!is_null($value)) {
             return $value;
         }
 
@@ -599,8 +592,8 @@ class notification_preference {
             return true;
         }
 
-        // It does not have the ancestor's id. Therefore we gonna need to check whether it
-        // it is a custom notification or not. If it is not a custom notification, then we are
+        // It does not have the ancestor's id. Therefore we going to need to check whether it
+        // is a custom notification or not. If it is not a custom notification, then we are
         // overridding the system built in notification.
         return !$this->is_custom_notification();
     }
