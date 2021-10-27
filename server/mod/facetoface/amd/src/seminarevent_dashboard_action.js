@@ -20,7 +20,7 @@
  * @package mod_facetoface
  */
 
-define(['core/log'], function(log) {
+define([], function() {
     /**
      * Get the viewport size excluding scroll bars.
      * Based on the following code: https://bugzilla.mozilla.org/show_bug.cgi?id=156388#c14
@@ -460,13 +460,9 @@ define(['core/log'], function(log) {
         this._init = function(element) {
             this.el = element;
             var button = element.querySelector('.mod_facetoface__sessionlist__action__dropdown');
-            try {
+
+            if (button) {
                 this.dropdown = new DropDownButton(button);
-            } catch (e) {
-                log.error(e);
-                // swallow exception.
-            }
-            if (this.dropdown) {
                 element.addEventListener(DropDownButton.OPEN_EVENT, this._onDropDownOpen.bind(this));
                 element.addEventListener(DropDownButton.CLOSED_EVENT, this._onDropDownClosed.bind(this));
             }
