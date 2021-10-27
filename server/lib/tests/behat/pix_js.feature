@@ -6,9 +6,9 @@ Feature: Javascript template rendering
     And I navigate to "Template library" node in "Site administration > Development"
 
   Scenario: Template library naviagtion works
-    Given I set the field "Component" to "Current Learning"
-    And I follow "block_current_learning/block"
-    Then I should see "Displaying 1 - 1 of 1 results"
+    Given I set the field "Component" to "Subsystem (core)"
+    And I follow "core/action_link"
+    Then I should see "This is an action link"
 
   Scenario: Javascript string rendering
     Given I follow "core/test"
