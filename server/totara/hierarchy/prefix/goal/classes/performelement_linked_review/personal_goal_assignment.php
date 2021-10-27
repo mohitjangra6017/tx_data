@@ -88,6 +88,7 @@ class personal_goal_assignment extends goal_assignment_content_type {
             ->set_filters([
                 'user_id' => $subject_instance->subject_user_id,
                 'ids' => $content_items->pluck('content_id'),
+                'deleted' => 0,
             ])
             ->fetch()
             ->key_by('id')

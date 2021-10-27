@@ -461,7 +461,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
 
         self::assertTrue($goal1_result_item['can_view_goal_details']);
 
-        // Delete the goal. It should still be in the result, but can_view_goal_details must be false.
+        // Delete the goal. Personal goals are only soft-deleted, so make sure it's not in the result any more.
         goal::delete_goal_item(['id' => $goal1->id], goal::SCOPE_PERSONAL);
 
         $result = $content_type->load_content_items(
@@ -471,10 +471,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
             true,
             $created_at
         );
-        self::assertCount(1, $result);
-
-        $goal1_result_item = $result[$goal1->id];
-        self::assertFalse($goal1_result_item['can_view_goal_details']);
+        self::assertCount(0, $result);
     }
 
     public function test_load_company_goal_items(): void {
