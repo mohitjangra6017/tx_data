@@ -533,7 +533,7 @@ class mobile_findlearning_webapi_resolver_query_filter_catalog_testcase extends 
         }
 
         $sql = "
-            SELECT FULLTEXTCATALOGPROPERTY(cat.name, 'ItemCount') AS [item_count]
+            SELECT MAX(FULLTEXTCATALOGPROPERTY(cat.name, 'ItemCount')) AS item_count
             FROM sys.fulltext_catalogs AS cat
         ";
 
