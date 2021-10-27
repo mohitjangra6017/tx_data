@@ -249,10 +249,10 @@ export default {
      * the effects of `overflows` and `hyphens` props
      **/
     handleTextareaInput: function(index) {
-      // need to use `$refs[*].$el` instead of just `$refs[*]` as the ref
+      // need to use `$refs[*][0].$el` instead of just `$refs[*][0]` as the ref
       // returned from the latter refers to the Textarea Vue component, not the
       // actual DOM element
-      let ref = this.$refs['textarea-' + index].$el;
+      let ref = this.$refs['textarea-' + index][0].$el;
       ref.style.height = '1px';
       ref.style.height = ref.scrollHeight + 'px';
     },
