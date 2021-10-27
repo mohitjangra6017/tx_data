@@ -189,6 +189,8 @@ abstract class node {
      * @return array
      */
     public static function sanitize_raw_node(array $raw_node): array {
+        debugging('The method \core\json_editor\node\node::sanitize_raw_node() is deprecated, there is no replacement.', DEBUG_DEVELOPER);
+
         if (!isset($raw_node['type'])) {
             throw new \coding_exception("Invalid node structure", static::get_type());
         }

@@ -23,19 +23,17 @@
 defined('MOODLE_INTERNAL') || die();
 
 use core\json_editor\helper\document_helper;
-use core\json_editor\helper\handler;
-use core\json_editor\node\paragraph;
-use core\json_editor\node\mention;
-use core\json_editor\node\attachments;
 use core\json_editor\node\attachment;
-use core\json_editor\node\text;
-use core\json_editor\node\image;
-use core\json_editor\node\video;
+use core\json_editor\node\attachments;
 use core\json_editor\node\audio;
 use core\json_editor\node\bullet_list;
-use core\json_editor\node\ruler;
+use core\json_editor\node\image;
+use core\json_editor\node\mention;
 use core\json_editor\node\ordered_list;
-use PHPUnit\Framework\AssertionFailedError;
+use core\json_editor\node\paragraph;
+use core\json_editor\node\ruler;
+use core\json_editor\node\text;
+use core\json_editor\node\video;
 
 /**
  * @coversDefaultClass core\json_editor\helper\document_helper
@@ -322,6 +320,14 @@ class core_json_editor_document_helper_testcase extends advanced_testcase {
             'content' => [
                 paragraph::create_json_node_from_text($html)
             ],
+        ]);
+
+        $this->assertDebuggingCalled([
+            'The method \core\json_editor\helper\document_helper::sanitize_json() is deprecated, there is no replacement.',
+            'The method \core\json_editor\helper\node_helper::sanitize_raw_nodes() is deprecated, there is no replacement.',
+            'The method \core\json_editor\node\node::sanitize_raw_node() is deprecated, there is no replacement.',
+            'The method \core\json_editor\helper\node_helper::sanitize_raw_nodes() is deprecated, there is no replacement.',
+            'The method \core\json_editor\node\node::sanitize_raw_node() is deprecated, there is no replacement.'
         ]);
 
         $this->assertIsArray($result);

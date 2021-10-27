@@ -108,6 +108,8 @@ final class node_helper {
      * @return array
      */
     public static function sanitize_raw_nodes(array $raw_nodes): array {
+        debugging('The method \core\json_editor\helper\node_helper::sanitize_raw_nodes() is deprecated, there is no replacement.', DEBUG_DEVELOPER);
+
         $schema = schema::instance();
 
         return array_map(

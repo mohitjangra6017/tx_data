@@ -322,6 +322,8 @@ final class document_helper {
      * @return string
      */
     public static function sanitize_json_document(string $json_document): string {
+        debugging('The method \core\json_editor\helper\document_helper::sanitize_json_document is deprecated, there is no replacement.', DEBUG_DEVELOPER);
+
         if (empty($json_document)) {
             return '';
         }
@@ -340,6 +342,8 @@ final class document_helper {
      * @return array
      */
     public static function sanitize_json(array $document): array {
+        debugging('The method \core\json_editor\helper\document_helper::sanitize_json() is deprecated, there is no replacement.', DEBUG_DEVELOPER);
+
         if (!isset($document['type'])) {
             throw new \coding_exception("Invalid json document");
         }
