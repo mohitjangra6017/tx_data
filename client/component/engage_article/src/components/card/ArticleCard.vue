@@ -52,18 +52,19 @@
     </ImageHeader>
 
     <CardHeader slot="header" class="tui-engageArticleCard__header">
-      <BookmarkButton
-        v-if="showBookmark"
-        slot="first"
-        size="300"
-        :bookmarked="innerBookmarked"
-        :primary="false"
-        :circle="false"
-        :small="true"
-        :transparent="true"
-        class="tui-engageArticleCard__bookmark"
-        @click="updateBookmark"
-      />
+      <div slot="first" class="tui-engageArticleCard__bar">
+        <BookmarkButton
+          v-if="showBookmark"
+          size="300"
+          :bookmarked="innerBookmarked"
+          :primary="false"
+          :circle="false"
+          :small="true"
+          :transparent="true"
+          class="tui-engageArticleCard__bookmark"
+          @click="updateBookmark"
+        />
+      </div>
 
       <a slot="second" class="tui-engageArticleCard__link" :href="url">
         <h3 :id="labelId" class="tui-engageArticleCard__title">
@@ -323,6 +324,10 @@ export default {
     }
   }
 
+  &__bar {
+    height: var(--gap-4);
+  }
+
   &__bookmark {
     // Negative margin here to neutralise the default redundant edges of icon.
     margin-top: 1px;
@@ -331,7 +336,7 @@ export default {
 
   &__title {
     @include tui-font-heading-x-small();
-    margin-top: var(--gap-4);
+    margin-right: var(--gap-5);
     color: var(--color-text);
     @include tui-wordbreak--hyphens;
   }

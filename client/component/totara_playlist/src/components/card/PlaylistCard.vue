@@ -66,18 +66,19 @@
     </ImageHeader>
 
     <CardHeader slot="header" class="tui-playlistCard__header">
-      <BookmarkButton
-        v-if="showBookmark"
-        slot="first"
-        size="300"
-        :bookmarked="innerBookmarked"
-        :primary="false"
-        :circle="false"
-        :small="true"
-        :transparent="true"
-        class="tui-playlistCard__bookmark"
-        @click="updateBookmark"
-      />
+      <div slot="first" class="tui-playlistCard__bar">
+        <BookmarkButton
+          v-if="showBookmark"
+          size="300"
+          :bookmarked="innerBookmarked"
+          :primary="false"
+          :circle="false"
+          :small="true"
+          :transparent="true"
+          class="tui-playlistCard__bookmark"
+          @click="updateBookmark"
+        />
+      </div>
       <a slot="second" class="tui-playlistCard__link" :href="url">
         <h4 :id="labelId" class="tui-playlistCard__title">
           {{ name }}
@@ -348,14 +349,19 @@ export default {
     }
   }
 
+  &__bar {
+    height: var(--gap-4);
+  }
+
   &__bookmark {
     // Negative margin here to neutralise the default redundant edges of icon.
-    margin-top: -2px;
+    margin-top: 1px;
     margin-right: calc(var(--gap-3) * -1);
   }
 
   &__title {
     @include tui-font-heading-x-small();
+    margin-right: var(--gap-5);
   }
 
   &__bookmarkIcon {
