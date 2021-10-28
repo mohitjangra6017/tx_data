@@ -8193,6 +8193,8 @@ function admin_get_root($reload=false, $requirefulltree=true) {
         require($CFG->dirroot.'/'.$CFG->admin.'/settings/plugins.php');
 
         $ADMIN->loaded = true;
+        // KINEO CCM - GLOTOT-1204
+        class_exists('\local_core\Hook\AdminTreeInitHook') && (new \local_core\Hook\AdminTreeInitHook($ADMIN))->execute();
     }
 
     return $ADMIN;
