@@ -33,7 +33,6 @@ Feature: Courses can be created in Single Activity mode
       | Course full name  | My first course |
       | Course short name | myfirstcourse |
       | Format | Single activity format |
-    And I press "Update format"
     Then I should see "Quiz" in the "Type of activity" "field"
     And I should not see "Forum" in the "Type of activity" "field"
     And I press "Save and display"
