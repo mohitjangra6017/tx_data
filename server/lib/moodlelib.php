@@ -2905,6 +2905,16 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         }
         // Set accesstime or the user will appear offline which messes up messaging.
         user_accesstime_log($course->id);
+        // KINEO CCM - GLOTOT-1014
+        class_exists('\local_core\hook\AfterRequireLogin') && (
+            new \local_core\hook\AfterRequireLogin(
+                $courseorid,
+                $autologinguest,
+                $cm,
+                $setwantsurltome,
+                $preventredirect
+            )
+        )->execute();
         return;
     }
 
@@ -3176,6 +3186,16 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
             }
         }
     }
+    // KINEO CCM - GLOTOT-1014
+    class_exists('\local_core\hook\AfterRequireLogin') && (
+    new \local_core\hook\AfterRequireLogin(
+        $courseorid,
+        $autologinguest,
+        $cm,
+        $setwantsurltome,
+        $preventredirect
+    )
+    )->execute();
 
     // Finally access granted, update lastaccess times.
     user_accesstime_log($course->id);
