@@ -802,3 +802,6 @@ if (!function_exists('hash_equals')) {
         return false;
     }
 }
+
+// KINEO CCM - GLOTOT-922 - GLOTOT-1478
+class_exists('\local_core\Hook\AfterConfigInit') && (new \local_core\Hook\AfterConfigInit())->execute();
