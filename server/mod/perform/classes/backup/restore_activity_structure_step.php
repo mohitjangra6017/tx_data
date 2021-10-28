@@ -182,9 +182,9 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
             $data->name = util::augment_text($data->name, activity::NAME_MAX_LENGTH, '', $suffix);
         }
 
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
+
         // Without the types being part of the backup we cannot map the id
         //$data->type_id = $this->get_mappingid('perform_type', $data->type_id);
 
@@ -200,10 +200,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $old_id = $data->id;
 
         $data->activity_id = $this->get_new_parentid('perform');
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_setting', $data);
         $this->set_mapping('perform_setting', $old_id, $new_item_id);
@@ -215,8 +213,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $data = (object)$data;
         $old_id = $data->id;
 
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
+        $data->created_at = time();
 
         $new_item_id = $DB->insert_record('perform_participant_external', $data);
         $this->set_mapping('perform_external_participant', $old_id, $new_item_id);
@@ -229,10 +226,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $old_id = $data->id;
 
         $data->activity_id = $this->get_new_parentid('perform');
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_section', $data);
         $this->set_mapping('perform_section', $old_id, $new_item_id);
@@ -350,8 +345,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->section_element_id = $this->get_mappingid('perform_section_element', $data->section_element_id);
         $data->participant_instance_id = $this->get_mappingid('perform_participant_instance', $data->participant_instance_id);
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_element_response', $data);
         $this->set_mapping('perform_element_response', $old_id, $new_item_id);
@@ -363,9 +358,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $data = (object)$data;
         $old_id = $data->id;
 
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-
+        $data->created_at = time();
         $data->section_id = $this->get_mappingid('perform_section', $data->section_id);
 
         $new_item_id = $DB->insert_record('perform_section_relationship', $data);
@@ -378,9 +371,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $data = (object)$data;
         $old_id = $data->id;
 
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-
+        $data->created_at = time();
         $data->activity_id = $this->get_new_parentid('perform');
 
         $new_item_id = $DB->insert_record('perform_notification', $data);
@@ -406,10 +397,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $old_id = $data->id;
 
         $data->activity_id = $this->get_new_parentid('perform');
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_track', $data);
         $this->set_mapping('perform_track', $old_id, $new_item_id);
@@ -423,10 +412,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->track_id = $this->get_mappingid('perform_track', $data->track_id);
         $data->created_by = $USER->id;
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_track_assignment', $data);
         $this->set_mapping('perform_track_assignment', $old_id, $new_item_id);
@@ -440,11 +427,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->track_id = $this->get_mappingid('perform_track', $data->track_id);
         $data->job_assignment_id = $this->get_mappingid('job_assignment', $data->job_assignment_id);
-
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
         $data->period_start_date = $this->apply_date_offset($data->period_start_date);
         $data->period_end_date = $this->apply_date_offset($data->period_end_date);
 
@@ -460,9 +444,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->track_user_assignment_id = $this->get_mappingid('perform_track_user_assignment', $data->track_user_assignment_id);
         $data->track_assignment_id = $this->get_mappingid('perform_track_assignment', $data->track_assignment_id);
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
+        $data->created_at = time();
 
         $new_item_id = $DB->insert_record('perform_track_user_assignment_via', $data);
         $this->set_mapping('perform_track_user_assignment_via', $old_id, $new_item_id);
@@ -477,10 +459,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $data->track_user_assignment_id = $this->get_mappingid('perform_track_user_assignment', $data->track_user_assignment_id);
         $data->job_assignment_id = $this->get_mappingid('job_assignment', $data->job_assignment_id);
         $data->subject_user_id = $this->get_mappingid('user', $data->subject_user_id);
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
         $data->completed_at = $this->apply_date_offset($data->completed_at);
 
         $new_item_id = $DB->insert_record('perform_subject_instance', $data);
@@ -498,10 +478,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
             : $this->get_mappingid('perform_external_participant', $data->participant_id);
 
         $data->subject_instance_id = $this->get_mappingid('perform_subject_instance', $data->subject_instance_id);
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_participant_instance', $data);
         $this->set_mapping('perform_participant_instance', $old_id, $new_item_id);
@@ -515,10 +493,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->participant_instance_id = $this->get_mappingid('perform_participant_instance', $data->participant_instance_id);
         $data->section_id = $this->get_mappingid('perform_section', $data->section_id);
-
-        // Keeping or moving these times makes little sense, but it is the expected Moodle way...
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_participant_section', $data);
         $this->set_mapping('perform_participant_section', $old_id, $new_item_id);
@@ -535,7 +511,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         // $data->manual_relationship_id = $this->get_mappingid('totara_core_relationship', $data->manual_relationship_id);
         // $data->selector_relationship_id = $this->get_mappingid('totara_core_relationship', $data->selector_relationship_id);
 
-        $data->created_at = $this->apply_date_offset($data->created_at);
+        $data->created_at = time();
 
         $new_item_id = $DB->insert_record('perform_manual_relation_selection', $data);
         $this->set_mapping('perform_manual_relation_selection', $old_id, $new_item_id);
@@ -549,9 +525,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->subject_instance_id = $this->get_mappingid('perform_subject_instance', $data->subject_instance_id);
         $data->manual_relation_selection_id = $this->get_mappingid('perform_manual_relation_selection', $data->manual_relation_selection_id);
-
-        $data->created_at = $this->apply_date_offset($data->created_at);
-        $data->updated_at = $this->apply_date_offset($data->updated_at);
+        $data->created_at = time();
+        $data->updated_at = $data->created_at;
 
         $new_item_id = $DB->insert_record('perform_manual_relation_selection_progress', $data);
         $this->set_mapping('perform_manual_relation_selection_progress', $old_id, $new_item_id);
@@ -571,7 +546,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         } else {
             $data->notified_at = $this->apply_date_offset($data->notified_at);
         }
-        $data->created_at = $this->apply_date_offset($data->created_at);
+        $data->created_at = time();
 
         $new_item_id = $DB->insert_record('perform_manual_relation_selector', $data);
         $this->set_mapping('perform_manual_relation_selector', $old_id, $new_item_id);
@@ -587,8 +562,7 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $data->core_relationship_id = $this->get_mappingid('totara_core_relationship', $data->core_relationship_id);
         $data->user_id = $this->get_mappingid('user', $data->user_id);
         $data->created_by = $this->get_mappingid('user', $data->created_by);
-
-        $data->created_at = $this->apply_date_offset($data->created_at);
+        $data->created_at = time();
 
         $new_item_id = $DB->insert_record('perform_subject_instance_manual_participant', $data);
         $this->set_mapping('perform_subject_instance_manual_participant', $old_id, $new_item_id);
