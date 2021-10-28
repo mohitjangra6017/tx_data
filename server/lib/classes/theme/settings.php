@@ -439,6 +439,15 @@ final class settings {
         $css = '';
         $custom_css = '';
         $categories = $this->get_categories($tenant_enabled, false);
+        // KINEO CCM START - GLOTOT-922 & GLOTOT-1805
+        $hook = new \local_core\Hook\ThemeCssVariables($this->theme_config, $this->get_file_instances(), $this->tenant_id, $css, $categories);
+        $hook->execute();
+        $css = $hook->getCss();
+        $categories = $hook->getCategories();
+        if ($hook->shouldSkipCore()) {
+            return $css;
+        }
+        // KINEO CCM END - GLOTOT-922 & GLOTOT-1805
         foreach ($categories as $category) {
             // First check if this category is contains CSS properties.
             if ($this->is_category_with_css_settings($category['name'])) {
