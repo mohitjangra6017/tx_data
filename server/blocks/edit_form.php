@@ -374,6 +374,8 @@ class block_edit_form extends moodleform {
         if (!$this->page->user_can_edit_blocks()) {
             $mform->hardFreeze($pagefields);
         }
+        // KINEO CCM - GLOTOT-1161
+        class_exists('\local_core\Hook\BlockEditForm') && (new \local_core\Hook\BlockEditForm($this))->execute();
 
         $this->add_action_buttons();
     }
