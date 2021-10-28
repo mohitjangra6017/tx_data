@@ -35,7 +35,7 @@ Feature: General behaviour with mod contentmarketplace
     And the following "categories" exist:
       | name       | category | idnumber |
       | Category A | 0        | A        |
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I should see "Spring"
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"

@@ -6,7 +6,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I log in as "admin"
 
   Scenario: Learning objects catalog: No items
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then the tui basket should be empty
     And I should see "0 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     And I should see "No items to display"
@@ -19,7 +19,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | A   | Course C |
       | B   | Course B |
       | C   | Course A |
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then the field "Sort by" matches value "Latest"
     And I should see "3 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     And I should see "3" rows in the tui datatable
@@ -87,7 +87,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | 49  | Course 49 |
       | 50  | Course 50 |
       | 51  | Course 51 |
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     And I set the field "Sort by" to "Alphabetical"
     Then the field "Items per page" matches value "20"
     And I should see "20" rows in the tui datatable
@@ -161,7 +161,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | A                   | category:2         |
       | B                   | category:2         |
       | C                   | category:2         |
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then I should see the tui select table contains:
       | Course A |
       | Course B |
@@ -192,7 +192,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | A   | Course A  | PHP         | COURSE        | 30               | MINUTE                |
       | B   | Course B  | Photoshop   | LEARNING_PATH | 4                | HOUR                  |
       | C   | Course C  | People      | VIDEO         | 5                | SECOND                |
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then I should see the tui select table contains:
       | Course A |
       | Course B |
@@ -246,7 +246,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | 23  | Course 23 |
       | 24  | Course 24 |
       | 25  | Course 25 |
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then the field "Items per page" matches value "20"
     And I should see "20" rows in the tui datatable
     When I click on "Page 2" "button"
@@ -280,7 +280,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | A                   | category:2         |
       | B                   | category:2         |
       | C                   | category:2         |
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I toggle the selection of row "2" of the tui select table
     And I toggle the selection of row "3" of the tui select table

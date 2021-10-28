@@ -12,7 +12,7 @@ Feature: Update content marketplace activity within course
   Scenario: Create course from learning object and update activity.
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I should see "Hibernate"
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
@@ -39,7 +39,7 @@ Feature: Update content marketplace activity within course
   Scenario: Create course from learning object and update with completion.
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I should see "Hibernate"
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"

@@ -14,7 +14,7 @@ Feature: Create course from content marketplace Linkedin Learning
   Scenario: Create courses from catalog import should make course catalog order by latest
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"
@@ -26,7 +26,7 @@ Feature: Create course from content marketplace Linkedin Learning
     And I should not see "Course B"
     And I should not see "Course C"
 
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "2" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"
@@ -35,7 +35,7 @@ Feature: Create course from content marketplace Linkedin Learning
     And "Course B" "text" should appear before "Course A" "text"
     And I should not see "Course C"
 
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "3" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"

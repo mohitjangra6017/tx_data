@@ -22,7 +22,7 @@ Feature: View content marketplace linkedin as activity within course
   Scenario: Course back url display depends upon course format
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"

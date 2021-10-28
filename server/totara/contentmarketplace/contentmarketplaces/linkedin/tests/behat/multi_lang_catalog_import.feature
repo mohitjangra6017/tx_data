@@ -29,7 +29,7 @@ Feature: Content marketplace linkedin with multi languages filter
       | C                   | category:6         |
     And I am on a totara site
     And I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
 
     # English language
     And I should see "English"
@@ -99,7 +99,7 @@ Feature: Content marketplace linkedin with multi languages filter
 
     And I am on a totara site
     And I log in as "admin"
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then I should not see "Language"
     And I should not see "English"
     And I should see "Course A"

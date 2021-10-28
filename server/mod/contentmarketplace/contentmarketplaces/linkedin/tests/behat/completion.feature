@@ -22,7 +22,7 @@ Feature: Content marketplace activity completion feature
 
   Scenario: Should not see the completion when completion is disabled
     When I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"
@@ -47,7 +47,7 @@ Feature: Content marketplace activity completion feature
 
   Scenario: Self completion is not enabled by default
     When I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"
@@ -83,7 +83,7 @@ Feature: Content marketplace activity completion feature
       | username | firstname | lastname | email           |
       | user_one | User      | One      | one@example.com |
     When I log in as "admin"
-    And I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I navigate to the catalog import page for the "linkedin" content marketplace
     And I toggle the selection of row "1" of the tui select table
     And I set the field "Select category" to "Category A"
     And I click on "Next: Review" "button"

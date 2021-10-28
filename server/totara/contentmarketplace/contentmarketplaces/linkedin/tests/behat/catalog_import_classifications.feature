@@ -25,7 +25,7 @@ Feature: Catalog import learning objects classifications.
   Scenario: Filter the catalog learning objects by subjects
     Given I am on a totara site
     And I log in as "admin"
-    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    When I navigate to the catalog import page for the "linkedin" content marketplace
     Then I should see "C++, Java" on row "1" of the tui select table
     And I should see "C++" on row "2" of the tui select table
     And I should see "Software development"

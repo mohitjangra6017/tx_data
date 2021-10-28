@@ -75,7 +75,7 @@ class behat_totara_contentmarketplace extends behat_base {
     }
 
     /**
-     * @When /^I navigate to the catalog import page for the the "([^"]*)" content marketplace/
+     * @When /^I navigate to the catalog import page for the "([^"]*)" content marketplace/
      * @param string $plugin_name
      */
     public function i_navigate_to_the_content_marketplace_catalog_import_page(string $plugin_name): void {
