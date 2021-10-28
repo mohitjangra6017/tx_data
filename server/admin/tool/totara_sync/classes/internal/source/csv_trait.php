@@ -249,6 +249,8 @@ trait csv_trait {
             default:
                 throw new \totara_sync_exception($this->get_element_name(), 'populatesynctablecsv', 'invalidfileaccess', $fileaccess);
         }
+        // KINEO CCM - GLOTOT-1454
+        class_exists('\local_core\Hook\HRImport\CsvPreProcess') && (new \local_core\Hook\HRImport\CsvPreProcess($this, $storefilepath))->execute();
 
         $encodingconfig = 'csv' . $this->get_element_name() . 'encoding';
         $encoding = $this->get_config($encodingconfig);
@@ -274,6 +276,8 @@ trait csv_trait {
      */
     protected function close_csv_file($file) {
         fclose($file);
+        // KINEO CCM - GLOTOT-1454
+        class_exists('\local_core\Hook\HRImport\CsvPostProcess') && (new \local_core\Hook\HRImport\CsvPostProcess($this, $file))->execute();
         // Done, clean up the file(s)
         if (isset($this->tempfilepath)) {
             unlink($this->tempfilepath);
