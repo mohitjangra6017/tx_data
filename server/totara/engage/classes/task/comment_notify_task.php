@@ -99,6 +99,7 @@ final class comment_notify_task extends adhoc_task {
             $subject->resourcetype = $resourcetype;
             $subject_content = get_string('comment_message_subject', 'totara_engage', $subject);
         } else {
+            $subject->name = $data->name;
             $subject_content = get_string('reply_message_subject', 'totara_engage', $subject);
         }
 
