@@ -500,7 +500,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
             $progress = $lesson->calculate_progress();
         }
 
-        $progressbar = new \static_progress_bar();
+        $progressbar = new \static_progress_bar('', 500, false, $lesson->name);
         $progressbar->set_progress($progress);
         $progressbaroutput = $OUTPUT->render_from_template('core/progress_bar', $progressbar->export_for_template($OUTPUT));
 

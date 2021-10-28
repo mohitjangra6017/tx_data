@@ -317,6 +317,7 @@ class rb_source_dp_certification_history extends rb_base_source {
                     'programid' => "prog.id",
                     'userid' => "base.userid",
                     'stringexport' => 0,
+                    'fullname' => 'prog.fullname'
                 )
             )
         );
@@ -337,6 +338,7 @@ class rb_source_dp_certification_history extends rb_base_source {
                     'programid' => "prog.id",
                     'userid' => "base.userid",
                     'stringexport' => 1,
+                    'fullname' => 'prog.fullname',
                 )
             )
         );

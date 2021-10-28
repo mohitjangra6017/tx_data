@@ -83,7 +83,7 @@ class certif_progress extends base {
             return get_string('xpercentcomplete', 'totara_core', $percentage);
         }
 
-        return self::get_renderer()->progressbar($percentage, 'medium', false);
+        return self::get_renderer()->progressbar($percentage, 'medium', false, 'DEFAULTTOOLTIP', $extrafields->fullname ?? null);
     }
 
     /**

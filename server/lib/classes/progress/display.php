@@ -46,12 +46,19 @@ class display extends base {
     protected $displaynames = false;
 
     /**
+     * The label for this progress
+     * @var string|null
+     */
+    protected $label;
+
+    /**
      * Constructs the progress reporter. This will output HTML code for the
      * progress bar, and an indeterminate wibbler below it.
      *
      * @param bool $startnow If true, outputs HTML immediately.
      */
-    public function __construct($startnow = true) {
+    public function __construct($startnow = true, ?string $label = null) {
+        $this->label = $label;
         if ($startnow) {
             $this->start_html();
         }
@@ -79,7 +86,7 @@ class display extends base {
         if ($this->bar) {
             throw new \coding_exception('Already started');
         }
-        $this->bar = new \progress_bar();
+        $this->bar = new \progress_bar('', 500, false, $this->label);
         $this->bar->create();
         echo \html_writer::start_div('wibbler');
     }

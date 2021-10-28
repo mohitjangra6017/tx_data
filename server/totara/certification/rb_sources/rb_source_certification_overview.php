@@ -726,9 +726,10 @@ class rb_source_certification_overview extends rb_base_source {
                     'window' => "certif_completion.timewindowopens",
                     'histcompletion' => "history.timecompleted",
                     'stringexport' => 0,
+                    'fullname' => 'certif.fullname',
                 ),
                 'displayfunc' => 'certif_completion_progress',
-                'joins' => array('certif_completion', 'history'),
+                'joins' => array('certif_completion', 'history', 'certif'),
                 'nosort' => true,
             )
         );
@@ -746,9 +747,10 @@ class rb_source_certification_overview extends rb_base_source {
                     'window' => "certif_completion.timewindowopens",
                     'histcompletion' => "history.timecompleted",
                     'stringexport' => 1,
+                    'fullname' => 'certif.fullname'
                 ),
                 'displayfunc' => 'certif_completion_progress',
-                'joins' => array('certif_completion', 'history'),
+                'joins' => array('certif_completion', 'history', 'certif'),
                 'nosort' => true,
             )
         );

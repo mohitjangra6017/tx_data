@@ -236,7 +236,7 @@ class item extends item_base implements item_has_progress, item_has_dueinfo, ite
             $this->progress_canbecompleted = true;
             $this->progress_percentage = $certificationprogress;
 
-            $pbar = new \static_progress_bar('', '0');
+            $pbar = new \static_progress_bar('', '0', false, $this->certification->fullname);
             $pbar->set_progress((int)$this->progress_percentage);
             $this->progress_pbar = $pbar->export_for_template($OUTPUT);
         }

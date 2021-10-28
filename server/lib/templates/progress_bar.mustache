@@ -46,7 +46,7 @@
 <div class="progressbar_container"{{#width}} style="width: {{width}}px;"{{/width}} id="{{id}}">
     <h2 id="{{id}}_status"></h2>
     <div class="progress progress-striped active">
-        <div id="{{id}}_bar" class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{progress}}" style="width:{{progress}}%">
+        <div id="{{id}}_bar" class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{progress}}" aria-label="{{ label }}" style="width:{{progress}}%">
             <span class="progressbar__text">{{progresstext}}</span>
         </div>
     </div>

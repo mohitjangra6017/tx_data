@@ -619,7 +619,7 @@ class development_plan {
         $tooltipstr = $OUTPUT->render_from_template('totara_plan/plan_status_summary', array('statuses' => $overall_strings));
 
         // Get relevant progress bar and return for display
-        return $totara_renderer->progressbar($overall_progress, 'medium', false, $tooltipstr);
+        return $totara_renderer->progressbar($overall_progress, 'medium', false, $tooltipstr, $this->name);
     }
 
 

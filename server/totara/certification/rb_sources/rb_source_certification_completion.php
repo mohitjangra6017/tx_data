@@ -277,7 +277,8 @@ class rb_source_certification_completion extends rb_base_source {
                 'extrafields' => array(
                     'programid' => "base.programid",
                     'userid' => "base.userid",
-                    'stringexport' => 0
+                    'stringexport' => 0,
+                    'fullname' => 'certif.fullname',
                 )
             )
         );
@@ -292,7 +293,8 @@ class rb_source_certification_completion extends rb_base_source {
                 'extrafields' => array(
                     'programid' => "base.programid",
                     'userid' => "base.userid",
-                    'stringexport' => 1
+                    'stringexport' => 1,
+                    'fullname' => 'certif.fullname',
                 )
             )
         );

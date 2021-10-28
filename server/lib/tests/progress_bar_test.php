@@ -47,6 +47,7 @@ require_once($CFG->libdir . '/outputcomponents.php');
             'width' => 0,
             'progress' => 0,
             'progresstext' => get_string('xpercent', 'core', 0),
+            'label' => 'Completed',
         );
 
         $this->assertSame($expected, $progress_bar->export_for_template($OUTPUT));
@@ -57,6 +58,42 @@ require_once($CFG->libdir . '/outputcomponents.php');
             'width' => 500,
             'progress' => 0,
             'progresstext' => get_string('xpercent', 'core', 0),
+            'label' => 'Completed',
+        );
+
+        $this->assertSame($expected, $progress_bar->export_for_template($OUTPUT));
+
+        $progress_bar = new static_progress_bar('abc', 500, false, 'a custom label');
+        $expected = array(
+            'id' => 'abc',
+            'width' => 500,
+            'progress' => 0,
+            'progresstext' => get_string('xpercent', 'core', 0),
+            'label' => 'a custom label',
+        );
+
+        $this->assertSame($expected, $progress_bar->export_for_template($OUTPUT));
+
+        // An empty label string should come out as such
+        $progress_bar = new static_progress_bar('abc', 500, false, '');
+        $expected = array(
+            'id' => 'abc',
+            'width' => 500,
+            'progress' => 0,
+            'progresstext' => get_string('xpercent', 'core', 0),
+            'label' => '',
+        );
+
+        $this->assertSame($expected, $progress_bar->export_for_template($OUTPUT));
+
+        // An null label string should come out as the default string
+        $progress_bar = new static_progress_bar('abc', 500, false, null);
+        $expected = array(
+            'id' => 'abc',
+            'width' => 500,
+            'progress' => 0,
+            'progresstext' => get_string('xpercent', 'core', 0),
+            'label' => 'Completed',
         );
 
         $this->assertSame($expected, $progress_bar->export_for_template($OUTPUT));
@@ -109,6 +146,7 @@ require_once($CFG->libdir . '/outputcomponents.php');
             'width' => 0,
             'progress' => 10,
             'progresstext' => get_string('xpercent', 'core', 10),
+            'label' => 'Completed',
             'popover' => array(
                 'contenttemplate' => false,
                 'contenttemplatecontext' => false,

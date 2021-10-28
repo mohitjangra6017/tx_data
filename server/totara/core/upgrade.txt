@@ -5,6 +5,7 @@ information provided here is intended especially for developers.
 
 * Moved tests/language_pack_faker_trait to the core_phpunit namespace. Any testcases using the trait need to be updated.
 * totara_get_categoryid_with_capability() has added a second parameter for user's id to not depends on the global $USER.
+* Progress bar renderer can now receive optional label (used for aria label)
 
 === 14.0 ===
 

@@ -429,7 +429,7 @@ function prog_display_certification_programs($userid) {
         $percentage = totara_program_get_user_percentage_complete($cp->id, $userid);
         $progress = $str_notassigned;
         if ($percentage !== null) {
-            $progress = $renderer->progressbar($percentage, 'medium', false);
+            $progress = $renderer->progressbar($percentage, 'medium', false, 'DEFAULTTOOLTIP', $cp->fullname);
         }
 
         $row = array();

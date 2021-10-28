@@ -1789,7 +1789,7 @@ class program {
                 $totararenderer = $PAGE->get_renderer('totara_core');
                 $percentage = totara_program_get_user_percentage_complete($this, $userid);
                 if ($percentage !== null) {
-                    $progress = $totararenderer->progressbar($percentage, 'medium', false);
+                    $progress = $totararenderer->progressbar($percentage, 'medium', false, 'DEFAULTTOOLTIP', $this->fullname);
                 } else {
                     $progress = get_string('notassigned', 'totara_program');
                 }

@@ -420,6 +420,7 @@ class rb_source_dp_certification extends rb_base_source {
                     'window' => "certif_completion.timewindowopens",
                     'histcompletion' => "certif_completion_history.timecompleted",
                     'stringexport' => 0,
+                    'fullname' => 'base.fullname'
                 ),
                 'nosort' => true,
             )
@@ -440,6 +441,7 @@ class rb_source_dp_certification extends rb_base_source {
                     'window' => "certif_completion.timewindowopens",
                     'histcompletion' => "certif_completion_history.timecompleted",
                     'stringexport' => 1,
+                    'fullname' => 'base.fullname'
                 ),
                 'nosort' => true,
             )

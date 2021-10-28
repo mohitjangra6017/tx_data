@@ -139,7 +139,7 @@ if ($backup->get_stage() == backup_ui::STAGE_FINAL) {
     // Display an extra backup step bar so that we can show the 'processing' step first.
     echo html_writer::start_div('', array('id' => 'executionprogress'));
     echo $renderer->progress_bar($backup->get_progress_bar());
-    $backup->get_controller()->set_progress(new \core\progress\display());
+    $backup->get_controller()->set_progress(new \core\progress\display(true, get_string('backupprogress', 'backup')));
 
     // Prepare logger and add to end of chain.
     $logger = new core_backup_html_logger($CFG->debugdeveloper ? backup::LOG_DEBUG : backup::LOG_INFO);

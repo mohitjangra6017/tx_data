@@ -185,7 +185,7 @@ if (!$restore->is_independent()) {
             // Show the current restore state (header with bolded item).
             echo $renderer->progress_bar($restore->get_progress_bar());
             // Start displaying the actual progress bar percentage.
-            $restore->get_controller()->set_progress(new \core\progress\display());
+            $restore->get_controller()->set_progress(new \core\progress\display(true, get_string('restoreprogress', 'backup')));
             // Prepare logger.
             $logger = new core_backup_html_logger($CFG->debugdeveloper ? backup::LOG_DEBUG : backup::LOG_INFO);
             $restore->get_controller()->add_logger($logger);

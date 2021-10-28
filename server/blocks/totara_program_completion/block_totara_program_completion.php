@@ -94,7 +94,7 @@ class block_totara_program_completion extends block_base {
             $percentage = totara_program_get_user_percentage_complete($program, $USER->id);
             $progress = $str_notassigned;
             if ($percentage !== null) {
-                $progress = $renderer->progressbar($percentage, 'medium', false);
+                $progress = $renderer->progressbar($percentage, 'medium', false, 'DEFAULTTOOLTIP', $program->fullname);
             }
 
             $name = html_writer::div(html_writer::link($programlink, format_string($program->fullname)), 'name');

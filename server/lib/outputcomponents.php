@@ -4767,6 +4767,8 @@ class progress_bar implements renderable, templatable {
     private $time_start = 0;
     /** @var \core\output\popover Popover for this component */
     private $popover = null;
+    /** @var string label for the progress bar */
+    private $label = '';
 
     /**
      * Constructor
@@ -4776,8 +4778,9 @@ class progress_bar implements renderable, templatable {
      * @param string $htmlid The container ID.
      * @param int $width The suggested width.
      * @param bool $autostart Whether to start the progress bar right away.
+     * @param string|null $label
      */
-    public function __construct($htmlid = '', $width = 500, $autostart = false) {
+    public function __construct($htmlid = '', $width = 500, $autostart = false, ?string $label = null) {
         if (!$this->is_static() && !CLI_SCRIPT and (!defined('NO_OUTPUT_BUFFERING') || !NO_OUTPUT_BUFFERING)) {
             debugging('progress_bar used without setting NO_OUTPUT_BUFFERING.', DEBUG_DEVELOPER);
         }
@@ -4789,6 +4792,7 @@ class progress_bar implements renderable, templatable {
         }
 
         $this->width = (int)$width;
+        $this->label = !is_null($label) ? $label : get_string('completed', 'totara_core');
 
         if ($autostart) {
             $this->create();
@@ -4943,7 +4947,8 @@ class progress_bar implements renderable, templatable {
             'id' => $this->html_id,
             'width' => $this->width,
             'progress' => $this->percent,
-            'progresstext' => get_string('xpercent', 'core', $this->percent)
+            'progresstext' => get_string('xpercent', 'core', $this->percent),
+            'label' => format_string($this->label),
         ];
 
         if ($this->popover instanceof \core\output\popover) {

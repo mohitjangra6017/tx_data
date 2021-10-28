@@ -279,7 +279,8 @@ class rb_source_dp_program extends rb_base_source {
                 'extrafields' => array(
                     'programid' => "base.id",
                     'userid' => "program_completion.userid",
-                    "stringexport" => 0
+                    "stringexport" => 0,
+                    'fullname' => 'base.fullname'
                 )
             )
         );

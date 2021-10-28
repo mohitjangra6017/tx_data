@@ -152,9 +152,11 @@ class totara_core_renderer extends plugin_renderer_base {
             return $data;
         }
 
+        $course = get_course($courseid);
+
         $data->statustext = get_string($COMPLETION_STATUS[$status], 'completion');
         $data->percent = $percent;
-        $pbar = new \static_progress_bar('', '0');
+        $pbar = new \static_progress_bar('', '0', false, $course->fullname);
         $pbar->set_progress((string)$percent);
         $detaildata = $completion->export_completion_criteria_for_template();
         if (!empty($detaildata)) {
@@ -534,9 +536,10 @@ class totara_core_renderer extends plugin_renderer_base {
      * @param string $size large, medium...
      * @param boolean $showlabel show completion text label
      * @param string $tooltip required tooltip text
-     * @return html string
+     * @param string $label text to be associated with the progress bar
+     * @return string html string
      */
-    public function progressbar($percent, $size='medium', $showlabel=false, $tooltip='DEFAULTTOOLTIP') {
+    public function progressbar($percent, $size = 'medium', $showlabel = false, $tooltip = 'DEFAULTTOOLTIP', ?string $label = '') {
         global $OUTPUT;
 
         $percent = round($percent);
@@ -546,7 +549,7 @@ class totara_core_renderer extends plugin_renderer_base {
         if ($percent < 0 || $percent > 100) {
             $data->statustext = 'progress bar error- invalid value...';
         } else {
-            $pbar = new \static_progress_bar('', '0');
+            $pbar = new \static_progress_bar('', '0', false, $label);
             $pbar->set_progress((string)$percent);
 
             if ($tooltip == 'DEFAULTTOOLTIP') {

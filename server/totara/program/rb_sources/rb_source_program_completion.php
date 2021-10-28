@@ -325,10 +325,12 @@ class rb_source_program_completion extends rb_base_source {
             "base.status",
             array(
                 'displayfunc' => 'program_completion_progress',
+                'joins' => ['program'],
                 'extrafields' => array(
                     'programid' => "base.programid",
                     'userid' => "base.userid",
-                    'stringexport' => 0
+                    'stringexport' => 0,
+                    'fullname' => 'program.fullname',
                 )
             )
         );
@@ -340,10 +342,12 @@ class rb_source_program_completion extends rb_base_source {
             "base.status",
             array(
                 'displayfunc' => 'program_completion_progress',
+                'joins' => ['program'],
                 'extrafields' => array(
                     'programid' => "base.programid",
                     'userid' => "base.userid",
-                    'stringexport' => 1
+                    'stringexport' => 1,
+                    'fullname' => 'program.fullname',
                 )
             )
         );
