@@ -6585,7 +6585,11 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         $mail->addReplyTo($values[0], $values[1]);
     }
 
+    // KINEO CCM - GLOTOT-950
+    class_exists('\local_core\Hook\Email\PreSend') && (new \local_core\Hook\Email\PreSend($user, $from, $mail))->execute();
     if ($mail->send()) {
+        // KINEO CCM - GLOTOT-950
+        class_exists('\local_core\Hook\Email\Sent') && (new \local_core\Hook\Email\Sent($user, $from, $mail))->execute();
         $emailbouncecounter = new \core_user\email_bounce_counter($user);
         $emailbouncecounter->increase_send_count();
         if (!empty($mail->SMTPDebug)) {
@@ -6605,6 +6609,8 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
             )
         ));
         $event->trigger();
+        // KINEO CCM - GLOTOT-950
+        class_exists('\local_core\Hook\Email\Failed') && (new \local_core\Hook\Email\Failed($user, $from, $mail))->execute();
         if (CLI_SCRIPT) {
             mtrace('Error: lib/moodlelib.php email_to_user(): '.$mail->ErrorInfo);
         }
