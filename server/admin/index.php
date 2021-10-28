@@ -413,6 +413,8 @@ if (!$cache and moodle_needs_upgrading()) {
     // install/upgrade all plugins and other parts
     upgrade_noncore(true);
 }
+// KINEO CCM - GLOTOT-1927
+class_exists('\local_core\Hook\PostUpgrade') && (new \local_core\Hook\PostUpgrade())->execute();
 
 // If this is the first install, indicate that this site is fully configured
 // except the admin password

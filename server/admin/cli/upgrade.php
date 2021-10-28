@@ -195,6 +195,9 @@ if ($totarainfo->upgradecore) {
 // unconditionally upgrade
 upgrade_noncore(true);
 
+// KINEO CCM - INTERNAL-24377
+class_exists('\local_core\Hook\PostUpgrade') && (new \local_core\Hook\PostUpgrade())->execute();
+
 // log in as admin - we need doanything permission when applying defaults
 \core\session\manager::set_user(get_admin());
 

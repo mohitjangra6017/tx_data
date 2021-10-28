@@ -1764,6 +1764,9 @@ function upgrade_core($version, $verbose) {
         cache_helper::purge_all(true);
         purge_all_caches();
 
+        // KINEO CCM - INTERNAL-24377
+        class_exists('\local_core\Hook\PreUpgrade') && (new \local_core\Hook\PreUpgrade(\local_core\Hook\PreUpgrade::UPGRADETYPE_CORE))->execute();
+
         // Totara; Run any pre-upgrade special fixes that may be required and update all languages.
         totara_preupgrade();
 
@@ -1844,6 +1847,9 @@ function upgrade_noncore($verbose) {
         // Reset caches before any output.
         cache_helper::purge_all(true);
         purge_all_caches();
+
+        // KINEO CCM - INTERNAL-24377
+        class_exists('\local_core\Hook\PreUpgrade') && (new \local_core\Hook\PreUpgrade(\local_core\Hook\PreUpgrade::UPGRADETYPE_NONCORE))->execute();
 
         // Totara; Run any pre-upgrade special fixes that may be required.
         totara_preupgrade();
