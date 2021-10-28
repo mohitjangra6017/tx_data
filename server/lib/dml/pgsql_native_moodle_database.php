@@ -393,12 +393,10 @@ class pgsql_native_moodle_database extends moodle_database {
         $keys = [];
         $table_name = $this->prefix.$table;
 
-        $sql = "SELECT c.column_name, c.data_type
-            FROM information_schema.table_constraints tc
-            JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_name)
-            JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema
-                AND tc.table_name = c.table_name AND ccu.column_name = c.column_name
-            WHERE constraint_type = 'PRIMARY KEY' and tc.table_name = :table_name;";
+        $sql = "SELECT ccu.column_name
+            FROM information_schema.constraint_column_usage ccu
+            JOIN information_schema.table_constraints tc ON tc.constraint_schema = ccu.constraint_schema AND tc.constraint_name = ccu.constraint_name AND tc.constraint_type = 'PRIMARY KEY'
+            WHERE ccu.table_name = :table_name";
 
         $rows = $this->get_records_sql_unkeyed($sql, ['table_name' => $table_name]);
 
