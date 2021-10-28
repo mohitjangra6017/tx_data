@@ -147,6 +147,19 @@ class behat_course extends behat_base {
     }
 
     /**
+     * Do a search on the course search page.
+     *
+     * @Given /^I search courses for search term "([^"]*)" with "([^"]*)" results per page$/
+     */
+    public function i_search_for_courses_using_search_term(string $search_term, string $results_per_page) {
+        \behat_hooks::set_step_readonly(false);
+
+        $url = new moodle_url('/course/search.php?search=' . $search_term . '&perpage=' . $results_per_page);
+        $this->getSession()->visit($this->locate_path($url->out_as_local_url(false)));
+        $this->wait_for_pending_js();
+    }
+
+    /**
      * Adds the selected activity/resource filling the form data with the specified field/value pairs. Sections 0 and 1 are also allowed on frontpage.
      *
      * @When /^I add a "(?P<activity_or_resource_name_string>(?:[^"]|\\")*)" to section "(?P<section_number>\d+)" and I fill the form with:$/

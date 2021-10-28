@@ -1814,6 +1814,11 @@ class core_course_renderer extends plugin_renderer_base {
             $displayoptions = array('sort' => array('displayname' => 1));
             // take the current page and number of results per page from query
             $perpage = optional_param('perpage', 0, PARAM_RAW);
+            if (!isloggedin() && ($perpage === 'all' || $perpage > $CFG->coursesperpage)) {
+                // Non-logged in users cannot have more courses on a page than the default determines.
+                // This is to mitigate the possibility of denial of service attacks.
+                $perpage = $CFG->coursesperpage;
+            }
             if ($perpage !== 'all') {
                 $displayoptions['limit'] = ((int)$perpage <= 0) ? $CFG->coursesperpage : (int)$perpage;
                 $page = optional_param('page', 0, PARAM_INT);
@@ -1821,7 +1826,7 @@ class core_course_renderer extends plugin_renderer_base {
             }
             // options 'paginationurl' and 'paginationallowall' are only used in method coursecat_courses()
             $displayoptions['paginationurl'] = new moodle_url('/course/search.php', $searchcriteria);
-            $displayoptions['paginationallowall'] = true; // allow adding link 'View all'
+            $displayoptions['paginationallowall'] = isloggedin(); // Allow adding link 'View all' for logged in users only.
 
             $class = 'course-search-result';
             foreach ($searchcriteria as $key => $value) {

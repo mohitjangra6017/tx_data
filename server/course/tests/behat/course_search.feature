@@ -42,3 +42,41 @@ Feature: Courses can be searched for and moved in bulk.
     And I click on category "Science" in the management interface
     And I should see "Biology Y1"
     And I should see "Biology Y2"
+
+  Scenario: Prevent switching off search result pagination for non-logged in users
+    Given I log in as "admin"
+    # Disable forcelogin, so the search can be accessed by non-logged in users.
+    And I set the following administration settings values:
+      | forcelogin     | 0 |
+      | coursesperpage | 2 |
+    When I search courses for search term "Y" with "3" results per page
+    # Default sort order is by display name.
+    Then I should see "Biology Y1"
+    And I should see "Biology Y2"
+    And I should see "English Y1"
+    And I should not see "English Y2"
+    And I should see "Show all"
+
+    # Logged in user can switch off pagination using "perpage=all".
+    When I search courses for search term "Y" with "all" results per page
+    Then I should see "Biology Y1"
+    And I should see "Biology Y2"
+    And I should see "English Y1"
+    And I should see "English Y2"
+    And I should not see "Show all"
+
+    When I log out
+    And I search courses for search term "Y" with "3" results per page
+    Then I should see "Biology Y1"
+    And I should see "Biology Y2"
+    And I should not see "English Y1"
+    And I should not see "English Y2"
+    And I should not see "Show all"
+
+    # Non-logged in user is not allowed to switch off pagination. Fall back to default - 2 courses per page.
+    When I search courses for search term "Y" with "all" results per page
+    Then I should see "Biology Y1"
+    And I should see "Biology Y2"
+    And I should not see "English Y1"
+    And I should not see "English Y2"
+    And I should not see "Show all"
