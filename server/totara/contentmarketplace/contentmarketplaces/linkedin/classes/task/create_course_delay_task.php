@@ -26,7 +26,7 @@ namespace contentmarketplace_linkedin\task;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\event\import_course_full_failure;
 use contentmarketplace_linkedin\event\import_course_partial_failure;
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use core\entity\user;
 use core\task\adhoc_task;
 use core\task\manager as task_manager;

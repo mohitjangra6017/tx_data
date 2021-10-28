@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @package totara_contentmarketplace
  */
 
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use core_phpunit\testcase;
 use totara_contentmarketplace\testing\helper;
 use totara_tenant\testing\generator as tenant_generator;
@@ -29,7 +29,7 @@ use totara_tenant\testing\generator as tenant_generator;
 /**
  * @group totara_contentmarketplace
  */
-class contentmarketplace_linkedin_catalog_import_interactor_testcase extends testcase {
+class totara_contentmarketplace_catalog_import_interactor_testcase extends testcase {
     /**
      * @return void
      */

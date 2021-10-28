@@ -26,7 +26,7 @@ namespace contentmarketplace_linkedin\webapi\resolver\mutation;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\dto\course_creation_result;
 use contentmarketplace_linkedin\entity\learning_object;
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use contentmarketplace_linkedin\task\create_course_delay_task;
 use core\notification;
 use core\webapi\execution_context;

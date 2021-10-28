@@ -23,7 +23,7 @@
 
 namespace contentmarketplace_linkedin\webapi\resolver\query;
 
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use context_helper;
 use core\orm\query\builder;
 use core\webapi\execution_context;

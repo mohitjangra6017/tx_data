@@ -18,16 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @package totara_contentmarketplace
  */
-namespace contentmarketplace_linkedin\interactor;
 
-use context;
+namespace totara_contentmarketplace\interactor;
+
 use context_coursecat;
 use context_system;
-use required_capability_exception;
 use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
-use totara_contentmarketplace\interactor\base;
 
 /**
  * Interactor class for catalog import actions related.

@@ -22,7 +22,7 @@
  */
 
 use container_course\course;
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use core\entity\enrol;
 use core\orm\query\builder;
 use core_phpunit\testcase;

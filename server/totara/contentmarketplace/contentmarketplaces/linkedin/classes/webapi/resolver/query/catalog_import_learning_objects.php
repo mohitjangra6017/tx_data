@@ -26,7 +26,7 @@ namespace contentmarketplace_linkedin\webapi\resolver\query;
 use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\data_provider\learning_objects;
 use contentmarketplace_linkedin\data_provider\learning_objects_selected_filters;
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;

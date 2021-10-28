@@ -22,7 +22,7 @@
  */
 namespace contentmarketplace_linkedin\workflow;
 
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use context_coursecat;
 use totara_contentmarketplace\workflow\marketplace_workflow;
 

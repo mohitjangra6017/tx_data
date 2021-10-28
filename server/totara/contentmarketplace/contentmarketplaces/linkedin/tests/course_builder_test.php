@@ -21,7 +21,7 @@
  * @package contentmarketplace_linkedin
  */
 
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use contentmarketplace_linkedin\model\learning_object;
 use contentmarketplace_linkedin\testing\generator;
 use core\orm\query\builder;

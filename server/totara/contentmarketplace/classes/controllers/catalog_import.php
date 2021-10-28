@@ -24,17 +24,17 @@
 namespace totara_contentmarketplace\controllers;
 
 use coding_exception;
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use context;
 use context_coursecat;
 use context_system;
 use core_component;
 use moodle_exception;
 use moodle_url;
+use totara_contentmarketplace\explorer as explorer_model;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use totara_contentmarketplace\local;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_mvc\controller;
-use totara_contentmarketplace\explorer as explorer_model;
 use totara_mvc\tui_view;
 use totara_mvc\view;
 
@@ -85,12 +85,20 @@ class catalog_import extends controller {
     *
     * @return void
     */
-    protected function authorize(): void {
+    final protected function authorize(): void {
         parent::authorize();
 
         local::require_contentmarketplace();
         $this->check_plugin_enabled();
 
+        $this->authorize_with_interactor();
+    }
+
+    /**
+     * Authorise the user using the interactor class.
+     * This can be overridden to use a plugin-specific interactor.
+     */
+    protected function authorize_with_interactor(): void {
         /** @var context_coursecat|context_system $context */
         $context = $this->get_context();
         $interactor = new catalog_import_interactor();
