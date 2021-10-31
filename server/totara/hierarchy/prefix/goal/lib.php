@@ -968,9 +968,11 @@ class goal extends hierarchy {
         }
 
         if ($scope == self::SCOPE_COMPANY) {
-            return $DB->get_records('goal_record', $conditions);
+            // Order by id to get reproducible results for testing.
+            return $DB->get_records('goal_record', $conditions, 'id');
         } else if ($scope == self::SCOPE_PERSONAL) {
-            return $DB->get_records('goal_personal', $conditions);
+            // Order by id to get reproducible results for testing.
+            return $DB->get_records('goal_personal', $conditions, 'id');
         }
     }
 

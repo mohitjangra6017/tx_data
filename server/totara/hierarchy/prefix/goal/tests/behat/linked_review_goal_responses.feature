@@ -137,10 +137,7 @@ Feature: Responding to goals linked to a performance review
     And I navigate to the outstanding perform activities list page
     And I click on "activity1" "link"
 
-    Then I should see "Personal goal to be deleted" in the 2nd selected content item for the "Personal goal review" linked review element
-    And I should see "I'm a personal goal that will be deleted" in the 2nd selected content item for the "Personal goal review" linked review element
-    And I should see "Goal assigned" in the 2nd selected content item for the "Personal goal review" linked review element
-    And I should not see "Target date" in the 2nd selected content item for the "Personal goal review" linked review element
+    Then I should see "The goal no longer exists" in the 2nd selected content item for the "Personal goal review" linked review element
 
     And I should see "Company goal to be deleted" in the 2nd selected content item for the "Company goal review" linked review element
     And I should see "I'm a company goal and I'm going to be deleted" in the 2nd selected content item for the "Company goal review" linked review element
