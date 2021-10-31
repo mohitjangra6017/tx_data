@@ -18,7 +18,7 @@ Feature: View the workspace files page
   Scenario: Workspace owner sees files
     Given I log in as "user_one"
     And I click on "Your Workspaces" in the totara menu
-    Then I should see "file.txt"
+    Then I should see a weka attachment with the name "file.txt" in the ".tui-workspaceDiscussionCard" "css_element"
     When I follow "Browse files"
     Then I should see "file.txt"
 
