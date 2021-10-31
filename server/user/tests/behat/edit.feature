@@ -77,3 +77,18 @@ Feature: Basic editing of users
     And I click on "First User" "link"
     When I click on "Edit profile" "link" in the ".block_totara_user_profile_category_contact" "css_element"
     Then I should see "New password"
+
+  Scenario: Admin/manager can create a new password for others admin but not for yourself
+    Given the following "users" exist:
+      | username | firstname | lastname | email             |
+      | user1    | First     | User     | user1@example.com |
+    And I log in as "admin"
+    And I navigate to "Permissions > Site administrators" in site administration
+
+    And I set the field "Users" to "First User (user1, user1@example.com)"
+    And I click on "Add" "button"
+    And I click on "Continue" "button"
+    And I navigate to "Manage users" node in "Site administration > Users"
+    And I click on "First User" "link"
+    When I click on "Edit profile" "link" in the ".block_totara_user_profile_category_contact" "css_element"
+    Then I should see "New password"

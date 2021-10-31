@@ -250,3 +250,20 @@ Feature: Account login management
     When I navigate to "Manage users" node in "Site administration > Users"
     And I click on "Manage login of First User" "link" in the "First User" "table_row"
     Then I should see "Change password"
+
+  Scenario: Admin/manager can change password for other admin but not for yourself
+    Given I log in as "admin"
+    And I click on "Admin User" "link"
+    When I follow "Profile"
+    And I follow "Manage user login"
+    Then I should not see "Change password"
+
+    And I navigate to "Permissions > Site administrators" in site administration
+
+    And I set the field "Users" to "First User (user1, user1@example.com)"
+    And I click on "Add" "button"
+    And I click on "Continue" "button"
+
+    When I navigate to "Manage users" node in "Site administration > Users"
+    And I click on "Manage login of First User" "link" in the "First User" "table_row"
+    Then I should see "Change password"

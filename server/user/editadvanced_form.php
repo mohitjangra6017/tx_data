@@ -120,7 +120,7 @@ class user_editadvanced_form extends moodleform {
             $mform->disabledIf('createpassword', 'auth', 'in', $cannotchangepass);
 
             // Remove the ability to change their own password while editing their profile
-            if (isset($USER->newadminuser) || ($userid == -1 || ($userid != $USER->id && !is_siteadmin($user)))) {
+            if (isset($USER->newadminuser) || ($userid == -1 || $userid != $USER->id)) {
                 if (!empty($CFG->passwordpolicy)) {
                     $mform->addElement('static', 'passwordpolicyinfo', '', print_password_policy());
                 }
