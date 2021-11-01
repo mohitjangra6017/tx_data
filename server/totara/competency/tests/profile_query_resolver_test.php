@@ -23,8 +23,6 @@
 
 use totara_competency\expand_task;
 use totara_competency\models\assignment_actions;
-use totara_core\advanced_feature;
-use totara_core\feature_not_available_exception;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
