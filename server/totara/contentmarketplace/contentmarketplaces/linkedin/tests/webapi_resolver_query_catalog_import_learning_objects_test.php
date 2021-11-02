@@ -398,7 +398,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'last_updated_at' => ['17 February 2021', date_format::FORMAT_DATE],
             'published_at' => ['27 March 2007', date_format::FORMAT_DATE],
             'level' => ['BEGINNER'],
-            'time_to_complete' => ['8h 56m', timespan_field_formatter::FORMAT_HUMAN],
+            'time_to_complete' => ['8h 55m', timespan_field_formatter::FORMAT_HUMAN],
             'asset_type' => ['COURSE'],
             'image_url' => ['https://cdn.lynda.com/course/260/260-636456652549313738-16x9.jpg'],
         ];
