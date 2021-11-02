@@ -112,6 +112,38 @@ class TestOptimizeHyperparams(unittest.TestCase):
         mock_auc_score.assert_called_once()
         self.assertEqual(performance, scores_array.mean())
 
+    @patch(target="subroutines.optimize_hyperparams.auc_score")
+    def test_compute_performance_no_interactions(self, mock_auc_score):
+        """
+        This method tests if the `__compute_performance` method of the
+        `OptimizeHyperparams` class returns expected response when there are zero past
+        user interactions
+        """
+        train_data = 10
+        test_data = 5
+        train_weights = 7
+        epochs = 3
+        comps = 5
+        scores_array = np.array([], dtype=np.float32)
+        mock_auc_score.return_value = scores_array
+        with patch(target="subroutines.optimize_hyperparams.LightFM"):
+            performance = self.optimizer._OptimizeHyperparams__compute_performance(
+                train_data=train_data,
+                test_data=test_data,
+                train_weights=train_weights,
+                epochs=epochs,
+                comps=comps
+            )
+
+        self.assertEqual(
+            first=performance,
+            second=0,
+            msg=(
+                "The 'OptimizeHyperparams.__compute_performance' method returns "
+                f"{performance} while the expected response was '0'"
+            )
+        )
+
     @patch("subroutines.optimize_hyperparams.np.random.randint")
     @patch(
         "subroutines.optimize_hyperparams.OptimizeHyperparams"

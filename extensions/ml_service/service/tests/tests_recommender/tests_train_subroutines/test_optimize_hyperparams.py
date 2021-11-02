@@ -18,7 +18,7 @@ Please contact [licensing@totaralearning.com] for more information.
 
 import numpy as np
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 
 from service.recommender.train_subroutines.optimize_hyperparams import (
     OptimizeHyperparams,
@@ -126,6 +126,38 @@ class TestOptimizeHyperparams(unittest.TestCase):
             msg=(
                 "The response from the `OptimizeHyperparams.compute_performance` is "
                 f"{performance}, while it was expected to be {expected_performance}"
+            ),
+        )
+
+    @patch(
+        target="service.recommender.train_subroutines.optimize_hyperparams.auc_score"
+    )
+    def test_compute_performance_no_interactions(self, mock_auc_score) -> None:
+        """
+        This method tests if the `compute_performance` method of the
+        `OptimizeHyperparams` class returns expected response when there are zero past
+        user interactions
+        """
+        epochs = 3
+        comps = 5
+        scores_array = np.array([], dtype=np.float32)
+        mock_auc_score.return_value = scores_array
+        with patch(
+            target=(
+                "service.recommender.train_subroutines.optimize_hyperparams.LightFM"
+            )
+        ):
+            performance = self.optimizer.compute_performance(
+                epochs=epochs,
+                comps=comps,
+            )
+
+        self.assertEqual(
+            first=performance,
+            second=0,
+            msg=(
+                "The 'OptimizeHyperparams.compute_performance' method returns "
+                f"{performance} while the expected response was '0'"
             ),
         )
 

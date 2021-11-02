@@ -166,9 +166,12 @@ class OptimizeHyperparams:
             user_features=self.user_features,
             item_features=self.item_features,
             num_threads=self.num_threads,
-        ).mean()
+        )
 
-        return score
+        if score.shape[0] == 0:
+            return 0
+
+        return score.mean()
 
     def run_optimization(self, lr):
         """
