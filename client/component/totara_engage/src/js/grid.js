@@ -22,12 +22,13 @@ const slice = Array.prototype.slice;
  * Returning an array of array.
  *
  * @param {Object[]} items
- * @param {Number} perRow
+ * @param {number} perRow
+ * @param {boolean} [padding=false]
  *
- * @return {Array}
+ * @return {Object[]}
  */
 export function calculateRow(items, perRow, padding = false) {
-  if (!Array.isArray(items) || !items.length) {
+  if (!Array.isArray(items) || !items.length || perRow === 0) {
     return [];
   }
 

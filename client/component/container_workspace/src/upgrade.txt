@@ -1,6 +1,14 @@
 This files describes API changes in /client/component/container_workspace,
 information provided here is intended especially for developers.
 
+=== 15.1 ===
+
+* Updated spacing and responsive behaviour in WorkspacePrimaryAction.vue and EmptySpacesHeader.vue
+  * SCSS changes
+* Updated mobile styling and empty state UI in RecommendedSpaces.vue, EmptySpacesPage.vue and SpaceCardsGrid.vue
+  * Template, SCSS and script block changes
+* Reduced the size of the smallest breakpoint in grid.js
+
 === 15.0 ===
 
 * Updated WorkspaceDiscussionTab, deprecated loadMore in favour of loadMoreItems

@@ -19,14 +19,14 @@
 export const cardGrid = {
   xs: {
     name: 'xs',
-    boundaries: [0, 764],
+    boundaries: [0, 500],
     direction: 'horizontal',
     cardUnits: 12,
   },
 
   s: {
     name: 's',
-    boundaries: [765, 992],
+    boundaries: [500, 992],
     direction: 'horizontal',
     cardUnits: 6,
   },
