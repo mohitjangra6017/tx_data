@@ -28,7 +28,7 @@ use core\entity\course;
 use core\orm\entity\model;
 use core_component;
 use core_container\entity\module;
-use mod_contentmarketplace\entity\content_marketplace as model_entity;
+use mod_contentmarketplace\entity\content_marketplace as content_marketplace_entity;
 use moodle_url;
 use stdClass;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
@@ -67,7 +67,7 @@ class content_marketplace extends model {
     private $course_module;
 
     /**
-     * @var model_entity
+     * @var content_marketplace_entity
      */
     protected $entity;
 
@@ -113,9 +113,9 @@ class content_marketplace extends model {
 
     /**
      * content_marketplace constructor.
-     * @param model_entity $entity
+     * @param content_marketplace_entity $entity
      */
-    public function __construct(model_entity $entity) {
+    public function __construct(content_marketplace_entity $entity) {
         parent::__construct($entity);
         $this->context = null;
         $this->internal_learning_object = null;
@@ -134,7 +134,7 @@ class content_marketplace extends model {
         learning_object $learning_object,
         ?int $completion_condition = null
     ): content_marketplace {
-        $entity = new model_entity();
+        $entity = new content_marketplace_entity();
         $entity->course = $course_id;
         $entity->learning_object_id = $learning_object->get_id();
         $entity->learning_object_marketplace_component = $learning_object::get_marketplace_component();
@@ -160,7 +160,7 @@ class content_marketplace extends model {
      * @return string
      */
     protected static function get_entity_class(): string {
-        return model_entity::class;
+        return content_marketplace_entity::class;
     }
 
     /**
@@ -168,15 +168,14 @@ class content_marketplace extends model {
      * @return content_marketplace
      */
     public static function from_course_module_id(int $cm_id): content_marketplace {
-        $course_module = course_module::from_id($cm_id);
-        $instance_id = $course_module->get_instance();
+        $entity = content_marketplace_entity::repository()
+            ->join('course_modules', 'id', 'instance')
+            ->join('modules', 'course_modules.module', 'id')
+            ->where('course_modules.id', $cm_id)
+            ->where('modules.name', content_marketplace_entity::TABLE)
+            ->one(true);
 
-        $entity = new model_entity($instance_id);
-
-        $content_marketplace = new static($entity);
-        $content_marketplace->context = $course_module->get_context();
-
-        return $content_marketplace;
+        return static::load_by_entity($entity);
     }
 
     /**

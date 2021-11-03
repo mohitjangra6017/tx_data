@@ -23,6 +23,7 @@
 
 use core\orm\query\builder;
 use core\orm\query\exceptions\record_not_found_exception;
+use core_container\entity\module;
 use core_phpunit\testcase;
 use mod_contentmarketplace\entity\content_marketplace as entity;
 use mod_contentmarketplace\model\content_marketplace;
@@ -60,25 +61,35 @@ class mod_contentmarketplace_content_marketplace_model_testcase extends testcase
      * @return void
      */
     public function test_instance_from_cm_id_that_is_not_content_marketplace(): void {
+        global $DB;
+        if ($DB instanceof sqlsrv_native_moodle_database) {
+            // Mssql doesn't support manually overriding the primary key value (id), so this test can't be done.
+            $this->markTestSkipped();
+        }
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
+        $contentmarketplace = $generator->create_module(
+            'contentmarketplace',
+            ['course' => $course->id, 'name' => 'contentmarketplace']
+        );
         $seminar = $generator->create_module(
             'facetoface',
-            ['course' => $course->id]
+            ['course' => $course->id, 'name' => 'seminar']
         );
+        $DB->execute('UPDATE {course_modules} SET instance = 1');
+        $DB->execute('UPDATE {contentmarketplace} SET id = 1');
+        $DB->execute('UPDATE {facetoface} SET id = 1');
 
-        try {
-            content_marketplace::from_course_module_id($seminar->cmid);
-            self::fail("Expect the fetch record to yield error");
-        } catch (record_not_found_exception $e) {
-            // Different db vendor give different error message, which
-            // this message is the closet.
-            self::assertStringContainsString(
-                'Can not find data record in database',
-                $e->getMessage()
-            );
-        }
+        $this->assertEquals(2, module::repository()->count());
+        $this->assertEquals(1, module::repository()->where('id', $contentmarketplace->cmid)->count());
+        $this->assertEquals(1, module::repository()->where('id', $seminar->cmid)->count());
+
+        $this->assertEquals('contentmarketplace', content_marketplace::from_course_module_id($contentmarketplace->cmid)->name);
+
+        $this->expectException(record_not_found_exception::class);
+        $this->expectExceptionMessage('Can not find data record in database');
+        content_marketplace::from_course_module_id($seminar->cmid);
     }
 
     /**

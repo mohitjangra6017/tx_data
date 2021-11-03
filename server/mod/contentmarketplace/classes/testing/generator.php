@@ -70,7 +70,7 @@ class generator extends mod_generator {
             $marketplace_generator = totara_contentmarketplace_generator::instance();
             $marketplace_component = $record->learning_object_marketplace_component;
 
-            $learning_object = $marketplace_generator->create_learning_object($marketplace_component);
+            $learning_object = $marketplace_generator->create_learning_object($marketplace_component, $record->name ?? null);
             $record->learning_object_id = $learning_object->get_id();
         }
 
