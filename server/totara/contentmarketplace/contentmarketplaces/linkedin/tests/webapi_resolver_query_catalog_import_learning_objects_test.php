@@ -146,11 +146,13 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'title' => 'Flash For Beginners',
             'short_description' => 'Flash not Photoshop',
             'description' => 'A great course!',
+            "last_updated_at" => time() + HOURSECS
         ]);
         $learning_object_2 = generator::instance()->create_learning_object('2', [
             'title' => 'Flash For Experts',
             'short_description' => 'adobe flash is an out of date technology',
             'description' => 'why would anyone use it now days?',
+            "last_updated_at" => time() + DAYSECS
         ]);
         $learning_object_3 = generator::instance()->create_learning_object('3', [
             'title' => 'Photoshop Pro 2021',
@@ -167,6 +169,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $result_search_for_photoshop = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'search' => '     photoshop     ',
         ]));
+
         $this->assertEquals(2, $result_search_for_photoshop['total']);
         $this->assertEquals($learning_object_1->id, $result_search_for_photoshop['items']->first()->id);
         $this->assertEquals($learning_object_3->id, $result_search_for_photoshop['items']->last()->id);
@@ -434,7 +437,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
     }
 
-    private function get_query_options($pagination = null, $filters = [], $sort_by = 'latest'): array {
+    private function get_query_options($pagination = null, $filters = [], $sort_by = 'LATEST'): array {
         return [
             'input' => [
                 'pagination' => $pagination ?? [
@@ -452,7 +455,6 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             ],
         ];
     }
-
 
     /**
      * @return void
