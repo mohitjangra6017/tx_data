@@ -24,8 +24,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /* NOTE: the following version number must be bumped during each major or minor Totara release. */
 
-$plugin->version  = 2021100100;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021100100;       // Requires this Totara version.
+$plugin->version  = 2021110500;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021110500;       // Requires this Totara version.
 $plugin->component = 'totara_comment';   // To check on upgrade, that module sits in correct place
 
 $plugin->dependencies = [

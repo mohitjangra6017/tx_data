@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021100100; // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2021100100; // Requires this Totara version
+$plugin->version   = 2021110500; // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2021110500; // Requires this Totara version
 $plugin->component = 'tool_health'; // Full name of the plugin (used for diagnostics)
 
 $plugin->maturity  = MATURITY_ALPHA; // this version's maturity level

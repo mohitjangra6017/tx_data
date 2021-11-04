@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021100100;
-$plugin->requires = 2021100100;  // Requires this Totara version.
+$plugin->version  = 2021110500;
+$plugin->requires = 2021110500;  // Requires this Totara version.
 $plugin->component= 'filter_data';
 
 $plugin->dependencies = array('mod_data' => 2020101200);

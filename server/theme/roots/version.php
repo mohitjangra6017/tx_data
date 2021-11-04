@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2021100100;     // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021100100;       // Requires this Totara version.
+$plugin->version  = 2021110500;     // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021110500;       // Requires this Totara version.
 $plugin->component = 'theme_roots';   // Full name of the plugin (used for diagnostics).

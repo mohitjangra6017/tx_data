@@ -24,5 +24,5 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'contentmarketplace_goone';
-$plugin->version   = 2021100100;
-$plugin->requires  = 2021100100; // Totara 9+ is required.
+$plugin->version   = 2021110500;
+$plugin->requires  = 2021110500; // Totara 9+ is required.
