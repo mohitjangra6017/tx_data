@@ -60,9 +60,24 @@ class totara_core_webapi_resolver_query_user_learning_testcase extends testcase 
         }
 
         $courses = [];
-        $courses[] = $this->getDataGenerator()->create_course(['shortname' => 'c1', 'fullname' => 'course1', 'summary' => 'first course']);
-        $courses[] = $this->getDataGenerator()->create_course(['shortname' => 'c2', 'fullname' => 'course2', 'summary' => 'second course']);
-        $courses[] = $this->getDataGenerator()->create_course(['shortname' => 'c3', 'fullname' => 'course3', 'summary' => 'third course']);
+        $courses[] = $this->getDataGenerator()->create_course([
+            'shortname' => 'c1',
+            'fullname' => 'course1',
+            'summary' => 'first course',
+            'summaryformat' => FORMAT_HTML,
+        ]);
+        $courses[] = $this->getDataGenerator()->create_course([
+            'shortname' => 'c2',
+            'fullname' => 'course2',
+            'summary' => 'second course',
+            'summaryformat' => FORMAT_HTML,
+        ]);
+        $courses[] = $this->getDataGenerator()->create_course([
+            'shortname' => 'c3',
+            'fullname' => 'course3',
+            'summary' => 'third course',
+            'summaryformat' => FORMAT_HTML,
+        ]);
 
         $this->getDataGenerator()->enrol_user($users[0]->id, $courses[0]->id, 'student', 'manual');
         $this->getDataGenerator()->enrol_user($users[1]->id, $courses[0]->id, 'student', 'manual');

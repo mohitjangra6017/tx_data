@@ -86,6 +86,7 @@ abstract class learning_items_helper {
                 'shortname',
                 'summary',
                 raw_field::raw("'{$type}' as type"),
+                $provider->get_summary_format_select(),
             ]);
             $builder->reset_order_by();
             $builders[] = $builder;

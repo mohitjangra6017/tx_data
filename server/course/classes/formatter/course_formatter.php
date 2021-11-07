@@ -41,10 +41,11 @@ class course_formatter extends formatter {
                 $component = 'course';
                 $filearea = 'summary';
                 $itemid = $this->object->id;
+                $context = \context_course::instance($itemid);
 
                 return $formatter
                     ->set_text_format($this->object->summaryformat)
-                    ->set_pluginfile_url_options($this->context, $component, $filearea)
+                    ->set_pluginfile_url_options($context, $component, $filearea)
                     ->format($value);
             },
             'summaryformat' => null,
