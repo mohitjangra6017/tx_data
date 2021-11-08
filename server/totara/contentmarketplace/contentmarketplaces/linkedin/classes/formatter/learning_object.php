@@ -42,6 +42,7 @@ class learning_object extends entity_model_formatter {
             'last_updated_at' => date_field_formatter::class,
             'published_at' => date_field_formatter::class,
             'level' => null,
+            'display_level' => null,
             'time_to_complete' => timespan_field_formatter::class,
             'asset_type' => null,
             'language' => null,

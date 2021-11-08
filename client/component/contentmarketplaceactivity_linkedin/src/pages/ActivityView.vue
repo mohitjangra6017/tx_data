@@ -296,7 +296,7 @@ export default {
           },
           description: module.intro,
           image: module.course.image,
-          levelString: learning_object.level,
+          levelString: learning_object.display_level,
           name: module.name,
           // Default to completion not started
           status: this.$str(

@@ -19,16 +19,6 @@ enum contentmarketplace_linkedin_asset_type {
 }
 
 """
-The skill level required for the LinkedIn learning material.
-See https://docs.microsoft.com/en-us/linkedin/learning/reference/learningassets#query-parameters-1
-"""
-enum contentmarketplace_linkedin_level {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
-}
-
-"""
 The way that the learning objects can be sorted by for the catalogue import.
 """
 enum contentmarketplace_linkedin_catalog_import_sort_by {
@@ -44,6 +34,16 @@ enum contentmarketplace_linkedin_classification_type {
   SUBJECT
   SKILL
   TOPIC
+}
+
+"""
+The skill level required for the LinkedIn learning material.
+See https://docs.microsoft.com/en-us/linkedin/learning/reference/learningassets#difficultylevel
+"""
+enum contentmarketplace_linkedin_level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }
 
 """
@@ -76,6 +76,7 @@ type contentmarketplace_linkedin_learning_object implements totara_contentmarket
   classifications: [contentmarketplace_linkedin_classification!]!
   subjects: [contentmarketplace_linkedin_classification!]!
   level: contentmarketplace_linkedin_level
+  display_level: String!
   time_to_complete(
     format: contentmarketplace_linkedin_timespan_format = HUMAN
   ): String

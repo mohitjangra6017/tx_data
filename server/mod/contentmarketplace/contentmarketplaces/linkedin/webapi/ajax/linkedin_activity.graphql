@@ -33,7 +33,7 @@ query contentmarketplaceactivity_linkedin_linkedin_activity($cm_id: core_id!) {
     learning_object {
       id
       asset_type
-      level
+      display_level
       time_to_complete
       last_updated_at
       web_launch_url
