@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 15.1 ===
 * Updated grid.js to handle zero perRow without causing an infinite loop
+* Updated _variables.scss to change ---totara-engage-card-height to ---engage-card-height to facilitate a shorter prefix for new variables
+  * SCSS changes
 
 === 15.0 ===
 

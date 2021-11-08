@@ -9,11 +9,16 @@ exports[`engage_article/components/card/ArticleCard.vue Checks snapshot 1`] = `
   <imageheader-stub
     class="tui-engageArticleCard__imageheader"
   >
-    <img
+    <div
       class="tui-engageArticleCard__image"
-      role="presentation"
-      src="/"
-    />
+      style="background-image: url(https://example.com/image.jpg});"
+    >
+      <span
+        class="sr-only"
+      >
+        Example image
+      </span>
+    </div>
      
     <div
       class="tui-engageArticleCard__icons"

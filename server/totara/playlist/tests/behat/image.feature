@@ -26,7 +26,8 @@ Feature: Create a playlist with a banner
     When I click on "Your Library" in the totara menu
     And I set the field "Search your library" to "TestPlaylist"
     And I press "Search your library"
-    Then "//img[@alt='TestPlaylist' and contains(@src, '/default_collection')]" "xpath_element" should exist
+    Then "//div[@class='tui-playlistCard__imageHeader' and contains(@style, 'background-image') and contains(@style, 'default_collection')]" "xpath_element" should exist
+    And I should see "TestPlaylist" in the ".tui-playlistCard__imageHeader .sr-only" "css_element"
 
     # Now go add a resource with an image
     When I view playlist "TestPlaylist"
@@ -48,8 +49,9 @@ Feature: Create a playlist with a banner
     Then I click on "Your Library" in the totara menu
     And I set the field "Search your library" to "TestPlaylist"
     And I press "Search your library"
-    Then "//img[@alt='TestPlaylist' and contains(@src, '/default_collection')]" "xpath_element" should not exist
-    And "//img[@alt='TestPlaylist' and contains(@src, '/card.png')]" "xpath_element" should exist
+    Then "//div[@class='tui-playlistCard__imageHeader' and contains(@style, 'background-image') and contains(@style, 'default_collection')]" "xpath_element" should not exist
+    And "//div[@class='tui-playlistCard__imageHeader' and contains(@style, 'background-image') and contains(@style, '/card.png')]" "xpath_element" should exist
+    And I should see "TestPlaylist" in the ".tui-playlistCard__imageHeader .sr-only" "css_element"
 
     # Now delete the resource
     When I view article "TestArticle"
@@ -62,5 +64,5 @@ Feature: Create a playlist with a banner
     And I press "Search your library"
 
     # Back to the default image
-    Then "//img[@alt='TestPlaylist' and contains(@src, '/default_collection')]" "xpath_element" should exist
-    And "//img[@alt='TestPlaylist' and contains(@src, '/card.png')]" "xpath_element" should not exist
+    Then "//div[@class='tui-playlistCard__imageHeader' and contains(@style, 'background-image') and contains(@style, '/default_collection'')]" "xpath_element" should not exist
+    And "//div[@class='tui-playlistCard__imageHeader' and contains(@style, 'background-image') and contains(@style, '/card.png')]" "xpath_element" should not exist

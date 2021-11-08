@@ -194,7 +194,7 @@ export default {
   }
 
   &__card {
-    height: var(--totara-engage-card-height);
+    height: var(---engage-card-height);
   }
 
   &__loadMoreContainer {

@@ -15,5 +15,13 @@
 // @module totara_engage
 
 :root {
-  --totara-engage-card-height: 340px;
+  // Portrait orientated (large) card height.
+  ---engage-card-height: 340px;
+  // Portrait orientated (large) card header image dimensions.
+  --engage-card-image-width: 100%;
+  --engage-card-image-height: 150px;
+
+  // Horizontal orientated (small) card header image dimensions.
+  // This variation of card's image is square and takes the full height of the card.
+  --engage-sidepanel-card-height: 82px;
 }

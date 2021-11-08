@@ -28,20 +28,17 @@
     @mouseleave="$_handleHovered(false)"
   >
     <ImageHeader slot="header-image" :show-cover="hovered">
-      <div slot="image" class="tui-playlistCard__imageHeader">
+      <div
+        slot="image"
+        class="tui-playlistCard__imageHeader"
+        :style="imageStyle"
+      >
+        <span class="sr-only">{{ name }}</span>
         <div class="tui-playlistCard__numberOfResourcesContainer">
           <div class="tui-playlistCard__numberOfResources">
             <!-- This box will be gone if the card is hovered -->
             <p>{{ extraData.resources }}</p>
           </div>
-        </div>
-
-        <div class="tui-playlistCard__imageContainer">
-          <img
-            :alt="name"
-            :src="extraData.image"
-            class="tui-playlistCard__image"
-          />
         </div>
       </div>
 
@@ -178,6 +175,11 @@ export default {
         this.extraData.ratingCount
       );
     },
+    imageStyle() {
+      return {
+        backgroundImage: `url(${this.extraData.image}})`,
+      };
+    },
   },
 
   created() {
@@ -274,12 +276,17 @@ export default {
 
 <style lang="scss">
 .tui-playlistCard {
-  min-height: var(--totara-engage-card-height);
+  min-height: var(---engage-card-height);
 
   &__imageHeader {
     position: relative;
-    width: 100%;
-    height: 100%;
+    @include card-header-image(
+      var(--engage-card-image-width),
+      var(--engage-card-image-height)
+    );
+    background-color: var(--color-primary);
+    border-top-left-radius: calc(var(--card-border-radius) - 1px);
+    border-top-right-radius: calc(var(--card-border-radius) - 1px);
   }
 
   &__imageContainer {
@@ -289,16 +296,6 @@ export default {
     justify-content: space-between;
     width: 100%;
     height: 100%;
-  }
-
-  &__image {
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-primary);
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-top-left-radius: calc(var(--card-border-radius) - 1px);
-    border-top-right-radius: calc(var(--card-border-radius) - 1px);
   }
 
   &__link {
