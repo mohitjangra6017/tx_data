@@ -243,6 +243,7 @@ $string['dragdrop_announce_drop_other'] = 'You have dropped the item. It has mov
 $string['dragdrop_announce_drop_same'] = 'You have dropped the item. It has moved from position {$a->from_position} to position {$a->to_position}.';
 $string['dragdrop_announce_drop_unknown'] = 'You have dropped the item. It has moved from position {$a->from_position} in a list to position {$a->to_position} in a different list.';
 $string['dragdrop_announce_lift'] = 'You have lifted an item at position {$a->from_position}.';
+$string['dragdrop_announce_move_null'] = 'You have restored the item at position {$a->from_position}.';
 $string['dragdrop_announce_move_other'] = 'You have moved the item from position {$a->from_position} in list {$a->from_source_name} to list position {$a->to_position} in {$a->to_source_name}.';
 $string['dragdrop_announce_move_same'] = 'You have moved the item from position {$a->from_position} to position {$a->to_position}.';
 $string['dragdrop_announce_move_unknown'] = 'You have moved the item from position {$a->from_position} in a list to position {$a->to_position} in a different list.';
