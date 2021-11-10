@@ -188,6 +188,14 @@ abstract class moodle_database {
     }
 
     /**
+     * Returns database name
+     * @return string
+     */
+    public function get_dbname() {
+        return $this->dbname;
+    }
+
+    /**
      * Loads and returns a database instance with the specified type and library.
      *
      * The loaded class is within lib/dml directory and of the form: $type.'_'.$library.'_moodle_database'
