@@ -5,7 +5,6 @@ exports[`presentation/buttons/OkCancelGroup.vue Checks snapshot 1`] = `
   class="tui-formBtnGroup"
 >
   <button
-    aria-disabled="false"
     class="tui-formBtn tui-formBtn--prim"
     type="button"
   >
@@ -27,7 +26,6 @@ exports[`presentation/buttons/OkCancelGroup.vue Checks snapshot 1`] = `
   </button>
    
   <button
-    aria-disabled="false"
     class="tui-formBtn"
     type="button"
   >

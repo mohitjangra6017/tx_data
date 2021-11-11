@@ -49,7 +49,6 @@ exports[`PlaylistTitleForm matches snapshot 1`] = `
     class="tui-formBtnGroup tui-doneCancelGroup"
   >
     <button
-      aria-disabled="false"
       aria-label="done-totara_engage"
       class="tui-formBtn tui-formBtn--prim tui-formBtn--small"
       type="button"
@@ -72,7 +71,6 @@ exports[`PlaylistTitleForm matches snapshot 1`] = `
     </button>
      
     <button
-      aria-disabled="false"
       class="tui-formBtn tui-formBtn--small"
       type="button"
     >
