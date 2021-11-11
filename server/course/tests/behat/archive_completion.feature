@@ -1,5 +1,5 @@
 @totara @core_course @javascript
-Feature: Users can manually archive course completion for themself and others.
+Feature: Users can manually archive course completion for themselves and others.
 
   Background:
     Given I am on a totara site
