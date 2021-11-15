@@ -53,6 +53,7 @@ class totara_completioneditor_install_testcase extends advanced_testcase {
         $cmc->coursemoduleid = $cmid;
         $cmc->userid = 222;
         $cmc->completionstate = 33;
+        $cmc->progress = 88;
         $cmc->viewed = 44;
         $cmc->timemodified = 555;
         $cmc->timecompleted = 666;
@@ -71,6 +72,7 @@ class totara_completioneditor_install_testcase extends advanced_testcase {
         $log = $DB->get_record('course_completion_log', array('courseid' => 123, 'userid' => 222));
         $this->assertStringContainsString((string)$cmcid2, $log->description);
         $this->assertStringContainsString('33', $log->description);
+        $this->assertStringContainsString('88', $log->description);
         $this->assertStringContainsString('44', $log->description);
         $this->assertStringContainsString('555', $log->description);
         $this->assertStringContainsString('666', $log->description);

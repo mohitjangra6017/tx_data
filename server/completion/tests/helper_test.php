@@ -855,6 +855,7 @@ class core_completion_helper_testcase extends advanced_testcase {
         $modulecompletion->coursemoduleid = $coursemoduleid;
         $modulecompletion->userid = $userid;
         $modulecompletion->completionstate = COMPLETION_COMPLETE_PASS;
+        $modulecompletion->progress = 99;
         $modulecompletion->viewed = 1;
         $modulecompletion->timemodified = 345;
         $modulecompletion->timecompleted = 456;
@@ -872,6 +873,7 @@ class core_completion_helper_testcase extends advanced_testcase {
         $this->assertEquals($USER->id, $log->changeuserid);
         $this->assertStringContainsString('Module completion logged', $log->description);
         $this->assertStringContainsString((string)$cmcid, $log->description);
+        $this->assertStringContainsString('99', $log->description);
         $this->assertStringContainsString('Yes', $log->description);
         $this->assertStringContainsString('345', $log->description);
         $this->assertStringContainsString('456', $log->description);
