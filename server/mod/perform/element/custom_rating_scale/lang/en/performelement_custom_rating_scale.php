@@ -34,7 +34,7 @@ $string['score'] = 'Score';
 $string['text'] = 'Text';
 
 // Help messages
-$string['custom_values_help'] = 'Enter a custom text label and a corresponding numeric score that combined represent a selectable value on the rating scale. The scores must be whole numbers, but do not have to be unique or in numeric order.';
+$string['custom_values_help'] = 'Enter a custom text label and a corresponding numeric score that combined represent a selectable value on the rating scale. Decimal values are permitted for scores, and the values do not have to be unique or in numeric order.';
 
 // Errors
 $string['error:answer_required'] = 'Answer is required';
