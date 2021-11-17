@@ -247,6 +247,7 @@ $string['configloglifetime'] = 'This specifies the length of time you want to ke
 $string['configlookahead'] = 'Days to look ahead';
 $string['configmailnewline'] = 'Newline characters used in mail messages. CRLF is required according to RFC 822bis, some mail servers do automatic conversion from LF to CRLF, other mail servers do incorrect conversion from CRLF to CRCRLF, yet others reject mails with bare LF (qmail for example). Try changing this setting if you are having problems with undelivered emails or double newlines.';
 $string['configmaxbytes'] = 'This specifies a maximum size for files uploaded to the site. This setting is limited by the PHP settings post_max_size and upload_max_filesize, as well as the Apache setting LimitRequestBody. In turn, maxbytes limits the range of sizes that can be chosen at course or activity level. If \'Site upload limit\' is chosen, the maximum size allowed by the server will be used.';
+$string['configmaxbytesextracted'] = 'This specifies a maximum size for the collective files contained in an archive file.';
 $string['configmaxconsecutiveidentchars'] = 'Passwords must not have more than this number of consecutive identical characters. Use 0 to disable this check.';
 $string['configmaxeditingtime'] = 'This specifies the amount of time people have to re-edit forum postings, glossary comments etc.  Usually 30 minutes is a good value.';
 $string['configmaxevents'] = 'Events to Lookahead';
@@ -740,6 +741,7 @@ unstable "{$a}" development code that is not suitable for use on most production
 sites. If this is not what you wanted then you should make sure you are updating
 from a STABLE branch of the Totara code. See Totara Docs for more details.';
 $string['maxbytes'] = 'Maximum uploaded file size';
+$string['maxbytesextracted'] = 'Maximum size for extracted archive content';
 $string['maxconsecutiveidentchars'] = 'Consecutive identical characters';
 $string['maxeditingtime'] = 'Maximum time to edit posts';
 $string['maxinputvars'] = 'We recommend setting max_input_vars to a minimum of 2000 to ensure proper functionality of the site.';
