@@ -45,15 +45,14 @@ class helper {
     public static function service_providers_configselect($settingname, $servicename) {
         $options = [];
         $issuers = \core\oauth2\api::get_all_issuers();
+
+        // TOTARA: Always show the invitation so unrelated oauth services don't get mapped
+        $options[] = get_string('selectoauth2issuer', 'admin');
+
         foreach ($issuers as $issuer) {
             $options[$issuer->get('id')] = s($issuer->get('name'));
         }
-        // If there are no OAuth2 issuers defined yet, the $options array
-        // is empty and the select element is not rendered. Add an entry
-        // with an invitation to create and select one issuer.
-        if (!count($options)) {
-            $options[] = get_string('selectoauth2issuer', 'admin');
-        }
+
         return new \admin_setting_configselect($settingname,
                                                new \lang_string('oauth2issuer', 'admin'),
                                                new \lang_string('oauth2issuer_desc', 'admin', $servicename),
