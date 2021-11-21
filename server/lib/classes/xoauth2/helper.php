@@ -47,7 +47,7 @@ class helper {
         $issuers = \core\oauth2\api::get_all_issuers();
 
         // TOTARA: Always show the invitation so unrelated oauth services don't get mapped
-        $options[] = get_string('selectoauth2issuer', 'admin');
+        $options[0] = get_string('selectoauth2issuer', 'admin');
 
         foreach ($issuers as $issuer) {
             $options[$issuer->get('id')] = s($issuer->get('name'));
@@ -56,7 +56,7 @@ class helper {
         return new \admin_setting_configselect($settingname,
                                                new \lang_string('oauth2issuer', 'admin'),
                                                new \lang_string('oauth2issuer_desc', 'admin', $servicename),
-                                               null, $options);
+                                               0, $options);
     }
 
     /**
@@ -71,7 +71,7 @@ class helper {
     public static function get_token_generator($issuerid, $username) {
         try {
             $issuer = \core\oauth2\api::get_issuer($issuerid);
-        } catch (dml_missing_record_exception $e) {
+        } catch (\dml_missing_record_exception $e) {
             $message = $e->getMessage();
             throw new \moodle_exception('oauth2servicefailure', 'admin', '', null, $message);
         }

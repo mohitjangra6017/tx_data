@@ -41,7 +41,7 @@ class core_xoauth2_testcase extends advanced_testcase {
 
         self::expectException(moodle_exception::class);
         self::expectExceptionMessage('oauth2servicefailure');
-        helper::get_token_generator('not-real', 'abc');
+        helper::get_token_generator(0, 'abc');
     }
 
     /**
