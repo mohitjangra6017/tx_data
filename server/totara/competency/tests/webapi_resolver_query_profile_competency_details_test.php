@@ -24,6 +24,8 @@
 global $CFG;
 require_once $CFG->dirroot . '/totara/competency/tests/profile_query_resolver_test.php';
 
+use totara_core\advanced_feature;
+
 /**
  * @group totara_competency
  */
@@ -58,5 +60,72 @@ class totara_competency_webapi_resolver_query_profile_competency_details_testcas
         $result = $this->resolve_graphql_query($this->get_query_name(), $args);
         $this->assertEquals($data->assignment->id, $result->assignments->first()->id);
         $this->assertEquals($data->comp->id, $result->competency->id);
+    }
+
+    /**
+     * Test the query through the GraphQL stack.
+     */
+    public function test_ajax_query_successful() {
+        $data = $this->create_data();
+        $comp = $data->comp;
+
+        $args = [
+            'user_id' => $data->user->id,
+            'competency_id' => $comp->id,
+        ];
+
+        $query = $this->get_query_name();
+        $result = $this->parsed_graphql_operation($query, $args);
+        $this->assert_webapi_operation_successful($result);
+
+        $result = $this->get_webapi_operation_data($result);
+        $this->assertCount(1, $result['items']);
+
+        $assignment = $data->assignment;
+        $actual_assignment = $result['items'][0]['assignment'];
+        $this->assertEquals($assignment->id, $actual_assignment['id']);
+        $this->assertEquals($assignment->type, $actual_assignment['type']);
+        $this->assertEquals($assignment->user_group_type, $actual_assignment['user_group_type']);
+
+        $actual_comp = $result['competency'];
+        $this->assertEquals($comp->id, $actual_comp['id']);
+        $this->assertEquals($comp->fullname, $actual_comp['fullname']);
+        $this->assertEquals($comp->description, $actual_comp['description']);
+
+        // Invalid or unknown competency ids should return a successful but null result .
+        $args['competency_id'] = 0;
+        $result = $this->parsed_graphql_operation($query, $args);
+        $this->assert_webapi_operation_successful($result);
+
+        $result = $this->get_webapi_operation_data($result);
+        $this->assertNull($result);
+
+        $args['competency_id'] = 2934;
+        $result = $this->parsed_graphql_operation($query, $args);
+        $this->assert_webapi_operation_successful($result);
+
+        $result = $this->get_webapi_operation_data($result);
+        $this->assertNull($result);
+    }
+
+    /**
+     * @covers ::resolve
+     */
+    public function test_failed_ajax_query(): void {
+        $data = $this->create_data();
+        $query = $this->get_query_name();
+        $args = [
+            'user_id' => $data->user->id,
+            'competency_id' => $data->comp->id,
+        ];
+
+        $feature = 'competency_assignment';
+        advanced_feature::disable($feature);
+        $result = $this->parsed_graphql_operation($query, $args);
+        $this->assert_webapi_operation_failed($result, "Feature $feature is not available.");
+        advanced_feature::enable($feature);
+
+        $result = $this->parsed_graphql_operation($query, []);
+        $this->assert_webapi_operation_failed($result, 'Variable "$user_id" of required type "core_id!" was not provided.');
     }
 }

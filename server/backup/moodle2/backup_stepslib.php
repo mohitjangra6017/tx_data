@@ -1238,7 +1238,7 @@ class backup_userscompletion_structure_step extends backup_structure_step {
         $completions = new backup_nested_element('completions');
 
         $completion = new backup_nested_element('completion', array('id'), array(
-            'userid', 'completionstate', 'viewed', 'timemodified', 'timecompleted'));
+            'userid', 'completionstate', 'progress', 'viewed', 'timemodified', 'timecompleted'));
 
         // Build the tree
 

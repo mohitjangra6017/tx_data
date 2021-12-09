@@ -260,7 +260,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
     public function test_get_module_and_criteria_from_data_cmc_only() {
         global $DB;
 
-
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
 
@@ -279,12 +278,14 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $facetoface->cmid;
         $data->completionstate = 234;
+        $data->progress = 55;
         $data->viewed = 345;
 
         $expectedcmc = new stdClass();
         $expectedcmc->coursemoduleid = $facetoface->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 55;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = null;
         $expectedcmc->reaggregate = 0;
@@ -304,6 +305,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $facetoface->cmid;
         $data->completionstate = 234;
+        $data->progress = 55;
         $data->viewed = 345;
         $data->cmctimecompleted = 567;
 
@@ -311,6 +313,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $expectedcmc->coursemoduleid = $facetoface->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 55;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = 567;
         $expectedcmc->reaggregate = 0;
@@ -330,12 +333,14 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $quiz->cmid;
         $data->completionstate = 234;
+        $data->progress = 55;
         $data->viewed = 345;
 
         $expectedcmc = new stdClass();
         $expectedcmc->coursemoduleid = $quiz->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 55;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = null;
         $expectedcmc->reaggregate = 0;
@@ -355,6 +360,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $quiz->cmid;
         $data->completionstate = 234;
+        $data->progress = 55;
         $data->viewed = 345;
         $data->cmctimecompleted = 567;
 
@@ -362,6 +368,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $expectedcmc->coursemoduleid = $quiz->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 55;
         $expectedcmc->viewed = 345;
         $expectedcmc->timemodified = 567;
         $expectedcmc->timecompleted = null;
@@ -378,6 +385,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $cmc->coursemoduleid = $quiz->cmid;
         $cmc->userid = $user->id;
         $cmc->completionstate = 1;
+        $cmc->progress = 55;
         $cmc->viewed = 1;
         $cmc->timemodified = 678;
         $cmc->timecompleted = 789;
@@ -387,6 +395,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $quiz->cmid;
         $data->completionstate = 234;
+        $data->progress = 55;
         $data->viewed = 345;
         $data->cmctimecompleted = 567;
 
@@ -395,6 +404,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $expectedcmc->coursemoduleid = $quiz->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 55;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = 567;
         $expectedcmc->reaggregate = 0;
@@ -508,6 +518,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $facetoface->cmid;
         $data->completionstate = 234;
+        $data->progress = 45;
         $data->viewed = 345;
         $data->courseid = $course->id;
         $data->criteriaid = 456;
@@ -517,6 +528,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $expectedcmc->coursemoduleid = $facetoface->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 45;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = null;
 
@@ -543,6 +555,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $facetoface->cmid;
         $data->completionstate = 234;
+        $data->progress = 45;
         $data->viewed = 345;
         $data->courseid = $course->id;
         $data->criteriaid = 456;
@@ -555,6 +568,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $expectedcmc->coursemoduleid = $facetoface->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 45;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = 567;
         $expectedcmc->reaggregate = 0;
@@ -581,6 +595,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $data->userid = $user->id;
         $data->cmid = $facetoface->cmid;
         $data->completionstate = 234;
+        $data->progress = 45;
         $data->viewed = 345;
         $data->courseid = $course->id;
         $data->criteriaid = 456;
@@ -593,6 +608,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $expectedcmc->coursemoduleid = $facetoface->cmid;
         $expectedcmc->userid = $user->id;
         $expectedcmc->completionstate = 234;
+        $expectedcmc->progress = 45;
         $expectedcmc->viewed = 345;
         $expectedcmc->timecompleted = 567;
         $expectedcmc->reaggregate = 0;

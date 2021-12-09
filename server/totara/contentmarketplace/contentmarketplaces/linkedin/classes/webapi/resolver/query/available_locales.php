@@ -29,6 +29,7 @@ use core\webapi\middleware;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_contentmarketplace\interactor\catalog_import_interactor;
 use totara_contentmarketplace\webapi\middleware\require_content_marketplace;
 
 /**
@@ -43,6 +44,7 @@ class available_locales implements query_resolver, has_middleware {
      * @return locale[]
      */
     public static function resolve(array $args, execution_context $ec): array {
+        (new catalog_import_interactor())->require_view_catalog_import_page();
         $provider = new locales();
         return $provider->get();
     }

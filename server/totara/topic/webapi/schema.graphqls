@@ -4,6 +4,10 @@ type totara_topic_topic {
   catalog: String!
 }
 
+type totara_topic_config {
+  enabled: Boolean!
+}
+
 extend type Query {
   totara_topic_system_topics: [totara_topic_topic!]!
   totara_topic_find_topics(
@@ -15,4 +19,9 @@ extend type Query {
     """
     exclude: [param_integer!]
   ): [totara_topic_topic!]!
+
+  totara_topic_get_config(
+    component: param_component!
+    item_type: String!
+  ): totara_topic_config!
 }

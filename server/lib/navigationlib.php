@@ -4202,12 +4202,16 @@ class settings_navigation extends navigation_node {
             if ($CFG->enablecompletion && $course->enablecompletion) {
                 $url = new moodle_url('/course/completion.php', array('id'=>$course->id));
                 $coursenode->add(get_string('coursecompletion', 'completion'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/settings', ''));
-
-                // TOTARA CHANGE - manual archive course completions link.
-                $url = new moodle_url('/course/archivecompletions.php', array('id' => $course->id));
-                $coursenode->add(get_string('archivecompletions', 'completion'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/settings', ''));
             }
         }
+
+        // Archive completed users link.
+        $navigation_helper = new \core_course\local\archive_progress_helper\output\navigation\completed_users($course);
+        $navigation_helper->add_node($coursenode);
+
+        // Archive my progress in this course link
+        $navigation_helper = new \core_course\local\archive_progress_helper\output\navigation\current_user($course);
+        $navigation_helper->add_node($coursenode);
 
         // TOTARA CHANGE - course completion editor.
         if ($CFG->enablecompletion && $course->enablecompletion) {

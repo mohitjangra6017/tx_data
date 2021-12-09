@@ -276,6 +276,86 @@ class core_completionlib_testcase extends advanced_testcase {
         $c->update_state($cm, COMPLETION_COMPLETE_PASS);
     }
 
+    public function test_update_progress() {
+        global $DB;
+        $this->setup_data();
+
+        self::setUser($this->user);
+        $completion = ['completion' => COMPLETION_TRACKING_MANUAL];
+        $forum = self::getDataGenerator()->create_module('forum', ['course' => $this->course->id], $completion);
+        $cm = get_coursemodule_from_instance('forum', $forum->id);
+        $c = new completion_info($this->course);
+
+        // Current user gets their progress set.
+        $c->update_progress($cm, 55);
+        $progress = $DB->get_field('course_modules_completion', 'progress',
+                                   ['coursemoduleid' => $cm->id, 'userid' => $this->user->id]);
+        self::assertEquals(55, $progress);
+
+        // Progress doesn't go backwards for the current user.
+        $c->update_progress($cm, 45);
+        $progress = $DB->get_field('course_modules_completion', 'progress',
+                                   ['coursemoduleid' => $cm->id, 'userid' => $this->user->id]);
+        self::assertEquals(55, $progress);
+
+        // Progress updated to the higher value.
+        $c->update_progress($cm, 65);
+        $progress = $DB->get_field('course_modules_completion', 'progress',
+                                   ['coursemoduleid' => $cm->id, 'userid' => $this->user->id]);
+        self::assertEquals(65, $progress);
+
+        // Check incorrect $progress values.
+        $this->expectException(moodle_exception::class);
+        $this->expectExceptionMessage('Progress value must be between 0 and 100');
+        $c->update_progress($cm, 101);
+        $progress = $DB->get_field('course_modules_completion', 'progress',
+                                   ['coursemoduleid' => $cm->id, 'userid' => $this->user->id]);
+        self::assertEquals(65, $progress); // Value didn't change.
+
+        $this->expectException(moodle_exception::class);
+        $this->expectExceptionMessage('Progress value must be between 0 and 100');
+        $c->update_progress($cm, -5);
+        $progress = $DB->get_field('course_modules_completion', 'progress',
+                                   ['coursemoduleid' => $cm->id, 'userid' => $this->user->id]);
+        self::assertEquals(65, $progress); // Value didn't change.
+
+        // Progress doesn't get updated for another user.
+        $newuser = self::getDataGenerator()->create_user();
+
+        $data = new stdClass();
+        $data->id = 0;
+        $data->userid = $newuser->id;
+        $data->coursemoduleid = $cm->id;
+        $data->completionstate = COMPLETION_INCOMPLETE;
+        $data->progress = 33;
+        $data->timemodified = time();
+        $data->viewed = COMPLETION_NOT_VIEWED;
+        $data->timecompleted = null;
+        $data->reaggregate = 0;
+        $anotherid = $DB->insert_record('course_modules_completion', $data);
+
+        $c->update_progress($cm, 75);
+
+        $progress1 = $DB->get_field('course_modules_completion', 'progress',
+                                  ['coursemoduleid' => $cm->id, 'userid' => $this->user->id]);
+        self::assertEquals(75, $progress1);
+
+        $progress2 = $DB->get_field('course_modules_completion', 'progress', ['id' => $anotherid]);
+        self::assertEquals(33, $progress2);
+
+        // Progress doesn't get updated for another activity.
+        $forum2 = self::getDataGenerator()->create_module('forum', ['course' => $this->course->id], $completion);
+        $cm2 = get_coursemodule_from_instance('forum', $forum2->id);
+
+        $c->update_progress($cm2, 80, $newuser->id);
+        $progress1 = $DB->get_field('course_modules_completion', 'progress',
+                                  ['coursemoduleid' => $cm2->id, 'userid' => $newuser->id]);
+        self::assertEquals(80, $progress1);
+
+        $progress2 = $DB->get_field('course_modules_completion', 'progress', ['id' => $anotherid]);
+        self::assertEquals(33, $progress2);
+    }
+
     public function test_internal_get_state() {
         $this->markTestSkipped('TODO: TL-13942 write proper completion tests!');
 
@@ -562,6 +642,7 @@ class core_completionlib_testcase extends advanced_testcase {
         $data->coursemoduleid  = 14;
         $data->userid          = 314159;
         $data->completionstate = COMPLETION_INCOMPLETE;
+        $data->progress        = null;
         $data->viewed          = 0;
         $data->timemodified    = 0;
         $data->timecompleted   = null;
@@ -606,6 +687,7 @@ class core_completionlib_testcase extends advanced_testcase {
         $data->userid = $this->user->id;
         $data->coursemoduleid = $cm->id;
         $data->completionstate = COMPLETION_COMPLETE;
+        $data->progress = null;
         $data->timemodified = time();
         $data->viewed = COMPLETION_NOT_VIEWED;
         $data->timecompleted = null;
@@ -632,6 +714,7 @@ class core_completionlib_testcase extends advanced_testcase {
         $d2->userid = $newuser->id;
         $d2->coursemoduleid = $cm2->id;
         $d2->completionstate = COMPLETION_COMPLETE;
+        $d2->progress = null;
         $d2->timemodified = time();
         $d2->viewed = COMPLETION_NOT_VIEWED;
         $d2->timecompleted = null;
@@ -660,6 +743,7 @@ class core_completionlib_testcase extends advanced_testcase {
         $d3->userid = $newuser2->id;
         $d3->coursemoduleid = $cm3->id;
         $d3->completionstate = COMPLETION_COMPLETE;
+        $d3->progress = null;
         $d3->timemodified = time();
         $d3->viewed = COMPLETION_NOT_VIEWED;
         $d3->timecompleted = null;
@@ -698,6 +782,7 @@ class core_completionlib_testcase extends advanced_testcase {
         $d3->userid = $newuser2->id;
         $d3->coursemoduleid = $cm3->id;
         $d3->completionstate = COMPLETION_COMPLETE;
+        $d3->progress = null;
         $d3->timemodified = time();
         $d3->viewed = COMPLETION_NOT_VIEWED;
         $d3->timecompleted = null;

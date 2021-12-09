@@ -33,7 +33,7 @@
       </FormRow>
 
       <FormRow v-slot="{ id }" label="Char length">
-        <InputText :id="id" v-model="charLength" />
+        <Select :id="id" v-model="charLength" :options="options" />
       </FormRow>
     </SamplesPropCtl>
 
@@ -45,8 +45,9 @@
 </template>
 
 <script>
+import { charLengthScale } from 'tui/components/form/form_common';
+import Select from 'tui/components/form/Select';
 import FormRow from 'tui/components/form/FormRow';
-import InputText from 'tui/components/form/InputText';
 import InputNumber from 'tui/components/form/InputNumber';
 import NotepadLines from 'tui/components/form/NotepadLines';
 import SamplesCode from 'samples/components/sample_parts/misc/SamplesCode';
@@ -55,8 +56,8 @@ import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl'
 
 export default {
   components: {
+    Select,
     FormRow,
-    InputText,
     InputNumber,
     NotepadLines,
     SamplesCode,
@@ -77,6 +78,19 @@ export default {
   }
 }`,
     };
+  },
+
+  computed: {
+    options() {
+      return charLengthScale
+        ? charLengthScale.map(length => {
+            return {
+              id: parseInt(length),
+              label: length,
+            };
+          })
+        : [];
+    },
   },
 };
 </script>

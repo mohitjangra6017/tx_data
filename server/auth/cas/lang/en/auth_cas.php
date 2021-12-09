@@ -74,14 +74,3 @@ $string['casform'] = 'Authentication choice';
 $string['noldapserver'] = 'No LDAP server configured for CAS! Syncing disabled.';
 $string['pluginname'] = 'CAS server (SSO)';
 $string['synctask'] = 'CAS users sync job';
-
-// Deprecated.
-$string['accesCAS'] = 'CAS users';
-$string['accesNOCAS'] = 'other users';
-$string['CASform'] = 'Authentication choice';
-$string['auth_cas_curl_ssl_version_SSLv2'] = 'SSLv2';
-$string['auth_cas_curl_ssl_version_SSLv3'] = 'SSLv3';
-$string['auth_cas_curl_ssl_version_TLSv1x'] = 'TLSv1.x';
-$string['auth_cas_curl_ssl_version_TLSv10'] = 'TLSv1.0';
-$string['auth_cas_curl_ssl_version_TLSv11'] = 'TLSv1.1';
-$string['auth_cas_curl_ssl_version_TLSv12'] = 'TLSv1.2';

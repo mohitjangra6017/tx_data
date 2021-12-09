@@ -67,7 +67,10 @@ export default {
   },
 
   props: {
-    ariaDisabled: [Boolean, String],
+    ariaDisabled: {
+      type: [Boolean, String],
+      default: null,
+    },
     ariaDescribedby: String,
     ariaExpanded: {
       type: [Boolean, String],

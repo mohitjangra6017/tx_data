@@ -1,6 +1,10 @@
 This files describes API changes in /client/component/engage_survey,
 information provided here is intended especially for developers.
 
+=== 15.1 ===
+* Updates in SurveyCard.vue to reference renamed css variable (---engage-card-height)
+  * SCSS changes
+
 === 14.0 ===
 * Updated SurveyQuestionResult.vue adjusting the answer display to better suit longer answers
   * Template & SCSS changes

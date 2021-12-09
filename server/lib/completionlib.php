@@ -781,6 +781,50 @@ class completion_info {
     }
 
     /**
+     * Update activity progress.
+     *
+     * Should be called whenever user makes progress (it is up to the module how to determine that).
+     * Doesn't have any impact on completion state or 'reaggregate' flag.
+     *
+     * @since Totara 15.2
+     *
+     * @param stdClass|cm_info $cm       Activity
+     * @param int|null         $progress Progress made by a user in an activity [0...100]
+     * @param int              $userid   User ID or 0 (default) for current user
+     *
+     * @return void
+     */
+    public function update_progress($cm, int $progress = null, int $userid = 0): void {
+        // Do nothing if completion is not enabled for this activity.
+        if (!$this->is_enabled($cm)) {
+            return;
+        }
+
+        // Check progress value is correct.
+        if ($progress < 0 || $progress > 100) {
+            $this->internal_systemerror('Progress value must be between 0 and 100');
+        }
+
+        // Get current completion information.
+        $data = $this->get_data($cm, false, $userid);
+
+        // Do nothing if we have already recorded progress that is higher or equals to the new one.
+        if ($data->progress >= $progress) {
+            return;
+        }
+
+        // Completed activity always has progress of 100%.
+        if (in_array($data->completionstate, [COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL])) {
+            $data->progress = 100;
+        } else {
+            $data->progress = $progress;
+        }
+
+        // Save new progress.
+        $this->internal_set_data($cm, $data);
+    }
+
+    /**
      * Calculates the completion state for an activity and user.
      *
      * Internal function. Not private, so we can unit-test it.
@@ -1519,6 +1563,7 @@ class completion_info {
         $data->coursemoduleid = $cmid;
         $data->userid = $userid;
         $data->completionstate = COMPLETION_INCOMPLETE;
+        $data->progress = null;
         $data->viewed = 0;
         $data->timemodified = 0;
         $data->timecompleted = null;

@@ -247,6 +247,7 @@ $string['configloglifetime'] = 'This specifies the length of time you want to ke
 $string['configlookahead'] = 'Days to look ahead';
 $string['configmailnewline'] = 'Newline characters used in mail messages. CRLF is required according to RFC 822bis, some mail servers do automatic conversion from LF to CRLF, other mail servers do incorrect conversion from CRLF to CRCRLF, yet others reject mails with bare LF (qmail for example). Try changing this setting if you are having problems with undelivered emails or double newlines.';
 $string['configmaxbytes'] = 'This specifies a maximum size for files uploaded to the site. This setting is limited by the PHP settings post_max_size and upload_max_filesize, as well as the Apache setting LimitRequestBody. In turn, maxbytes limits the range of sizes that can be chosen at course or activity level. If \'Site upload limit\' is chosen, the maximum size allowed by the server will be used.';
+$string['configmaxbytesextracted'] = 'This specifies a maximum size for the collective files contained in an archive file.';
 $string['configmaxconsecutiveidentchars'] = 'Passwords must not have more than this number of consecutive identical characters. Use 0 to disable this check.';
 $string['configmaxeditingtime'] = 'This specifies the amount of time people have to re-edit forum postings, glossary comments etc.  Usually 30 minutes is a good value.';
 $string['configmaxevents'] = 'Events to Lookahead';
@@ -740,6 +741,7 @@ unstable "{$a}" development code that is not suitable for use on most production
 sites. If this is not what you wanted then you should make sure you are updating
 from a STABLE branch of the Totara code. See Totara Docs for more details.';
 $string['maxbytes'] = 'Maximum uploaded file size';
+$string['maxbytesextracted'] = 'Maximum size for extracted archive content';
 $string['maxconsecutiveidentchars'] = 'Consecutive identical characters';
 $string['maxeditingtime'] = 'Maximum time to edit posts';
 $string['maxinputvars'] = 'We recommend setting max_input_vars to a minimum of 2000 to ensure proper functionality of the site.';
@@ -822,6 +824,10 @@ $string['notifyloginthreshold'] = 'Threshold for email notifications';
 $string['notloggedinroleid'] = 'Role for visitors';
 $string['numberofmissingstrings'] = 'Number of missing strings: {$a}';
 $string['numberofstrings'] = 'Total number of strings: {$a->strings}<br />Missing: {$a->missing} ({$a->missingpercent}&nbsp;%)';
+$string['oauth2issuer'] = 'OAuth2 Service';
+$string['oauth2issuer_desc'] = 'OAuth2 service to use for {$a}, using XOAUTH2 authentication. If the service does not exist yet, you will need to create it.';
+$string['oauth2issuer_disabled'] = 'The configured OAuth2 Service is disabled. Mail processing cannot proceed.';
+$string['oauth2issuer_connectionerror'] = 'The configured OAuth2 service could not connect to the service. Check service configuration and connected system account details.';
 $string['oauth2services'] = 'OAuth 2';
 $string['oauthrefreshtokenexpired'] = 'The refresh token for one of the OAuth services {$a->issuer} on your site {$a->siteurl} has expired. This will limit the functionality of any plugins that use this service. To fix this issue, visit the OAuth 2 Services configuration page and click on the "Connect system account" icon in the table row for this service. Be sure to login using the same service account for the OAuth system each time.';
 $string['oauthrefreshtokenexpiredshort'] = 'OAuth refresh token expired for {$a->issuer} on your site {$a->siteurl}.';
@@ -1051,6 +1057,7 @@ $string['sectionerror'] = 'Section error!';
 $string['secureforms'] = 'Use additional form security';
 $string['security'] = 'Security';
 $string['selectdevice'] = 'Select device';
+$string['selectoauth2issuer'] = 'Select OAuth2 Service...';
 $string['selectsearchengine'] = 'Select search engine';
 $string['selecttheme'] = 'Select theme for {$a} device';
 $string['server'] = 'Server';

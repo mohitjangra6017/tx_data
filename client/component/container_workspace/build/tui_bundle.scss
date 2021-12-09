@@ -13,10 +13,11 @@
 
   &__dropdown {
     width: 100%;
+    margin-top: var(--gap-2);
 
     @media (min-width: $tui-screen-xs) {
-      /* IE support - :(*/
-      width: auto;
+      width: auto; /* IE support.*/
+      margin-top: 0;
     }
 
     &-button {
@@ -230,7 +231,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: var(--totara-engage-card-height);
+  height: var(---engage-card-height);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -303,7 +304,7 @@
 
 .tui-workspaceContributeCard {
   width: 100%;
-  height: calc(var(--totara-engage-card-height) + 11px);
+  height: calc(var(---engage-card-height) + 11px);
 
   .tui-card {
     /* Overiding cards border*/
@@ -783,7 +784,7 @@
   }
 
   &__card {
-    height: var(--totara-engage-card-height);
+    height: var(---engage-card-height);
   }
 
   &__loadMoreContainer {
@@ -817,8 +818,10 @@
 
   &__title {
     @include tui-font-heading-medium();
+    @include tui-wordbreak--hard();
     margin: 0;
     margin-bottom: var(--gap-12);
+    text-align: center;
   }
 
   &__actionBox {
@@ -1105,8 +1108,7 @@
 
 .tui-recommendedSpaces {
   &__head {
-    display: flex;
-    justify-content: space-between;
+    display: block;
     margin-bottom: var(--gap-4);
   }
 
@@ -1117,6 +1119,13 @@
 
   &__link {
     @include tui-font-link();
+  }
+
+  @media screen and (min-width: $tui-screen-sm) {
+    &__head {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 
@@ -1211,8 +1220,13 @@
     height: 100%;
   }
 
+  &__sideMenu {
+    display: none;
+  }
+
   &__content {
-    padding-right: var(--gap-8);
+    padding-right: var(--gap-4);
+    padding-left: var(--gap-4);
   }
 
   &__header {
@@ -1220,12 +1234,19 @@
     margin-bottom: var(--gap-12);
   }
 
-  &__horizontalLine {
-    margin: 0;
-  }
-
   &__recommendedSpaces {
     margin-top: var(--gap-8);
+  }
+
+  @media screen and (min-width: $tui-screen-sm) {
+    &__sideMenu {
+      display: block;
+    }
+
+    &__content {
+      padding-right: var(--gap-8);
+      padding-left: 0;
+    }
   }
 }
 

@@ -336,6 +336,10 @@ final class topic {
             }
         }
 
+        if (!\core_tag_area::is_enabled($component, $itemtype)) {
+            return false;
+        }
+
         /** @var tag_area_repository $repo */
         $repo = tag_area::repository();
         $area = $repo->find_for_component($component, $itemtype);
