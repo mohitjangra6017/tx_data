@@ -38,6 +38,7 @@
     "tke/local-completion-report": "15.0.0",
     "tke/local-config": "15.0.0",
     "tke/local-core": "15.0.0",
+    "tke/local-credly": "15.0.1",
     "tke/local-default-filters": "15.0.0",
     "tke/local-email-log": "15.0.0",
     "tke/local-isotope-skeleton": "15.0.0",
