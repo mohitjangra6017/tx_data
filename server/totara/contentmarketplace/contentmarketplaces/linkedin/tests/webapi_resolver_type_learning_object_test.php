@@ -206,12 +206,12 @@ class contentmarketplace_linkedin_webapi_resolver_type_learning_object_testcase 
     /**
      * @return void
      */
-    public function test_get_level(): void {
+    public function test_get_display_level(): void {
         self::assertEquals(
-            $this->learning_object->level,
+            $this->learning_object->display_level,
             $this->resolve_graphql_type(
                 $this->get_graphql_name(type_learning_object::class),
-                "level",
+                "display_level",
                 $this->learning_object,
             )
         );

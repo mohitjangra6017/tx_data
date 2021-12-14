@@ -29,6 +29,7 @@ use contentmarketplace_linkedin\testing\generator;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use contentmarketplace_linkedin\dto\locale;
+use totara_contentmarketplace\testing\helper;
 
 /**
  * @group totara_contentmarketplace
@@ -96,4 +97,63 @@ class contentmarketplace_linkedin_webapi_resolver_query_available_locales_testca
         self::assertEquals("en", $last_locale->get_lang());
         self::assertEquals("US", $last_locale->get_country());
     }
+
+    /**
+     * @return void
+     */
+    public function test_get_available_by_different_type_user(): void {
+        $generator = generator::instance();
+        $generator->create_learning_object("urn:lyndaCourse:1", ["locale_language" => "en", "locale_country" => "US"]);
+        $generator->create_learning_object("urn:lyndaCourse:2", ["locale_language" => "en", "locale_country" => "US"]);
+        $generator->create_learning_object("urn:lyndaCourse:3", ["locale_language" => "de", "locale_country" => "DE"]);
+
+        // Test with admin user
+        self::setAdminUser();
+
+        $locales = $this->resolve_graphql_query(
+            $this->get_graphql_name(available_locales::class)
+        );
+
+        self::assertIsArray($locales);
+        self::assertCount(2, $locales);
+
+        // Test with course creator
+        $gen = self::getDataGenerator();
+        $user = $gen->create_user();
+        $course_category = coursecat::create(['name' => 'Category custom']);
+        $context_category = $course_category->get_context();
+        $role_id = helper::get_course_creator_role();
+        role_assign($role_id, $user->id, $context_category->id);
+        self::setUser($user);
+        $locales = $this->resolve_graphql_query(
+            $this->get_graphql_name(available_locales::class)
+        );
+
+        self::assertIsArray($locales);
+        self::assertCount(2, $locales);
+
+        // Test with student role
+        $user = $gen->create_user();
+        $student_id = helper::get_student_role();
+        role_assign($student_id, $user->id, context_system::instance());
+        assign_capability('totara/contentmarketplace:add', CAP_ALLOW, $student_id, context_system::instance());
+        self::setUser($user);
+        $locales = $this->resolve_graphql_query(
+            $this->get_graphql_name(available_locales::class)
+        );
+
+        self::assertIsArray($locales);
+        self::assertCount(2, $locales);
+
+        // Test with authenticated user
+        $user = $gen->create_user();
+        self::setUser($user);
+
+        self::expectExceptionMessage('Sorry, but you do not currently have permissions to do that (Add content marketplace)');
+        self::expectException(required_capability_exception::class);
+        $this->resolve_graphql_query(
+            $this->get_graphql_name(available_locales::class)
+        );
+    }
+
 }

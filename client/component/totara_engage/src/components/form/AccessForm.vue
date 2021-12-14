@@ -18,6 +18,7 @@
 
 <template>
   <Form
+    v-if="!$apollo.loading"
     class="tui-engageAccessForm"
     :vertical="true"
     input-width="full"
@@ -54,9 +55,16 @@
       </FormRow>
     </div>
 
+    <div
+      v-if="accessPublic && !topicConfig.topicEnabled"
+      class="tui-engageAccessForm__tag"
+    >
+      <EngageCallout />
+    </div>
+
     <div v-if="!accessPrivate" class="tui-engageAccessForm__tagLists">
       <TopicsSelector
-        v-if="accessPublic"
+        v-if="accessPublic && topicConfig.topicEnabled"
         class="tui-engageAccessForm__tagList"
         :selected-topics="selectedTopics"
         @change="selectedTopics = $event"
@@ -107,7 +115,6 @@ import ButtonGroup from 'tui/components/buttons/ButtonGroup';
 import Button from 'tui/components/buttons/Button';
 import CancelButton from 'tui/components/buttons/Cancel';
 import { FormRow } from 'tui/components/uniform';
-
 import LoadingButton from 'totara_engage/components/buttons/LoadingButton';
 import TopicsSelector from 'totara_engage/components/form/access/EngageTopicsSelector';
 import RecipientsSelector from 'totara_engage/components/form/access/RecipientsSelector';
@@ -115,9 +122,11 @@ import AccessSelector from 'totara_engage/components/form/access/AccessSelector'
 import SharedBoard from 'totara_engage/components/form/SharedBoard';
 import { AccessManager, TimeViewType } from 'totara_engage/index';
 import { config } from 'tui/config';
+import EngageCallout from 'totara_engage/components/callout/EngageCallout';
 
 // GraphQL
 import ShareRecipients from 'totara_engage/graphql/share_recipients';
+import getTopicConfig from 'totara_topic/graphql/get_config';
 
 // Mixins
 import ContainerMixin from 'totara_engage/mixins/container_mixin';
@@ -139,6 +148,7 @@ export default {
     TopicsSelector,
     TimeViewSelector,
     SharedBoard,
+    EngageCallout,
   },
 
   mixins: [ContainerMixin],
@@ -169,6 +179,27 @@ export default {
           this.shareToVariables.component === 'container_workspace' ||
           String(this.shareToVariables.itemid) === '0'
         );
+      },
+    },
+
+    topicConfig: {
+      query: getTopicConfig,
+      variables() {
+        let itemType = '';
+        if (this.component === 'totara_playlist') {
+          itemType = 'playlist';
+        } else {
+          itemType = 'engage_resource';
+        }
+        return {
+          component: this.component,
+          item_type: itemType,
+        };
+      },
+      update({ config }) {
+        return {
+          topicEnabled: config.enabled,
+        };
       },
     },
   },
@@ -252,6 +283,7 @@ export default {
       selectedTime: this.selectedTimeView,
       selectedTopics: slice.call(this.selectedOptions.topics),
       sharedTo: { people: [], workspaces: [] },
+      topicConfig: { topicEnabled: true },
     };
   },
 
@@ -266,6 +298,9 @@ export default {
     },
 
     disabled() {
+      if (this.accessPublic && !this.topicConfig.topicEnabled) {
+        return true;
+      }
       if (
         !this.access ||
         this.submitting ||

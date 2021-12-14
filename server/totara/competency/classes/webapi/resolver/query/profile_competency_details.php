@@ -30,8 +30,12 @@ class profile_competency_details extends profile_resolver {
     public static function resolve(array $args, execution_context $ec) {
         $user_id = static::authorize($args['user_id'] ?? null);
         $status = $args['status'] ?? null;
+        $competency_id = $args['competency_id'] ?? null;
 
-        return competency_progress::build_for_competency($user_id, $args['competency_id'], $status);
+        if (!isset($competency_id)) {
+            return null;
+        }
+        return competency_progress::build_for_competency($user_id, $competency_id, $status);
     }
 
 }

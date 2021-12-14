@@ -102,8 +102,10 @@ export default {
 
   &__title {
     @include tui-font-heading-medium();
+    @include tui-wordbreak--hard();
     margin: 0;
     margin-bottom: var(--gap-12);
+    text-align: center;
   }
 
   &__actionBox {

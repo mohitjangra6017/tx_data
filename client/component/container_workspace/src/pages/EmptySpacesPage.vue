@@ -18,24 +18,20 @@
 <template>
   <LayoutTwoColumn class="tui-emptySpacesPage">
     <SidePanel slot="left" :show-button-control="false" :initially-open="true">
-      <WorkspaceMenu @create-workspace="navigateToWorkspace" />
+      <WorkspaceMenu
+        class="tui-emptySpacesPage__sideMenu"
+        @create-workspace="navigateToWorkspace"
+      />
     </SidePanel>
 
-    <div
-      slot="right"
-      slot-scope="{ units }"
-      class="tui-emptySpacesPage__content"
-    >
+    <div slot="right" class="tui-emptySpacesPage__content">
       <EmptySpacesHeader
         :can-create="canCreate"
         class="tui-emptySpacesPage__header"
       />
 
-      <hr v-if="showRecommended" class="tui-emptySpacesPage__horizontalLine" />
-
       <RecommendSpaces
         v-if="showRecommended"
-        :max-grid-units="units"
         class="tui-emptySpacesPage__recommendedSpaces"
         @join-workspace="joinWorkspace"
       />
@@ -149,8 +145,13 @@ export default {
     height: 100%;
   }
 
+  &__sideMenu {
+    display: none;
+  }
+
   &__content {
-    padding-right: var(--gap-8);
+    padding-right: var(--gap-4);
+    padding-left: var(--gap-4);
   }
 
   &__header {
@@ -158,12 +159,19 @@ export default {
     margin-bottom: var(--gap-12);
   }
 
-  &__horizontalLine {
-    margin: 0;
-  }
-
   &__recommendedSpaces {
     margin-top: var(--gap-8);
+  }
+
+  @media screen and (min-width: $tui-screen-sm) {
+    &__sideMenu {
+      display: block;
+    }
+
+    &__content {
+      padding-right: var(--gap-8);
+      padding-left: 0;
+    }
   }
 }
 </style>

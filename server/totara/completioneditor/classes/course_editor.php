@@ -599,6 +599,7 @@ final class course_editor {
             $cmc->coursemoduleid = $data->cmid;
             $cmc->userid = $data->userid;
             $cmc->completionstate = $data->completionstate;
+            $cmc->progress = !empty($data->progress) ? $data->progress : null;
             $cmc->viewed = $data->viewed;
 
             $now = time();

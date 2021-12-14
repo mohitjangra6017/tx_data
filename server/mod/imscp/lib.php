@@ -118,6 +118,11 @@ function imscp_add_instance($data, $mform) {
             // Extract package content to 'content' filearea.
             $package = reset($files);
             $packer = get_file_packer('application/zip');
+
+            if (!$package->is_extracted_size_valid($packer)) {
+                throw new moodle_exception('cannotunzipquotaexceeded', 'repository');
+            }
+
             $package->extract_to_storage($packer, $context->id, 'mod_imscp', 'content', 1, '/');
             $structure = imscp_parse_structure($imscp, $context);
             $imscp->structure = is_array($structure) ? serialize($structure) : null;

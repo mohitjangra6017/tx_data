@@ -168,4 +168,18 @@ class totara_topic_add_topic_testcase extends advanced_testcase {
         }
         $this->assertEquals(count($input), count($found_topics));
     }
+
+
+    /**
+     * @return void
+     */
+    public function test_can_be_added(): void {
+        $this->setAdminUser();
+
+        $topic = topic::create("Hello world");
+        self::assertTrue($topic->can_be_added('engage_article', 'engage_resource'));
+
+        set_config('usetags', 0);
+        self::assertFalse($topic->can_be_added('engage_article', 'engage_resource'));
+    }
 }

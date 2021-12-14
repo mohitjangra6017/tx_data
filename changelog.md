@@ -1,3 +1,125 @@
+Release 15.1 (24th November 2021):
+==================================
+
+Security issues
+---------------
+
+TL-32727 Added checking of uncompressed archive file size prior to extraction
+
+    The total uncompressed size of an archive file is now checked prior to
+    extracting its content to ensure that it is within an allowed size.
+    The allowed size is set by a new administration setting, maxbytesextracted.
+
+Performance improvements
+------------------------
+
+TL-33019 Improved performance of the audience report builder content restriction
+
+Improvements
+------------
+
+TL-14090 Introduced the ability for privileged users to archive and reset an individuals progress in a course
+
+    This change introduces two new capability controlled opt-in improvements, and
+    improved the access control for the existing archive all users completion
+    functionality within courses.
+
+    This allows a user who has the 'totara/core:archivemycourseprogress' capability
+    to archive and reset their progress in a course.
+    In order to perform the action the user must hold the required capability,
+    completion must be enabled for the site and for the course, and the course must
+    not be a part of either a program or a certification, and the user must hold a
+    completion tracked role within the course.
+    A user with this capability will have a see a link to 'Reset this course' within
+    the course administration block when viewing the course.
+    The new capability is not given to any roles by default.
+
+    It also allows a user who has the 'totara/core:archiveusercourseprogress'
+    capability to archive and reset the progress of another user within a course.
+    In order to perform the action the user must hold the required capability,
+    completion must be enabled for the site and for the course, the course must not
+    be a part of a program or a certification, and the user whose progress is being
+    archived and reset must hold a completion tracked role within the course.
+    A new action has been added to the course completion report to enable this.
+    The new capability is not given to any roles by default.
+
+    Finally, the existing archive and reset completion functionality now has a new
+    dedicated capability 'totara/core:archiveenrolledcourseprogress'.
+    Previously users were required to have the ability to delete the course in order
+    to archive and reset progress for all enrolled users.
+    To ensure backwards compatibility during upgrades when the new capability is
+    installed roles that hold the moodle/course:delete capability are given this
+    permission.
+
+TL-31706 Added OAuth2 authentication to outgoing SMTP mail service
+
+    With this patch outgoing email connections can now be configured using the
+    XOAuth2 protocol. To make use of this protocol you will need to configure an
+    OAuth2 service with your provider and connect with a system account. Afterwards
+    the OAuth2 service can be chosen on the Outgoing email configuration page.
+
+Bug fixes
+---------
+
+TL-29872 Fixed the help text on the custom rating scale element that was incorrectly stating the scores must be whole numbers
+TL-31011 Made sure to return 0 AUC score in optimisation routine when no users have past interactions with the content
+TL-32306 Added capability check to available locales query in the LinkedIn content marketplace plugin
+TL-32327 Removed blank space under course details of LinkedIn Learning courses with no 'level'
+TL-32330 Fixed incorrect duration on LinkedIn Learning courses
+TL-32347 Added a notification banner to LinkedIn course pages when the course is not available
+TL-32638 Applied visual fixes to related playlist/resource card images
+TL-32660 Improved error handling in the profile_competency_details GraphQL query
+TL-32743 Fixed description formatting of linked review learning items in performance activities
+TL-32748 Fixed the 'Your Workspaces' page on mobile when the user does not belong to any workspaces
+TL-32752 Fixed resetting Seminar activities on certification expiry
+TL-32780 Fixed PHP errors shown when training editors view course completion settings
+TL-32795 Fixed a JavaScript error in question bank
+
+    Fixed a JavaScript error when navigating via the tab key through input fields
+    when creating a question bank drag and drop image in the drop zones section.
+
+TL-32797 Fixed bookmark button making some Engage card titles misaligned
+TL-32818 Fixed reordering of feedback page break and label elements
+TL-32889 Fixed the plugin icon for the external content marketplace activity module not appearing on the plugins overview page
+TL-32971 Added the database name to the lock key to avoid multiple databases on the same database server sharing locks
+TL-33021 Fixed resources that include topics crashing on save when tags functionality is disabled
+TL-33101 Removed previously deprecated strings from language file which caused a database error
+
+    On case insensitive database collation the language customisation tool showed a
+    database error when opening a language pack for editing. This is now fixed and
+    the duplicate language strings have been removed.
+
+Technical changes
+-----------------
+
+TL-32041 Added configurable number filter to report builder
+
+    This filter allows filtering numerical data using an operator that is specified
+    in the report source.
+
+TL-32155 Added ability to disable grouping for a column in a report source
+TL-32613 Improved tile layout on workflow manager page
+TL-32968 Added support for activity completion progress
+
+    With this change it is possible for activity modules to optionally set a
+    percentage progress towards activity completion, in order to make it possible to
+    report on more fine grained progress towards completing an activity.
+
+    At this point the new API is not implemented for any activities yet, and there
+    is no interface changes which display activity progress.
+
+    This change includes a database upgrade to add a new "progress" field to the
+    "course_modules_completion" table. The new field supports values between 0 and
+    100. Existing records will be given a "progress" of "null".
+
+Tui front end framework
+-----------------------
+
+TL-32695 Replaced 'char length' field on the NotepadLines page in the tui samples library with a select list
+TL-32995 Prevented moving an item to the same position on the dragdrop component
+TL-33000 Fixed accessibility issue with disabled buttons
+
+
 Release 15.0 (5th November 2021):
 =================================
 

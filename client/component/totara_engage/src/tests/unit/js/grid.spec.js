@@ -18,10 +18,10 @@
 
 import { calculateRow } from 'totara_engage/grid';
 
-describe('totara_engage/grid.js', function() {
+describe('totara_engage/grid.js', () => {
   const items = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  it('Checks the row calculator with 2', function() {
+  it('Checks the row calculator with 2', () => {
     let result = calculateRow(items, 2);
     expect(result.length).toEqual(4);
 
@@ -30,11 +30,16 @@ describe('totara_engage/grid.js', function() {
     });
   });
 
-  it('Checks the row calculator with 3', function() {
+  it('Checks the row calculator with 3', () => {
     let result = calculateRow(items, 3);
     expect(result.length).toEqual(3);
     expect(result[0].items).toEqual([1, 2, 3]);
     expect(result[1].items).toEqual([4, 5, 6]);
     expect(result[2].items).toEqual([7, 8]);
+  });
+
+  it('Can handle zero per row', () => {
+    let result = calculateRow(items, 0);
+    expect(result).toEqual([]);
   });
 });

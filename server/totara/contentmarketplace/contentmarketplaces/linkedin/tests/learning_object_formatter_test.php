@@ -64,6 +64,7 @@ class contentmarketplace_linkedin_learning_object_formatter_testcase extends tes
         // Unformatted fields
         $this->assertEquals($entity->asset_type, $formatter->format('asset_type'));
         $this->assertEquals($entity->level, $formatter->format('level'));
+        $this->assertEquals('Beginner', $formatter->format('display_level'));
         $this->assertEquals($entity->primary_image_url, $formatter->format('image_url'));
 
         // String fields

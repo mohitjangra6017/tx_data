@@ -30,7 +30,7 @@ Feature: Custom article images
     And I click on "Only you" "text" in the ".tui-engageAccessForm" "css_element"
     And I press "Done"
     And I click on "Your Library" in the totara menu
-    Then "//img[@role='presentation' and contains(@src, '/default')]" "xpath_element" should exist
+    Then "//div[@class='tui-engageArticleCard__image' and @role='presentation' and contains(@style, 'background-image') and contains(@style, '/default')]" "xpath_element" should exist
 
   Scenario: Articles with an external image will use it
     Given I log in as "user1"
@@ -52,4 +52,4 @@ Feature: Custom article images
     And I press "Done"
     And I click on "Your Library" in the totara menu
     And I wait for the next second
-    Then ".tui-engageArticleCard__imageheader img[src*='_test.jpg'][src*='preview=engage_article_resource']" "css_element" should exist
+    Then "//div[@class='tui-engageArticleCard__image' and @role='presentation' and contains(@style, 'background-image') and contains(@style, '_test.jpg')]" "xpath_element" should exist

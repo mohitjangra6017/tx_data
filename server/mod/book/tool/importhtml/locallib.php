@@ -43,6 +43,11 @@ function toolbook_importhtml_import_chapters($package, $type, $book, $context, $
     $chapterfiles = toolbook_importhtml_get_chapter_files($package, $type);
     $packer = get_file_packer('application/zip');
     $fs->delete_area_files($context->id, 'mod_book', 'importhtmltemp', 0);
+
+    if (!$package->is_extracted_size_valid($packer)) {
+        throw new moodle_exception('cannotunzipquotaexceeded', 'repository');
+    }
+
     $package->extract_to_storage($packer, $context->id, 'mod_book', 'importhtmltemp', 0, '/');
     // $datafiles = $fs->get_area_files($context->id, 'mod_book', 'importhtmltemp', 0, 'id', false);
     // echo "<pre>";p(var_export($datafiles, true));

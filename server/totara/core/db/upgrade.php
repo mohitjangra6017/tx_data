@@ -142,5 +142,18 @@ function xmldb_totara_core_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021070700, 'totara', 'core');
     }
 
+    if ($oldversion < 2021110502) {
+        // Define field 'progress' to be added to 'course_modules_completion' table.
+        $table = new xmldb_table('course_modules_completion');
+        $field = new xmldb_field('progress', XMLDB_TYPE_INTEGER, 3, null, null, null, null, 'completionstate');
+
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Main savepoint reached.
+        upgrade_plugin_savepoint(true, 2021110502, 'totara', 'core');
+    }
+
     return true;
 }

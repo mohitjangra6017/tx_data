@@ -73,3 +73,12 @@ msnid,core
 sitebackpackverify,core_badges
 editsettings,core_badges
 preferences,core_badges
+archivecompletionscheck,core_completion
+usersarchived,core_completion
+archivedcompletions,core_completion
+archivingcompletions,core_completion
+archiveusersaffected,core_completion
+archivecheck,core_completion
+archivecompletions,core_completion
+cannotarchivecompletions,core_completion
+nouserstoarchive,core_completion

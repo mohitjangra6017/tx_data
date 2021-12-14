@@ -23,6 +23,7 @@
         bookmarked,
         instanceid,
         image,
+        alt,
         name,
         reactions,
         timeview,
@@ -34,6 +35,7 @@
         :resource-id="instanceid"
         :bookmarked="bookmarked"
         :image="image"
+        :image-alt="alt"
         :name="name"
         :reactions="reactions"
         :timeview="timeview"
@@ -90,11 +92,12 @@ export default {
 
         let results = data.articles.map(item => {
           const { bookmarked, extra, name, instanceid, reactions, url } = item;
-          const { image, timeview } = JSON.parse(extra);
+          const { image, alt, timeview } = JSON.parse(extra);
           return {
             bookmarked,
             instanceid,
             image,
+            alt,
             name,
             reactions,
             timeview,

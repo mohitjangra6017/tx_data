@@ -24,6 +24,7 @@
 namespace totara_core\data_provider;
 
 use core\orm\entity\filter\filter_factory;
+use core\orm\query\raw_field;
 
 interface provider_interface {
 
@@ -42,5 +43,12 @@ interface provider_interface {
      * @return string
      */
     public static function get_type(): string;
+
+    /**
+     * Get the select statement for summary format.
+     *
+     * @return raw_field|string
+     */
+    public static function get_summary_format_select();
 
 }

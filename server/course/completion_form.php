@@ -174,6 +174,13 @@ class course_completion_form extends moodleform {
             $selectbox = array();
             $selected = array();
             foreach ($courses as $c) {
+                // Skip if course is not part of the category list. Courses might not be part of this list
+                // for various reasons, one of which is that this course category is hidden and the user
+                // does not have course creator role.
+                if (!isset($list[$c->category])) {
+                    continue;
+                }
+
                 $selectbox[$c->id] = $list[$c->category] . ' / ' . format_string($c->fullname, true,
                     array('context' => context_course::instance($c->id)));
 

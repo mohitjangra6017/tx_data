@@ -16,10 +16,14 @@
   @module container_workspace
 -->
 <template>
-  <div
-    v-if="!$apollo.loading && 0 !== workspaces.length"
+  <Responsive
+    v-if="hasRecommendations"
     class="tui-recommendedSpaces"
+    :breakpoints="boundaries"
+    @responsive-resize="currentBoundaryName = $event"
   >
+    <hr class="tui-recommendedSpaces__horizontalLine" />
+
     <div class="tui-recommendedSpaces__head">
       <h2 class="tui-recommendedSpaces__title">
         <span>{{ $str('recommended_spaces', 'container_workspace') }}</span>
@@ -35,17 +39,21 @@
     </div>
 
     <SpaceCardsGrid
-      :max-grid-units="maxGridUnits"
+      :max-grid-units="12"
+      :workspace-units="cardUnits"
       :workspaces="workspaces"
+      no-empty-state-message
       class="tui-recommendedSpaces__grid"
       @join-workspace="joinWorkspace"
     />
-  </div>
+  </Responsive>
 </template>
 
 <script>
+import Responsive from 'tui/components/responsive/Responsive';
 import Loading from 'tui/components/icons/Loading';
 import SpaceCardsGrid from 'container_workspace/components/grid/SpaceCardsGrid';
+import { cardGrid } from 'container_workspace/index';
 import { config } from 'tui/config';
 
 // GraphQL Queries
@@ -53,14 +61,19 @@ import recommendedSpaces from 'ml_recommender/graphql/get_recommended_user_works
 
 export default {
   components: {
+    Responsive,
     Loading,
     SpaceCardsGrid,
   },
 
   props: {
+    /**
+     * This property had been deprecated, it is no longer used.
+     * @deprecated since Totara 15.0
+     */
     maxGridUnits: {
       type: [Number, String],
-      required: true,
+      required: false,
     },
   },
 
@@ -78,10 +91,31 @@ export default {
 
   data() {
     return {
+      currentBoundaryName: 'l',
       workspaces: [],
     };
   },
+  computed: {
+    boundaries() {
+      return Object.values(cardGrid);
+    },
+    /**
+     * @returns {Number}
+     */
+    cardUnits() {
+      if (!cardGrid[this.currentBoundaryName]) {
+        return 2;
+      }
 
+      return cardGrid[this.currentBoundaryName].cardUnits;
+    },
+    /**
+     * @return {boolean}
+     */
+    hasRecommendations() {
+      return !this.$apollo.loading && this.workspaces.length > 0;
+    },
+  },
   methods: {
     /**
      *
@@ -107,8 +141,7 @@ export default {
 <style lang="scss">
 .tui-recommendedSpaces {
   &__head {
-    display: flex;
-    justify-content: space-between;
+    display: block;
     margin-bottom: var(--gap-4);
   }
 
@@ -119,6 +152,13 @@ export default {
 
   &__link {
     @include tui-font-link();
+  }
+
+  @media screen and (min-width: $tui-screen-sm) {
+    &__head {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 </style>

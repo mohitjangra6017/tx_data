@@ -1,6 +1,12 @@
 This files describes API changes in /client/component/engage_article,
 information provided here is intended especially for developers.
 
+=== 15.1 ===
+* Updates in Related.vue to pass image alt text to the RelatedCard components
+  * JS changes
+* Updates in ArticleCard.vue and RelatedCard.vue to use background image based (css cropping) card header images
+  * Template, SCSS and JS changes
+
 === 15.0 ===
 * Updated ArticleTitle.vue and ArticleView.vue to not be hard against the viewport edge on mobile, and make main headings smaller
   * SCSS changes
@@ -9,7 +15,8 @@ information provided here is intended especially for developers.
 * Updates in Related.vue
   * Templated and JS changes
   * Deprecated getRecommendations as it is now an apollo query
-
+* Updated ArticleCard.vue & PlaylistCard.vue to keep the title position consistent when the bookmark button is available
+    * Template & SCSS changes
 
 === 13.3 ===
 * Updates in ArticleForm.vue:

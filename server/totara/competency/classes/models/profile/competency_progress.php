@@ -23,6 +23,7 @@
 
 namespace totara_competency\models\profile;
 
+use coding_exception;
 use core\entity\user;
 use core\orm\collection;
 use stdClass;

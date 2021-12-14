@@ -9,7 +9,7 @@ query contentmarketplace_linkedin_catalog_import_learning_objects(
       name
       image_url
       asset_type
-      level
+      display_level
       time_to_complete
       subjects {
         id
