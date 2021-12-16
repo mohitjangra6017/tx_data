@@ -26,6 +26,7 @@ $string['batchoperationconfirmuploadfiles'] = 'Upload one or more feedback files
 $string['batchuploadfiles'] = 'Upload feedback files for multiple users';
 $string['batchuploadfilesforusers'] = 'Send feedback files to {$a} selected user(s).';
 $string['configmaxbytes'] = 'Maximum file size';
+$string['configmaxbytesextracted'] = 'Maximum extracted archive size';
 $string['confirmuploadzip'] = 'Confirm zip upload';
 $string['countfiles'] = '{$a} files';
 $string['default'] = 'Enabled by default';

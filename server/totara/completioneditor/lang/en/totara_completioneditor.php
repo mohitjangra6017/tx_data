@@ -21,6 +21,7 @@
  * @package totara_completioneditor
  */
 
+$string['actions'] = 'Actions';
 $string['allrequired'] = 'all required';
 $string['anyrequired'] = 'any required';
 $string['certificationcompletionedit'] = 'Edit certification completion';

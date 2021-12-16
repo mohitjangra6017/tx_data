@@ -63,8 +63,6 @@ import { config } from 'tui/config';
 // GraphQL queries
 import findWorkspaces from 'container_workspace/graphql/find_workspaces';
 
-const has = Object.prototype.hasOwnProperty;
-
 export default {
   components: {
     SpaceCardsGrid,
@@ -148,21 +146,7 @@ export default {
 
   computed: {
     boundaries() {
-      let items = Object.values(cardGrid);
-
-      return Array.prototype.map.call(
-        items,
-        /**
-         *
-         * @param {Array}   boundaries
-         * @param {String}  name
-         *
-         * @returns {{name: String, boundaries: Array}}
-         */
-        ({ boundaries, name }) => {
-          return { boundaries, name };
-        }
-      );
+      return Object.values(cardGrid);
     },
 
     /**
@@ -170,13 +154,12 @@ export default {
      * @returns {Number}
      */
     cardUnits() {
-      if (!has.call(cardGrid, this.currentBoundaryName)) {
+      if (!cardGrid[this.currentBoundaryName]) {
         // Default to 2.
         return 2;
       }
 
-      let { cardUnits } = cardGrid[this.currentBoundaryName];
-      return cardUnits;
+      return cardGrid[this.currentBoundaryName].cardUnits;
     },
 
     queryVariables() {

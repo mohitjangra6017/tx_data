@@ -59,6 +59,20 @@ The filter has the following options:
 * **is less than**: This option allows only information that has a numerical value less than the text entered (if no text is entered, then the filter is disabled).
 * **is greater than or equal to**: This option allows only information that has a numerical value greater than or equal to the text entered (if no text is entered, then the filter is disabled).
 * **is less than or equal to**: This option allows only information that has a numerical value less than or equal to the text entered (if no text is entered, then the filter is disabled).';
+$string['filternumbersetoperator'] = 'Number with operator';
+$string['filternumbersetoperator_help'] = 'This filter allows you to filter results based on a set operator';
+$string['filternumbersetoperatorequal'] = 'Number equals filter';
+$string['filternumbersetoperatorequal_help'] = 'This filter allows you to filter numerical information that is equal to the number specified';
+$string['filternumbersetoperatornotequal'] = 'Number not equal filter';
+$string['filternumbersetoperatornotequal_help'] = 'This filter allows you to filter numerical information that is not equal to the number specified';
+$string['filternumbersetoperatorgreaterthan'] = 'Number greater than filter';
+$string['filternumbersetoperatorgreaterthan_help'] = 'This filter allows you to filter numerical information that is greater than the number specified';
+$string['filternumbersetoperatorlessthan'] = 'Number less than filter';
+$string['filternumbersetoperatorlessthan_help'] = 'This filter allows you to filter numerical information that is less than the number specified';
+$string['filternumbersetoperatorgreaterorequal'] = 'Number greater than or equal filter';
+$string['filternumbersetoperatorgreaterorequal_help'] = 'This filter allows you to filter numerical information that is greater than or equal to the number specified';
+$string['filternumbersetoperatorlessorequal'] = 'Number less than or equal filter';
+$string['filternumbersetoperatorlessorequal_help'] = 'This filter allows you to filter numerical information that is less than or equal to the number specified';
 $string['filtersimpleselect'] = 'Simple select filter';
 $string['filtersimpleselect_help'] = 'This filter allows you to filter information based on a dropdown list. This filter does not have any extra options.';
 $string['filtertext'] = 'Text filter';

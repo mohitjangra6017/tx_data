@@ -24,6 +24,7 @@
 namespace core_course\data_provider;
 
 use core\entity\course as course_entity;
+use core\orm\query\raw_field;
 use totara_core\data_provider\provider;
 use totara_core\data_provider\provider_interface;
 use core\orm\entity\filter\filter_factory;
@@ -54,5 +55,11 @@ class course extends provider implements provider_interface {
         return 'course';
     }
 
+    /**
+     * @inheritDoc
+     */
+    public static function get_summary_format_select() {
+        return 'summaryformat';
+    }
 
 }

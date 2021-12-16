@@ -22,7 +22,9 @@
     :clickable="true"
     @click="handleClickCard"
   >
-    <img :src="image" :alt="name" class="tui-engageArticleRelatedCard__img" />
+    <div class="tui-engageArticleRelatedCard__img" :style="imageStyle">
+      <span v-if="imageAlt" class="sr-only">{{ imageAlt }}</span>
+    </div>
     <section class="tui-engageArticleRelatedCard__content">
       <a :href="url">
         {{ name }}
@@ -94,6 +96,7 @@ export default {
       type: String,
       required: true,
     },
+    imageAlt: String,
     reactions: {
       type: [Number, String],
       required: true,
@@ -130,6 +133,11 @@ export default {
 
       return '';
     },
+    imageStyle() {
+      return {
+        backgroundImage: `url(${this.image}})`,
+      };
+    },
   },
 
   methods: {
@@ -162,13 +170,18 @@ export default {
 .tui-engageArticleRelatedCard {
   display: flex;
   min-width: 120px;
-  height: 82px;
+  height: var(--engage-sidepanel-card-height);
   background-color: var(--color-neutral-1);
 
   &__img {
-    width: 80px;
-    height: 80px;
-    padding: var(--gap-2);
+    @include card-header-image(
+      var(--engage-sidepanel-card-height),
+      var(--engage-sidepanel-card-height),
+      var(--gap-2),
+      'horizontal'
+    );
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
   }
 
   &__content {
@@ -176,6 +189,7 @@ export default {
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-between;
+    margin-left: var(--gap-2);
     padding: var(--gap-4) 0 var(--gap-2) 0;
     overflow: hidden;
 

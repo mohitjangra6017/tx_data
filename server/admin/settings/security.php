@@ -35,6 +35,23 @@ if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
     $max_upload_choices = get_max_upload_sizes(0, 0, 0, $maxbytes);
     // maxbytes set to 0 will allow the maximum server limit for uploads
     $temp->add(new admin_setting_configselect('maxbytes', new lang_string('maxbytes', 'admin'), new lang_string('configmaxbytes', 'admin'), 0, $max_upload_choices));
+
+    // The max size of extracted archive file contents.
+    $maxbytesextracted = $maxbytes;
+    if (!empty($CFG->maxbytesextracted)) {
+        $maxbytesextracted = $CFG->maxbytesextracted;
+    }
+    $max_upload_choices = get_max_upload_sizes(0, 0, 0, $maxbytesextracted);
+    $temp->add(
+        new admin_setting_configselect(
+            'maxbytesextracted',
+            new lang_string('maxbytesextracted', 'admin'),
+            new lang_string('configmaxbytesextracted', 'admin'),
+            $maxbytes,
+            $max_upload_choices
+        )
+    );
+
     // 100MB
     $defaultuserquota = 104857600;
     $params = new stdClass();

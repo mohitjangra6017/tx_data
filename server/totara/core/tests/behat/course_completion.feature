@@ -80,12 +80,10 @@ Feature: Users completion of courses
     And I log out
     And I log in as "admin"
     And I am on "Course 1" course homepage
-    And I navigate to "Completions archive" node in "Course administration"
-    And I press "Continue"
+    And I navigate to "Reset completions" node in "Course administration"
     And I press "Continue"
     And I am on "Course 2" course homepage
-    And I navigate to "Completions archive" node in "Course administration"
-    And I press "Continue"
+    And I navigate to "Reset completions" node in "Course administration"
     And I press "Continue"
     And I navigate to my "Historic Completions Report" report
     Then I should see "No" in the "Course 1" "table_row"

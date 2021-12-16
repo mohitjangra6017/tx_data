@@ -21,6 +21,12 @@
  * @package totara_certification
  */
 
+use core\task\completion_regular_task;
+use mod_facetoface\seminar_event;
+use mod_facetoface\seminar_event_helper;
+use mod_facetoface\signup;
+use mod_facetoface\signup\state\fully_attended;
+use mod_facetoface\signup_helper;
 use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die();
@@ -5524,6 +5530,119 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertEquals(0, $DB->count_records_select('prog_completion', $where, array('programid' => $cert1->id, 'userid' => $user1->id)));
         $this->assertEquals(1, $DB->count_records_select('prog_completion', $where, array('programid' => $cert1->id, 'userid' => $user2->id))); // One reset!
         $this->assertEquals(0, $DB->count_records_select('prog_completion', $where, array('programid' => $cert2->id, 'userid' => $user2->id)));
+    }
+
+    /**
+     * There used to be a bug where certif_set_state_expired() failed to reset completion of face-to-face activities.
+     * This is a test for that particular fix, making sure the bug is not re-introduced.
+     */
+    public function test_certif_set_state_expired_resets_activities() {
+        global $DB;
+
+        $data_generator = self::getDataGenerator();
+        $completion_generator = \core_completion\testing\generator::instance();
+        $program_generator = \totara_program\testing\generator::instance();
+
+        $user = $data_generator->create_user();
+        $course = $data_generator->create_course();
+        $course_recert = $data_generator->create_course();
+        $completion_generator->enable_completion_tracking($course);
+
+        $cert = $program_generator->create_certification();
+        $program_generator->add_courses_and_courseset_to_program($cert, [[$course]], CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert, [[$course_recert]], CERTIFPATH_RECERT);
+
+        $program_generator->assign_to_program($cert->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
+
+        // Create face-to-face.
+        $facetofacedata = [
+            'name' => 'facetoface1',
+            'course' => $course->id
+        ];
+        $f2fmoduleoptions = [
+            'completion' => COMPLETION_TRACKING_AUTOMATIC,
+            'completionstatusrequired' => json_encode([fully_attended::get_code()])
+        ];
+        $facetoface_generator = $data_generator->get_plugin_generator('mod_facetoface');
+        $facetoface = $facetoface_generator->create_instance($facetofacedata, $f2fmoduleoptions);
+
+        // Create a f2f session. It will be moved to the past after signups.
+        $session_date = new stdClass();
+        $session_date->timestart = time() + DAYSECS;
+        $session_date->timefinish = time() + DAYSECS + 60;
+        $session_date->sessiontimezone = 'Pacific/Auckland';
+        $session_data = [
+            'facetoface' => $facetoface->id,
+            'capacity' => 10,
+            'allowoverbook' => 1,
+            'sessiondates' => [$session_date],
+            'mincapacity' => '4',
+            'cutoff' => "86400"
+        ];
+        $session_id = $facetoface_generator->add_session($session_data);
+        $seminarevent = new seminar_event($session_id);
+
+        $completion_generator->set_activity_completion($course->id, [$facetoface], COMPLETION_AGGREGATION_ANY);
+
+        $data_generator->enrol_user($user->id, $course->id);
+
+        // Check user is not yet complete for course and certs.
+        $course_info = new completion_info($course);
+        $this->assertFalse($course_info->is_course_complete($user->id));
+
+        // Attend the face-to-face.
+        signup_helper::signup(signup::create($user->id, $seminarevent));
+
+        // Move session time to the past.
+        $sessiondate = new stdClass();
+        $sessiondate->timestart = time() - DAYSECS;
+        $sessiondate->timefinish = time() - DAYSECS + 60;
+        $sessiondate->sessiontimezone = 'Pacific/Auckland';
+        seminar_event_helper::merge_sessions($seminarevent, [$sessiondate]);
+
+        $f2fsignups = $DB->get_records('facetoface_signups', ['sessionid' => $seminarevent->get_id()], '', 'userid, id');
+        $attendancedata = [
+            $f2fsignups[$user->id]->id => fully_attended::get_code(),
+        ];
+        signup_helper::process_attendance($seminarevent, $attendancedata);
+
+        ob_start();
+        $completion_task = new completion_regular_task();
+        $completion_task->execute();
+        ob_end_clean();
+
+        // Check that the course is marked complete.
+        $course_info = new completion_info($course);
+        $this->assertTrue($course_info->is_course_complete($user->id));
+
+        // Check that the module is marked complete.
+        $f2fmodulecompletions =
+            $DB->get_records('course_modules_completion', ['coursemoduleid' => $facetoface->cmid], '', 'userid, completionstate');
+        $this->assertEquals(COMPLETION_COMPLETE, $f2fmodulecompletions[$user->id]->completionstate);
+
+        // Make sure the signup record exists and is not archived.
+        $signup_records = $DB->get_records('facetoface_signups', ['userid' => $user->id, 'sessionid' => $seminarevent->get_id()]);
+        self::assertCount(1, $signup_records);
+        $signup_record = reset($signup_records);
+        self::assertEquals(0, $signup_record->archived);
+
+        // Set the certification into the window open state for the user.
+        $this->assertTrue(certif_set_state_windowopen($cert->id, $user->id));
+
+        // Run the function, catching messages.
+        $sink = self::redirectMessages();
+        $this->assertTrue(certif_set_state_expired($cert->id, $user->id));
+        $sink->close();
+
+        $f2fmodulecompletions =
+            $DB->get_records('course_modules_completion', ['coursemoduleid' => $facetoface->cmid], '', 'userid, completionstate');
+        $this->assertFalse(isset($f2fmodulecompletions[$user->id]));
+
+        // Verify the signup record has been archived.
+        $signup_records = $DB->get_records('facetoface_signups', ['userid' => $user->id, 'sessionid' => $seminarevent->get_id()]);
+        self::assertCount(1, $signup_records);
+        $signup_record = reset($signup_records);
+        self::assertEquals(1, $signup_record->archived);
     }
 
     public function test_certif_set_state_expired() {

@@ -74,13 +74,13 @@
         <div class="tui-linkedInImportLearningItem__bar">
           <div class="tui-linkedInImportLearningItem__bar-overview">
             <!-- Course level (Beginner, intermediate, advanced) -->
-            <div v-if="courseLevelString">
+            <div v-if="data.display_level">
               <span class="sr-only">
                 {{
                   $str('a11y_content_difficulty', 'contentmarketplace_linkedin')
                 }}
               </span>
-              {{ courseLevelString }}
+              {{ data.display_level }}
             </div>
             <!-- Course completion time -->
             <div v-if="data.time_to_complete">
@@ -229,38 +229,6 @@ export default {
     },
 
     /**
-     * Return correct language string for course level
-     *
-     * @return {String}
-     */
-    courseLevelString() {
-      const key = this.data.level;
-      if (!key) {
-        return '';
-      }
-
-      let level =
-        key === 'BEGINNER'
-          ? this.$str(
-              'course_difficulty_beginner',
-              'contentmarketplace_linkedin'
-            )
-          : key === 'INTERMEDIATE'
-          ? this.$str(
-              'course_difficulty_intermediate',
-              'contentmarketplace_linkedin'
-            )
-          : key === 'ADVANCED'
-          ? this.$str(
-              'course_difficulty_advanced',
-              'contentmarketplace_linkedin'
-            )
-          : '';
-
-      return level;
-    },
-
-    /**
      * Return correct language string for content type
      *
      * @return {String}
@@ -310,9 +278,6 @@ export default {
       "a11y_view_courses",
       "appears_in",
       "content_appears_in",
-      "course_difficulty_advanced",
-      "course_difficulty_beginner",
-      "course_difficulty_intermediate",
       "course_type_course",
       "course_type_learning_path",
       "course_type_video",

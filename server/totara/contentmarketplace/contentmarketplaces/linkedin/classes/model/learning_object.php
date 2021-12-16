@@ -26,6 +26,7 @@ namespace contentmarketplace_linkedin\model;
 use Closure;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\event\learning_object_updated;
 use contentmarketplace_linkedin\learning_object\resolver;
@@ -64,6 +65,7 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read classification[]|orm_collection $subjects         Get the mapped classifications
  *                                                                  type {@see constants::CLASSIFICATION_TYPE_SUBJECT}
  * @property-read course[]|orm_collection         $courses
+ * @property-read string                          $display_level
  *
  * @package contentmarketplace_linkedin\model
  */
@@ -104,6 +106,7 @@ class learning_object extends model implements detailed_model {
         'classifications',
         'subjects',
         'courses',
+        'display_level',
     ];
 
     /**
@@ -273,6 +276,22 @@ class learning_object extends model implements detailed_model {
         return $this->entity->courses->filter(function (course $course) {
             return totara_course_is_viewable($course->to_record(), user::logged_in()->id);
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function get_display_level(): string {
+        switch ($this->entity->level) {
+            case constants::DIFFICULTY_LEVEL_BEGINNER:
+                return get_string('course_difficulty_beginner', 'contentmarketplace_linkedin');
+            case constants::DIFFICULTY_LEVEL_INTERMEDIATE:
+                return get_string('course_difficulty_intermediate', 'contentmarketplace_linkedin');
+            case constants::DIFFICULTY_LEVEL_ADVANCED :
+                return get_string('course_difficulty_advanced', 'contentmarketplace_linkedin');
+            default:
+                return get_string('course_difficulty_general', 'contentmarketplace_linkedin');
+        }
     }
 
     /**

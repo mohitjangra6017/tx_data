@@ -130,7 +130,7 @@ export default {
 <style lang="scss">
 .tui-workspaceContributeCard {
   width: 100%;
-  height: calc(var(--totara-engage-card-height) + 11px);
+  height: calc(var(---engage-card-height) + 11px);
 
   .tui-card {
     // Overiding cards border

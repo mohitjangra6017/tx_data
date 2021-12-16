@@ -215,6 +215,9 @@ $string['sortalphabet'] = 'A-Z';
 $string['sortcreated'] = 'Created';
 $string['sortpopular'] = 'Popular';
 $string['tags'] = "tags";
+$string['tag_warning'] = 'Please note that in order to share this resource with everyone you must assign topic tags. It 
+appears that tags functionality is disabled. Contact the site administrators to enable tags functionality and ensure there 
+is at least one saved topic.';
 $string['timeviewfivetoten'] = '5 to 10 mins';
 $string['timeviewlessthanfive'] = 'Less than 5 mins';
 $string['timeviewmorethanten'] = 'More than 10 mins';

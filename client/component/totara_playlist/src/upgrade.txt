@@ -1,11 +1,20 @@
 This files describes API changes in /client/component/totara_playlist,
 information provided here is intended especially for developers.
 
+=== 15.1 ===
+* Updates in AddNewPlaylistCard.vue to reference renamed css variable (---engage-card-height)
+  * SCSS changes
+* Updates in Related.vue to pass image alt text to the RelatedCard components
+  * JS changes
+* Updates in PlaylistCard.vue and RelatedCard.vue to use background image based (css cropping) card header images
+  And using class styling for the resource count instead of relying on dom structure
+  * Template, SCSS and JS changes
+
 === 15.0 ===
 * Updates in PlaylistSidePanel.vue
   * Template changes
 * Updates in Related.vue
-  * Templated and JS changes
+  * Template and JS changes
   * Deprecated getRecommendations as it is now an apollo query
 
 === 14.0 ===

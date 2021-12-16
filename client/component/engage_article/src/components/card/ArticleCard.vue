@@ -31,13 +31,14 @@
       :show-cover="hovered"
       class="tui-engageArticleCard__imageheader"
     >
-      <img
+      <div
         slot="image"
-        :alt="extraData.alt || null"
         :role="getRoleAttr"
-        :src="extraData.image"
         class="tui-engageArticleCard__image"
-      />
+        :style="imageStyle"
+      >
+        <span v-if="extraData.alt" class="sr-only">{{ extraData.alt }}</span>
+      </div>
 
       <div slot="actions" class="tui-engageArticleCard__icons">
         <ButtonIcon
@@ -52,18 +53,19 @@
     </ImageHeader>
 
     <CardHeader slot="header" class="tui-engageArticleCard__header">
-      <BookmarkButton
-        v-if="showBookmark"
-        slot="first"
-        size="300"
-        :bookmarked="innerBookmarked"
-        :primary="false"
-        :circle="false"
-        :small="true"
-        :transparent="true"
-        class="tui-engageArticleCard__bookmark"
-        @click="updateBookmark"
-      />
+      <div slot="first" class="tui-engageArticleCard__bar">
+        <BookmarkButton
+          v-if="showBookmark"
+          size="300"
+          :bookmarked="innerBookmarked"
+          :primary="false"
+          :circle="false"
+          :small="true"
+          :transparent="true"
+          class="tui-engageArticleCard__bookmark"
+          @click="updateBookmark"
+        />
+      </div>
 
       <a slot="second" class="tui-engageArticleCard__link" :href="url">
         <h3 :id="labelId" class="tui-engageArticleCard__title">
@@ -181,6 +183,12 @@ export default {
     getRoleAttr() {
       return !this.extraData.alt ? 'presentation' : null;
     },
+
+    imageStyle() {
+      return {
+        backgroundImage: `url(${this.extraData.image}})`,
+      };
+    },
   },
 
   created() {
@@ -292,15 +300,14 @@ export default {
 <style lang="scss">
 .tui-engageArticleCard {
   height: 100%;
-  min-height: var(--totara-engage-card-height);
-
-  &__imageheader {
-    padding: var(--gap-4) var(--gap-4) 0 var(--gap-4);
-  }
+  min-height: var(---engage-card-height);
 
   &__image {
-    display: block;
-    width: 100%;
+    @include card-header-image(
+      var(--engage-card-image-width),
+      var(--engage-card-image-height),
+      var(--gap-4)
+    );
   }
 
   &__link {
@@ -323,6 +330,10 @@ export default {
     }
   }
 
+  &__bar {
+    height: var(--gap-4);
+  }
+
   &__bookmark {
     // Negative margin here to neutralise the default redundant edges of icon.
     margin-top: 1px;
@@ -331,7 +342,7 @@ export default {
 
   &__title {
     @include tui-font-heading-x-small();
-    margin-top: var(--gap-4);
+    margin-right: var(--gap-5);
     color: var(--color-text);
     @include tui-wordbreak--hyphens;
   }

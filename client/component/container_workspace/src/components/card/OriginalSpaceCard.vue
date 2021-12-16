@@ -282,7 +282,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: var(--totara-engage-card-height);
+  height: var(---engage-card-height);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

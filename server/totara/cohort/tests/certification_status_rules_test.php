@@ -92,14 +92,6 @@ class totara_cohort_certification_status_rules_testcase extends totara_cohort_ce
             $this->program_generator->legacy_add_courseset_program($this->certifications[$i]->id, [$this->courses[$i]->id], CERTIFPATH_RECERT);
         }
 
-        // Create cohort.
-        $this->cohort = $this->cohort_generator->create_cohort(['cohorttype' => cohort::TYPE_DYNAMIC]);
-        $this->assertTrue($DB->record_exists('cohort', ['id' => $this->cohort->id]));
-        $this->assertEquals(0, $DB->count_records('cohort_members', ['cohortid' => $this->cohort->id]));
-
-        // Create ruleset.
-        $this->ruleset = cohort_rule_create_ruleset($this->cohort->draftcollectionid);
-
         // Create the test user groups stored in $this->$user_groups
         $this->create_users_and_assignments();
     }
@@ -480,38 +472,51 @@ class totara_cohort_certification_status_rules_testcase extends totara_cohort_ce
         return $data;
     }
 
-    /**
-     * @dataProvider data_certification_status
-     */
-    public function test_certification_status_rule($name, $certifications, $params, $usergroups) {
+    public function test_certification_status_rule() {
         global $DB;
         $this->setAdminUser();
 
-        // Users that should be in this audience.
-        $userids = [];
-        foreach ($usergroups as $usergroup) {
-            foreach ($this->user_groups[$usergroup] as $user) {
-                $userids[$user->id] = $user->id;
+        $data = $this->data_certification_status();
+        $generator = $this->cohort_generator;
+
+        foreach ($data as $detail) {
+            [$name, $certifications, $params, $usergroups] = $detail;
+
+
+            // Users that should be in this audience.
+            $userids = [];
+            foreach ($usergroups as $usergroup) {
+                foreach ($this->user_groups[$usergroup] as $user) {
+                    $userids[$user->id] = $user->id;
+                }
             }
+            $userids = array_keys($userids);
+            sort($userids);
+
+            // Process listofids.
+            $listofids = [];
+            foreach ($certifications as $certification) {
+                $listofids[] = $this->certifications[$certification]->id;
+            }
+
+            // Create cohort.
+            $cohort = $generator->create_cohort(['cohorttype' => cohort::TYPE_DYNAMIC]);
+            $this->assertTrue($DB->record_exists('cohort', ['id' => $cohort->id]));
+            $this->assertEquals(0, $DB->count_records('cohort_members', ['cohortid' => $cohort->id]));
+
+            // Create ruleset.
+            $ruleset = cohort_rule_create_ruleset($cohort->draftcollectionid);
+
+            // Create certification status rule.
+            $generator->create_cohort_rule_params($ruleset, 'learning', 'certificationstatus', $params, $listofids, 'listofids');
+            cohort_rules_approve_changes($cohort);
+
+            // Check we have the correct members.
+            $members = $DB->get_records('cohort_members', ['cohortid' => $cohort->id], '', 'userid');
+            $members = array_keys($members);
+            sort($members);
+            $this->assertSame($userids, $members, 'Failed for ' . $name);
         }
-        $userids = array_keys($userids);
-        sort($userids);
-
-        // Process listofids.
-        $listofids = [];
-        foreach ($certifications as $certification) {
-            $listofids[] = $this->certifications[$certification]->id;
-        }
-
-        // Create certification status rule.
-        $this->cohort_generator->create_cohort_rule_params($this->ruleset, 'learning', 'certificationstatus', $params, $listofids, 'listofids');
-        cohort_rules_approve_changes($this->cohort);
-
-        // Check we have the correct members.
-        $members = $DB->get_records('cohort_members', ['cohortid' => $this->cohort->id], '', 'userid');
-        $members = array_keys($members);
-        sort($members);
-        $this->assertSame($userids, $members, 'Failed for ' . $name);
     }
 
 }

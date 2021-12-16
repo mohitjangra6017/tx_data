@@ -612,6 +612,39 @@ class stored_file {
     }
 
     /**
+     * Checks that the extracted size of the file is within configured limits.
+     *
+     * @param file_packer $packer
+     * @param int|null $max_extracted_size
+     * @param int|null $file_content_size
+     *
+     * @return bool
+     */
+    public function is_extracted_size_valid(
+        file_packer $packer,
+        ?int $max_extracted_size = 0,
+        ?int $file_content_size = 0
+    ): bool {
+        global $CFG;
+
+        // If maxbytesextracted is not explicitly set then we fall back on site maxbytes limit.
+        $max = !empty($CFG->maxbytesextracted)
+                ? get_max_upload_file_size($CFG->maxbytesextracted)
+                : get_max_upload_file_size($CFG->maxbytes);
+
+        $max_extracted_size = $max_extracted_size > 0 && $max_extracted_size <= $max
+            ? $max_extracted_size
+            : $max;
+
+        // Get content size of archive.
+        if (empty($file_content_size)) {
+            $file_content_size = $this->get_total_content_size($packer);
+        }
+
+        return !is_null($file_content_size) && $file_content_size <= $max_extracted_size;
+    }
+
+    /**
      * Add file/directory into archive.
      *
      * @param file_archive $filearch file archive instance
