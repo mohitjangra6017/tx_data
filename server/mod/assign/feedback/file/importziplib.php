@@ -169,6 +169,10 @@ class assignfeedback_file_zip_importer {
         $packer = get_file_packer('application/zip');
         core_php_time_limit::raise(ASSIGNFEEDBACK_FILE_MAXFILEUNZIPTIME);
 
+        if (!$zipfile->is_extracted_size_valid($packer)) {
+            throw new moodle_exception('cannotunzipquotaexceeded', 'repository');
+        }
+
         return $packer->extract_to_storage($zipfile,
                                     $contextid,
                                     'assignfeedback_file',

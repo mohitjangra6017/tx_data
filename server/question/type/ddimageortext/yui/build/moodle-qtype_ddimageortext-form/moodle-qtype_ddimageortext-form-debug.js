@@ -181,9 +181,12 @@ Y.extend(DDIMAGEORTEXT_FORM, M.qtype_ddimageortext.dd_base_class, {
             var draginstanceno = this.form.from_name_with_index(name).indexes[0];
             var fromform = [this.form.get_form_value('drops', [draginstanceno, 'xleft']),
                             this.form.get_form_value('drops', [draginstanceno, 'ytop'])];
-            var constrainedxy = this.constrain_xy(draginstanceno, fromform);
-            this.form.set_form_value('drops', [draginstanceno, 'xleft'], constrainedxy[0]);
-            this.form.set_form_value('drops', [draginstanceno, 'ytop'], constrainedxy[1]);
+
+            if (fromform[0] && fromform[1]) {
+                var constrainedxy = this.constrain_xy(draginstanceno, fromform);
+                this.form.set_form_value('drops', [draginstanceno, 'xleft'], constrainedxy[0]);
+                this.form.set_form_value('drops', [draginstanceno, 'ytop'], constrainedxy[1]);
+            }
         }, this);
 
         // Change in selected item.

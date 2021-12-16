@@ -20,6 +20,7 @@
 import { shallowMount } from '@vue/test-utils';
 import component from 'tui/components/buttons/Button.vue';
 import { axe, toHaveNoViolations } from 'jest-axe';
+
 expect.extend(toHaveNoViolations);
 
 describe('Button', () => {
@@ -74,5 +75,21 @@ describe('Button', () => {
       attachToDocument: true,
     });
     expect(wrapper.element).toBe(document.activeElement);
+  });
+
+  it.each([
+    [null, undefined],
+    [true, 'true'],
+    ['true', 'true'],
+    [false, 'false'],
+    ['false', 'false'],
+  ])('should set aria-disabled appropriately when passed %p', (val, attr) => {
+    const wrapper = shallowMount(component, {
+      propsData: {
+        text: 'text',
+        ariaDisabled: val,
+      },
+    });
+    expect(wrapper.find('button').attributes('aria-disabled')).toBe(attr);
   });
 });

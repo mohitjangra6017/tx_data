@@ -22,11 +22,20 @@ import { getString, langString } from 'tui/i18n';
 export default class DragDropAnnouncer {
   constructor(manager) {
     this.manager = manager;
+    this.isRestorationAnnounced = false;
+  }
+
+  isNullMove({ dragItem, dropDesc }) {
+    return (
+      dropDesc &&
+      dragItem.descriptor.sourceId === dropDesc.sourceId &&
+      dragItem.descriptor.index === dropDesc.index
+    );
   }
 
   handleDragStart({ dropDesc }) {
+    this.isRestorationAnnounced = false;
     announce({
-      // message: `You have lifted an item at position ${dropDesc.index + 1}.`,
       message: getString('dragdrop_announce_lift', 'totara_core', {
         from_position: dropDesc.index + 1,
       }),
@@ -34,6 +43,7 @@ export default class DragDropAnnouncer {
   }
 
   handleDragMove({ dragItem, dropDesc, valid }) {
+    this.isRestorationAnnounced = false;
     if (!dropDesc) {
       announce({
         message: getString('dragdrop_announce_no_drop', 'totara_core'),
@@ -55,7 +65,17 @@ export default class DragDropAnnouncer {
       ? ''
       : ' ' + getString('dragdrop_announce_no_drop', 'totara_core');
 
-    if (fromSource == toSource) {
+    if (valid && this.isNullMove({ dragItem, dropDesc })) {
+      this.isRestorationAnnounced = true;
+      announce({
+        message:
+          getString(
+            'dragdrop_announce_move_null',
+            'totara_core',
+            formatParams
+          ) + invalidAppend,
+      });
+    } else if (fromSource == toSource) {
       announce({
         message:
           getString(
@@ -105,6 +125,20 @@ export default class DragDropAnnouncer {
     };
 
     if (!drop) {
+      if (this.isRestorationAnnounced) {
+        // silence because "you have restored the item" is the previous announcement.
+        return;
+      }
+      if (this.isNullMove({ dragItem, dropDesc })) {
+        announce({
+          message: getString(
+            'dragdrop_announce_move_null',
+            'totara_core',
+            formatParams
+          ),
+        });
+        return;
+      }
       announce({
         message: getString(
           'dragdrop_announce_drop_cancel',
@@ -149,6 +183,7 @@ export default class DragDropAnnouncer {
 
 DragDropAnnouncer.langStrings = [
   langString('dragdrop_announce_lift', 'totara_core'),
+  langString('dragdrop_announce_move_null', 'totara_core'),
   langString('dragdrop_announce_move_same', 'totara_core'),
   langString('dragdrop_announce_move_other', 'totara_core'),
   langString('dragdrop_announce_move_unknown', 'totara_core'),

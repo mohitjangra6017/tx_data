@@ -43,9 +43,10 @@ class certification_formatter extends formatter {
                 $component = 'totara_program';
                 $filearea = 'summary';
                 $itemid = $this->object->id;
+                $context = \context_program::instance($itemid);
 
                 return $formatter
-                    ->set_pluginfile_url_options($this->context, $component, $filearea, $itemid)
+                    ->set_pluginfile_url_options($context, $component, $filearea, 0)
                     ->format($value);
             },
             'summaryformat' => null,

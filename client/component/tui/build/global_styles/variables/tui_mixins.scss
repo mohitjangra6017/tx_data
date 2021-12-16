@@ -34,3 +34,35 @@
   outline-offset: 1px;
 }
 
+/**
+ * For adding a fixed sized header image to a card, including optional margin on the outer edges.
+ */
+@mixin card-header-image(
+  $width,
+  $height,
+  $margin: null,
+  $orientation: 'vertical'
+) {
+  background-position: center;
+  background-size: cover;
+
+  @if $margin == null {
+    width: $width;
+    height: $height;
+  } @else {
+    @if $orientation == 'vertical' {
+      width: calc(#{$width} - (#{$margin} * 2));
+      height: calc(#{$height} - #{$margin});
+      margin-top: $margin;
+      margin-right: $margin;
+      margin-left: $margin;
+    } @else {
+      width: calc(#{$height} - #{$margin});
+      height: calc(#{$height} - (#{$margin} * 2));
+      margin-top: $margin;
+      margin-bottom: $margin;
+      margin-left: $margin;
+    }
+  }
+}
+

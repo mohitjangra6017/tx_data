@@ -368,8 +368,12 @@ export class DragDropManager {
     // is this a successful drop? or are we ending without dropping?
     const drop = this.canDrop(descriptor, this.state.dropDesc);
     const canAnimate = this.state.layoutInteraction == 'move';
+    const nullMove = this._announcer.isNullMove({
+      dragItem: this.state.dragItem,
+      dropDesc: this.state.dropDesc,
+    });
 
-    if (drop) {
+    if (drop && !nullMove) {
       if (canAnimate && animate) {
         this._setState({
           phase: PHASE_DROP_ANIMATING,

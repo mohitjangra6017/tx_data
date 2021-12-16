@@ -24,6 +24,7 @@
         fullname,
         instanceid,
         image,
+        alt,
         name,
         rating,
         resources,
@@ -36,6 +37,7 @@
         :bookmarked="bookmarked"
         :fullname="fullname"
         :image="image"
+        :image-alt="alt"
         :name="name"
         :rating="rating"
         :resources="resources"
@@ -89,11 +91,12 @@ export default {
 
         let results = data.playlists.map(item => {
           const { bookmarked, extra, name, instanceid, reactions, url } = item;
-          const { image, timeview } = JSON.parse(extra);
+          const { image, alt, timeview } = JSON.parse(extra);
           return {
             bookmarked,
             instanceid,
             image,
+            alt,
             name,
             reactions,
             timeview,
@@ -140,13 +143,14 @@ export default {
 
           this.playlists = data.playlists.map(item => {
             const { bookmarked, extra, name, instanceid, user, url } = item;
-            const { image, rating, resources } = JSON.parse(extra);
+            const { image, alt, rating, resources } = JSON.parse(extra);
             const { fullname } = user;
             return {
               bookmarked,
               fullname,
               instanceid,
               image,
+              alt,
               name,
               rating,
               resources,

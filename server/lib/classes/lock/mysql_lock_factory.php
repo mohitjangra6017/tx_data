@@ -93,10 +93,14 @@ class mysql_lock_factory implements lock_factory {
      * @return string
      */
     public function get_lock_name_from_key($key) {
-        $name = $this->db->get_prefix() . 'dblock_' . $this->type . '_' . $key;
+        $name = $this->db->get_dbname() . ':' . $this->db->get_prefix() . 'dblock_' . $this->type . '_' . $key;
         // Max key length is 64.
         if (strlen($name) >= 64) {
-            $name = $this->db->get_prefix() . 'dblock_' . md5($this->type . '_' . $key);
+            $name = $this->db->get_dbname() . ':' . $this->db->get_prefix() . 'dblock_' . md5($this->type . '_' . $key);
+
+            if (strlen($name) >= 64) {
+                return md5($name);
+            }
         }
         return $name;
     }

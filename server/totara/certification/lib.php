@@ -1833,6 +1833,9 @@ function certif_set_state_expired(int $programid, int $userid, string $logmessag
         $logmessage = 'Certification expired, changed to primary certification path, primary/non-recert path courses reset';
     }
 
+    // Remember expiry time before we overwrite it.
+    $timeexpires = $certcompletion->timeexpires;
+
     // Change the cert and prog completion records.
     $certcompletion->status = CERTIFSTATUS_EXPIRED;
     $certcompletion->renewalstatus = CERTIFRENEWALSTATUS_EXPIRED;
@@ -1857,7 +1860,7 @@ function certif_set_state_expired(int $programid, int $userid, string $logmessag
     $primarycourses = find_courses_for_certif($certcompletion->certifid, 'c.id, c.fullname', CERTIFPATH_CERT);
     $recertcourses = find_courses_for_certif($certcompletion->certifid, 'c.id, c.fullname', CERTIFPATH_RECERT);
     $courses = array_diff(array_keys($primarycourses), array_keys($recertcourses));
-    certif_archive_courses_completion($courses, $userid, $certcompletion->timeexpires);
+    certif_archive_courses_completion($courses, $userid, $timeexpires);
 
     $transaction->allow_commit();
 

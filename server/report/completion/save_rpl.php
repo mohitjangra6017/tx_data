@@ -98,6 +98,7 @@ if (!empty($cmid)) {
     $data->id = 0;
     $data->userid = $user->id;
     $data->viewed = 0;
+    $data->progress = strlen($rpl) ? 100 : null;
     $data->coursemoduleid = $cmid;
     $data->completionstate = strlen($rpl) ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
     $data->timemodified = time();

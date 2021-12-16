@@ -166,7 +166,6 @@ exports[`PositionAdder should check snapshot 1`] = `
                 >
                   <button
                     aria-describedby="id-items-added"
-                    aria-disabled="false"
                     class="tui-formBtn tui-formBtn--prim"
                     disabled="disabled"
                     type="button"
@@ -189,7 +188,6 @@ exports[`PositionAdder should check snapshot 1`] = `
                   </button>
                    
                   <button
-                    aria-disabled="false"
                     class="tui-formBtn"
                     type="button"
                   >

@@ -57,7 +57,7 @@
       </template>
     </VirtualScroll>
     <div
-      v-if="!isLoading && cursor.total === 0"
+      v-if="!noEmptyStateMessage && !isLoading && cursor.total === 0"
       class="tui-spaceCardsGrid__emptyResult"
     >
       {{ $str('space_empty_result', 'container_workspace') }}
@@ -124,6 +124,10 @@ export default {
         return { total: 0, next: '' };
       },
     },
+    /**
+     * Don't show an empty state message when ere are no workspaces supplied.
+     */
+    noEmptyStateMessage: Boolean,
   },
 
   data() {
@@ -190,7 +194,7 @@ export default {
   }
 
   &__card {
-    height: var(--totara-engage-card-height);
+    height: var(---engage-card-height);
   }
 
   &__loadMoreContainer {

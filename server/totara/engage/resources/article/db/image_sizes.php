@@ -24,8 +24,10 @@ defined('MOODLE_INTERNAL') || die();
 
 $sizes = [
     'engage_article_resource' => [
-        'width' => 253,
-        'height' => 136,
-        'mode' => 'crop'
+        // 16/9 ratio, maximum size for an image asset. the client will handle
+        // fitting the image within the container
+        'width' => 320,
+        'height' => 180,
+        'mode' => 'crop',
     ],
 ];

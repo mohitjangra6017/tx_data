@@ -18,6 +18,7 @@ Please contact [licensing@totaralearning.com] for more information.
 
 import numpy as np
 import re
+from scipy.sparse import csr_matrix
 import unicodedata
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -138,6 +139,21 @@ class TextEncoder:
         doc = self.remove_stopwords(in_doc=doc)
         return doc
 
+    @staticmethod
+    def docs_empty(docs: list) -> bool:
+        """
+        To check if the list of documents have no content
+
+        :param docs: The list of documents to be checked
+        :type docs: list
+        :return: Whether the documents have no content
+        :rtype: bool
+        """
+        if all("" == s or s.isspace() for s in docs):
+            return True
+
+        return False
+
     def encode_documents(self, documents) -> dict:
         """
         This method cleans the free text and then vectorize into a matrix using TF-IDF
@@ -151,6 +167,12 @@ class TextEncoder:
         :rtype: str
         """
         sanitised_documents = [self.clean_text(doc=doc) for doc in documents]
+        if self.docs_empty(docs=sanitised_documents):
+            return {
+                "features": [],
+                "vectors": csr_matrix((len(sanitised_documents), 0), dtype=np.float32),
+            }
+
         vectorizer = TfidfVectorizer(dtype=np.float32)
         vectors = vectorizer.fit_transform(raw_documents=sanitised_documents)
         return {"features": vectorizer.get_feature_names(), "vectors": vectors}

@@ -310,6 +310,11 @@ function scorm_parse($scorm, $full) {
                 $fs->delete_area_files($context->id, 'mod_scorm', 'content');
 
                 $packer = get_file_packer('application/zip');
+
+                if (!$packagefile->is_extracted_size_valid($packer)) {
+                    throw new moodle_exception('cannotunzipquotaexceeded', 'repository');
+                }
+
                 $packagefile->extract_to_storage($packer, $context->id, 'mod_scorm', 'content', 0, '/');
             }
 

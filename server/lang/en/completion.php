@@ -169,6 +169,7 @@ $string['error:stateinvalid'] = 'Invalid - select a valid status';
 $string['eventcoursecompleted'] = 'Course completed';
 $string['eventcoursecompletionupdated'] = 'Course completion updated';
 $string['eventcoursemodulecompletionupdated'] = 'Course module completion updated';
+$string['eventuserprogressarchived'] = 'User progress in course archived';
 $string['excelcsvdownload'] = 'Download in Excel-compatible format (.csv)';
 $string['fraction'] = 'Fraction';
 $string['graderequired'] = 'Required course grade';
@@ -190,6 +191,7 @@ $string['notenroled'] = 'You are not enrolled in this course';
 $string['nottracked'] = 'You are currently not being tracked by completion in this course';
 $string['notviewedactivity'] = 'Has not viewed the {$a}';
 $string['notyetstarted'] = 'Not yet started';
+$string['ok'] = 'Ok';
 $string['overallaggregation'] = 'Completion requirements';
 $string['overallaggregation_all'] = 'Course is complete when ALL conditions are met';
 $string['overallaggregation_any'] = 'Course is complete when ANY of the conditions are met';
@@ -266,18 +268,6 @@ $string['roleaggregationmethod']='Aggregation method';
 $string['roleaggregationmethod_help'] = 'An aggregation method of **All** means this criteria will be marked as complete when the learner has been marked complete by all the selected roles. If the aggregation method is set to **Any** only one of the selected roles will be required to mark the learner complete for them to complete the course.';
 $string['returntocourse']='Return to course';
 $string['selectnone'] = 'Select none';
-
-$string['archivecompletions'] = 'Completions archive';
-$string['cannotarchivecompletions'] = 'No permission to archive this course completions';
-$string['archivingcompletions'] = 'Archiving completions for course {$a}';
-$string['archivedcompletions'] = 'Archived completions for course : {$a}';
-$string['archivecompletionscheck'] = 'The course completion data that will be archived is limited to: id; courseid; userid; timecompleted; grade.
-<br />
-All other completion data is <strong>permanently deleted</strong>. A record of completion will exist in the learner\'s Record of Learning.';
-$string['archivecheck'] = 'Archive {$a} ?';
-$string['nouserstoarchive'] = 'There are no users that have completed this course';
-$string['archiveusersaffected'] = '{$a} users will be affected';
-$string['usersarchived'] = '{$a} users completion records have been successfully archived';
 $string['statusnottracked'] = 'Not tracked';
 $string['statusnotstarted'] = 'Not started';
 $string['statusnocriteria'] = 'No criteria';
@@ -295,6 +285,50 @@ $string['tooltipcompletioncourseone'] = 'One other course needs to be completed'
 $string['tooltipcompletioncoursemany'] = '{$a} other courses need to be completed';
 $string['userdatacomponentname'] = 'Completion';
 $string['userdataitemcourse_completion'] = 'Course completions (including internal activity completion)';
+
+$string['archive_completed_users_navigation'] = 'Reset completions';
+$string['archive_completed_users_heading'] = 'Archive and reset course completions';
+$string['archive_completed_users_no_completions'] = 'There are no users that have completed this course';
+$string['archive_current_user_navigation'] = 'Reset this course';
+$string['archive_current_user_heading'] = 'Archive and reset your course completion';
+$string['archive_current_user_no_completions'] = 'You have not completed this course';
+$string['archive_single_user_heading'] = 'Archive and reset course completion';
+$string['archive_single_user_no_completions'] = '**“{$a->user}”** has not completed this course';
+$string['confirm_archive_completed_users_progress'] = 'This action will archive the progress and completion records of all learners who completed this course. Learners status will be reset so that they can retake the course.
+
+Any completion progress recorded in the record of learning will remain unchanged.
+
+Participation in activities within this course will be archived and/or removed. Data may be permanently deleted.
+
+This action will affect {$a} learner(s).';
+$string['confirm_archive_current_user_progress'] = 'This action will archive all your progress in this course, and the completion status. Your course completion status will be reset so that you can retake the course.
+
+Any completion progress recorded in the record of learning will remain unchanged.
+
+Your participation in activities within this course will be archived and/or removed. Data may be **permanently deleted**.';
+$string['confirm_archive_single_user_progress'] = 'This action will archive all progress and completion status of **“{$a->user}”** on this course. Learner course completion status will be reset so that they can retake the course.
+
+Any completion progress recorded in the record of learning will remain unchanged.
+
+The learner participation in activities within this course will be archived and/or removed. Data may be **permanently deleted**.';
+$string['successfully_archived_completed_users_progress'] = '{$a} users have had their progress and completion archived and reset in this course.';
+$string['successfully_archived_current_user_progress'] = 'Your progress in this course and completion state have been archived and reset.';
+$string['successfully_archived_single_user_progress'] = 'Progress and completion state have been archived and reset for {$a->user} in this course.';
+
+
+
+// Deprecated since 15.0
+$string['archivecompletionscheck'] = 'The course completion data that will be archived is limited to: id; courseid; userid; timecompleted; grade.
+<br />
+All other completion data is <strong>permanently deleted</strong>. A record of completion will exist in the learner\'s Record of Learning.';
+$string['usersarchived'] = '{$a} users completion records have been successfully archived';
+$string['archivedcompletions'] = 'Archived completions for course : {$a}';
+$string['archivingcompletions'] = 'Archiving completions for course {$a}';
+$string['archiveusersaffected'] = '{$a} users will be affected';
+$string['archivecheck'] = 'Archive {$a} ?';
+$string['archivecompletions'] = 'Completions archive';
+$string['cannotarchivecompletions'] = 'No permission to archive this course completions';
+$string['nouserstoarchive'] = 'There are no users that have completed this course';
 
 // Deprecated since 13.0
 $string['completion-title-manual-n'] = 'Mark as complete: {$a}';

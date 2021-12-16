@@ -204,6 +204,13 @@ class totara_competency_model_profile_progress_testcase extends totara_competenc
         self::assertInstanceOf(unassigned_competency_progress::class, $progress);
         self::assertCount(0, $progress->assignments);
         self::assertEquals($competency->id, $progress->competency->id);
+
+        // These are invalid competency ids but should return null instead.
+        $progress = competency_progress::build_for_competency($user1, 0);
+        self::assertNull($progress);
+
+        $progress = competency_progress::build_for_competency($user1, 232);
+        self::assertNull($progress);
     }
 
     /**

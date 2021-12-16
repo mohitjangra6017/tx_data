@@ -9,7 +9,14 @@ exports[`totara_playlist/components/card/PlaylistCard.vue Checks snapshot 1`] = 
   <imageheader-stub>
     <div
       class="tui-playlistCard__imageHeader"
+      style="background-image: url(https://example.com/image.jpg});"
     >
+      <span
+        class="sr-only"
+      >
+        Hello world
+      </span>
+       
       <div
         class="tui-playlistCard__numberOfResourcesContainer"
       >
@@ -20,15 +27,6 @@ exports[`totara_playlist/components/card/PlaylistCard.vue Checks snapshot 1`] = 
             0
           </p>
         </div>
-      </div>
-       
-      <div
-        class="tui-playlistCard__imageContainer"
-      >
-        <img
-          alt="Hello world"
-          class="tui-playlistCard__image"
-        />
       </div>
     </div>
      
@@ -52,12 +50,16 @@ exports[`totara_playlist/components/card/PlaylistCard.vue Checks snapshot 1`] = 
   <cardheader-stub
     class="tui-playlistCard__header"
   >
-    <bookmarkbutton-stub
-      class="tui-playlistCard__bookmark"
-      size="300"
-      small="true"
-      transparent="true"
-    />
+    <div
+      class="tui-playlistCard__bar"
+    >
+      <bookmarkbutton-stub
+        class="tui-playlistCard__bookmark"
+        size="300"
+        small="true"
+        transparent="true"
+      />
+    </div>
      
     <a
       class="tui-playlistCard__link"

@@ -599,6 +599,66 @@ class core_files_zip_packer_testcase extends advanced_testcase implements file_p
     }
 
     /**
+     * Test that the validations correctly caters for large extracted content.
+     */
+    public function test_zip_size_validation(): void {
+        $this->setAdminUser();
+        $packer = get_file_packer('application/zip');
+
+        $file = $this->create_zip_stored_file();
+
+        $limit1 = 512000;
+        $limit2 = 1024000;
+
+        // Limit1 is below the extracted content size so the file should be invalid.
+        $this->assertFalse($file->is_extracted_size_valid($packer, $limit1));
+
+        // Limit2 is above/equals to the extracted content size so this is fine.
+        $this->assertTrue($file->is_extracted_size_valid($packer, $limit2));
+
+        // Set the maxbytes config setting to 512KB so that it is a hard ceiling
+        // for file size.
+        set_config('maxbytes', $limit1);
+
+        // Limit1 is below the extracted content size so the file should be invalid.
+        $this->assertFalse($file->is_extracted_size_valid($packer, $limit1));
+
+        // We cannot upload 1M files anymore as the hard limit is 512KB.
+        $this->assertFalse($file->is_extracted_size_valid($packer, $limit2));
+
+        // As maxbytes is only a fallback setting we can set maxbytesextracted which
+        // takes precedence.
+        set_config('maxbytesextracted', $limit2);
+
+        // We can now upload 1M files again.
+        $this->assertTrue($file->is_extracted_size_valid($packer, $limit2));
+    }
+
+    /**
+     * @return stored_file
+     */
+    private function create_zip_stored_file(): stored_file {
+        global $CFG, $USER;
+        require_once("{$CFG->dirroot}/lib/filelib.php");
+
+        $fs = get_file_storage();
+        $context = context_user::instance($USER->id);
+
+        $record = new stdClass();
+        $record->contextid = $context->id;
+        $record->itemid = 42;
+        $record->filepath = '/';
+        $record->filename = 'zb.zip';
+        $record->component = 'user';
+        $record->filearea = 'draft';
+        $record->mimetype = 'application/zip';
+
+        $file_content = file_get_contents("{$CFG->dirroot}/lib/tests/fixtures/zip_bomb_1M.zip");
+
+        return $fs->create_file_from_string($record, $file_content);
+    }
+
+    /**
      * Checks that progress reported is numeric rather than indeterminate,
      * and follows the progress reporting rules.
      */

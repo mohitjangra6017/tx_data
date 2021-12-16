@@ -2,7 +2,6 @@
 
 exports[`Button matches snapshot 1`] = `
 <button
-  aria-disabled="false"
   class="tui-formBtn"
   type="button"
 >

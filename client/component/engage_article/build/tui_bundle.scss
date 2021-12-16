@@ -9,15 +9,14 @@
 
 .tui-engageArticleCard {
   height: 100%;
-  min-height: var(--totara-engage-card-height);
-
-  &__imageheader {
-    padding: var(--gap-4) var(--gap-4) 0 var(--gap-4);
-  }
+  min-height: var(---engage-card-height);
 
   &__image {
-    display: block;
-    width: 100%;
+    @include card-header-image(
+      var(--engage-card-image-width),
+      var(--engage-card-image-height),
+      var(--gap-4)
+    );
   }
 
   &__link {
@@ -40,6 +39,10 @@
     }
   }
 
+  &__bar {
+    height: var(--gap-4);
+  }
+
   &__bookmark {
     /* Negative margin here to neutralise the default redundant edges of icon.*/
     margin-top: 1px;
@@ -48,7 +51,7 @@
 
   &__title {
     @include tui-font-heading-x-small();
-    margin-top: var(--gap-4);
+    margin-right: var(--gap-5);
     color: var(--color-text);
     @include tui-wordbreak--hyphens;
   }
@@ -90,13 +93,18 @@
 .tui-engageArticleRelatedCard {
   display: flex;
   min-width: 120px;
-  height: 82px;
+  height: var(--engage-sidepanel-card-height);
   background-color: var(--color-neutral-1);
 
   &__img {
-    width: 80px;
-    height: 80px;
-    padding: var(--gap-2);
+    @include card-header-image(
+      var(--engage-sidepanel-card-height),
+      var(--engage-sidepanel-card-height),
+      var(--gap-2),
+      'horizontal'
+    );
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
   }
 
   &__content {
@@ -104,6 +112,7 @@
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-between;
+    margin-left: var(--gap-2);
     padding: var(--gap-4) 0 var(--gap-2) 0;
     overflow: hidden;
 

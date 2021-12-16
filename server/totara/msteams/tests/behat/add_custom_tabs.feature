@@ -58,7 +58,6 @@ Feature: Add a tab to Teams Channel
     And I should see "Cool playlist"
     And I should see "10 apps to boost your productivity"
     But I should not see "Working from home or office?"
-    And I should not see "Mastering arts"
     And I should not see "We couldn't find any matches"
     And I should see "Logged in as User One."
     And I should see "Sign out"

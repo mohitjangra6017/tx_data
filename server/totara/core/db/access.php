@@ -201,4 +201,37 @@ $capabilities = array(
         'archetypes'    => array(
         ),
     ),
+
+    // Allow a user to archive and reset progress for all enrolled users within a course
+    // Cloned from course:delete as that is the capability the code used to use prior to having a dedicated cap.
+    'totara/core:archiveenrolledcourseprogress' => array(
+        'riskbitmask' => RISK_DATALOSS,
+        'captype'       => 'write',
+        'contextlevel'  => CONTEXT_COURSE,
+        'archetypes'    => array(
+            'manager' => CAP_ALLOW,
+            'tenantdomainmanager' => CAP_ALLOW,
+        ),
+        'clonepermissionsfrom' => 'moodle/course:delete',
+    ),
+
+    // Allow a user to archive and reset the progress of another user within a course.
+    'totara/core:archiveusercourseprogress' => array(
+        'riskbitmask' => RISK_DATALOSS,
+        'captype'       => 'write',
+        'contextlevel'  => CONTEXT_COURSE,
+        'archetypes'    => array(
+            // Not given to any role by default, this is opt-in functionality.
+        ),
+    ),
+
+    // Allow a user to archive and reset their own progress in a course.
+    'totara/core:archivemycourseprogress' => array(
+        'riskbitmask' => RISK_DATALOSS,
+        'captype'       => 'write',
+        'contextlevel'  => CONTEXT_COURSE,
+        'archetypes'    => array(
+            // Not given to any role by default, this is opt-in functionality.
+        ),
+    ),
 );

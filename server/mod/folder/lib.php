@@ -357,11 +357,14 @@ function folder_dndupload_handle($uploadinfo) {
     // Only ever one file - extract the contents.
     $file = reset($files);
 
-    $success = $file->extract_to_storage(new zip_packer(), $context->id, 'mod_folder', 'content', 0, '/', $USER->id);
-    $fs->delete_area_files($context->id, 'mod_folder', 'temp', 0);
+    $packer = new zip_packer();
+    if ($file->is_extracted_size_valid($packer)) {
+        $success = $file->extract_to_storage($packer, $context->id, 'mod_folder', 'content', 0, '/', $USER->id);
+        $fs->delete_area_files($context->id, 'mod_folder', 'temp', 0);
 
-    if ($success) {
-        return $data->id;
+        if ($success) {
+            return $data->id;
+        }
     }
 
     $DB->delete_records('folder', array('id' => $data->id));

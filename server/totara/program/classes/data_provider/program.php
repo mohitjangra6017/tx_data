@@ -24,6 +24,7 @@
 namespace totara_program\data_provider;
 
 use core\orm\entity\filter\filter_factory;
+use core\orm\query\raw_field;
 use totara_program\entity\program as prog_entity;
 use totara_core\data_provider\provider;
 use totara_core\data_provider\provider_interface;
@@ -54,5 +55,12 @@ class program extends provider implements provider_interface {
         return 'program';
     }
 
+    /**
+     * @inheritDoc
+     */
+    public static function get_summary_format_select() {
+        $format = FORMAT_HTML;
+        return raw_field::raw("{$format} AS summaryformat");
+    }
 
 }
