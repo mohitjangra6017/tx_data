@@ -530,6 +530,9 @@ class reportbuilder {
 
         $this->src = self::get_source_object($this->source, $usesourcecache, true, $this->globalrestrictionset);
 
+        // KINEO CCM - GLOTOT-2488
+        class_exists(\local_core\Hook\ReportBuilder\ReportSourceInitialised::class) && (new \local_core\Hook\ReportBuilder\ReportSourceInitialised($this->src))->execute();
+
         // If uniqueid was overridden, apply it here and reset.
         if (isset(self::$overrideuniquid)) {
             $this->uniqueid = self::$overrideuniquid;
