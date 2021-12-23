@@ -33,7 +33,6 @@ exports[`ProgressTracker should check snapshot 1`] = `
           class="tui-progressTrackerItem__label tui-progressTrackerItem__label-current"
         >
           <button
-            aria-disabled="false"
             class="tui-formBtn tui-formBtn--transparent"
             type="button"
           >
@@ -131,7 +130,6 @@ exports[`ProgressTracker should check snapshot 1`] = `
           class="tui-progressTrackerItem__label"
         >
           <button
-            aria-disabled="false"
             class="tui-formBtn tui-formBtn--transparent"
             type="button"
           >

@@ -635,12 +635,15 @@ final class helper {
         }
         $completionstate .= " ($modulescompletion->completionstate)";
 
+        $progress = $modulescompletion->progress ? "Yes (" . $modulescompletion->progress . ")" : "No";
+
         $viewed = $modulescompletion->viewed ? "Yes" : "No";
         $viewed .= " ($modulescompletion->viewed)";
 
         $description = $message . '<br/>' .
             '<ul><li>CMCID: ' . $modulescompletion->id . '</li>' .
             '<li>Completion state: ' . $completionstate . '</li>' .
+            '<li>Progress: ' . $progress . '</li>' .
             '<li>Viewed: ' . $viewed . '</li>' .
             '<li>Time modified: ' . self::format_log_date($modulescompletion->timemodified) . '</li>' .
             '<li>Time completed: ' . self::format_log_date($modulescompletion->timecompleted) . '</li>' .

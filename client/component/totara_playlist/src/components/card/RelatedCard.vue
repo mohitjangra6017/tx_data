@@ -23,13 +23,11 @@
     @click="handleClickCard"
   >
     <a :href="url" />
-    <div
-      class="tui-playlistRelatedCard__header"
-      :style="{
-        'background-image': `url('${image}')`,
-      }"
-    >
-      <span>{{ resources }}</span>
+    <div class="tui-playlistRelatedCard__header" :style="imageStyle">
+      <span v-if="imageAlt" class="sr-only">{{ imageAlt }}</span>
+      <span class="tui-playlistRelatedCard__resourceCount">
+        {{ resources }}
+      </span>
     </div>
 
     <section class="tui-playlistRelatedCard__content">
@@ -81,6 +79,7 @@ export default {
       type: String,
       required: true,
     },
+    imageAlt: String,
     name: {
       type: String,
       required: true,
@@ -109,6 +108,14 @@ export default {
     };
   },
 
+  computed: {
+    imageStyle() {
+      return {
+        backgroundImage: `url(${this.image}})`,
+      };
+    },
+  },
+
   methods: {
     handleClickBookmark() {
       this.innerBookmarked = !this.innerBookmarked;
@@ -125,38 +132,40 @@ export default {
 .tui-playlistRelatedCard {
   display: flex;
   min-width: 120px;
-  height: 82px;
+  height: var(--engage-sidepanel-card-height);
   background-color: var(--color-neutral-1);
 
   &__header {
+    @include card-header-image(
+      var(--engage-sidepanel-card-height),
+      var(--engage-sidepanel-card-height),
+      null,
+      'horizontal'
+    );
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
-    height: 80px;
-    margin-right: var(--gap-2);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    background-color: var(--color-primary);
     border-top-left-radius: var(--border-radius-normal);
     border-bottom-left-radius: var(--border-radius-normal);
+  }
 
-    > :first-child {
-      @include tui-font-heading-label-small();
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      background-color: var(--color-neutral-1);
-      border-radius: 50%;
-    }
+  &__resourceCount {
+    @include tui-font-heading-label-small();
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-neutral-1);
+    border-radius: 50%;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    margin-left: var(--gap-2);
     padding: var(--gap-4) 0 var(--gap-2) 0;
     overflow: hidden;
 

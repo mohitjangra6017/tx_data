@@ -139,6 +139,9 @@ if ($group === 0 && $course->groupmode == SEPARATEGROUPS) {
 }
 
 $showeditorlink = has_capability('totara/completioneditor:editcoursecompletion', $context);
+$can_reset_user_progress = has_capability('totara/core:archiveusercourseprogress', $context);
+$show_actions_column = $showeditorlink || $can_reset_user_progress;
+
 $canmarkcomplete = has_capability('moodle/course:markcomplete', $context);
 
 /**
@@ -438,7 +441,7 @@ if (!$csv) {
     print '<th style="text-align: center;">'.get_string('course').'</th>';
 
     // Editor column header.
-    if ($showeditorlink) {
+    if ($show_actions_column) {
         print '<th scope="col" class="completion-editorlink"></th>';
     }
 
@@ -509,7 +512,7 @@ if (!$csv) {
     print '</th>';
 
     // Editor column header.
-    if ($showeditorlink) {
+    if ($show_actions_column) {
         print '<th scope="col" class="completion-editorlink"></th>';
     }
 
@@ -545,7 +548,7 @@ if (!$csv) {
         print '</div></div></th>';
 
         // Editor column header.
-        if ($showeditorlink) {
+        if ($show_actions_column) {
             print '<th scope="col" class="completion-editorlink"></th>';
         }
 
@@ -651,9 +654,9 @@ if (!$csv) {
 
     print '</th>';
 
-    // Editor column header.
-    if ($showeditorlink) {
-        print '<th scope="col" class="completion-editorlink">' . get_string('edit', 'totara_completioneditor') . '</th>';
+    // Actions column header.
+    if ($show_actions_column) {
+        print '<th scope="col" class="completion-editorlink">' . get_string('actions', 'totara_completioneditor') . '</th>';
     }
 
     print '</tr></thead>';
@@ -887,11 +890,20 @@ foreach ($progress as $user) {
 
         print '</td>';
 
-        // Add a link to the completion editor for the user.
-        if ($showeditorlink) {
-            $completionurl = new moodle_url('/totara/completioneditor/edit_course_completion.php', array('courseid' => $course->id, 'userid' => $user->id));
+        if ($show_actions_column) {
             print '<td class="completion-editorlink">';
-            print $OUTPUT->action_icon($completionurl, new pix_icon('t/edit', get_string('edit')));
+
+            // Add a link to the completion editor for the user.
+            if ($showeditorlink) {
+                $completionurl = new moodle_url('/totara/completioneditor/edit_course_completion.php', array('courseid' => $course->id, 'userid' => $user->id));
+                print $OUTPUT->action_icon($completionurl, new pix_icon('t/edit', get_string('edit')));
+            }
+
+            if ($can_reset_user_progress) {
+                $completionurl = new moodle_url('/course/archivecompletions.php', array('id' => $course->id, 'userid' => $user->id));
+                $alt_text = get_string('reset_completion_for_user_x', 'report_completion', fullname($user));
+                print $OUTPUT->action_icon($completionurl, new pix_icon('t/reload', $alt_text));
+            }
             print '</td>';
         }
 

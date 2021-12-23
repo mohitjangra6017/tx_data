@@ -51,7 +51,7 @@ describe('totara_playlist/components/card/PlaylistCard.vue', () => {
         extra: JSON.stringify({
           resources: 0,
           actions: false,
-          images: [],
+          image: 'https://example.com/image.jpg',
         }),
         showBookmark: true,
       },

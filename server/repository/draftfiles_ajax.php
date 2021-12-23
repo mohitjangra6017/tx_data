@@ -228,7 +228,8 @@ switch ($action) {
 
         // Check whether the maximum size allowed in this draft area will be exceeded with unzipping the file.
         // If the maximum size allowed is exceeded, return an error before attempting to unzip.
-        if (file_is_draft_area_limit_reached($draftid, $areamaxbytes, $filecontentsize)) {
+        if (!$file->is_extracted_size_valid($zipper, $areamaxbytes, $filecontentsize)
+            || file_is_draft_area_limit_reached($draftid, $areamaxbytes, $filecontentsize)) {
             $return->error = get_string('cannotunzipquotaexceeded', 'repository');
             die(json_encode($return));
         }
@@ -237,6 +238,7 @@ switch ($action) {
         $temppath = $fs->get_unused_dirname($user_context->id, 'user', 'draft', $draftid, $filepath. pathinfo($filename, PATHINFO_FILENAME). '/');
         $donotremovedirs = array();
         $doremovedirs = array($temppath);
+
         // Extract archive and move all files from $temppath to $filepath
         if ($file->extract_to_storage($zipper, $user_context->id, 'user', 'draft', $draftid, $temppath, $USER->id) !== false) {
             $extractedfiles = $fs->get_directory_files($user_context->id, 'user', 'draft', $draftid, $temppath, true);

@@ -44,7 +44,8 @@ describe('engage_article/components/card/ArticleCard.vue', () => {
         sharedbycount: 10,
         totalComments: 1,
         extra: JSON.stringify({
-          image: '/',
+          image: 'https://example.com/image.jpg',
+          alt: 'Example image',
           usage: 5,
           timeview: null,
         }),

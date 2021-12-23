@@ -93,7 +93,7 @@ class mssql_lock_factory implements lock_factory {
      * @return string
      */
     public function get_lock_name_from_key($key) {
-        return $this->db->get_prefix() . 'dblock_' . $this->type . '_' . $key;
+        return $this->db->get_dbname() . ':' . $this->db->get_prefix() . 'dblock_' . $this->type . '_' . $key;
     }
 
     /**

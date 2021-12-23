@@ -84,7 +84,7 @@ class timespan_field_formatter extends base_field_formatter {
         $seconds = $total_seconds % MINSECS;
 
         if ($hours > 0 || $minutes >= 10) {
-            $minutes = (int) ceil($minutes);
+            $minutes = (int) floor($minutes);
             if ($minutes === HOURMINS) {
                 $hours++;
                 $minutes = 0;

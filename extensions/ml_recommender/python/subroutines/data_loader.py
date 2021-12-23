@@ -18,8 +18,10 @@ Please contact [licensing@totaralearning.com] for more information.
 
 import json
 import os
+import numpy as np
 import pandas as pd
 from lightfm.data import Dataset
+from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from subroutines.pre_processors import PreProcessors
@@ -197,6 +199,21 @@ class DataLoader:
         ).to_dict()
         return item_type_map
 
+    @staticmethod
+    def docs_empty(docs: list) -> bool:
+        """
+        To check if the list of documents have no content
+
+        :param docs: The list of documents to be checked
+        :type docs: list
+        :return: Whether the documents have no content
+        :rtype: bool
+        """
+        if all("" == s or s.isspace() for s in docs):
+            return True
+
+        return False
+
     def __get_users(self, users_data=None, query="mf"):
         """
         Uses the pandas DataFrame `users_data` and returns a list of user ids
@@ -267,15 +284,21 @@ class DataLoader:
                 del text_preprocessor
 
                 # Convert the list of documents into a matrix of TF-IDF features
-                tf = TfidfVectorizer()
-                transformed_doc = tf.fit_transform(processed_document)
+                if self.docs_empty(docs=processed_document):
+                    transformed_doc = csr_matrix(
+                        (len(processed_document), 0), dtype=np.float32
+                    )
+                    features_names = []
+                else:
+                    tf = TfidfVectorizer()
+                    transformed_doc = tf.fit_transform(processed_document)
+                    features_names = tf.get_feature_names()
 
                 # --------------------------------------------------------------
                 # Convert the matrix of TF-IDF features into a list where each row of
                 # the matrix is transformed into an element of the list. This element is
                 # a dictionary where the keys are the feature names (words from the
                 # cleaned document) and each value is TF-IDF value of that word.
-                features_names = tf.get_feature_names()
                 text_features = []
                 for item in range(transformed_doc.shape[0]):
                     indices = transformed_doc[item, :].indices
@@ -355,16 +378,21 @@ class DataLoader:
             del text_preprocessor
 
             # Convert the list of documents into a matrix of TF-IDF features
-            tf = TfidfVectorizer()
-            tf.fit(processed_document)
-            transformed_doc = tf.transform(processed_document)
+            if self.docs_empty(docs=processed_document):
+                transformed_doc = csr_matrix(
+                    (len(processed_document), 0), dtype=np.float32
+                )
+                features_list = []
+            else:
+                tf = TfidfVectorizer()
+                transformed_doc = tf.fit_transform(processed_document)
+                features_list = tf.get_feature_names()
 
             # --------------------------------------------------------------
             # Convert the matrix of TF-IDF features into a list where each row of the
             # matrix is transformed into an element of the list. This element is a
             # dictionary where the keys are the feature names (words from the cleaned
             # document) and each value is TF-IDF value of that word.
-            features_list = tf.get_feature_names()
             text_features = []
             for item in range(transformed_doc.shape[0]):
                 indices = transformed_doc[item, :].indices

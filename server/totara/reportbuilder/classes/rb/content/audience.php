@@ -47,11 +47,10 @@ final class audience extends base {
         $params = [];
 
         if (!empty($cohortid)) {
-            $restriction = "(EXISTS (SELECT 1
+            $restriction = "({$field} IN (SELECT userid
                                        FROM {cohort_members} cm
                                        WHERE
-                                         cm.userid = {$field}
-                                         AND cm.cohortid = :audiencecontentaudienceid
+                                         cm.cohortid = :audiencecontentaudienceid
                                      ))";
             $params = ['audiencecontentaudienceid' => $cohortid];
         }

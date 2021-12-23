@@ -68,6 +68,7 @@ be sent a notification once the process is complete.";
 $string['course_creation'] = 'Course creation';
 $string['course_difficulty_advanced'] = 'Advanced';
 $string['course_difficulty_beginner'] = 'Beginner';
+$string['course_difficulty_general'] = 'General';
 $string['course_difficulty_intermediate'] = 'Intermediate';
 $string['course_number'] = '{$a} course';
 $string['course_number_plural'] = '{$a} courses';

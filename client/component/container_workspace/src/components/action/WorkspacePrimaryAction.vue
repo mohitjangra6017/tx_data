@@ -798,10 +798,11 @@ export default {
 
   &__dropdown {
     width: 100%;
+    margin-top: var(--gap-2);
 
     @media (min-width: $tui-screen-xs) {
-      // IE support - :(
-      width: auto;
+      width: auto; // IE support.
+      margin-top: 0;
     }
 
     &-button {

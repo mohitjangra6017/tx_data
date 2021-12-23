@@ -41,11 +41,12 @@ class TestDataLoader(unittest.TestCase):
         self.interactions = data_obj.get_interactions()
         self.items_data = data_obj.get_items()
         self.users_data = data_obj.get_users()
+        self.user_concat_cols = cfg.get_property("concat")["users"]
 
         self.data_loader = DataLoader(
             users_spread_hor=cfg.get_property("spread_hor")["users"],
             users_expand_dict=cfg.get_property("expand_dict")["users"],
-            users_concat=cfg.get_property("concat")["users"],
+            users_concat=self.user_concat_cols,
         )
 
     def test_get_interactions(self):
@@ -334,3 +335,50 @@ class TestDataLoader(unittest.TestCase):
         self.assertIsInstance(random.choice(interactions), tuple)
         self.assertIsInstance(positive_inter_map, dict)
         self.assertIsInstance(random.choice(list(positive_inter_map.values())), list)
+
+    @patch("subroutines.data_loader.open")
+    def test_get_users_no_description(self, _):
+        """
+        This method tests if the `__get_users` method of the `DataLoader` class returns
+        correct response when there was no description in any of the user's profiles.
+        """
+        users_modified_data = self.users_data.copy()
+        for col in self.user_concat_cols:
+            users_modified_data[col] = ""
+
+        users_transformed_data = self.data_loader._DataLoader__get_users(
+            users_data=users_modified_data, query="hybrid"
+        )
+        self.assertIsInstance(
+            obj=users_transformed_data["users_features_data"],
+            cls=list,
+            msg=(
+                "The 'users_features_data' value of returned response from the "
+                "'DataLoader.__get_users' for empty user's descriptions "
+                f"{type(users_transformed_data['users_features_data'])} while it was"
+                "expected to be <class 'list'>"
+            )
+        )
+
+    @patch("subroutines.data_loader.open")
+    def get_items_no_document(self, _):
+        """
+        This method tests if the `__get_items` method of the `DataLoader` class returns
+        correct response when there was no text description in any of the content.
+        """
+        items_modified_data = self.items_data.copy()
+        items_modified_data["document"] = ""
+
+        items_transformed_data = self.data_loader._DataLoader__get_items(
+            users_data=items_modified_data, query="hybrid"
+        )
+        self.assertIsInstance(
+            obj=items_transformed_data["items_features_data"],
+            cls=list,
+            msg=(
+                "The 'items_features_data' value of returned response from the "
+                "'DataLoader.__get_items' for empty user's descriptions "
+                f"{type(items_transformed_data['items_features_data'])} while it was"
+                "expected to be <class 'list'>"
+            )
+        )

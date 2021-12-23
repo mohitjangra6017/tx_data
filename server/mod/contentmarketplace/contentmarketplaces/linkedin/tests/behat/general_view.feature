@@ -18,6 +18,9 @@ Feature: View content marketplace linkedin as activity within course
       | name       | category | idnumber |
       | Category A | 0        | A        |
     And I set up the "linkedin" content marketplace plugin
+    And the following "users" exist:
+      | username  | firstname | lastname | email                 |
+      | learner   | Learner   | One      | learner@example.com   |
 
   Scenario: Course back url display depends upon course format
     Given I am on a totara site
@@ -43,3 +46,36 @@ Feature: View content marketplace linkedin as activity within course
     And I should see "Topic 2"
     When I follow "Course A"
     Then "Course A" "link" should exist
+
+  Scenario: View linkedin activity page depends on learners' capability
+    Given I am on a totara site
+    And I log in as "admin"
+    And I navigate to the catalog import page for the "linkedin" content marketplace
+    And I toggle the selection of row "1" of the tui select table
+    And I set the field "Select category" to "Category A"
+    And I click on "Next: Review" "button"
+    When I click on "Create course(s)" "button"
+    Then I should see "Course A"
+    And I am on "Course A" course homepage
+    And I click on "Administration" "button"
+    And I press "Course administration"
+    And I press "Users"
+    And I click on "Enrolment methods" "link"
+    And I click on "Enable" "link" in the "Self enrolment (Learner)" "table_row"
+    And I click on "Enable" "link" in the "Guest access" "table_row"
+    And I log out
+
+    And I log in as "learner"
+    And I am on "Course A" course homepage
+    When I click on "Enrol to course Course A" "button"
+    And I log out
+
+    And I log in as "admin"
+    And I set the following system permissions of "Learner" role:
+      | capability                  | permission |
+      | mod/contentmarketplace:view | Prevent    |
+    And I log out
+
+    And I log in as "learner"
+    And I am on "Course A" course homepage
+    Then I should see "Sorry, this activity is currently hidden"

@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\notification;
+
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 
@@ -468,7 +470,15 @@ class format_singleactivity extends format_base {
             } else if (!$cm->uservisible || !$cm->url) {
                 // Activity is set but not visible to current user or does not have url.
                 // Display course page (either empty or with availability restriction info).
-                return;
+                // Totara: fire notification to alert user to avoid displaying empty course page.
+                if (!$cm->uservisible) {
+                    $renderer = $PAGE->get_renderer('course');
+                    $message = $renderer->course_section_cm_unavailable_error_message($cm);
+                    notification::add(
+                        $message,
+                        notification::ERROR
+                    );
+                }
             } else {
                 // Everything is set up and accessible, redirect to the activity page!
                 redirect($cm->url);

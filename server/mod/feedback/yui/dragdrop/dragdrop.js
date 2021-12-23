@@ -177,17 +177,15 @@ YUI.add('moodle-mod_feedback-dragdrop', function(Y) {
                 if (!drop.contains(drag)) {
                     drop.appendChild(drag);
                 }
-                var childElement;
-                var elementId;
+
                 var elements = [];
                 drop.all(CSS.DRAGITEM).each(function(v) {
-                    childElement = v.one('.felement').one('[id^="feedback_item_"]');
-                    if (childElement) {
-                        elementId = this.get_node_id(childElement.get('id'));
-                        if (elements.indexOf(elementId) == -1) {
-                            elements.push(elementId);
-                        }
+                    // Skip the transparent "ghost" element.
+                    if (v.hasClass('drag_item_active')) {
+                        return;
                     }
+
+                    elements.push(this.get_node_id(v.get('id')));
                 }, this);
                 var spinner = M.util.add_spinner(Y, dragnode);
                 this.save_item_order(this.cmid, elements.toString(), spinner);
