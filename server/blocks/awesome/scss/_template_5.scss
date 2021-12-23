@@ -1,0 +1,36 @@
+$t5_gutterwidth : 25px;
+$t5_contentbg : #333333;
+$t5_textcolour : #ffffff;
+
+.block.block_awesome .awesome-block.template-5 {
+    .caption {
+        position: relative;
+        min-height: 250px;
+        padding: 0;
+        background-color: $t5_contentbg;
+        color: $t5_textcolour;
+        border: 3px solid $t5_contentbg;
+        
+        .inner {
+            padding: $t5_gutterwidth;
+        }
+        
+        h2 {
+            padding: 15px 25px;
+            margin-bottom: 0;
+        }
+        
+        .awesome-link {
+            position: absolute;
+            bottom: $t5_gutterwidth;
+            right: $t5_gutterwidth;
+            min-width: 110px;
+            
+            &:after {
+                content: "\f054";
+                font-family: FontAwesome;
+                padding-left: 10px;
+            }
+        }
+    }
+}

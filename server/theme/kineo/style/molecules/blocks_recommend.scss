@@ -1,0 +1,37 @@
+@import '../lib/mixins';
+$blockRecommendCarouselBackground : opacify($black, 0.5%);
+.block_recommend {
+    .block_recommend_tags {
+        list-style-type: none;
+        li {
+            margin-bottom: 10px;
+        }
+    }
+    .course {
+        margin-bottom: 10px;
+        img {
+            width: auto;
+            height: 200px;
+        }
+    }
+    .slick-prev,
+    .slick-next {
+        &:active:focus,
+        &:active {
+            background-color: transparent;
+            outline: none;
+            box-shadow: none;
+        }
+        &:before {
+            @include mixinsFontSize(32);
+            line-height: 2;
+            background-color: $blockRecommendCarouselBackground;
+            padding: 0 5px 5px 5px;
+            position: relative;
+            top: -5px;
+        }
+    }
+    .slick-slide {
+        margin-right: 10px;
+    }
+}

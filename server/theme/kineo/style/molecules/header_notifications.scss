@@ -1,0 +1,17 @@
+@if ($resolvedHeaderNotificationsShow == "false") {
+   .popover-region-notifications {
+       display: none;
+   }
+}
+
+.popover-region-notifications {
+    .flex-icon {
+        color: $headerNotificationsIconColour;
+    }
+    .popover-region-toggle {
+      .count-container {
+        background-color: $headerNotificationsCountBackgroundColour;
+        color: $headerNotificationsCountColour;
+      }
+    }
+}

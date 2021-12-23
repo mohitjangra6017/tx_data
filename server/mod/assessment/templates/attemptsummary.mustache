@@ -1,0 +1,17 @@
+<h3>{{contenthead}}</h3>
+{{#attemptinfo}}
+<div class="attempt-info">
+    <label>{{strattemptsremaining}}:</label>
+    <span class="attempt-count">{{remaining}}</span>
+</div>
+{{/attemptinfo}}
+{{#notice}}
+<div class="alert alert-{{noticetype}}">{{notice}}</div>
+{{/notice}}
+{{{tablehtml}}}
+<div class="buttons">
+    {{#buttons}}
+    <a class="btn btn-{{class}} link-as-button" href="{{{url}}}">{{label}}</a>
+    {{/buttons}}
+</div>
+

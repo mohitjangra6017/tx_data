@@ -1,0 +1,288 @@
+@import '../lib/mixins';
+@import '../lib/media';
+$navBackgroundColour: $desktopNavContainerBackgroundColour;
+$menuBelowLogoMenuMarginTop: var(--gap-2);
+$menuBelowLogoMenuMarginBottom: calc(#{$menuBelowLogoMenuMarginTop} * -1);
+$mobileMenuCloseIcon: 32px;
+
+@mixin menuLinkIconColour($menuLinkIconColour) {
+  .ft,
+  .ft-fw {
+    color: $menuLinkIconColour;
+  }
+}
+
+@if ($resolvedPageHeaderSticky == "true") {
+  .totaraNav  {
+    background-color: $navBackgroundColour;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index:1002 !important;
+  }
+}
+@if ($showSubList == false) {
+  .totaraNav_sub--list {
+    display: none;
+  }
+}
+@if ($resolvedNavigationPosition == "left") {
+  .totaraNav_prim--list {
+    float: left;
+  }
+}
+@if ($resolvedNavigationPosition == "middle") {
+  .totaraNav_prim--list {
+    margin: 0 auto;
+  }
+  @include media992() {
+    .totaraNav_prim--side {
+      margin: 0;
+    }
+  }
+}
+@if ($resolvedNavigationPosition == "right") {
+  .totaraNav_prim--list {
+    margin: auto 0 auto auto;
+  }
+  @include media992() {
+    .totaraNav_prim--side {
+      margin: 0;
+    }
+  }
+}
+
+
+.totaraNav  {
+  nav {
+    &,
+    .totaraNav_prim--list_item_label,
+    .totaraNav_sub--list_item_label {
+      font-family: $navigationFont;
+      font-size: $desktopNavFontSize;
+      font-weight: $navigationFontWeight;
+      text-transform: $navigationTextTransform;
+    }
+    .totara_core__QuickAccess_flex-container {
+      font-size: $baseFontSize;
+      font-weight: normal;
+      text-transform: none;
+    }
+  }
+  .totaraNav_prim--list_showMobile,
+  .totaraNav_prim--toggleNav_target:hover,
+  .totaraNav_prim--toggleNav_target:active,
+  .totaraNav_prim--list_close {
+    background-color: $showMobileMenuBackgroundColour;
+  }
+  .totaraNav_prim--list_close {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &:visited {
+      color: $desktopNavLinkColour;
+      .ft {
+        font-size: $mobileMenuCloseIcon;
+      }
+    }
+  }
+}
+.totara_core__QuickAccess .totara_core__QuickAccess_group-list {
+  margin-top: 20px;
+}
+@include media768() {
+  .totaraNav_prim--side {
+    align-self: center;
+  }
+}
+
+.totaraNav_prim--list {
+  background-color: $desktopNavContainerBackgroundColour;
+  .totaraNav_prim--list_item {
+    .totaraNav_prim--list_item_link {
+      background-color: $desktopNavLinkBackgroundColour;
+      color: $desktopNavLinkColour;
+      @include menuLinkIconColour($desktopNavLinkColour);
+      &:hover,
+      &:focus {
+        background-color: $desktopNavLinkBackgroundColourHover;
+        color: $desktopNavLinkColourHover;
+        @include menuLinkIconColour($desktopNavLinkColourHover);
+      }
+    }
+    &.totaraNav_prim--list_item_selected {
+      .totaraNav_prim--list_item_link {
+        color: $desktopNavLinkColourActive;
+        background-color: $desktopNavBackgroundColourActive;
+      }
+    }
+  }
+}
+
+@include media992() {
+  .totaraNav_prim--list {
+    align-self: center;
+  }
+  @if ($resolvedHideSeparator == true) {
+    .totaraNav_prim--side__separator {
+      display: none;
+    }
+  }
+}
+
+.notloggedin {
+  .totaraNav_prim--list {
+    background-color: transparent;
+  }
+}
+
+.totaraNav_prim--list .navExpand--list {
+  font-family: $subNavigationFont;
+  border-width: $desktopSubNavBorderWeight;
+  .navExpand--list_item {
+    .navExpand--list_item_link {
+      background-color: $desktopSubNavLinkBackgroundColour;
+      color: $desktopSubNavLinkColour;
+      font-size: $desktopSubNavFontSize;
+      font-weight: $desktopSubNavFontWeight;
+      text-transform: $desktopSubNavTextTransform;
+      @include menuLinkIconColour($desktopSubNavLinkColour);
+      &:hover,
+      &:focus {
+        background-color: $desktopSubNavLinkBackgroundColourHover;
+        color: $desktopSubNavLinkColourHover;
+        @include menuLinkIconColour($desktopNavLinkColourHover);
+      }
+    }
+    &.navExpand--list_item_selected {
+      .navExpand--list_item_link {
+        background-color: $desktopSubNavLinkBackgroundColourActive;
+        color: $desktopSubNavLinkColourActive;
+        @include media992 {
+          border-top-color: $desktopSubNavLinkBorderColour;
+        }
+      }
+    }
+  }
+}
+.navExpand--listSecond {
+  @include media992 {
+    border-width: $subNavContainerBorderWeight;
+  }
+}
+
+// Navigation positioned below the logo.
+.full-width-nav {
+  display: none;
+}
+@include media992() {
+
+  @if ($resolvedNavigationBelowLogo == true) {
+    .totaraNav_prim > .container-fluid {
+      flex-wrap: wrap;
+
+      .masthead_logo {
+        flex-grow: 1;
+        flex-basis: 50%;
+      }
+
+      .totaraNav_prim--list {
+        margin-top: $menuBelowLogoMenuMarginTop;
+        margin-bottom: $menuBelowLogoMenuMarginBottom;
+        position: static;
+        order: 10;
+        display: flex;
+      }
+
+      @if ($resolvedNavigationPosition == 'right') {
+        .totara_prim--list {
+          margin-right: 0;
+          margin-left: auto;
+          right: 0;
+        }
+      } @else if ($resolvedNavigationPosition == 'middle') {
+        .totara_prim--list {
+          margin: 0 auto;
+        }
+      } @else {
+        .totara_prim--list {
+          margin-right: 100%;
+        }
+      }
+
+      .totaraNav_prim--side {
+        flex-basis: 50%;
+        justify-content: flex-end;
+      }
+    }
+    .ie11 {
+      .totaraNav_prim > .container-fluid .totaraNav_prim--side {
+        flex-basis: auto;
+      }
+    }
+  }
+  @if ($resolvedNavigationBelowLogo == bottom) {
+    .masthead_logo + .totaraNav_prim--list {
+      visibility: hidden;
+    }
+    &:not(.path-login)  {
+      .totaraNav_prim {
+        padding-bottom: 10px;
+        &.full-width-nav {
+          padding: 0;
+        }
+      }
+    }
+    .full-width-nav.totaraNav_prim {
+      display: block;
+      padding: 0;
+      background-color: $desktopNavContainerBackgroundColour;
+      //.full-width-nav-wrapper {
+      //
+      //}
+    }
+    .path-login {
+      .full-width-nav {
+        display: none;
+      }
+    }
+  }
+}
+.totaraNav_prim--toggleNav_target {
+  background-color: $mobileMenuIconBackgroundColour;
+ @include menuLinkIconColour($mobileMenuIconColour);
+  &:hover,
+  &:focus {
+    background-color: $mobileMenuIconBackgroundColour;
+    @include menuLinkIconColour($mobileMenuIconColourHover);
+  }
+}
+.totaraNav_prim--list_showMobile {
+  padding: 0;
+}
+
+.totaraNav nav {
+  a {
+    .totaraNav_sub--list_item_label {
+        color: $navSubTabTextColour;
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      .totaraNav_sub--list_item_label {
+        color: $navSubTabTextHover;
+      }
+    }
+  }
+  .totaraNav_sub--list_item_selected {
+    a {
+      .totaraNav_sub--list_item_label {
+        color: $navSubTabTextColourSelected;
+      }
+    }
+    .totaraNav_sub--list_item_link {
+      border-width: $secondaryNavigationItemSelectedBorderWeight;
+    }
+  }
+}

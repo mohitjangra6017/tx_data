@@ -1,0 +1,76 @@
+@import "../lib/mixins";
+
+$inputBorderColour: #ccc;
+$inputTextColour: $black;
+$inputBackgroundColour: $white;
+
+$legendColour: $baseTextColour;
+$legendWithLinkColour: $baseTextColour;
+
+legend {
+    color: $legendColour;
+    .mform & a {
+        @include mixinsLinkStateColours(
+            $linkDefaultColour: $legendWithLinkColour,
+            $linkVisitedStateColour: $legendWithLinkColour,
+            $linkHoverStateColour: $legendWithLinkColour,
+            $linkActiveStateColour: $legendWithLinkColour,
+            $linkFocusStateColour: $legendWithLinkColour
+        );
+    }
+}
+
+input {
+    &[type="color"],
+    &[type="date"],
+    &[type="datetime"],
+    &[type="datetime-local"],
+    &[type="email"],
+    &[type="month"],
+    &[type="number"],
+    &[type="password"],
+    &[type="search"],
+    &[type="tel"],
+    &[type="text"],
+    &[type="time"],
+    &[type="url"],
+    &[type="week"] {
+        form & {
+            color: $inputTextColour;
+            background-color: $inputBackgroundColour;
+        }
+    }
+}
+
+select {
+    form &,
+    &.singleselect {
+        color: $inputTextColour;
+        background-color: $inputBackgroundColour;
+    }
+}
+
+textarea {
+    color: $inputTextColour;
+    background-color: $inputBackgroundColour;
+}
+
+#atto_morefontcolors_dialogue,
+#atto_morebackcolors_dialogue {
+    input[type="text"] {
+        max-width: 100%;
+    }
+}
+.input-group {
+    .form-control,
+    .input-group-btn button {
+        min-height: $buttonInputGroupMinHeight;
+    }
+}
+.totaraNav_prim--side .popover-region .input-group-btn .flex-icon {
+    vertical-align: initial;
+}
+#id_custom_fonts_css {
+    width: 100%;
+    min-height: 500px;
+}

@@ -1,0 +1,298 @@
+@import '../lib/mixins';
+
+//$regionTopBlockHeaderPadding: 0;
+//$regionTopBlockTitlePadding: 0;
+//$regionTopBlockContentPadding: 0;
+//
+//#page.container-fluid {
+//    @if ($topRegionFullWidth == true) {
+//        max-width: 100%;
+//        padding-left: 0;
+//        padding-right: 0;
+//        #region-top.row {
+//            margin-left: 0;
+//            margin-right: 0;
+//        }
+//        #page-content {
+//            > .row:not(#region-top) {
+//                max-width: $pageMaxWidth;
+//                padding: 0 $pageElementPadding;
+//                margin: 0 auto;
+//            }
+//            [data-blockregion="top"].col-sm-12 {
+//                padding-left: 0;
+//                padding-right: 0;
+//            }
+//        }
+//    }
+//}
+//
+//
+//#block-region-top .block {
+//    &,
+//    .chromeless & {
+//        .block-control-actions {
+//            @include mixinsBorderlessBlockControlActionsMargin();
+//        }
+//    }
+//}
+
+@mixin regionStyles($regionBackgroundColour, $regionBackgroundImage, $fixBackgroundImage) {
+    background-color: $regionBackgroundColour;
+    @if ($regionBackgroundImage) {
+        background-image: url($regionBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if ($fixBackgroundImage == true) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+.editing-region-border {
+    border: $editingRegionBorder;
+    padding: 7px;
+    position: relative;
+    &:after {
+        border: 2px dotted var(--color-neutral-5);
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+    }
+    &#block-region-main {
+        border: none;
+        &:after {
+            display: none;
+        }
+    }
+}
+#block-region-top,
+#block-region-bottom {
+    padding: 5px;
+}
+#region-top,
+#region-bottom {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#block-region-dash-pge-top {
+    background-color: $dashboardRegionPageTopBackgroundColour;
+    @if (variable-exists(resolvedDashboardRegionPageTopBackgroundImage) and $resolvedDashboardRegionPageTopBackgroundImage) {
+        background-image: url($resolvedDashboardRegionPageTopBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if (variable-exists(resolvedFixDashboardRegionPageTopBackgroundImage) and $resolvedFixDashboardRegionPageTopBackgroundImage) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+.pagelayout-dashboard {
+    #block-region-top {
+        background-color: $dashboardRegionContentTopBackgroundColour;
+        @if (variable-exists(resolvedDashboardRegionContentTopBackgroundImage) and $resolvedDashboardRegionContentTopBackgroundImage) {
+            background-image: url($resolvedDashboardRegionContentTopBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixDashboardRegionContentTopBackgroundImage) and $resolvedFixDashboardRegionContentTopBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-bottom {
+        background-color: $dashboardRegionContentBottomBackgroundColour;
+        @if (variable-exists(resolvedDashboardRegionContentBottomBackgroundImage) and $resolvedDashboardRegionContentBottomBackgroundImage) {
+            background-image: url($resolvedDashboardRegionContentBottomBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixDashboardRegionContentBottomBackgroundImage) and $resolvedFixDashboardRegionContentBottomBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+}
+#block-region-dash-main-one {
+    background-color: $dashboardRegionMainOneBackgroundColour;
+    @if (variable-exists(resolvedDashboardRegionMainOneBackgroundImage) and $resolvedDashboardRegionMainOneBackgroundImage) {
+        background-image: url($resolvedDashboardRegionMainOneBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if (variable-exists(resolvedFixDashboardRegionMainOneBackgroundImage) and $resolvedFixDashboardRegionMainOneBackgroundImage) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+
+#block-region-dash-main-two {
+    background-color: $dashboardRegionMainTwoBackgroundColour;
+    @if (variable-exists(resolvedDashboardRegionMainTwoBackgroundImage) and $resolvedDashboardRegionMainTwoBackgroundImage) {
+        background-image: url($resolvedDashboardRegionMainTwoBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if (variable-exists(resolvedFixDashboardRegionMainTwoBackgroundImage) and $resolvedFixDashboardRegionMainTwoBackgroundImage) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+
+#block-region-dash-main-three {
+    background-color: $dashboardRegionMainThreeBackgroundColour;
+    @if (variable-exists(resolvedDashboardRegionMainThreeBackgroundImage) and $resolvedDashboardRegionMainThreeBackgroundImage) {
+        background-image: url($resolvedDashboardRegionMainThreeBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if (variable-exists(resolvedFixDashboardRegionMainThreeBackgroundImage) and $resolvedFixDashboardRegionMainThreeBackgroundImage) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+
+#block-region-dash-main-four {
+    background-color: $dashboardRegionMainFourBackgroundColour;
+    @if (variable-exists(resolvedDashboardRegionMainFourBackgroundImage) and $resolvedDashboardRegionMainFourBackgroundImage) {
+        background-image: url($resolvedDashboardRegionMainFourBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if (variable-exists(resolvedFixDashboardRegionMainFourBackgroundImage) and $resolvedFixDashboardRegionMainFourBackgroundImage) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+
+#block-region-dash-pge-bottom {
+    background-color: $dashboardRegionPageBottomBackgroundColour;
+    @if (variable-exists(resolvedDashboardRegionPageBottomBackgroundImage) and $resolvedDashboardRegionPageBottomBackgroundImage) {
+        background-image: url($resolvedDashboardRegionPageBottomBackgroundImage);
+        @include mixinsBackgroundImageStyles;
+    }
+    @if (variable-exists(resolvedFixDashboardRegionPageBottomBackgroundImage) and $resolvedFixDashboardRegionPageBottomBackgroundImage) {
+        @include mixinsFixedBackgroundImageStyles();
+    }
+}
+
+#page-site-index {
+    #block-region-top {
+        background-color: $frontPageRegionContentTopBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionContentTopBackgroundImage) and $resolvedFrontpageRegionContentTopBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionContentTopBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpageContentTopBackgroundImage) and $resolvedFixFrontpageContentTopBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-bottom {
+        background-color: $frontPageRegionContentBottomBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionContentBottomBackgroundImage) and $resolvedFrontpageRegionContentBottomBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionContentBottomBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpageRegionContentBottomBackgroundImage) and $resolvedFixFrontpageRegionContentBottomBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-front-pge-top {
+        background-color: $frontPageRegionPageTopBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionPageTopBackgroundImage) and $resolvedFrontpageRegionPageTopBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionPageTopBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpagePageTopBackgroundImage) and $resolvedFixFrontpagePageTopBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-front-pge-bottom {
+        background-color: $frontPageRegionPageBottomBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionPageBottomBackgroundImage) and $resolvedFrontpageRegionPageBottomBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionPageBottomBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpagePageTopBackgroundImage) and $resolvedFixFrontpagePageTopBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-main-one {
+        background-color: $frontPageRegionOneBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionMainOneBackgroundImage) and $resolvedFrontpageRegionMainOneBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionMainOneBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpageRegionMainOneBackgroundImage) and $resolvedFixFrontpageRegionMainOneBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-main-two {
+        background-color: $frontPageRegionTwoBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionMainTwoBackgroundImage) and $resolvedFrontpageRegionMainTwoBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionMainTwoBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpageRegionMainTwoBackgroundImage) and $resolvedFixFrontpageRegionMainTwoBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+    #block-region-main-three {
+        background-color: $frontPageRegionThreeBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionMainThreeBackgroundImage) and $resolvedFrontpageRegionMainThreeBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionMainThreeBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpageRegionMainThreeBackgroundImage) and $resolvedFixFrontpageRegionMainThreeBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+
+    }
+    #block-region-main-four {
+        background-color: $frontPageRegionFourBackgroundColour;
+        @if (variable-exists(resolvedFrontpageRegionMainFourBackgroundImage) and $resolvedFrontpageRegionMainFourBackgroundImage) {
+            background-image: url($resolvedFrontpageRegionMainFourBackgroundImage);
+            @include mixinsBackgroundImageStyles;
+        }
+        @if (variable-exists(resolvedFixFrontpageRegionMainFourBackgroundImage) and $resolvedFixFrontpageRegionMainFourBackgroundImage) {
+            @include mixinsFixedBackgroundImageStyles();
+        }
+    }
+}
+.path-course-view {
+    #block-region-crs-pge-top {
+        @include regionStyles (
+                $regionBackgroundColour: $courseRegionPageTopBackgroundColour,
+                $regionBackgroundImage: $resolvedCourseRegionPageTopBackgroundImage,
+                $fixBackgroundImage: $resolvedFixCourseRegionPageTopBackgroundImage
+        );
+    }
+    #block-region-crs-pge-bottom {
+        @include regionStyles (
+                $regionBackgroundColour: $courseRegionPageBottomBackgroundColour,
+                $regionBackgroundImage: $resolvedCourseRegionPageBottomBackgroundImage,
+                $fixBackgroundImage: $resolvedFixCourseRegionPageBottomBackgroundImage
+        );
+    }
+    #block-region-top {
+        @include regionStyles (
+                $regionBackgroundColour: $coursePageRegionTopBackgroundColour,
+                $regionBackgroundImage: $resolvedCoursePageRegionTopBackgroundImage,
+                $fixBackgroundImage: $resolvedFixCoursePageRegionTopBackgroundImage
+        );
+    }
+    #block-region-bottom {
+        @include regionStyles (
+                $regionBackgroundColour: $coursePageRegionBottomBackgroundColour,
+                $regionBackgroundImage: $resolvedCoursePageRegionBottomBackgroundImage,
+                $fixBackgroundImage: $resolvedFixCoursePageRegionBottomBackgroundImage
+        );
+    }
+}
+
+#admin-region{
+    padding-top: 15px;
+    background-color: $adminRegionBackgroundColour;
+    &:after {
+        content: " ";
+        width: 100%;
+        display: table;
+        clear: both;
+    }
+}
+
+.block-region {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}

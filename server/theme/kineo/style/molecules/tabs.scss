@@ -1,0 +1,106 @@
+@import '../lib/mixins';
+$tabsActiveHeight: var(--gap-1);
+$tabsActiveBoxShadow:  -2px 0 rgba(0,0,0,.03);
+$tabsLinkPadding: var(--tab-v-padding) var(--tab-h-padding);
+$tabsActivePaddingTop: calc(var(--tab-v-padding) - var(--tab-border-width));
+$tabsActivePaddingBottom: calc(var(--tab-v-padding) + var(--tab-border-width));
+$tabsFocusOutlineColour: var(--color-state-focus);
+$tabsMarginTop: var(--tab-highlight-height);
+$tabsMarginRight: calc(var(--tab-border-width) * -1);
+&,
+#dialog-tabs {
+  .nav-tabs > li,
+  .nav-tabs > li.ui-state-default {
+    > a {
+      background-color: $tabsBackgroundColour;
+      border-color: $tabsBorderColour;
+      color: $tabsTextColour;
+      border-radius: $tabsBorderRadius;
+      text-transform: $tabsTextTransform;
+      font-size: $tabsFontSize;
+      padding: $tabsLinkPadding;
+      margin-top: 0;
+      margin-right: $tabsMarginRight;
+      font-weight: $tabsFontWeight;
+
+      &:focus {
+        outline: dashed 1px $tabsFocusOutlineColour;
+        outline-offset: -0.75rem;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      a {
+        background-color: $tabsBackgroundColourHover;
+        border-color: $tabsBorderColourHover;
+        color: $tabsTextColourHover;
+      }
+    }
+
+    &.active,
+    &.ui-state-active {
+      a {
+        position: relative;
+        border-radius: $tabsBorderRadiusActive;
+        background-color: $tabsBackgroundColourActive;
+        border-color: $tabsBorderColourActive;
+        border-bottom: 1px solid $tabsBackgroundColourActive;
+        color: $tabsTextColourActive;
+        padding-top: $tabsActivePaddingTop;
+        padding-bottom: $tabsActivePaddingBottom;
+
+        &:after {
+          position: absolute;
+          background: $tabsSelectedBarColour;
+          content: '';
+          top: -3px;
+          right: 0;
+          left: -2px;
+          width: calc(100% + 2px);
+          height: $tabsActiveHeight;
+        }
+      }
+
+      &:hover,
+      &:focus {
+        a {
+          background-color: $tabsBackgroundColourActiveHover;
+          border-color: $tabsBorderColourActiveHover;
+          color: $tabsTextColourActiveHover;
+          cursor: pointer;
+        }
+      }
+
+      &:first-child > a,
+      a {
+        &,
+        &:hover,
+        &:focus {
+          box-shadow: $tabsActiveBoxShadow;
+        }
+      }
+    }
+
+    &.disabled {
+      &:last-child > a {
+        border-right-color: $tabsBorderColour;
+      }
+
+      + .disabled,
+      &:first-child {
+        > a {
+          border-left-color: $tabsBorderColour;
+        }
+      }
+
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          border-top-color: $tabsBorderColour;
+        }
+      }
+    }
+  }
+}

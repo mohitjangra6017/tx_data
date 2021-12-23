@@ -1,0 +1,25 @@
+$questionSpacing : 10px;
+#categoryquestions {
+    margin-bottom: $questionSpacing;
+    td,
+    th {
+        padding: $questionSpacing;
+    }
+    .iconcol {
+        width: 22px;
+        a {
+            .flex-icon:before {
+                margin-right: $questionSpacing;
+            }
+        }
+    }
+}
+.questiontext {
+    .accordion-group {
+        margin-bottom: $questionSpacing;
+    }
+    div[class*="container"] {
+        margin-bottom: $questionSpacing;
+        padding-left: 3px;
+    }
+}

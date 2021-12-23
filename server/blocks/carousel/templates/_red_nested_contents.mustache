@@ -1,0 +1,68 @@
+<section id="carousel-{{id}}" class="{{carouseltype}} {{template}} {{cardsize}} alt-interactions">
+{{#slides}}
+    <article class="learning {{#summary}} has-summary {{/summary}}" data-courseid="{{courseid}}" data-image_src="{{{thumbnail}}}">
+        <figure class="tile" {{^displayinmodal}} title="{{#str}} gotocourse, block_carousel {{/str}}" {{/displayinmodal}} {{#displayinmodal}} title="{{#str}} showdetail, block_carousel {{/str}}" data-displayinmodal="yes" {{/displayinmodal}} data-url="{{url}}">
+            <div class="figure-ratio">
+                <div class="figure-ratio-image" style="background-image: url('{{{thumbnail}}}')"></div>
+            </div>
+            {{#showcompletionicon}}
+                {{#iscomplete}} <span class="completion-status complete"><i class="fas fa-check-circle"></i></span> {{/iscomplete}}
+                {{^iscomplete}} <span class="completion-status not-complete"></span> {{/iscomplete}}
+            {{/showcompletionicon}}
+            <div class="custom-tags">
+                {{#custom_fields}}
+                    <span class="custom-tag">{{.}}</span> 
+                {{/custom_fields}}
+            </div>
+            <div class="caption">
+                <div class="title-wrap">
+                    <div class="icon">
+                        {{{icon}}}
+                    </div>
+                    <h3>{{title}}</h3>
+                </div>
+                <div class="summary">
+                    {{summary}}
+                </div>
+            </div>
+        </figure>
+        {{#hidecardexpanddetails}}
+        <span title="{{#str}} gotocourse, block_carousel {{/str}}"></span>
+        {{/hidecardexpanddetails}}
+        {{^hidecardexpanddetails}}
+        <span class="toggle-card-details" title="{{#str}} showdetail, block_carousel {{/str}}"></span>
+        {{/hidecardexpanddetails}}
+    </article>
+{{/slides}} 
+</section>
+
+<section id="carousel-nav-{{id}}" class="nav-slides {{carouseltype}} {{template}} {{cardsize}}">
+    {{#slides}}
+    <article class="learning-details">
+        {{#thumbnail}} 
+            <img src="{{{thumbnail}}}" crossorigin="anonymous" class="hidden" /> 
+        {{/thumbnail}}
+        <button type="button" class="close-slide-details"><i class="far fa-times"></i></button>
+        <div class="slide-details">
+            <h2>{{{icon}}}  {{fulltitle}}</h2>
+            <div class="custom-tags">{{#custom_fields_details}}<span class="custom-tag">{{.}}</span>{{/custom_fields_details}}{{{rating}}}{{{likes}}}{{{completions}}}</div>
+            <div class="full-details">
+                <div class="full-summary">
+                    {{{fullsummary}}}
+                </div>
+                <div class="tags">
+                {{#tags}}
+                    <span class="label label-info">{{.}}</span>
+                {{/tags}}
+                </div>
+                {{#displayinmodal}}
+                    {{{courselet_url}}}
+                {{/displayinmodal}}
+                {{^displayinmodal}}
+                    <a class="btn btn-raised btn-red" href="{{{url}}}">{{#str}} gotocourse, block_carousel {{/str}}</a>
+                {{/displayinmodal}}
+            </div>
+        </div>
+    </article>
+    {{/slides}}
+</section>

@@ -1,0 +1,22 @@
+{
+    "name": "tke/local-default-filters",
+    "type": "totara-local",
+    "description": "Local report builder default filters",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "default_filters",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/local-default-filters/wikis/home"
+    }
+}

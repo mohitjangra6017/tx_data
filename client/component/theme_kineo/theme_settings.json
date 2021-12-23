@@ -1,0 +1,77 @@
+{
+  "tabs": [
+    {
+      "identifier": "brand",
+      "headings": [
+        "brand-colors",
+        "brand-images",
+        "miscellaneous",
+        "notifications",
+        "header-help",
+        "messages",
+        "custom-styles",
+        "custom-images-path",
+        "backup-restore-config",
+        "progress"
+      ]
+    },
+    {
+      "identifier": "elements",
+      "headings": [
+        "buttons",
+        "tabs",
+        "tables",
+        "breadcrumbs"
+      ]
+    },
+    {
+      "identifier": "fonts",
+      "headings": [
+        "custom-fonts",
+        "typography",
+        "font-family"
+      ]
+    },
+    {
+      "identifier": "navigation",
+      "headings": [
+        "primary-navigation",
+        "secondary-navigation",
+        "user-menu",
+        "quick-access-menu",
+        "mobile-menu"
+      ]
+    },
+    {
+      "identifier": "pages",
+      "headings": [
+        "general",
+        "site-header",
+        "footer",
+        "dashboard",
+        "course-page-settings",
+        "login-signup-page",
+        "frontpage"
+      ]
+    },
+    {
+      "identifier": "blocks",
+      "headings": [
+        "anderspink",
+        "featured-links"
+      ]
+    },
+    {
+      "identifier": "isotope",
+      "headings": [
+        "button-filter-colours",
+        "item-colours",
+	"isotope-enhanced-styles",
+        "radial-colours",
+        "radial-text",
+        "radial-sizes-and-spacing",
+        "radial-enhanced-styles"
+      ]
+    }
+  ]
+}

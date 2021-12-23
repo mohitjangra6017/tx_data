@@ -1,0 +1,54 @@
+@mixin setAvatarStyle($userMenuAvatarStyle) {
+  @if ($userMenuAvatarStyle == square) {
+    border-radius: 0;
+  }
+  @if ($userMenuAvatarStyle == round) {
+    border-radius: 50%;
+  }
+}
+
+.usermenu {
+  .userbutton {
+    .avatars {
+      .avatar {
+        img {
+          @include setAvatarStyle($resolvedUserMenuAvatarStyle);
+        }
+      }
+    }
+  }
+
+  ul.menubar {
+    li {
+      &,
+      a {
+        font-size: $userMenuFontSize;
+        font-weight: $userMenuFontWeight;
+        text-transform: $userMenuTextTransform;
+      }
+    }
+  }
+
+  .moodle-actionmenu[data-enhanced].show .menu {
+    background-color: $userMenuDropdownBackgroundColour;
+    border-color: $userMenuDropdownBorderColour;
+    border-width: $userMenuDropdownBorderWidth;
+    border-radius: $userMenuDropdownBorderRadius;
+    font-size: $userMenuDropdownFontSize;
+    text-transform: $userMenuDropdownTextTransform;
+    > li {
+      > a {
+        color: $userMenuDropdownTextColour;
+        font-weight: $userMenuDropdownFontWeight;
+        &:focus {
+          background-color: transparent;
+        }
+        &:hover,
+        &:hover:focus {
+          color: $userMenuDropdownTextColourHover;
+          background-color: $userMenuDropdownBackgroundColourHover;
+        }
+      }
+    }
+  }
+}

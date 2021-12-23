@@ -1,0 +1,49 @@
+@import '../lib/mixins';
+@import '../lib/media';
+
+$logoSizeMobileDefault: 1.5em;
+$logoSizeDesktopDefault: 2.8rem;
+
+/// Calculates a new value based on the default value and a percentage of the value
+/// @param {number} $default Default value that must contain units, unless the value is 0
+/// @param {number (unitless)} $percentage used to calculate a percentage of $default which will be added to $default
+/// @return {number} The sum of $default + the percentage of $default.  This includes the units passed in with $default
+@function getDefaultAndPercentageSum($default, $percentage) {
+  @return calc(#{$default} + ((#{$default} / 100) * #{$percentage}));
+}
+
+/// Set the height for the masthead logo
+/// @param {number} $height The value to use when setting the height which must include units, unless the value is 0
+@mixin setLogoHeight($height) {
+  .totaraNav_prim {
+    .masthead_logo,
+    .masthead_logo--header .masthead_logo--header_img {
+      height: $height;
+    }
+  }
+}
+
+/// Sets the logo size based on settings defined in the theme designer
+/// @param {string} $logoSizeFromSettings The value containing the keyword size option passed in from the theme
+/// designer.  Values are 'default', 'medium', 'large' or 'very-large'
+/// @param {number} $logoSizeDefault The default size for the logo which must include units, unless the value is 0
+@mixin setLogoSize($logoSizeFromSettings, $logoSizeDefault) {
+  @if ($logoSizeFromSettings == "default") {
+    @include setLogoHeight($logoSizeDefault);
+  }
+  @if ($logoSizeFromSettings == "medium") {
+    @include setLogoHeight(getDefaultAndPercentageSum($logoSizeDefault, 50));
+  }
+  @if ($logoSizeFromSettings == "large") {
+    @include setLogoHeight(getDefaultAndPercentageSum($logoSizeDefault, 100));
+  }
+  @if ($logoSizeFromSettings == "very-large") {
+    @include setLogoHeight(getDefaultAndPercentageSum($logoSizeDefault, 150));
+  }
+}
+
+@include setLogoSize($resolvedSiteLogoSize, $logoSizeMobileDefault);
+
+@include media768() {
+  @include setLogoSize($resolvedSiteLogoSize, $logoSizeDesktopDefault);
+}

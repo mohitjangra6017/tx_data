@@ -1,0 +1,22 @@
+{
+    "name": "tke/atto-fontfamily",
+    "description": "Choose fonts in the atto editor",
+    "type": "totara-atto",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "fontfamily",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/atto-fontfamily/wikis/home"
+    }
+}

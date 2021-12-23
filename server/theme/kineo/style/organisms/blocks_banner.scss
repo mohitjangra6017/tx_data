@@ -1,0 +1,46 @@
+@import '../lib/mixins';
+@import '../lib/media';
+$bannerBlockHeaderPadding: 0;
+$bannerBlockTitlePadding: 0;
+$bannerBlockContentPadding: 0;
+
+$bannerBlockContentCentredWithPageMaxWidth: $pageMaxWidth;
+$bannerBlockContentCentredWithPageMargin: 0 auto;
+$bannerBlockContentCentredWithPageBannerTextWrapperPadding: 10px;
+
+$bannerBlockContentCentredWithPageBannerTextWrapperWidthTablet: 70%;
+$bannerBlockContentCentredWithPageBannerTextWrapperWidthDesktop: 50%;
+
+.block.block_banner {
+    .block-header {
+        padding: $bannerBlockHeaderPadding;
+    }
+    .title.block-title {
+        padding: $bannerBlockTitlePadding;
+    }
+    .block-content {
+        padding: $bannerBlockContentPadding;
+    }
+}
+
+.block.block_banner {
+    .block-control-actions {
+        @include mixinsBorderlessBlockControlActionsMargin;
+    }
+}
+
+.block_banner.banner_text_center_with_page {
+    .content {
+        max-width: $bannerBlockContentCentredWithPageMaxWidth;
+        margin: $bannerBlockContentCentredWithPageMargin;
+        .bannertextwrapper {
+            padding: $bannerBlockContentCentredWithPageBannerTextWrapperPadding;
+            @include media768 {
+                width: $bannerBlockContentCentredWithPageBannerTextWrapperWidthTablet;
+            }
+            @include media1024 {
+                width: $bannerBlockContentCentredWithPageBannerTextWrapperWidthDesktop;
+            }
+        }
+    }
+}

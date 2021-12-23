@@ -1,0 +1,52 @@
+.block_carousel {
+    article {
+        .social {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            
+            .btn {
+                border-radius: 0;
+                border: none;
+                box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.4);
+                background-color: $carousel_white;
+
+                i {
+                    margin-right: 10px;
+                }
+            }
+            
+            > div {
+                float:left;
+                padding-right: 10px;
+            }
+            .carousel-like {
+                a {
+                    &.unlike-button {
+                        display: none;
+                    }
+                }
+                
+                &.liked a {
+                    display:none;
+                    
+                    &.unlike-button {
+                        display: inline-block;
+                    }
+                }
+            }
+            
+            .dropdown-menu {
+                padding: 15px;
+                min-width: 210px;
+                border-radius: 0;
+                border: none;
+                margin-bottom: 6px;
+                
+                button {
+                    float: right;
+                }
+            }
+        }
+    }
+}

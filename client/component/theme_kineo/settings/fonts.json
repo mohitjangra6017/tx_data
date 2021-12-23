@@ -1,0 +1,648 @@
+[
+  {
+    "identifier": "base-font",
+    "type": "text",
+    "default": "Arial,Helvetica Neue,Helvetica,sans-serif",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "heading-font",
+    "type": "text",
+    "default": "@base-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h1-font",
+    "type": "text",
+    "default": "@heading-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h2-font",
+    "type": "text",
+    "default": "@heading-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h3-font",
+    "type": "text",
+    "default": "@heading-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h4-font",
+    "type": "text",
+    "default": "@heading-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h5-font",
+    "type": "text",
+    "default": "@heading-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h6-font",
+    "type": "text",
+    "default": "@heading-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "navigation-font",
+    "type": "text",
+    "default": "@base-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "sub-navigation-font",
+    "type": "text",
+    "default": "@navigation-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "breadcrumb-font",
+    "type": "text",
+    "default": "@base-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "button-font",
+    "type": "text",
+    "default": "@base-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "table-header-font",
+    "type": "text",
+    "default": "@base-font",
+    "heading":  "font-family",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "color-text",
+    "type": "colour",
+    "default": "@color-black",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "color-heading",
+    "type": "colour",
+    "default": "@color-text",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "link-color",
+    "type": "colour",
+    "default": "@color-primary",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "link-color-hover",
+    "type": "colour",
+    "default": "@color-secondary",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "link-color-active",
+    "type": "colour",
+    "default": "@link-color-hover",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "link-color-visited",
+    "type": "colour",
+    "default": "@link-color",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "base-font-size",
+    "type": "text",
+    "default": "14px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "base-font-weight",
+    "type": "text",
+    "default": "normal",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h1-font-size",
+    "type": "text",
+    "default": "36px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation":[
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h1-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h2-font-size",
+    "type": "text",
+    "default": "30px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h2-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h3-font-size",
+    "type": "text",
+    "default": "24px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h3-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h4-font-size",
+    "type": "text",
+    "default": "18px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h4-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h5-font-size",
+    "type": "text",
+    "default": "16px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h5-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h6-font-size",
+    "type": "text",
+    "default": "14px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h6-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "h1-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "typography",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalise",
+        "lowercase",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "h2-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "typography",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalise",
+        "lowercase",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "h3-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "typography",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalise",
+        "lowercase",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "h4-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "typography",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalise",
+        "lowercase",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "h5-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "typography",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalise",
+        "lowercase",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "h6-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "typography",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalise",
+        "lowercase",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "color-h1",
+    "type": "colour",
+    "default": "@color-heading",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "color-h2",
+    "type": "colour",
+    "default": "@color-heading",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "color-h3",
+    "type": "colour",
+    "default": "@color-heading",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "color-h4",
+    "type": "colour",
+    "default": "@color-heading",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "color-h5",
+    "type": "colour",
+    "default": "@color-heading",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "color-h6",
+    "type": "colour",
+    "default": "@color-heading",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "h1-font-size-mobile",
+    "type": "text",
+    "default": "@h1-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h1-font-size-tablet",
+    "type": "text",
+    "default": "@h1-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h2-font-size-mobile",
+    "type": "text",
+    "default": "@h2-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h2-font-size-tablet",
+    "type": "text",
+    "default": "@h2-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h3-font-size-mobile",
+    "type": "text",
+    "default": "@h3-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h3-font-size-tablet",
+    "type": "text",
+    "default": "@h3-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h4-font-size-mobile",
+    "type": "text",
+    "default": "@h4-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h4-font-size-tablet",
+    "type": "text",
+    "default": "@h4-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h5-font-size-mobile",
+    "type": "text",
+    "default": "@h5-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h5-font-size-tablet",
+    "type": "text",
+    "default": "@h5-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h6-font-size-mobile",
+    "type": "text",
+    "default": "@h6-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "h6-font-size-tablet",
+    "type": "text",
+    "default": "@h6-font-size",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "dialog-font-size",
+    "type": "text",
+    "default": "12px",
+    "heading":  "typography",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  }
+]

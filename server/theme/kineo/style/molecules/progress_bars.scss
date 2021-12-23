@@ -1,0 +1,11 @@
+.progress {
+  border-color: $progressValueBackgroundColour;
+  box-shadow: none;
+  .bar {
+    color: $progressValueTextColour;
+    background-color: $progressValueBackgroundColour;
+  }
+}
+.progress-invert .progressbar__text {
+  color: $progressContainerTextColour;
+}

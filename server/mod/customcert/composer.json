@@ -1,0 +1,22 @@
+{
+    "name": "tke/mod-customcert",
+    "type": "totara-mod",
+    "description": "Custom certificate activity module",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "customcert",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/mod-customcert/wikis/home"
+    }
+}

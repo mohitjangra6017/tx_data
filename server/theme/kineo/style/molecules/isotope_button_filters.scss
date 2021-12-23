@@ -1,0 +1,106 @@
+$isotopeButtonFiltersButtonMinHeight: 40px;
+$isotopeButtonFiltersButtonMinWidth: 100px;
+$isotopeButtonFiltersButtonMaxWidth: 160px;
+$isotopeButtonFiltersButtonMargin: 0 10px 10px;
+
+$isotopeButtonFiltersButtonHoverLightenPercentage: 10%;
+
+.block_isotope .filters {
+    .type-filter-buttons {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    button {
+        min-height: $isotopeButtonFiltersButtonMinHeight;
+        min-width: $isotopeButtonFiltersButtonMinWidth;
+        max-width: $isotopeButtonFiltersButtonMaxWidth;
+        margin: $isotopeButtonFiltersButtonMargin;
+        color: $isotopeFilterTextColour;
+        border-color: $isotopeFilterBorderColour;
+        &:hover,
+        &.active {
+            border-color: $isotopeFilterBorderColourSelected;
+        }
+        &.all {
+            background-color: $isotopeFilterAllFiltersBackgroundColour;
+            color: $isotopeFilterAllTextColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterAllFiltersBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.course {
+            background-color: $isotopeFilterCourseBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterCourseBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.program {
+            background-color: $isotopeFilterProgramsBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterProgramsBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.certification {
+            background-color: $isotopeFilterCertificationsBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterCertificationsBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.unknown {
+            background-color: $isotopeFilterOverdueBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterOverdueBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.started {
+            background-color: $isotopeFilterStartedBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterStartedBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.completed {
+            background-color: $isotopeFilterCompletedBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterCompletedBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.notstarted {
+            background-color: $isotopeFilterNotStartedBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterNotStartedBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.required {
+            background-color: $isotopeFilterRequiredBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterRequiredBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.notrequired {
+            background-color: $isotopeFilterNotRequiredBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterNotRequiredBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.expired {
+            background-color: $isotopeFilterExpiredBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterExpiredBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.overdue {
+            background-color: $isotopeFilterOverdueBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterOverdueBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+        &.statewindowopen {
+            background-color: $isotopeFilterStateWindowOpenBackgroundColour;
+            &:hover {
+                background: adjust-color($resolvedIsotopeFilterStateWindowOpenBackgroundColor, $lightness: $isotopeButtonFiltersButtonHoverLightenPercentage);
+            }
+        }
+    }
+}

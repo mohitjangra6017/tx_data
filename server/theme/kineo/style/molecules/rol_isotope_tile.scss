@@ -1,0 +1,222 @@
+@import '../lib/mixins';
+@import '../lib/media';
+$isotopeItemMinHeight: 24%;
+
+$isotopeItemMarginMobile: 0 0 1% 0;
+$isotopeItemMarginTablet: 0.5%;
+$isotopeItemMarginDesktop: 0.5%;
+
+$isotopeItemWidthMobile: 100%;
+$isotopeItemWidthTablet: 32%;
+$isotopeItemWidthDesktop: 24%;
+
+$isotopeItemPaddingBottomTablet: $isotopeItemWidthTablet - (($isotopeItemWidthTablet / 100) * 30);
+$isotopeItemPaddingBottomDesktop: $isotopeItemWidthDesktop - (($isotopeItemWidthDesktop / 100) * 30);
+
+$isotopeItemPadding: 10px 10px;
+
+$isotopeItemContentMargin: 0 0 10px;
+$isotopeItemTitleFontSize: $baseFontSize;
+$isotopeItemDefaultFontSize:  $baseFontSize;
+
+$isotopeItemShadow: 0 10px 20px 0 rgba(0, 0, 0, 0.3);
+$isotopeItemShadowHover: 0 10px 20px 0 rgba(0, 0, 0, 0.5);
+
+@if ($resolvedIsotopeItemEnableShadow == true) {
+    figure.isotope.item {
+        box-shadow: $isotopeItemShadow;
+        &:hover {
+            box-shadow: $isotopeItemShadowHover;
+        }
+    }
+}
+
+figure.isotope.item {
+    width: $isotopeItemWidthMobile;
+    margin: $isotopeItemMarginMobile;
+    padding-top: $isotopeItemMinHeight;
+    background-color: $isotopeItemBackgroundColour;
+    background-repeat: no-repeat;
+    background-size: cover;
+    &:hover {
+        background-color: $isotopeItemBackgroundColourHover;
+    }
+    > a {
+        display: block;
+        background-color: $isotopeItemInfoBackgroundColour;
+        padding: $isotopeItemPadding;
+        @include mixinsFontSize($isotopeItemDefaultFontSize);
+        min-height: 120px;
+        @include mixinsLinkStateColours(
+            $isotopeItemColour,
+            $isotopeItemColour,
+            $isotopeItemColour,
+            $isotopeItemColour,
+            $isotopeItemColour
+        );
+        &:hover {
+            text-decoration: none;
+        }
+        // Title.
+        > span:first-of-type {
+            color: $isotopeItemNameColour;
+            display: block;
+            margin: $isotopeItemContentMargin;
+            @include mixinsFontSize($isotopeItemTitleFontSize);
+            font-weight: bold;
+        }
+        // Type.
+        > span:first-of-type + span {
+            display: block;
+            margin: $isotopeItemContentMargin;
+        }
+        .req {
+            color: $isotopeItemRequiredTextColour;
+            display: block;
+            margin: $isotopeItemContentMargin;
+        }
+        .date {
+            color: $isotopeItemDateColour;
+            display: block;
+            margin: $isotopeItemContentMargin;
+        }
+        > span:first-of-type,
+        > span:first-of-type + span,
+        .req,
+        .date {
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+    &.status- {
+        &unknown {
+            background-color: $isotopeFilterOverdueBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterOverdueBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterOverdueBackgroundColor, 0.5);
+                }
+            }
+        }
+        &started {
+            background-color: $isotopeFilterStartedBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterStartedBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterStartedBackgroundColor, 0.5);
+                }
+            }
+        }
+        &completed {
+            background-color: $isotopeFilterCompletedBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterCompletedBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterCompletedBackgroundColor, 0.5);
+                }
+            }
+        }
+        &notstarted {
+            background-color: $isotopeFilterNotStartedBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterNotStartedBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterNotStartedBackgroundColor, 0.5);
+                }
+            }
+        }
+        &required {
+            background-color: $isotopeFilterRequiredBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterRequiredBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterRequiredBackgroundColor, 0.5);
+                }
+            }
+        }
+        &notrequired {
+            background-color: $isotopeFilterNotRequiredBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterNotRequiredBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterNotRequiredBackgroundColor, 0.5);
+                }
+            }
+        }
+        &expired {
+            background-color: $isotopeFilterExpiredBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterExpiredBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterExpiredBackgroundColor, 0.5);
+                }
+            }
+        }
+        &overdue {
+            background-color: $isotopeFilterOverdueBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterOverdueBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterOverdueBackgroundColor, 0.5);
+                }
+            }
+        }
+        &statewindowopen {
+            background-color: $isotopeFilterStateWindowOpenBackgroundColour;
+            &:hover {
+                @include backgroundOpacity($resolvedIsotopeFilterStateWindowOpenBackgroundColor, 0.9);
+            }
+            &.imgstatus-show  {
+                a.name {
+                    @include backgroundOpacity($resolvedIsotopeFilterStateWindowOpenBackgroundColor, 0.5);
+                }
+            }
+        }
+    }
+}
+
+@include media768() {
+    figure.isotope.item {
+        width: $isotopeItemWidthTablet;
+        padding: 0 0 $isotopeItemPaddingBottomTablet;
+        height: 0;
+        margin: $isotopeItemMarginTablet;
+        > a {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        &.imgstatus-hide {
+            > a {
+                min-height: auto;
+            }
+        }
+    }
+}
+
+@include media1200() {
+    figure.isotope.item {
+        width: $isotopeItemWidthDesktop;
+        padding-bottom: $isotopeItemPaddingBottomDesktop;
+        height: 0;
+        margin: $isotopeItemMarginDesktop;
+    }
+}

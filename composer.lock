@@ -1,0 +1,2007 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "09faf78e67a48762e6011c5455abe9cd",
+    "packages": [
+        {
+            "name": "composer/installers",
+            "version": "v1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/installers.git",
+                "reference": "d20a64ed3c94748397ff5973488761b22f6d3f19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/installers/zipball/d20a64ed3c94748397ff5973488761b22f6d3f19",
+                "reference": "d20a64ed3c94748397ff5973488761b22f6d3f19",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0"
+            },
+            "replace": {
+                "roundcube/plugin-installer": "*",
+                "shama/baton": "*"
+            },
+            "require-dev": {
+                "composer/composer": "1.6.* || ^2.0",
+                "composer/semver": "^1 || ^3",
+                "phpstan/phpstan": "^0.12.55",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "symfony/phpunit-bridge": "^4.2 || ^5",
+                "symfony/process": "^2.3"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Composer\\Installers\\Plugin",
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Installers\\": "src/Composer/Installers"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Robinson Young",
+                    "email": "kyle@dontkry.com",
+                    "homepage": "https://github.com/shama"
+                }
+            ],
+            "description": "A multi-framework Composer library installer",
+            "homepage": "https://composer.github.io/installers/",
+            "keywords": [
+                "Craft",
+                "Dolibarr",
+                "Eliasis",
+                "Hurad",
+                "ImageCMS",
+                "Kanboard",
+                "Lan Management System",
+                "MODX Evo",
+                "MantisBT",
+                "Mautic",
+                "Maya",
+                "OXID",
+                "Plentymarkets",
+                "Porto",
+                "RadPHP",
+                "SMF",
+                "Starbug",
+                "Thelia",
+                "Whmcs",
+                "WolfCMS",
+                "agl",
+                "aimeos",
+                "annotatecms",
+                "attogram",
+                "bitrix",
+                "cakephp",
+                "chef",
+                "cockpit",
+                "codeigniter",
+                "concrete5",
+                "croogo",
+                "dokuwiki",
+                "drupal",
+                "eZ Platform",
+                "elgg",
+                "expressionengine",
+                "fuelphp",
+                "grav",
+                "installer",
+                "itop",
+                "joomla",
+                "known",
+                "kohana",
+                "laravel",
+                "lavalite",
+                "lithium",
+                "magento",
+                "majima",
+                "mako",
+                "mediawiki",
+                "miaoxing",
+                "modulework",
+                "modx",
+                "moodle",
+                "osclass",
+                "pantheon",
+                "phpbb",
+                "piwik",
+                "ppi",
+                "processwire",
+                "puppet",
+                "pxcms",
+                "reindex",
+                "roundcube",
+                "shopware",
+                "silverstripe",
+                "sydes",
+                "sylius",
+                "symfony",
+                "tastyigniter",
+                "typo3",
+                "wordpress",
+                "yawik",
+                "zend",
+                "zikula"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/installers/issues",
+                "source": "https://github.com/composer/installers/tree/v1.12.0"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-09-13T08:19:44+00:00"
+        },
+        {
+            "name": "kineo/installers",
+            "version": "1.3.2",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/black-box-plugins/kineo_installers.git",
+                "reference": "44a21be46aa3448ab16dcb409bd7756e873f46ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/862/repository/archive.zip?sha=44a21be46aa3448ab16dcb409bd7756e873f46ab"
+            },
+            "require": {
+                "composer-plugin-api": "^1.0|^2.0",
+                "composer/installers": "~1.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.7|^2.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "KineoInstaller\\Plugin",
+                "plugin-modifies-downloads": true,
+                "kineo-project-id": 862
+            },
+            "autoload": {
+                "psr-4": {
+                    "KineoInstaller\\": "src/Kineo/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A multi-framework Composer library installer",
+            "homepage": "https://gitlab.kineodev.com/black-box-plugins/kineo_installers",
+            "time": "2021-05-21T16:41:58+01:00"
+        },
+        {
+            "name": "symfony/polyfill-ctype",
+            "version": "v1.23.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-ctype.git",
+                "reference": "46cd95797e9df938fdd2b03693b5fca5e64b01ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/46cd95797e9df938fdd2b03693b5fca5e64b01ce",
+                "reference": "46cd95797e9df938fdd2b03693b5fca5e64b01ce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "suggest": {
+                "ext-ctype": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.23-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gert de Pagter",
+                    "email": "BackEndTea@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for ctype functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "ctype",
+                "polyfill",
+                "portable"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.23.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-02-19T12:13:01+00:00"
+        },
+        {
+            "name": "tke/atto-fontfamily",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/atto-fontfamily.git",
+                "reference": "c27bdaf5fb5b65a89ad224435bf237e0d8f3241a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1119/repository/archive.zip?sha=c27bdaf5fb5b65a89ad224435bf237e0d8f3241a"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-atto",
+            "extra": {
+                "installer-name": "fontfamily",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1119
+            },
+            "description": "Choose fonts in the atto editor",
+            "homepage": "https://gitlab.kineodev.com/plugins/atto-fontfamily",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/atto-fontfamily/wikis/home"
+            },
+            "time": "2021-11-24T12:25:25+00:00"
+        },
+        {
+            "name": "tke/atto-fullscreen",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/atto-fullscreen.git",
+                "reference": "fa7b246b2b29d4df5509ca4f32620456aeb3b2eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1118/repository/archive.zip?sha=fa7b246b2b29d4df5509ca4f32620456aeb3b2eb"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-atto",
+            "extra": {
+                "installer-name": "fullscreen",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1118
+            },
+            "description": "Allow editor to display fullscreen",
+            "homepage": "https://gitlab.kineodev.com/plugins/atto-fullscreen",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/atto-fullscreen/wikis/home"
+            },
+            "time": "2021-11-24T12:25:27+00:00"
+        },
+        {
+            "name": "tke/atto-html-plus",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/atto-html-plus.git",
+                "reference": "3ed1a7d9363a0dffa39fb5667bcf3c4aaf79967d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1122/repository/archive.zip?sha=3ed1a7d9363a0dffa39fb5667bcf3c4aaf79967d"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-atto",
+            "extra": {
+                "installer-name": "htmlplus",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1122
+            },
+            "description": "Style html in the editor",
+            "homepage": "https://gitlab.kineodev.com/plugins/atto-html-plus",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/atto-html-plus/wikis/home"
+            },
+            "time": "2021-11-24T12:25:29+00:00"
+        },
+        {
+            "name": "tke/atto-more-back-colors",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/atto-more-back-colors.git",
+                "reference": "3f3a0d0d902d709bd1215d525527cd0ab0c39118"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1121/repository/archive.zip?sha=3f3a0d0d902d709bd1215d525527cd0ab0c39118"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-atto",
+            "extra": {
+                "installer-name": "morebackcolors",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1121
+            },
+            "description": "Add more background colors to the editor",
+            "homepage": "https://gitlab.kineodev.com/plugins/atto-more-back-colors",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/atto-more-back-colors/wikis/home"
+            },
+            "time": "2021-11-24T12:25:32+00:00"
+        },
+        {
+            "name": "tke/atto-more-font-colors",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/atto-more-font-colors.git",
+                "reference": "73b53052edc029dcbd0b1868b30c4fcff1b9d9bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1120/repository/archive.zip?sha=73b53052edc029dcbd0b1868b30c4fcff1b9d9bb"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-atto",
+            "extra": {
+                "installer-name": "morefontcolors",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1120
+            },
+            "description": "Add more font colors to the editor",
+            "homepage": "https://gitlab.kineodev.com/plugins/atto-more-font-colors",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/atto-more-font-colors/wikis/home"
+            },
+            "time": "2021-11-24T12:25:36+00:00"
+        },
+        {
+            "name": "tke/atto-styles",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/atto-styles.git",
+                "reference": "6b799987035716c0c825224cfbe1f90b7dd96836"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1117/repository/archive.zip?sha=6b799987035716c0c825224cfbe1f90b7dd96836"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-atto",
+            "extra": {
+                "installer-name": "styles",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1117
+            },
+            "description": "Allow custom styles to be used in the editor",
+            "homepage": "https://gitlab.kineodev.com/plugins/atto-styles",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/atto-styles/wikis/home"
+            },
+            "time": "2021-11-24T12:25:41+00:00"
+        },
+        {
+            "name": "tke/auth-saml2",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/auth-saml2.git",
+                "reference": "08defd6c38b30a4720ffc2a4823ace6d9c5fb52a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1131/repository/archive.zip?sha=08defd6c38b30a4720ffc2a4823ace6d9c5fb52a"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-auth",
+            "extra": {
+                "installer-name": "saml2",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1131
+            },
+            "description": "SAML2 Authentication plugin",
+            "homepage": "https://gitlab.kineodev.com/plugins/auth-saml2",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/auth-saml2/wikis/home"
+            },
+            "time": "2021-11-24T12:25:46+00:00"
+        },
+        {
+            "name": "tke/auth-simplesamlidp",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/auth-simplesamlidp.git",
+                "reference": "4c3818ffd407e0a6381d632ddd20127e6b3a1500"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1133/repository/archive.zip?sha=4c3818ffd407e0a6381d632ddd20127e6b3a1500"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-auth",
+            "extra": {
+                "installer-name": "simplesamlidp",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1133
+            },
+            "description": "Authentication plugin to enable Totara to act as an Identity Provider using SAML (SimpleSAMLphp)",
+            "homepage": "https://gitlab.kineodev.com/plugins/auth-simplesamlidp",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/auth-simplesamlidp/wikis/home"
+            },
+            "time": "2021-11-24T12:25:51+00:00"
+        },
+        {
+            "name": "tke/block-anderspink",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-anderspink.git",
+                "reference": "a0e57c90a6936d422ddfed98d358775508216de0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1107/repository/archive.zip?sha=a0e57c90a6936d422ddfed98d358775508216de0"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "anderspink",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1107
+            },
+            "description": "Anders Pink content curation block",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-anderspink",
+            "time": "2021-11-24T12:25:57+00:00"
+        },
+        {
+            "name": "tke/block-awesome",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-awesome.git",
+                "reference": "3b5f3f101a43f33062167ff6aa9c02daa35f5bc6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1138/repository/archive.zip?sha=3b5f3f101a43f33062167ff6aa9c02daa35f5bc6"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "awesome",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1138
+            },
+            "description": "Fork of ninelanterns/block_awesome",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-awesome",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/block-awesome/wikis/home"
+            },
+            "time": "2021-11-24T12:26:03+00:00"
+        },
+        {
+            "name": "tke/block-banner",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-banner.git",
+                "reference": "2a4dee5f17133b40a483e9fe6bf1b576bf707eb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1108/repository/archive.zip?sha=2a4dee5f17133b40a483e9fe6bf1b576bf707eb7"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "banner",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false
+                },
+                "kineo-project-id": 1108
+            },
+            "description": "Banner presentation block",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-banner",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/block-banner/wikis/home"
+            },
+            "time": "2021-11-24T12:26:10+00:00"
+        },
+        {
+            "name": "tke/block-carousel",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-carousel.git",
+                "reference": "edbe324f4ed777fdedb1a0fb7953b55cb80caffa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1443/repository/archive.zip?sha=edbe324f4ed777fdedb1a0fb7953b55cb80caffa"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "carousel",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1443
+            },
+            "description": "Kineo Carousel",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-carousel",
+            "time": "2021-12-22T15:58:09+00:00"
+        },
+        {
+            "name": "tke/block-course-recommendations",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-course-recommendations.git",
+                "reference": "94b117d155fca0c1f6cc0c3fdb2013070aab346e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1153/repository/archive.zip?sha=94b117d155fca0c1f6cc0c3fdb2013070aab346e"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/block-rate-course": "~15.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "course_recommendations",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1153
+            },
+            "description": "Allows users to interact with recommendations from rate-course",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-course-recommendations",
+            "time": "2021-11-24T12:26:19+00:00"
+        },
+        {
+            "name": "tke/block-isotope",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-isotope.git",
+                "reference": "760695e2f0c8bab0b1aaa65a4ebc63315ec8bcc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1140/repository/archive.zip?sha=760695e2f0c8bab0b1aaa65a4ebc63315ec8bcc2"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-isotope-skeleton": "~15.0",
+                "tke/tke": "~15.0",
+                "twig/twig": "~1.18"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "isotope",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1140
+            },
+            "homepage": "https://gitlab.kineodev.com/plugins/block-isotope",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/block-isotope/wikis/home"
+            },
+            "time": "2021-11-24T12:26:26+00:00"
+        },
+        {
+            "name": "tke/block-leaderboard",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-leaderboard.git",
+                "reference": "45b7a0301a69501c5d08402a15c92eb06b3dc0a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1169/repository/archive.zip?sha=45b7a0301a69501c5d08402a15c92eb06b3dc0a1"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-leaderboard": "*",
+                "tke/tke": "~15.0"
+            },
+            "replace": {
+                "kineo/block-leaderboard": "*",
+                "kineo/block_leaderboard": "*",
+                "kineo/block_score": "*"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "leaderboard",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1169
+            },
+            "authors": [
+                {
+                    "name": "Carlos Jurado",
+                    "email": "carlos.jurado@kineo.com"
+                }
+            ],
+            "description": "Show user's score",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-leaderboard",
+            "time": "2021-11-24T12:26:35+00:00"
+        },
+        {
+            "name": "tke/block-rate-course",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-rate-course.git",
+                "reference": "76b4e13aee5ecbebe8ffd6aa656e7cf340f58ecb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1071/repository/archive.zip?sha=76b4e13aee5ecbebe8ffd6aa656e7cf340f58ecb"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "rate_course",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1071
+            },
+            "description": "Functionality for likes, recommendations, and reviews of courses",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-rate-course",
+            "time": "2021-12-22T15:58:10+00:00"
+        },
+        {
+            "name": "tke/block-record-of-learning",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-record-of-learning.git",
+                "reference": "96f06fcc78f94ce14ccf4e98602e5de3c87cb8ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1109/repository/archive.zip?sha=96f06fcc78f94ce14ccf4e98602e5de3c87cb8ff"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "record_of_learning",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1109
+            },
+            "description": "Displays the user's Record of Learning in a block",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-record-of-learning",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/block-record-of-learning/wikis/home"
+            },
+            "time": "2021-11-24T12:26:52+00:00"
+        },
+        {
+            "name": "tke/block-related-courses",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-related-courses.git",
+                "reference": "3e9fee5d87e55339d74faafccfb8d1b2f0e14392"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1125/repository/archive.zip?sha=3e9fee5d87e55339d74faafccfb8d1b2f0e14392"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "related_courses",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1125
+            },
+            "authors": [
+                {
+                    "name": "Carlos Jurado",
+                    "email": "carlos.jurado@kineo.com"
+                },
+                {
+                    "name": "Simon Adams",
+                    "email": "simon.adams@kineo.com"
+                }
+            ],
+            "description": "Show courses based on ones with the same tags as the completed courses by the user",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-related-courses",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/block-related-courses/wikis/home"
+            },
+            "time": "2021-11-24T12:27:00+00:00"
+        },
+        {
+            "name": "tke/block-required-learning",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/block-required-learning.git",
+                "reference": "c93fab092b8b2fb532128a43921da16de2b21a05"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1110/repository/archive.zip?sha=c93fab092b8b2fb532128a43921da16de2b21a05"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-block",
+            "extra": {
+                "installer-name": "required_learning",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1110
+            },
+            "description": "Displays the user's Required Learning in a block",
+            "homepage": "https://gitlab.kineodev.com/plugins/block-required-learning",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/block-required-learning/wikis/home"
+            },
+            "time": "2021-11-24T12:27:08+00:00"
+        },
+        {
+            "name": "tke/builder",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/build-process-plugin.git",
+                "reference": "f39193c93622cc8f78e9bb27364e35b84ab8cb48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1190/repository/archive.zip?sha=f39193c93622cc8f78e9bb27364e35b84ab8cb48"
+            },
+            "require": {
+                "composer-plugin-api": "^1.0|^2.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "KineoBuilder\\Plugin",
+                "kineo-project-id": 1190
+            },
+            "autoload": {
+                "psr-4": {
+                    "KineoBuilder\\": "src"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Geering",
+                    "email": "michael.geering@kineo.com"
+                }
+            ],
+            "description": "The automated build system for Totara: Kineo Edition",
+            "homepage": "https://gitlab.kineodev.com/plugins/build-process-plugin",
+            "time": "2021-11-25T09:44:40+00:00"
+        },
+        {
+            "name": "tke/enrol-autoenrol",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/enrol-autoenrol.git",
+                "reference": "3cf8547cdd7844ff4a1d68199d38fbf8f629932a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1136/repository/archive.zip?sha=3cf8547cdd7844ff4a1d68199d38fbf8f629932a"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-enrol",
+            "extra": {
+                "installer-name": "autoenrol",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1136
+            },
+            "description": "AutoEnrol enrolment plugin",
+            "homepage": "https://gitlab.kineodev.com/plugins/enrol-autoenrol",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/enrol-autoenrol/wikis/home"
+            },
+            "time": "2021-11-24T12:27:18+00:00"
+        },
+        {
+            "name": "tke/format-tiles",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/format-tiles.git",
+                "reference": "0602eac936ecab2b564c02ed6d392fcb1e5e87ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1100/repository/archive.zip?sha=0602eac936ecab2b564c02ed6d392fcb1e5e87ad"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-format",
+            "extra": {
+                "installer-name": "tiles",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1100
+            },
+            "description": "Tiles format option for courses",
+            "homepage": "https://gitlab.kineodev.com/plugins/format-tiles",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/format-tiles/wikis/home"
+            },
+            "time": "2021-11-24T12:27:27+00:00"
+        },
+        {
+            "name": "tke/isotope-provider-bookings",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/isotope-provider-bookings.git",
+                "reference": "771c9820b867299316bec76dc7cbc6e67e40d626"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1139/repository/archive.zip?sha=771c9820b867299316bec76dc7cbc6e67e40d626"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-isotope-skeleton": "~15.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-isotope-provider",
+            "extra": {
+                "installer-name": "bookings",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1139
+            },
+            "description": "Isotope Provider that displays a user's Seminar Bookings",
+            "homepage": "https://gitlab.kineodev.com/plugins/isotope-provider-bookings",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-bookings/wikis/home"
+            },
+            "time": "2021-12-22T15:58:12+00:00"
+        },
+        {
+            "name": "tke/isotope-provider-mandatory-completion",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/isotope-provider-mandatory-completion.git",
+                "reference": "14243ae9cf27fac7d5ffe9d1bd1b9ee5d3d27ef6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1142/repository/archive.zip?sha=14243ae9cf27fac7d5ffe9d1bd1b9ee5d3d27ef6"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-isotope-skeleton": "~15.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-isotope-provider",
+            "extra": {
+                "installer-name": "mandatory_completion",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1142
+            },
+            "description": "Shows a drill-down display of the mandatory completions within the organization hierarchy",
+            "homepage": "https://gitlab.kineodev.com/plugins/isotope-provider-mandatory-completion",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-mandatory-completion/wikis/home"
+            },
+            "time": "2021-11-24T12:27:44+00:00"
+        },
+        {
+            "name": "tke/isotope-provider-programs",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/isotope-provider-programs.git",
+                "reference": "5f5962d01f543d457880d8862378de333e98cc25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1143/repository/archive.zip?sha=5f5962d01f543d457880d8862378de333e98cc25"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-isotope-skeleton": "~15.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-isotope-provider",
+            "extra": {
+                "installer-name": "programs",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1143
+            },
+            "description": "Displays a user's assigned programs in the Isotope Block",
+            "homepage": "https://gitlab.kineodev.com/plugins/isotope-provider-programs",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-programs/wikis/home"
+            },
+            "time": "2021-12-22T15:58:14+00:00"
+        },
+        {
+            "name": "tke/isotope-provider-record-of-learning",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/isotope-provider-record-of-learning.git",
+                "reference": "f789eb816cc8690b3ac92c239d67a278171a0a82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1145/repository/archive.zip?sha=f789eb816cc8690b3ac92c239d67a278171a0a82"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-isotope-skeleton": "~15.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-isotope-provider",
+            "extra": {
+                "installer-name": "record_of_learning",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1145
+            },
+            "description": "Shows a learners record of learning in the isotope block",
+            "homepage": "https://gitlab.kineodev.com/plugins/isotope-provider-record-of-learning",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-record-of-learning/wikis/home"
+            },
+            "time": "2021-12-22T15:58:22+00:00"
+        },
+        {
+            "name": "tke/isotope-provider-required-learning",
+            "version": "15.0.1",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/isotope-provider-required-learning.git",
+                "reference": "e4ceee974f5e550709f80d6474d4bd663a7d5d0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1165/repository/archive.zip?sha=e4ceee974f5e550709f80d6474d4bd663a7d5d0e"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/local-isotope-skeleton": "~15.0",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-isotope-provider",
+            "extra": {
+                "installer-name": "required_learning",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1165
+            },
+            "homepage": "https://gitlab.kineodev.com/plugins/isotope-provider-required-learning",
+            "time": "2021-12-08T14:39:14+00:00"
+        },
+        {
+            "name": "tke/local-backup",
+            "version": "15.0.1",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-backup.git",
+                "reference": "19bd30ef4202fa84b468bbb059d3ca5d4af6b634"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1445/repository/archive.zip?sha=19bd30ef4202fa84b468bbb059d3ca5d4af6b634"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "backup",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1445
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Backup and Restore of Dashboards, Blocks and Site Configuration",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-backup",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-backup/wikis/home"
+            },
+            "time": "2021-12-08T14:39:22+00:00"
+        },
+        {
+            "name": "tke/local-completion-report",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-completion-report.git",
+                "reference": "769b966a2744152b1f2f287d0de772b43f6126fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1126/repository/archive.zip?sha=769b966a2744152b1f2f287d0de772b43f6126fd"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "completionreport",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1126
+            },
+            "description": "Custom completion report",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-completion-report",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-completion-report/wikis/home"
+            },
+            "time": "2021-11-24T12:28:26+00:00"
+        },
+        {
+            "name": "tke/local-config",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-config.git",
+                "reference": "c4a768066d147805daa76c9b6a0ccabe16185619"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1157/repository/archive.zip?sha=c4a768066d147805daa76c9b6a0ccabe16185619"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "config",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1157
+            },
+            "description": "A report to that details all admin setting configuration changes",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-config",
+            "time": "2021-11-24T12:28:35+00:00"
+        },
+        {
+            "name": "tke/local-core",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-core.git",
+                "reference": "3b7ad8abe0ac8f458d2ccf1efde19d50fb36f6b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1376/repository/archive.zip?sha=3b7ad8abe0ac8f458d2ccf1efde19d50fb36f6b1"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "core",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1376
+            },
+            "description": "Facilitates TKE integration with TLS core",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-core",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-core/wikis/home"
+            },
+            "time": "2021-12-22T15:58:24+00:00"
+        },
+        {
+            "name": "tke/local-credly",
+            "version": "15.0.1",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-credly.git",
+                "reference": "c2455e33675af9cb39048a69b66661911ca7d716"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1418/repository/archive.zip?sha=c2455e33675af9cb39048a69b66661911ca7d716"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "credly",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": true
+                },
+                "kineo-project-id": 1418
+            },
+            "description": "Credly intregration",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-credly",
+            "time": "2021-12-09T10:26:04+00:00"
+        },
+        {
+            "name": "tke/local-default-filters",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-default-filters.git",
+                "reference": "957f2242c5be569ec439f1564fb96bed4f18cde4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1323/repository/archive.zip?sha=957f2242c5be569ec439f1564fb96bed4f18cde4"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "default_filters",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1323
+            },
+            "description": "Local report builder default filters",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-default-filters",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-default-filters/wikis/home"
+            },
+            "time": "2021-11-24T12:29:02+00:00"
+        },
+        {
+            "name": "tke/local-email-log",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-email-log.git",
+                "reference": "16afc1ef9a8b2fac51ac289527c16954fa481579"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1151/repository/archive.zip?sha=16afc1ef9a8b2fac51ac289527c16954fa481579"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "email_log",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1151
+            },
+            "description": "Log sent emails",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-email-log",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-email-log/wikis/home"
+            },
+            "time": "2021-11-24T12:28:17+00:00"
+        },
+        {
+            "name": "tke/local-isotope-skeleton",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-isotope-skeleton.git",
+                "reference": "d2e9f2a1fa4238dc1df012f507f63d213daae645"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1146/repository/archive.zip?sha=d2e9f2a1fa4238dc1df012f507f63d213daae645"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "isotope",
+                "kineo": {
+                    "subplugin-path": "providers/",
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1146
+            },
+            "description": "Skeleton for holding Isotope Providers as Moodle sub-plugins",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-isotope-skeleton",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-isotope-skeleton/wikis/home"
+            },
+            "time": "2021-11-24T12:29:11+00:00"
+        },
+        {
+            "name": "tke/local-leaderboard",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-leaderboard.git",
+                "reference": "4df382f8b0ee0b35be962721d94fb30c60b327d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1168/repository/archive.zip?sha=4df382f8b0ee0b35be962721d94fb30c60b327d2"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "replace": {
+                "kineo/local_leaderboard": "*",
+                "kineo/score": "*",
+                "tke/local-leaderboard": "*"
+            },
+            "suggest": {
+                "tke/block-leaderboard": "Block to display leaderboard to users"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "leaderboard",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1168
+            },
+            "authors": [
+                {
+                    "name": "Carlos Jurado",
+                    "email": "carlos.jurado@kineo.com"
+                }
+            ],
+            "description": "Earn score points on Totara events",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-leaderboard",
+            "time": "2021-11-24T12:29:20+00:00"
+        },
+        {
+            "name": "tke/local-program-report",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-program-report.git",
+                "reference": "e48e786cdcb3ebab3b9cbe13ef52a2d37952d3ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1127/repository/archive.zip?sha=e48e786cdcb3ebab3b9cbe13ef52a2d37952d3ff"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "program_report",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1127
+            },
+            "description": "Custom program completion report",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-program-report",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/local-program-report/wikis/home"
+            },
+            "time": "2021-11-24T12:29:29+00:00"
+        },
+        {
+            "name": "tke/local-realtimecohortassignment",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/local-realtimecohortassignment.git",
+                "reference": "00400cd81b45f44d345867436b56e1114fafdb8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1170/repository/archive.zip?sha=00400cd81b45f44d345867436b56e1114fafdb8a"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-local",
+            "extra": {
+                "installer-name": "realtimecohortassignment",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1170
+            },
+            "authors": [
+                {
+                    "name": "Carlos Jurado",
+                    "email": "carlos.jurado@kineo.com"
+                }
+            ],
+            "description": "Local plugin to update dynamic audience assignments on user create and update events",
+            "homepage": "https://gitlab.kineodev.com/plugins/local-realtimecohortassignment",
+            "time": "2021-11-24T12:29:37+00:00"
+        },
+        {
+            "name": "tke/logstore-xapi",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/logstore-xapi.git",
+                "reference": "6713889fc47ddbdbd65ba4ea1be4786af6e30e02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/933/repository/archive.zip?sha=6713889fc47ddbdbd65ba4ea1be4786af6e30e02"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "require-dev": {
+                "learninglocker/statementfactory": "~0.0",
+                "phpunit/phpunit": "~8.0"
+            },
+            "type": "totara-logstore",
+            "extra": {
+                "installer-name": "xapi",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 933
+            },
+            "license": [
+                "GPL v3"
+            ],
+            "description": "xAPI Event Log Store",
+            "homepage": "https://gitlab.kineodev.com/plugins/logstore-xapi",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/logstore-xapi/wikis/home"
+            },
+            "time": "2021-11-24T12:29:47+00:00"
+        },
+        {
+            "name": "tke/mod-assessment",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/mod-assessment.git",
+                "reference": "030f85d3bb14ab0e20baa8429298140dfeea6582"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1129/repository/archive.zip?sha=030f85d3bb14ab0e20baa8429298140dfeea6582"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-mod",
+            "extra": {
+                "installer-name": "assessment",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1129
+            },
+            "authors": [
+                {
+                    "name": "Michael J. Trio",
+                    "email": "michael.trio@kineo.com"
+                }
+            ],
+            "description": "Appraisal-like module for courses",
+            "homepage": "https://gitlab.kineodev.com/plugins/mod-assessment",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/mod-assessment/wikis/home"
+            },
+            "time": "2021-11-24T12:29:56+00:00"
+        },
+        {
+            "name": "tke/mod-customcert",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/mod-customcert.git",
+                "reference": "bfbd38b3c79b5a3b7224752e237e54f4f6393e12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1137/repository/archive.zip?sha=bfbd38b3c79b5a3b7224752e237e54f4f6393e12"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-mod",
+            "extra": {
+                "installer-name": "customcert",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1137
+            },
+            "description": "Custom certificate activity module",
+            "homepage": "https://gitlab.kineodev.com/plugins/mod-customcert",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/mod-customcert/wikis/home"
+            },
+            "time": "2021-11-24T12:30:04+00:00"
+        },
+        {
+            "name": "tke/mod-hvp",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/mod-hvp.git",
+                "reference": "074f799d522c295ecda6c91f6867c18c8887d0c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1141/repository/archive.zip?sha=074f799d522c295ecda6c91f6867c18c8887d0c3"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-mod",
+            "extra": {
+                "installer-name": "hvp",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1141
+            },
+            "description": "H5P activity plugin",
+            "homepage": "https://gitlab.kineodev.com/plugins/mod-hvp",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/mod-hvp/wikis/home"
+            },
+            "time": "2021-11-24T12:30:12+00:00"
+        },
+        {
+            "name": "tke/mod-tincanlaunch",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/mod-tincanlaunch.git",
+                "reference": "470be9564fc5bd476fa2aaa3f007106e6d2fd806"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1148/repository/archive.zip?sha=470be9564fc5bd476fa2aaa3f007106e6d2fd806"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-mod",
+            "extra": {
+                "installer-name": "tincanlaunch",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1148
+            },
+            "description": "Moodle module to launch xapi content",
+            "homepage": "https://gitlab.kineodev.com/plugins/mod-tincanlaunch",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/mod-tincanlaunch/wikis/home"
+            },
+            "time": "2021-11-24T12:30:21+00:00"
+        },
+        {
+            "name": "tke/repository-kineo-adapt",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/repository-kineo-adapt.git",
+                "reference": "515baffcff6d1759fed50b6792a8412c126a3d90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1128/repository/archive.zip?sha=515baffcff6d1759fed50b6792a8412c126a3d90"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-repository",
+            "extra": {
+                "installer-name": "kineoadapt",
+                "kineo": {
+                    "code-standards": "moodle",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": false
+                },
+                "kineo-project-id": 1128
+            },
+            "description": "A Totara repository plugin to enable scorm activities published in external Adapt Authoring Tool sites to be added to courses in Totara.",
+            "homepage": "https://gitlab.kineodev.com/plugins/repository-kineo-adapt",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/repository-kineo-adapt/wikis/home"
+            },
+            "time": "2021-11-24T12:30:30+00:00"
+        },
+        {
+            "name": "tke/theme-framework",
+            "version": "15.1.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/theme-framework.git",
+                "reference": "2ba2563d91fb1c3e8c3c2627d87e3839fdf4f759"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1162/repository/archive.zip?sha=2ba2563d91fb1c3e8c3c2627d87e3839fdf4f759"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-theme",
+            "extra": {
+                "installer-name": "kineo",
+                "kineo": {
+                    "code-standards": "psr-12",
+                    "has-config-init": false,
+                    "has-core-modifications": false,
+                    "has-htaccess": false,
+                    "has-totara-component": true
+                },
+                "kineo-project-id": 1162
+            },
+            "description": "Kineo Framework for themes",
+            "homepage": "https://gitlab.kineodev.com/plugins/theme-framework",
+            "time": "2021-12-22T15:58:26+00:00"
+        },
+        {
+            "name": "tke/tool-mfa",
+            "version": "15.0.0",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@gitlab.kineodev.com:2222/plugins/tool-mfa.git",
+                "reference": "f51d94cc28be24c9eef1385b7463b797fbd50732"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.kineodev.com/api/v3/projects/1104/repository/archive.zip?sha=f51d94cc28be24c9eef1385b7463b797fbd50732"
+            },
+            "require": {
+                "kineo/installers": "~1.3",
+                "tke/tke": "~15.0"
+            },
+            "type": "totara-tool",
+            "extra": {
+                "installer-name": "mfa",
+                "kineo": {
+                    "code-standards": "moodle"
+                },
+                "kineo-project-id": 1104
+            },
+            "description": "Multi-factor authentication library",
+            "homepage": "https://gitlab.kineodev.com/plugins/tool-mfa",
+            "support": {
+                "wiki": "https://gitlab.kineodev.com/plugins/tool-mfa/wikis/home"
+            },
+            "time": "2021-11-24T12:30:38+00:00"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.44.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "ae39480f010ef88adc7938503c9b02d3baf2f3b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae39480f010ef88adc7938503c9b02d3baf2f3b3",
+                "reference": "ae39480f010ef88adc7938503c9b02d3baf2f3b3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "require-dev": {
+                "psr/container": "^1.0",
+                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.44-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                },
+                "psr-4": {
+                    "Twig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Twig Team",
+                    "role": "Contributors"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "https://twig.symfony.com",
+            "keywords": [
+                "templating"
+            ],
+            "support": {
+                "issues": "https://github.com/twigphp/Twig/issues",
+                "source": "https://github.com/twigphp/Twig/tree/v1.44.6"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/twig/twig",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-11-25T13:31:46+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.4.0 <7.5"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}

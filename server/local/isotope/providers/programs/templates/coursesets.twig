@@ -1,0 +1,54 @@
+<div class="programs isotope coursesetcontainer">
+{% if coursesetGroups is not empty %}
+    {% for coursesetGroup in coursesetGroups %}
+        {% for courseset in coursesetGroup %}
+            <div class="isotope courseset courseset-{{ courseset.id }} {% if courseset.accessible %}courseset-available{% else %}courseset-locked{% endif %}">
+                <p>{{ courseset.label }}</p>
+                {% if config.no_content_text %}
+                    <p class="courseset-description" style="display: none;">{{ config.no_content_text }}</p>
+                {% endif %}
+                {% if config.display_completion_requirements %}
+                        <p class="courseset-criteria">{{ courseset.completionhtml }}</p>
+                {% endif %}
+                <section class="programs isotope container">
+                {% for learning in courseset.courses %}
+                    {%- set image_class -%}
+                        {%- if learning.image and config.display_course_image != 'disabled' -%}
+                            {%- if config.display_course_image == 'background' -%}
+                                course-image-background
+                            {%- elseif config.display_course_image == 'foreground' -%}
+                                course-image-foreground
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endset -%}
+
+                    <figure class="isotope item prog-{{ learning.programid }} status-{{ learning.status }} {{ learning.status }} {% if learning.imgstatus %}imgstatus-{{ learning.imgstatus }}{% endif %} {{ image_class }}"
+                        {% if config.display_course_image == 'background' and learning.image %}
+                            style="background-image: url({{ learning.image }})"
+                        {% endif %}
+                    >
+                        {%- set content -%}
+                            {%- if config.display_course_image == 'foreground' and learning.image -%}
+                                <img src="{{ learning.image }}">
+                            {%- endif -%}
+                            <span class="item-name">{{ learning.fullname | format_html }}</span>
+                            {%- if learning.date is not empty -%}
+                                <time class="date">
+                                    {{ learning.date }}
+                                </time>
+                            {%- endif -%}
+                        {%- endset -%}
+
+                        {% if courseset.accessible %}
+                            <a href="{{ learning.url }}" class="name">{{ content }}</a>
+                        {% else %}
+                            {{ content }}
+                        {% endif %}
+                    </figure>
+                {% endfor %}
+                </section>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+</div>

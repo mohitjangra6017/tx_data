@@ -1,0 +1,21 @@
+.block.block_carousel ._red_person{
+    @extend ._red;
+}
+
+.block.block_carousel ._red_person{
+    article.learning,
+    article.learning-details {
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    &.nav-slides {
+        article {
+            .slide-details {
+                .full-summary {
+                    height: 100%;
+                }
+            }
+        }
+    }
+}

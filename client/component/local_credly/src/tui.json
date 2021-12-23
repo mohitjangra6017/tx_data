@@ -1,0 +1,7 @@
+{
+  "component": "local_credly",
+  "vendor": "kineo",
+  "dependencies": [
+    "totara_engage"
+  ]
+}

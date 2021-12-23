@@ -1,0 +1,50 @@
+{{!
+    @template assquestion_activityscore/element_activityscore
+
+    This template generates an assessment question form display
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+     * visible
+     * label
+     * items
+
+     Example context (json):
+     {
+        "visible": "true",
+        "label": "Activity results",
+        "items": [
+            "activityname": "SCORM Test",
+            "scorelong": 25
+        ]
+     }
+}}
+
+{{#visible}}
+<div class="tf_element totara_form_element_table">
+    <legend>{{label}}</legend>
+
+    <div class="tf_element">
+        <table class="activity-scores">
+            <tr>
+                <th>{{#str}}title,assquestion_activityscore{{/str}}</th>
+                <th>{{#str}}score,assquestion_activityscore{{/str}}</th>
+            </tr>
+            {{#items}}
+            <tr>
+                <td>{{{activityname}}}</td>
+                <td>{{{scorelong}}}</td>
+            </tr>
+            {{/items}}
+            {{^items}}
+            <tr colspan="2"><td>{{#str}}nothingtodisplay,assquestion_activityscore{{/str}}</td></tr>
+            {{/items}}
+        </table>
+    </div>
+</div>
+{{/visible}}

@@ -1,0 +1,12 @@
+query local_credly_programs {
+    programs: local_credly_programs {
+        metadata {
+            total
+        }
+        items {
+            id
+            name
+            category
+        }
+    }
+}

@@ -1,0 +1,180 @@
+/*!
+ * @copyright &copy; Kartik Visweswaran, Krajee.com, 2014
+ * @version 2.5.0
+ *
+ * A simple yet powerful JQuery star rating plugin that allows rendering
+ * fractional star ratings and supports Right to Left (RTL) input.
+ *
+ * For more JQuery/Bootstrap plugins and demos visit http://plugins.krajee.com
+ * For more Yii related demos visit http://demos.krajee.com
+ */.rating-loading{width:25px;height:25px;font-size:0;color:#fff;background:transparent url(../img/loading.gif) top left no-repeat;border:none}.rating-gly{font-family:'Glyphicons Halflings'}.rating-gly-star{font-family:'Glyphicons Halflings';padding-left:2px}.rating-gly-star .rating-stars:before{padding-left:2px}.rating-lg .rating-gly-star,.rating-lg .rating-gly-star .rating-stars:before{padding-left:4px}.rating-xl .rating-gly-star,.rating-xl .rating-gly-star .rating-stars:before{padding-left:2px}.rating-active{cursor:default}.rating-disabled{cursor:not-allowed}.rating-uni{font-size:1.2em;margin-top:-5px}.rating-container{position:relative;vertical-align:middle;display:inline-block;color:#e3e3e3;overflow:hidden}.rating-container:before{content:attr(data-content)}.rating-container .rating-stars{position:absolute;left:0;top:0;white-space:nowrap;overflow:hidden;color:#fde16d;transition:all .25s ease-out;-o-transition:all .25s ease-out;-moz-transition:all .25s ease-out;-webkit-transition:all .25s ease-out}.rating-container .rating-stars:before{content:attr(data-content);text-shadow:0 0 1px rgba(0,0,0,.7)}.rating-container-rtl{position:relative;vertical-align:middle;display:inline-block;overflow:hidden;color:#fde16d}.rating-container-rtl:before{content:attr(data-content);text-shadow:0 0 1px rgba(0,0,0,.7)}.rating-container-rtl .rating-stars{position:absolute;left:0;top:0;white-space:nowrap;overflow:hidden;color:#e3e3e3;transition:all .25s ease-out;-o-transition:all .25s ease-out;-moz-transition:all .25s ease-out;-webkit-transition:all .25s ease-out}.rating-container-rtl .rating-stars:before{content:attr(data-content)}.rating-xl{font-size:4.89em}.rating-lg{font-size:3.91em}.rating-md{font-size:3.13em}.rating-sm{font-size:2.5em}.rating-xs{font-size:2em}.star-rating .clear-rating,.star-rating-rtl .clear-rating{color:#aaa;cursor:not-allowed;display:inline-block;vertical-align:middle;font-size:60%}.clear-rating-active{cursor:pointer!important}.clear-rating-active:hover{color:#843534}.star-rating .clear-rating{padding-right:5px}.star-rating .caption,.star-rating-rtl .caption{color:#999;display:inline-block;vertical-align:middle;font-size:55%}.star-rating .caption{padding-left:5px}.star-rating-rtl .caption{padding-right:5px}
+
+/* Make the text editor for reviews smaller as it only supports 140 characters */
+textarea.courserating { height: 75px; width: 205px; }
+
+/* Display the rating text and stars inline */
+.ratingavg,
+.ratingavg .star-rating,
+.course-review-display .star-rating {
+    display: inline;
+    font-size: 1.1em;
+}
+
+.course-review-display .star-rating { float:right }
+
+.course-reviews-list {
+    position: relative;
+    font-size: 0.85em;
+    padding-top: 31px;
+}
+
+.course-reviews-list #course-review-tab {
+    position: absolute;
+    top: 0;
+}
+
+.course-reviews-list .tab-content {
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+.course-reviews-list .nav > li > a {
+    padding: 5px;
+    border-color: transparent;
+}
+
+.course-reviews-list .well {
+    margin-bottom: 3px;
+}
+
+.course-reviews-list .well-sm {
+    padding: 5px;
+}
+
+.course-reviews-list .well-sm p {
+    margin: 0 0 6px;
+}
+
+.course-review-liked,
+.rate-course-like-course .btn-default.course-review-liked,
+#btn-enrol-enrolled {
+    color: #3c763d;
+}
+
+.course-review-buttons {
+    margin: 10px;
+}
+
+#course-review-tab-content .dropdown-menu:before,
+.course-review-buttons .dropdown-menu:before {
+    position: absolute;
+    top:-7px;
+    left: 15px;
+    display: inline-block;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #ccc;
+    border-left: 7px solid transparent;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    content: '';
+}
+
+.course-review-buttons .dropup .dropdown-menu:before {
+	border-bottom: 0px solid #ccc;
+	border-top: 7px solid #ccc;
+    bottom: -7px;
+    top: unset;
+}
+
+#course-review-tab-content .dropdown-menu.dropdown-menu-right:before,
+.course-review-buttons .dropdown-menu.dropdown-menu-right:before {
+	left:270px;
+}
+
+#course-review-tab-content .dropdown-menu:after,
+.course-review-buttons .dropdown-menu:after {
+    position: absolute;
+    top:-6px;
+    left: 15px;
+    display: inline-block;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ffffff;
+    border-left: 6px solid transparent;
+    content: '';
+}
+
+.course-review-buttons .dropup .dropdown-menu:after {
+	border-top: 6px solid #ffffff;
+	border-bottom: 0px;
+    bottom: -6px;
+    top:unset;
+}
+
+#course-review-tab-content .dropdown-menu.dropdown-menu-right:after,
+.course-review-buttons .dropdown-menu.dropdown-menu-right:after {
+    left:270px;
+}
+
+#course-review-tab-content .dropdown-menu,
+.course-review-buttons .dropdown-menu {
+    padding: 10px;
+    font-size: 0.9em;
+    min-width: 300px;
+    z-index:1000;
+}
+
+#course-review-tab-content .dropdown-menu h2,
+.course-review-buttons .dropdown-menu h2 {
+    margin-top: 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #cccccc;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.course-review-buttons .userselect2 {
+    width: 205px;
+}
+
+#course-review-tab-content #review-comment {
+    cursor: pointer;
+}
+
+#course-review-tab-content .dropdown-menu {
+    font-size: 13px;
+    top: unset;
+}
+
+#course-review-tab-content .comments-div::before {
+    content: "\f0e5";
+    float: left;
+    font-family: "FontAwesome";
+    margin-left: -15px;
+}
+
+#course-review-tab-content .comments-div {
+    margin-left: 25px;
+    margin-bottom: 6px;
+}
+
+#course-review-tab-content span.replyby {
+    font-weight: bolder;
+}
+
+#course-review-tab-content span.title {
+    color: #ccc;
+}
+
+#course-review-tab-content .course-review-delete {
+    float: right;
+}
+
+/* Set the star sizes smaller than default library */
+.rating-xs { font-size: 1.25em; }
+.rating-sm { font-size: 1.5em; }
+.rating-md { font-size: 2em; }
+.rating-lg { font-size: 2.3em; }
+.rating-xl { font-size: 3em; }
+
+.block_rate_course .btn-group.dropup {
+    padding-top: 0;
+}

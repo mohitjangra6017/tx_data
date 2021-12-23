@@ -1,0 +1,21 @@
+{{#condensed}}
+    {{#total_ratings}}
+    <div class="ratings custom-tag">
+        <i class="fas fa-star"></i>
+        {{average_rating}}
+        <span class="superscript">({{total_ratings}})</span>
+    </div>
+    {{/total_ratings}}
+{{/condensed}}
+
+{{^condensed}}
+<div class="ratings">
+    {{#fullstars}}
+        <i class="fas fa-star"></i>
+    {{/fullstars}}
+    {{#halfstar}}
+        <i class="fas fa-star-half"></i>
+    {{/halfstar}}
+    {{#total_ratings}}<span>({{total_ratings}})</span>{{/total_ratings}}
+</div>
+{{/condensed}}

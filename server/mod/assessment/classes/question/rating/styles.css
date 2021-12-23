@@ -1,0 +1,11 @@
+.tf_element_input .slider {
+    max-width: 70%;
+}
+
+.tf_element_input .slider .maxval {
+    float: right;
+}
+
+.tf_element_input .slider .selectedval {
+    text-align: center;
+}

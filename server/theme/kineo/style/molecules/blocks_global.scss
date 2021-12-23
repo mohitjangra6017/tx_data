@@ -1,0 +1,868 @@
+@import '../lib/mixins';
+@import '../lib/media';
+@import '../../scss/_global_variables';
+$blockPadding: 10px;
+$blockPaddingWithoutBorder: 0;
+$blockHeaderPaddingWithoutBorder: $blockPaddingWithoutBorder;
+$blockTitlePaddingBottom: 5px;
+$blockContentPaddingWithoutBorder: $blockPaddingWithoutBorder;
+$blockContentHeadingColour: $blockColour;
+$blockContentLinkColour: $linkColour;
+$blockContentLinkColourVisited: $linkColourVisited;
+$blockContentLinkColourHover: $linkColourHover;
+$blockContentLinkColourActive: $linkColourActive;
+
+$blockBoxShadow: false;
+$blockNoBorderBoxShadow: false;
+$colourBlack: $black;
+$colourWhite: $white;
+$colourBrandMain: $brandColourMain;
+$colourAccentOne: $brandColourAccent1;
+$colourAccentTwo: $brandColourAccent2;
+$colourAccentThree: $brandColourAccent3;
+$colourAccentFour: $brandColourAccent4;
+$colourGreyOne: $brandGrey1;
+$colourGreyTwo: $brandGrey2;
+$colourGreyThree: $brandGrey3;
+$colourGreyFour: $brandGrey4;
+$colourGreyFive: $brandGrey5;
+$dockedBlockPadding: 10px;
+
+
+$blockShadow: 0 3px 6px 0 rgba(0,0,0,.16), 0 3px 6px 0 rgba(0,0,0,.23);
+
+@mixin setBlockWidth($blockWidth: 100%, $blockSideMargin: 1%) {
+    width: calc(#{$blockWidth} - (#{$blockSideMargin} * 2));
+    margin-left: $blockSideMargin;
+    margin-right: $blockSideMargin;
+    display: inline-block;
+    vertical-align: top;
+}
+
+@mixin setBlockCustomColour($colour) {
+    &,
+    .block-content {
+        color: $colour;
+    }
+}
+@mixin setBlockCustomBackgroundColour($backgroundColour) {
+    background-color: $backgroundColour;
+}
+@mixin setBlockHeaderTextTransform($blockHeadingTextTransform) {
+    @if ($blockHeadingTextTransform == uppercase) {
+        text-transform: uppercase;
+    }
+    @if ($blockHeadingTextTransform == none) {
+        text-transform: none;
+    }
+    @if ($blockHeadingTextTransform == capitalize) {
+        text-transform: capitalize;
+    }
+    @if ($blockHeadingTextTransform == lowercase) {
+        text-transform: lowercase;
+    }
+}
+
+@mixin setBlockShadow($borderWeight) {
+    @if ($blockBoxShadow == true) and ($borderWeight > 0) {
+        @include mixinsBoxShadow($blockShadow);
+    }
+    @if ($blockBoxShadow == true) and ($borderWeight == thin) {
+        @include mixinsBoxShadow($blockShadow);
+    }
+    @if ($blockBoxShadow == false) and ($borderWeight == 0) {
+        box-shadow: none;
+    }
+    @if ($blockNoBorderBoxShadow == true) {
+        @include mixinsBoxShadow($blockShadow);
+    }
+    @if ($blockNoBorderBoxShadow == false) {
+        box-shadow: none;
+    }
+}
+@mixin blockBorderStyle($borderWeight, $borderColour) {
+    border: $borderWeight solid $borderColour;
+    @if ($borderWeight == 1px) {
+        border: thin solid $borderColour;
+    }
+}
+@mixin backgroundOpacity($backgroundColour, $amount) {
+    background-color: transparentize($backgroundColour, $amount);
+}
+.block,
+.custom-appearance-showcase {
+    @include blockBorderStyle($blockBorderWeight, $blockBorderColour);
+    &[class*="text-colour-color-black"] {
+        @include setBlockCustomColour($colourBlack);
+    }
+    &[class*="text-colour-color-white"] {
+        @include setBlockCustomColour($colourWhite);
+    }
+    &[class*="text-colour-color-primary"] {
+        @include setBlockCustomColour($colourBrandMain);
+    }
+    &[class*="text-colour-color-secondary"] {
+        @include setBlockCustomColour($colourAccentOne);
+    }
+    &[class*="text-colour-color-tertiary"] {
+        @include setBlockCustomColour($colourAccentTwo);
+    }
+    &[class*="text-colour-color-accent-3"] {
+        @include setBlockCustomColour($colourAccentThree);
+    }
+    &[class*="text-colour-color-accent-4"] {
+        @include setBlockCustomColour($colourAccentFour);
+    }
+    &[class*="text-colour-color-neutral-2"] {
+        @include setBlockCustomColour($colourGreyOne);
+    }
+    &[class*="text-colour-color-neutral-3"] {
+        @include setBlockCustomColour($colourGreyTwo);
+    }
+    &[class*="text-colour-color-neutral-4"] {
+        @include setBlockCustomColour($colourGreyThree);
+    }
+    &[class*="text-colour-color-neutral-5"] {
+        @include setBlockCustomColour($colourGreyFour);
+    }
+    &[class*="text-colour-color-neutral-6"] {
+        @include setBlockCustomColour($colourGreyFive);
+    }
+    //Background colours
+    &[class*="background-colour-color-black"] {
+        @include setBlockCustomBackgroundColour($colourBlack);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorBlack, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorBlack, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorBlack, 0);
+        }
+    }
+    &[class*="background-colour-color-white"] {
+        @include setBlockCustomBackgroundColour($colourWhite);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorWhite, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorWhite, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorWhite, 0);
+        }
+    }
+    &[class*="background-colour-color-primary"] {
+        @include setBlockCustomBackgroundColour($colourBrandMain);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorPrimary, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorPrimary, 0);
+        }
+    }
+    &[class*="background-colour-color-secondary"] {
+        @include setBlockCustomBackgroundColour($colourAccentOne);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorSecondary, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorSecondary, 0);
+        }
+    }
+    &[class*="background-colour-color-tertiary"] {
+        @include setBlockCustomBackgroundColour($colourAccentTwo);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorTertiary, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorTertiary, 0);
+        }
+    }
+    &[class*="background-colour-color-accent-3"] {
+        @include setBlockCustomBackgroundColour($colourAccentThree);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorAccent3, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorAccent3, 0);
+        }
+    }
+    &[class*="background-colour-color-accent-4"] {
+        @include setBlockCustomBackgroundColour($colourAccentFour);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorAccent4, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorAccent4, 0);
+        }
+    }
+    &[class*="background-colour-color-neutral-2"] {
+        @include setBlockCustomBackgroundColour($colourGreyOne);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorNeutral2, 0);
+        }
+    }
+    &[class*="background-colour-color-neutral-3"] {
+        @include setBlockCustomBackgroundColour($colourGreyTwo);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorNeutral3, 0);
+        }
+    }
+    &[class*="background-colour-color-neutral-4"] {
+        @include setBlockCustomBackgroundColour($colourGreyThree);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorNeutral4, 0);
+        }
+    }
+    &[class*="background-colour-color-neutral-5"] {
+        @include setBlockCustomBackgroundColour($colourGreyFour);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorNeutral5, 0);
+        }
+    }
+    &[class*="background-colour-color-neutral-6"] {
+        @include setBlockCustomBackgroundColour($colourGreyFive);
+        &[class*="opacity-0"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 1);
+        }
+
+        &[class*="opacity-10"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.9);
+        }
+
+        &[class*="opacity-20"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.8);
+        }
+
+        &[class*="opacity-30"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.7);
+        }
+
+        &[class*="opacity-40"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.6);
+        }
+
+        &[class*="opacity-50"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.5);
+        }
+
+        &[class*="opacity-60"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.4);
+        }
+
+        &[class*="opacity-70"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.3);
+        }
+
+        &[class*="opacity-80"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.2);
+        }
+
+        &[class*="opacity-90"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0.1);
+        }
+
+        &[class*="opacity-100"] {
+            @include backgroundOpacity($resolvedColorNeutral6, 0);
+        }
+    }
+    //Borders
+    &[class*="border-colour-color-black"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourBlack);
+        }
+    }
+    &[class*="border-colour-color-white"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourWhite);
+        }
+    }
+    &[class*="border-colour-color-primary"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourBrandMain);
+        }
+    }
+    &[class*="border-colour-color-secondary"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourAccentOne);
+        }
+    }
+    &[class*="border-colour-color-tertiary"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourAccentTwo);
+        }
+    }
+    &[class*="border-colour-color-accent-3"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourAccentThree);
+        }
+    }
+    &[class*="border-colour-color-accent-4"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourAccentFour);
+        }
+    }
+    &[class*="border-colour-color-neutral-2"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourGreyOne);
+        }
+    }
+    &[class*="border-colour-color-neutral-3"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourGreyTwo);
+        }
+    }
+    &[class*="border-colour-color-neutral-4"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourGreyThree);
+        }
+    }
+    &[class*="border-colour-color-neutral-5"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourGreyFour);
+        }
+    }
+    &[class*="border-colour-color-neutral-6"] {
+        &,
+        .block-header {
+            @include blockBorderStyle($blockBorderWeight, $colourGreyFive);
+        }
+    }
+}
+
+[data-blockregion="top"] .block {
+    border-radius: 0;
+    .block-header,
+    .block-header .moodle-actionmenu.block-control-actions,
+    .block-content {
+        border-radius: 0;
+    }
+}
+
+.block {
+    background-color: $blockBackgroundColour;
+    border-radius: $blockBorderRadius;
+    width: 100%;
+
+    &,
+    &.chromeless.block {
+        @include setBlockShadow($blockBorderWeight);
+    }
+    .block-header {
+        background-color: $blockHeaderBackgroundColour;
+        padding: $blockHeaderPaddingWithBorder;
+        .block-title.title {
+            color: $blockHeadingColour;
+            padding-bottom: $blockTitlePaddingBottom;
+            h2 {
+                font-size: $blockHeaderTextSize;
+                font-weight: $blockHeaderFontWeight;
+                @include setBlockHeaderTextTransform($resolvedBlockHeadingTextTransform);
+            }
+        }
+    }
+    .block-header,
+    .block-header .moodle-actionmenu.block-control-actions {
+        border-top-left-radius: $blockBorderRadius;
+        border-top-right-radius: $blockBorderRadius;
+    }
+    .block-content {
+        color: $blockColour;
+        border-bottom-left-radius: $blockBorderRadius;
+        border-bottom-right-radius: $blockBorderRadius;
+        padding: $blockContentPaddingWithBorder;
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: $blockContentHeadingColour;
+        }
+        a {
+            @include mixinsLinkStateColours(
+                $blockContentLinkColour,
+                $blockContentLinkColourVisited,
+                $blockContentLinkColourHover,
+                $blockContentLinkColourActive,
+                $blockContentLinkColourHover
+            );
+        }
+    }
+    &.chromeless {
+        .block-content {
+            padding: $blockContentPaddingWithoutBorder;
+        }
+    }
+    @include media768() {
+        &.width-20 {
+            @include setBlockWidth(20%);
+        }
+        &.width-25 {
+            @include setBlockWidth(25%);
+        }
+        &.width-33 {
+            @include setBlockWidth(33.3%);
+        }
+        &.width-50 {
+            @include setBlockWidth(50%);
+        }
+        &.width-66 {
+            @include setBlockWidth(66.6%);
+        }
+        &.width-75 {
+            @include setBlockWidth(75%);
+        }
+        &.width-100 {
+            @include setBlockWidth(100%);
+        }
+    }
+}
+.block .block-title,
+#dockeditempanel .dockeditempanel_content h2 {
+    box-shadow: inset 0 -1px 0 $blockHeadingUnderlineColour;
+}
+
+#dockeditempanel {
+    @include media480 {
+        min-width: 420px;
+    }
+    .dockeditempanel_hd {
+        padding: $dockedBlockPadding;
+    }
+    .dockeditempanel_content {
+        h2 {
+            text-transform: $blockHeadingTextTransform;
+            font-size: $baseFontSize;
+        }
+        .block-content {
+            padding: 0 $dockedBlockPadding $dockedBlockPadding;
+        }
+    }
+}

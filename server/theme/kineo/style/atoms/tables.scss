@@ -1,0 +1,271 @@
+@import '../lib/mixins';
+$localTableBorder: $tableBorderWidth solid $tableBorderColour;
+$defaultTableBorder : none;
+$tableTagColour: #ffffff;
+
+@mixin tablesSetHeadColours(
+    $headColour,
+    $headBackgroundColour
+) {
+    .path-rating .ratingtable,
+    table#explaincaps,
+    table#defineroletable,
+    table.grading-report,
+    table#listdirectories,
+    table.rolecaps,
+    table.userenrolment,
+    table#form,
+    form#movecourses table,
+    #page-admin-course-index .editcourse,
+    .forumheaderlist,
+    table.flexible,
+    .generaltable {
+        &,
+        .block & {
+            tr th,
+            thead tr td {
+                background-color: $headBackgroundColour;
+                color: $headColour;
+                a,
+                .ft,
+                .ft-fw {
+                    @include mixinsLinkStateColours(
+                        $linkDefaultColour: $headColour,
+                        $linkVisitedStateColour: $headColour,
+                        $linkHoverStateColour: $headColour,
+                        $linkActiveStateColour: $headColour,
+                        $linkFocusStateColour: $headColour
+                    );
+                }
+            }
+        }
+    }
+}
+
+@mixin tablesSetRowColours(
+    $colour,
+    $backgroundColour,
+    $colourHover,
+    $backgroundColourHover,
+    $linkColour,
+    $linkColourHover
+) {
+    background-color: $backgroundColour;
+    transition: background-color 0.3s ease-in-out;
+    td {
+        color: $colour;
+        transition: color 0.3s ease-in-out;
+        a:not(.btn) {
+            color: $linkColour;
+            &:hover {
+                color: $linkColourHover;
+            }
+            &.label-info {
+                color: $tableTagColour;
+                &:hover {
+                    color: $tableTagColour;
+                }
+            }
+            .ft,
+            .ft-fw {
+                color: $colour;
+                transition: color 0.3s ease-in-out;
+            }
+        }
+    }
+    &:hover {
+        background-color: $backgroundColourHover;
+        td {
+            color: $colourHover;
+            a:not(.btn) {
+                color: $linkColour;
+                &:hover {
+                    color: $linkColourHover;
+                }
+                &.label-info {
+                    color: $tableTagColour;
+                    &:hover {
+                        color: $tableTagColour;
+                    }
+                }
+            }
+            .ft,
+            .ft-fw {
+                color: $colourHover;
+            }
+        }
+    }
+};
+
+@mixin tablesSetBodyColours(
+    $oddRow,
+    $colour,
+    $backgroundColour,
+    $colourHover,
+    $backgroundColourHover
+) {
+    .path-rating .ratingtable,
+    table#explaincaps,
+    table#defineroletable,
+    table.grading-report,
+    table#listdirectories,
+    table.rolecaps,
+    table.userenrolment,
+    table#form,
+    form#movecourses table,
+    #page-admin-course-index .editcourse,
+    .forumheaderlist,
+    table.flexible,
+    .generaltable {
+        > tbody > tr {
+            @if $oddRow {
+                &:nth-of-type(odd) {
+                    @include tablesSetRowColours(
+                        $colour: $colour,
+                        $backgroundColour: $backgroundColour,
+                        $colourHover: $colourHover,
+                        $backgroundColourHover: $backgroundColourHover,
+                        $linkColour: $tableLinkColour,
+                        $linkColourHover: $tableLinkColourHover
+                    )
+                }
+            } @else {
+                &:nth-of-type(even) {
+                    @include tablesSetRowColours(
+                        $colour: $colour,
+                        $backgroundColour: $backgroundColour,
+                        $colourHover: $colourHover,
+                        $backgroundColourHover: $backgroundColourHover,
+                        $linkColour: $tableLinkColour,
+                        $linkColourHover: $tableLinkColourHover
+                    )
+                }
+            }
+            &.dimmed_text {
+                &,
+                &:hover {
+                    td {
+                        &,
+                        a,
+                        a:active,
+                        a:hover,
+                        a:focus,
+                        .ft-fw {
+                            color: $dimmedText;
+                        }
+                    }
+
+                    @if $oddRow {
+                        &:nth-of-type(odd) {
+                            td {
+                                &,
+                                a,
+                                a:active,
+                                a:hover,
+                                a:focus,
+                                .ft-fw {
+                                    color: $dimmedText;
+                                }
+                            }
+                        }
+                    } @else {
+                        &:nth-of-type(even) {
+                            td {
+                                &,
+                                a,
+                                a:active,
+                                a:hover,
+                                a:focus,
+                                .ft-fw {
+                                    color: $dimmedText;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+th,
+td {
+    border: $defaultTableBorder;
+}
+thead {
+    th,
+    td {
+        font-family: $tableHeaderFont;
+        font-weight: $tableHeaderFontWeight;
+        text-transform: $tableHeaderTextTransform;
+        @include mixinsFontSize($tableHeaderFontSize);
+    }
+}
+tbody {
+    background-color: $tableBodyBackgroundColour;
+    td {
+        @include mixinsFontSize($tableCellFontSize);
+    }
+}
+.path-rating .ratingtable,
+table.flexible,
+.generaltable {
+    > thead,
+    > tbody,
+    > tfoot {
+        > tr {
+            > th,
+            > td {
+                border: $localTableBorder;
+            }
+        }
+    }
+    > caption + thead,
+    > colgroup + thead,
+    > thead:first-child {
+        > tr:first-child {
+            > th,
+            > td {
+                border: $localTableBorder;
+            }
+        }
+    }
+    > thead > tr {
+        > th,
+        > td {
+            border: $localTableBorder;
+        }
+    }
+    > tbody + tbody {
+        border: $localTableBorder;
+    }
+}
+
+.chart-output-htmltable {
+    th,
+    td {
+        border-left: 0;
+        border-right: 0;
+    }
+}
+
+@include tablesSetHeadColours(
+    $headColour: $tableHeadColour,
+    $headBackgroundColour: $tableHeadBackgroundColour
+);
+
+@include tablesSetBodyColours(
+    $oddRow: true,
+    $colour: $tablecellcolourodd,
+    $backgroundColour: $tableStripeOddBackgroundColour,
+    $colourHover: $tableCellColourOddHover,
+    $backgroundColourHover: $tableCellBackgroundColourOddHover
+);
+
+@include tablesSetBodyColours(
+    $oddRow: false,
+    $colour: $tablecellcoloureven,
+    $backgroundColour: $tableStripeEvenBackgroundColour,
+    $colourHover: $tableCellColourEvenHover,
+    $backgroundColourHover: $tableCellBackgroundColourEvenHover
+);

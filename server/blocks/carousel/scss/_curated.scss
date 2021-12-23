@@ -1,0 +1,112 @@
+.cohort-container,
+.curated-container {
+    width: 100%;
+    margin: auto;
+    
+    &:after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+// Modal
+.carousel-curated-modal.modal-container {
+    .modal {
+        max-width: 1200px;
+        
+        select[multiple].form-control, 
+        select[size].form-control,
+        input.form-control[type="text"] {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .modal-header {
+            h3 {
+                outline: none;
+            }
+        }
+
+        .modal-body {
+            overflow-y: unset;
+
+            .panel-group {
+                .panel {
+                    .panel-heading {
+                        h4.panel-title {
+                            min-height: 18px;
+                        }
+                    }
+                    .panel-body {
+                        max-height: 100px;
+                        overflow: auto;
+                    }
+                }
+            }
+        }
+        
+        #add-new-cluster {
+            font-size: 14px;
+            float: right;
+            cursor: pointer;
+            
+            i.fa {
+                margin-right: 2px;
+                font-size: 12px;
+                margin-bottom: 1px;
+            }
+        }
+        .cluster-actions {
+            float: right;
+            cursor: pointer;
+            margin-left: 10px;
+            
+            button.dropdown-toggle {
+                padding: 0;
+                box-shadow: none;
+                border: none;
+                background-color: transparent;
+                line-height: 1;
+                display: inline-block;
+                font-size: 16px;
+            }
+            .dropdown-menu {
+                right: 0;
+                left: auto;
+                padding: 10px 15px;
+                min-width: 200px;
+                text-align: center;
+                
+                span.confirm-msg {
+                    display: block;
+                    margin-bottom: 20px;
+                }
+                
+                .btn-cancel {
+                    color: $carousel_white;
+                }
+                
+                .btn {
+                    margin-left: 8px;
+                    margin-right: 8px;
+                }
+            }
+        }
+        .cluster-current-image {
+            img {
+                max-width: 200px;
+            }
+        }
+    }
+}
+.select2-container {
+    z-index: 9999;
+    width: 100% !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    padding: 0;
+    border-right: 1px solid #999;
+    padding-right: 5px;
+    margin-right: 5px;
+}

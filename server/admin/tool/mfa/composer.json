@@ -1,0 +1,18 @@
+{
+    "name": "tke/tool-mfa",
+    "description": "Multi-factor authentication library",
+    "type": "totara-tool",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "mfa",
+        "kineo": {
+            "code-standards": "moodle"
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/tool-mfa/wikis/home"
+    }
+}

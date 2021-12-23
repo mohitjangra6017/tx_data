@@ -1,0 +1,23 @@
+{
+    "name": "tke/isotope-provider-bookings",
+    "type": "totara-isotope-provider",
+    "description": "Isotope Provider that displays a user's Seminar Bookings",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0",
+        "tke/local-isotope-skeleton": "~15.0"
+    },
+    "extra": {
+        "installer-name": "bookings",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-bookings/wikis/home"
+    }
+}

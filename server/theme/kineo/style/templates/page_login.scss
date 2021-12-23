@@ -1,0 +1,458 @@
+@import '../lib/mixins';
+@import '../lib/media';
+@import '../../scss/_global_variables';
+
+$loginBoxMargin: 30px 0 10px;
+$loginDisplayForgottenPasswordLink: true;
+
+@mixin loginPanelButton (
+    $buttonBackground,
+    $buttonBackgroundHover,
+    $buttonColour,
+    $buttonColourHover,
+    $buttonBorderColour,
+    $buttonBorderColourHover,
+    $buttonBorderRadius,
+    $buttonTextTransform,
+    $buttonFontSize,
+    $buttonFontWeight,
+    $buttonPadding
+) {
+    .btn,
+    .link-as-button,
+    button,
+    input[type="submit"],
+    input[type="reset"],
+    input[type="button"],
+    .btn-primary,
+    .btn-default,
+    .btn-secondary,
+    #loginbtn {
+        background-color: $buttonBackground;
+        color: $buttonColour;
+        border-color: $buttonBorderColour;
+        border-radius:  $buttonBorderRadius;
+        text-transform: $buttonTextTransform;
+        font-weight: $buttonFontWeight;
+        padding: $buttonPadding;
+        @include mixinsFontSize($buttonFontSize);
+        &:hover,
+        &:active {
+            background-color: $buttonBackgroundHover;
+            color: $buttonColourHover;
+            border-color: $buttonBorderColourHover;
+        }
+    }
+}
+
+@mixin panelStyle(
+    $panelBackgroundColour,
+    $panelColour,
+    $panelBorderRadius,
+    $panelHeadingFontSize,
+    $panelHeadingFontWeight,
+    $panelHeadingTextTransform,
+    $panelHeadingTextUnderlineColour,
+    $panelBorderColour,
+    $panelBorderWidth
+) {
+    background-color: $panelBackgroundColour;
+    border-radius: $panelBorderRadius;
+    border-color: $panelBorderColour;
+    border-width: $panelBorderWidth;
+    border-style: solid;
+    > h2,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    label,
+    .desc {
+        color: $panelColour;
+    }
+    a {
+        &,
+        &:link,
+        &:visited,
+        &:hover,
+        &:active,
+        &:focus {
+            color: $panelColour
+        }
+    }
+    > h2 {
+        font-size: $panelHeadingFontSize;
+        font-weight: $panelHeadingFontWeight;
+        text-transform: $panelHeadingTextTransform;
+        + hr {
+            border-color: $panelHeadingTextUnderlineColour;
+        }
+    }
+}
+
+@mixin loginPanelStyle (
+    $panelBackgroundColour,
+    $panelBorderColour,
+    $panelBorderRadius,
+    $panelBorderWidth,
+    $panelHeaderColour,
+    $panelTextColour,
+    $panelLinkColour,
+    $panelTextSize,
+    $panelHeadingSize,
+    $panelPadding
+) {
+    background-color: $panelBackgroundColour;
+    border: $panelBorderWidth solid $panelBorderColour;
+    @if ($panelBorderWidth == 1px) {
+        border: thin solid $panelBorderColour;
+    }
+    border-radius: $panelBorderRadius;
+    color: $panelTextColour;
+    padding: $panelPadding;
+    @include mixinsFontSize($panelTextSize);
+    > h2 {
+        color: $panelHeaderColour;
+        font-size: $panelHeadingSize;
+    }
+    a {
+        @include mixinsFontSize($panelTextSize);
+        &:link, &:visited {
+            color: $panelLinkColour;
+        }
+        &:hover, &:active {
+            color: $panelLinkColour;
+        }
+    }
+    p,
+    input[type="password"],
+    input[type="submit"],
+    input[type="text"] {
+        @include mixinsFontSize($panelTextSize);
+    }
+    p,
+    label,
+    .desc {
+        color: $panelTextColour;
+    }
+    input[type="password"],
+    input[type="submit"],
+    input[type="text"] {
+        border-width: thin;
+    }
+}
+
+@mixin loginFlexPanel(
+    $flexGrow,
+    $flexShrink,
+    $flexBasis
+) {
+    float: none;
+    flex-basis: auto;
+    flex-grow: $flexGrow;
+    flex-shrink: $flexShrink;
+    left: 0;
+    margin: 0;
+    width: $flexBasis;
+}
+
+@mixin pathLogin(
+    $bodyBackgroundColour,
+    $headerBackgroundColour,
+    $footerBackgroundColour,
+    $footerColour
+) {
+    #page-login-index {
+        background-color: $bodyBackgroundColour;
+        .totaraNav_prim {
+            background-color: $headerBackgroundColour;
+        }
+        #page-footer,
+        .page-footer-poweredby {
+            background-color: $footerBackgroundColour;
+            &,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6,
+            a,
+            .footer-links-container ul li a {
+                color: $footerColour;
+            }
+            .footer-links-container ul li:not(last-of-type) {
+                border-color: $footerColour;
+            }
+        }
+    }
+}
+
+.forgetpass {
+    @if ($loginDisplayForgottenPasswordLink == true) {
+        display: block;
+    }
+
+    @if ($loginDisplayForgottenPasswordLink == false) {
+        display: none;
+    }
+}
+
+@include pathLogin(
+        $bodyBackgroundColour: $loginPageBackgroundColour,
+        $headerBackgroundColour: $loginPageHeaderBackgroundColour,
+        $footerBackgroundColour: $loginPageFooterBackgroundColour,
+        $footerColour: $loginPageFooterColour
+);
+
+body.path-login {
+    @if ($resolvedLoginPageBackgroundImage) {
+        background-image: url($resolvedLoginPageBackgroundImage);
+        background-size: $resolvedLoginPageBackgroundSize;
+        background-repeat: $resolvedLoginPageBackgroundRepeat;
+        background-position: $loginPageBackgroundPosition;
+        @if ($resolvedLoginPageBackgroundPosition == top-right) {
+            background-position: top right;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == top-left) {
+            background-position: top left;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == top-center) {
+            background-position: top center;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == center-right) {
+            background-position: center right;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == center-left) {
+            background-position: center left;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == center-center) {
+            background-position: center center;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == bottom-right) {
+            background-position: bottom right;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == bottom-left) {
+            background-position: bottom left;
+        }
+        @if ($resolvedLoginPageBackgroundPosition == bottom-center) {
+            background-position: bottom center;
+        }
+        @if ($resolvedLoginPageBackgroundAttachment == true) {
+            background-attachment: fixed;
+        }
+        @if ($resolvedLoginPageBackgroundSize == fullauto) {
+            background-size: 100% auto;
+        }
+    }
+    #page {
+        background-color: $loginPageContentBackgroundColour;
+    }
+    .totaraNav_prim--side .langmenu {
+        position: relative;
+        top: 10px;
+        @include media768() {
+            top: 0;
+        }
+    }
+    #page-footer {
+        .copyright-container {
+            color: $loginPageFooterCopyrightColour;
+        }
+    }
+}
+#page-login-index {
+    #region-main {
+        @if ($resolvedLoginPageContentBackgroundImage) {
+            background-image: url($resolvedLoginPageContentBackgroundImage);
+            background-repeat: no-repeat;
+            background-size: $resolvedLoginPageContentBackgroundSize;
+            @if ($resolvedLoginPageContentBackgroundSize == fullauto) {
+                background-size: 100% auto;
+            }
+        }
+    }
+}
+.loginbox {
+    margin: $loginBoxMargin;
+    border-radius: 0;
+    .loginpanel {
+        @include loginPanelButton(
+                $buttonColour: $loginPanelButtonColour,
+                $buttonColourHover: $loginPanelButtonColourHover,
+                $buttonBackground: $loginPanelButtonBackground,
+                $buttonBackgroundHover: $loginPanelButtonBackgroundHover,
+                $buttonBorderColour: $loginPanelBorderColour,
+                $buttonBorderColourHover: $loginPanelBorderColourHover,
+                $buttonBorderRadius: $loginPanelButtonBorderRadius,
+                $buttonTextTransform: $loginPanelButtonTextTransform,
+                $buttonFontSize: $loginPanelButtonFontSize,
+                $buttonFontWeight: $loginPanelButtonFontWeight,
+                $buttonPadding: $loginPanelButtonPadding
+        );
+    }
+    .potentialidp {
+        padding: 0;
+    }
+}
+
+.loginbox {
+    .signupform {
+        @include loginPanelButton(
+                $buttonColour: $signupPanelButtonColour,
+                $buttonColourHover: $signupPanelButtonColourHover,
+                $buttonBackground: $signupPanelButtonBackground,
+                $buttonBackgroundHover: $signupPanelButtonBackgroundHover,
+                $buttonBorderColour: $signupPanelBorderColour,
+                $buttonBorderColourHover: $signupPanelBorderColourHover,
+                $buttonBorderRadius: $signupPanelButtonBorderRadius,
+                $buttonTextTransform: $signupPanelButtonTextTransform,
+                $buttonFontSize: $signupPanelButtonFontSize,
+                $buttonFontWeight: $signupPanelButtonFontWeight,
+                $buttonPadding: $signupPanelButtonPadding
+        );
+    }
+}
+
+#page-content div[role="main"] {
+    .loginbox {
+        .signuppanel {
+            .potentialidps {
+                display: inline-block;
+                padding: 15px;
+                @include loginPanelButton(
+                        $buttonColour: $signupPanelButtonColour,
+                        $buttonColourHover: $signupPanelButtonColourHover,
+                        $buttonBackground: $signupPanelButtonBackground,
+                        $buttonBackgroundHover: $signupPanelButtonBackgroundHover,
+                        $buttonBorderColour: $signupPanelBorderColour,
+                        $buttonBorderColourHover: $signupPanelBorderColourHover,
+                        $buttonBorderRadius: $signupPanelButtonBorderRadius,
+                        $buttonTextTransform: $signupPanelButtonTextTransform,
+                        $buttonFontSize: $signupPanelButtonFontSize,
+                        $buttonFontWeight: $signupPanelButtonFontWeight,
+                        $buttonPadding: $signupPanelButtonPadding
+                );
+            }
+        }
+        &.onecolumn {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            .loginpanel {
+                padding: 15px;
+            }
+            .signuppanel {
+                margin-top: 20px;
+            }
+        }
+        &.twocolumns {
+            @include media768 {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                .loginpanel {
+                    @include loginFlexPanel(0, 0, 33.3%);
+                }
+                .signuppanel {
+                    @include loginFlexPanel(0, 0, 58.3%);
+                    .potentialidps {
+                        padding: 0;
+                        margin-top: 20px;
+                    }
+                }
+            }
+        }
+        .loginpanel {
+            @include panelStyle(
+                    $panelBackgroundColour: $loginPanelBackgroundColour,
+                    $panelColour: $loginPanelColour,
+                    $panelBorderRadius: $loginPanelBorderRadius,
+                    $panelBorderColour: $loginPanelBorderColor,
+                    $panelBorderWidth: $loginPanelBorderWidth,
+                    $panelHeadingFontSize: $panelHeadingSize,
+                    $panelHeadingFontWeight: $panelHeadingFontWeight,
+                    $panelHeadingTextTransform: $resolvedPanelHeadingTextTransform,
+                    $panelHeadingTextUnderlineColour: $loginPanelHeadingTextUnderlineColour
+
+            )
+        }
+        .signuppanel {
+            @include panelStyle(
+                    $panelBackgroundColour: $signupPanelBackgroundColour,
+                    $panelColour: $signupPanelColour,
+                    $panelBorderRadius: $signupPanelBorderRadius,
+                    $panelBorderColour: $signupPanelBorderColor,
+                    $panelBorderWidth: $signupPanelBorderWidth,
+                    $panelHeadingFontSize: $panelHeadingSize,
+                    $panelHeadingFontWeight: $panelHeadingFontWeight,
+                    $panelHeadingTextTransform: $resolvedPanelHeadingTextTransform,
+                    $panelHeadingTextUnderlineColour: $signupPanelHeadingTextUnderlineColour
+            )
+        }
+    }
+}
+
+.skip-block,
+.skip-block-to {
+    flex: 0 0 0;
+}
+
+@if ($resolvedHideLoginHeroImage == "hide") {
+    .path-login #login_hero-image {
+        display: none;
+    }
+    .loginbox {
+        margin: 50px 0 10px;
+    }
+}
+
+@if ($resolvedHideLoginHeroImage == "show") {
+    .path-login #login_hero-image {
+        display: block;
+    }
+}
+@if ($resolvedHideLoginHeaderDropShadow == true) {
+    .path-login .totaraNav {
+        box-shadow: none;
+    }
+}
+@if ($resolvedHideLoginHeaderDropShadow == false) {
+    .path-login .totaraNav {
+        box-shadow: $totaraNavBoxShadow;
+    }
+}
+
+.core__forgotpassword,
+#page-login-signup #region-main {
+    margin-top: 10px;
+    @include panelStyle(
+            $panelBackgroundColour: $loginPanelBackgroundColour,
+            $panelColour: $loginPanelColour,
+            $panelBorderRadius: $loginPanelBorderRadius,
+            $panelBorderColour: $loginPanelBorderColor,
+            $panelBorderWidth: $loginPanelBorderWidth,
+            $panelHeadingFontSize: $panelHeadingSize,
+            $panelHeadingFontWeight: $panelHeadingFontWeight,
+            $panelHeadingTextTransform: $resolvedPanelHeadingTextTransform,
+            $panelHeadingTextUnderlineColour: $loginPanelHeadingTextUnderlineColour
+
+    );
+    @include loginPanelButton(
+            $buttonColour: $loginPanelButtonColour,
+            $buttonColourHover: $loginPanelButtonColourHover,
+            $buttonBackground: $loginPanelButtonBackground,
+            $buttonBackgroundHover: $loginPanelButtonBackgroundHover,
+            $buttonBorderColour: $loginPanelBorderColour,
+            $buttonBorderColourHover: $loginPanelBorderColourHover,
+            $buttonBorderRadius: $loginPanelButtonBorderRadius,
+            $buttonTextTransform: $loginPanelButtonTextTransform,
+            $buttonFontSize: $loginPanelButtonFontSize,
+            $buttonFontWeight: $loginPanelButtonFontWeight,
+            $buttonPadding: $loginPanelButtonPadding
+    );
+}

@@ -1,0 +1,6 @@
+<ul class="block_related_courses_tags">
+    <li><button class="tag" data-filter="*">{{#str}}all, block_related_courses{{/str}}</button></li>
+    {{#tags}}
+        <li><button class="tag" data-filter=".tag_{{.}}">{{.}}</button></li>
+    {{/tags}}
+</ul>

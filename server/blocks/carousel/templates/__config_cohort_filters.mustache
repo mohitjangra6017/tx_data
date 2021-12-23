@@ -1,0 +1,11 @@
+<form class="cohort-configuration-from">
+    <div class="form-group">
+        <label for="tags-search">{{#str}} cohort_search, block_carousel {{/str}}</label>
+        <select multiple class="form-control select2" id="cohort-search" name="cohortids[]">
+            {{#cohorts}}
+                <option value="{{id}}" {{#selected}} selected {{/selected}}>{{name}}</option>
+            {{/cohorts}}
+        </select>
+    </div>
+    <input type="hidden" name="blockinstanceid" value="{{blockinstanceid}}" />
+</form>

@@ -1,0 +1,9 @@
+$panelBackgroundColour: $profilePanelBackgroundColour;
+
+.userprofile {
+    .profile_tree {
+        section {
+            background-color: $panelBackgroundColour;
+        }
+    }
+}

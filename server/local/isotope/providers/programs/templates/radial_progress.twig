@@ -1,0 +1,40 @@
+{% macro progress(progs, plugin, default) %}
+<nav class="programs isotope progname progfilters">
+    <span>{{ get_string('filter_navigation:program', plugin) }}</span>
+    <div>
+        {{ block('container') }}
+    </div>
+</nav>
+{% endmacro %}
+
+{%- block circle -%}
+<div class="circle">
+    <div class="mask full">
+        <div class="fill"></div>
+    </div>
+    <div class="mask half">
+        <div class="fill"></div>
+        <div class="fill fix"></div>
+    </div>
+    <div class="shadow"></div>
+</div>
+{%- endblock -%}
+
+{%- block inset -%}
+<div class="inset">
+    <div class="percentage">
+        <div class="numbers"><span>-</span>{% for i in 0..100 %}<span>{{ i }}%</span>{% endfor %}</div>
+    </div>
+</div>
+{%- endblock -%}
+
+{%- block container -%}
+    {% for prog in progs %}
+        {% set active = (prog.id == default) ? 'active' : '' %}
+        <div class="radial-progress prog {{ prog.status }} {{ active }}" data-filter="{{ prog.id }}" data-progress="0" data-progress-value="{{ prog.progress }}">
+            {{ block('circle') }}
+            {{ block('inset') }}
+            <p class="label">{{ prog.fullname | format_html }}</p>
+        </div>
+    {% endfor %}
+{%- endblock -%}

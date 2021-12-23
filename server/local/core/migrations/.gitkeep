@@ -1,0 +1,1 @@
+This file ensures the migrations directory always exists, ready for the install of Migration plugins.

@@ -1,0 +1,25 @@
+ .totaraNav_prim--side {
+    .usermenu {
+        .toggle-display {
+            color: $userMenuToggleDisplayColour;
+            background-color: $userMenuToggleDisplayBackgroundColour;
+            &:hover {
+                color: $userMenuToggleDisplayColourHover;
+                background-color: $userMenuToggleDisplayBackgroundColourHover;
+            }
+        }
+        .menu .ft-fw {
+            color: $userMenuIconColour;
+        }
+        .login {
+            color: $userMenuToggleDisplayColour;
+        }
+    }
+    .popover-region {
+        .nav-link {
+            &:hover {
+                background-color: $userMenuIconButtonBackgroundColourHover;
+            }
+        }
+    }
+}

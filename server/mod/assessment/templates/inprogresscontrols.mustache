@@ -1,0 +1,19 @@
+<div class='controls'>
+    <div class = "return-nav">
+        <a href = "{{{backurl}}}" class = "btn btn-default back">{{strback}}</a>
+    </div>
+    <div class = "status">
+        <label>{{strstatus}}:</label>
+        {{status}}
+    </div>
+    {{#isevaluator}}
+    <div class = "alert alert-info viewing-user">
+        {{strviewinguser}}
+    </div>
+    {{/isevaluator}}
+    {{#isreviewer}}
+    <div class = "alert alert-info viewing-user">
+        {{strviewinguser}}
+    </div>
+    {{/isreviewer}}
+</div>

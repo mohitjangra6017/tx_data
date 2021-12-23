@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/email_log/db" VERSION="20170622" COMMENT="XMLDB file for Moodle local/email_log"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_email_log" COMMENT="Stores details about emails sent from the system.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="usertoid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The recipients userid"/>
+        <FIELD NAME="usertoemail" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The recipients email"/>
+        <FIELD NAME="userfromid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The senders userid"/>
+        <FIELD NAME="userfromemail" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The senders email"/>
+        <FIELD NAME="subject" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The email subject"/>
+        <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The email body"/>
+        <FIELD NAME="timesent" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="sent" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="usertoid" UNIQUE="false" FIELDS="usertoid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

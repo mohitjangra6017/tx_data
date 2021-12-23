@@ -1,0 +1,26 @@
+$t2_gutterwidth : 25px;
+$t2_contentbg : #333333;
+$t2_textcolour : #ffffff;
+
+.block.block_awesome .awesome-block.template-2 {
+    .caption {
+        position: relative;
+        min-height: 250px;
+        padding: $t2_gutterwidth;
+        background-color: $t2_contentbg;
+        color: $t2_textcolour;
+        
+        .awesome-link {
+            position: absolute;
+            bottom: $t2_gutterwidth;
+            right: $t2_gutterwidth;
+            min-width: 110px;
+            
+            &:after {
+                content: "\f054";
+                font-family: FontAwesome;
+                padding-left: 10px;
+            }
+        }
+    }
+}

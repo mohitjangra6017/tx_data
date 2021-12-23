@@ -1,0 +1,11 @@
+.block.block_carousel ._red_filteredenrolledlist {
+  @extend ._red;
+}
+
+.block.block_carousel {
+  .filteredenrolledlist {
+    .slick-slide {
+      text-align: left;
+    }
+  }
+}

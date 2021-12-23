@@ -1,0 +1,9 @@
+@import '../lib/mixins';
+$legendFontSize: $baseFontSize;
+
+.fitem > fieldset > legend {
+    @include mixinsFontSize($legendFontSize);
+}
+.collapsible-actions {
+    margin-bottom: 20px;
+}

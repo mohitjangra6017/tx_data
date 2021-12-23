@@ -1,0 +1,40 @@
+{% import 'radial_progress.twig' as radial %}
+{% import 'filter_navigation.twig' as filter_navigation %}
+{% use "table.twig" %}
+{% use "tile.twig" %}
+{% if items is not empty %}
+    <p class="isotope-description">{{ get_string('description', plugin) }}</p>
+
+    {% if config.filter_completion_status == 'radial' %}
+        {{ radial.progress(statuses, plugin, config.default_filter_status) }}
+    {% elseif config.filter_completion_status == 'basic' %}
+        {{ filter_navigation.nav(statuses, 'status', plugin, config.default_filter_status) }}
+    {% endif %}
+
+    {% if config.filter_type == '1' %}
+        {{ filter_navigation.nav(types, 'type', plugin, config.default_filter_type) }}
+    {% endif %}
+
+    {% if config.filter_required == '1' %}
+        {{ filter_navigation.nav(requires, 'required', plugin, config.default_filter_required) }}
+    {% endif %}
+
+    <section class="learning isotope container display-type-{{ config.display_type }}">
+        {% if config.display_type == 'tile' %}
+            {% for learning in items %}
+                {%- set image_class -%}
+                    {%- if learning.image and config.display_course_image != 'disabled' -%}
+                        {%- if config.display_course_image == 'background' -%}
+                            course-image-background
+                        {%- elseif config.display_course_image == 'foreground' -%}
+                            course-image-foreground
+                        {%- endif -%}
+                    {%- endif -%}
+                {%- endset -%}
+                {% block tile %}{{ parent() }}{% endblock %}
+            {% endfor %}
+        {% else %}
+            {% block table %}{{ parent() }}{% endblock %}
+        {% endif %}
+    </section>
+{% endif %}

@@ -1,0 +1,36 @@
+// basic colours
+$carousel_white: var(--color-white);
+$carousel_charcoal: #262626;
+$carousel_black: var(--color-black);
+$carousel_primary_text_colour: var(--color-text);
+$carousel_secondary_text_colour: #AAAAAA;
+
+$carousel_text_colour: $carousel_primary_text_colour;
+$carousel_tag_bg: #F4C150;
+$carousel_tag_imp_bg: #F59C49;
+$carousel_tag_height: 16px;
+$carousel_radius: 6px;
+
+// brand colours
+$carousel_brandcolor1: var(--color-primary);
+$carousel_brandcolor2: var(--color-secondary);
+$carousel_brandcolor3: var(--color-tertiary);
+$carousel_brandcolor4: var(--color-accent-3);
+
+// grey
+$carousel_light_grey: #CCCCCC;
+$carousel_lighter_grey: #EBEBEB;
+$carousel_dark_grey: #636363;
+$carousel_darker_grey: #333333;
+
+// dimmed text
+$carousel_dimmed_text: #a5a5a5;
+
+$carousel_border_color: $carousel_lighter_grey;
+
+$carousel_gutter_width: 10px;
+$carousel_course_detail_height: 385px;
+
+$carousel_font_awesome: 'tfont';
+
+$carousel_details_height: 385px;

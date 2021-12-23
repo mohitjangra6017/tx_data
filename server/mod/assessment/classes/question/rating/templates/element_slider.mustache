@@ -1,0 +1,11 @@
+<div class="tf_element_input">{{> totara_form/validation_errors}}
+    <div class="slider">
+        <span class="minval">{{minval}}</span>
+        <span class="maxval">{{maxval}}</span>
+        <input type="range" id="{{id}}" {{#frozen}}disabled data-{{/frozen}}name="{{name}}" value="{{rvalue}}" step="{{step}}" min="{{minval}}" max="{{maxval}}"
+            onchange="$(this).siblings('.selectedval').find('span.value').html(this.value);"
+            {{#required}}required{{/required}}
+        />
+        <div class="selectedval">{{strselected}} = <span class='value'>{{rvalue}}</span></div>
+    </div>
+</div>

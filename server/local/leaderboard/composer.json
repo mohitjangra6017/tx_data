@@ -1,0 +1,33 @@
+{
+    "name": "tke/local-leaderboard",
+    "description": "Earn score points on Totara events",
+    "type": "totara-local",
+    "authors": [
+        {
+            "name": "Carlos Jurado",
+            "email": "carlos.jurado@kineo.com"
+        }
+    ],
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "suggest": {
+        "tke/block-leaderboard": "Block to display leaderboard to users"
+    },
+    "extra": {
+        "installer-name": "leaderboard",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "replace": {
+        "kineo/score": "*",
+        "kineo/local_leaderboard": "*",
+        "tke/local-leaderboard": "*"
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "tke/block-rate-course",
+    "description": "Functionality for likes, recommendations, and reviews of courses",
+    "type": "totara-block",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "rate_course",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    }
+}

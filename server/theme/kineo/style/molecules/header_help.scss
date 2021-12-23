@@ -1,0 +1,84 @@
+@import '../../scss/_global_variables';
+
+@mixin headerHelpIcon(
+  $enabled,
+  $iconOrText,
+  $helpIcon,
+  $colour,
+  $size
+) {
+  .popover-region-helplink {
+    display: none;
+
+    a {
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+
+      &,
+      .flex-icon {
+        color: $colour;
+        font-size: $size;
+
+        &:hover,
+        &:focus {
+          color: $colour
+        }
+      }
+
+      span {
+        display: none;
+      }
+
+      span:last-of-type {
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  @if ($enabled == true) {
+    .popover-region-helplink {
+      display: block;
+    }
+  }
+  @if ($iconOrText == 'icon') {
+    .popover-region-helplink {
+      a {
+        @if ($helpIcon == 'info') {
+          span[data-flex-icon="fa-info-circle"] {
+            display: inline-block;
+          }
+        }
+        @if ($helpIcon == 'question-mark') {
+          span[data-flex-icon = "fa-question-circle"] {
+            display: inline-block;
+          }
+        }
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+  @if ($iconOrText == 'text') {
+    .popover-region-helplink {
+      a {
+        span:last-of-type {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+@include headerHelpIcon(
+        $enabled: $resolvedEnableHelpLink,
+        $iconOrText: $resolvedEnableHelpLinkAsIconOrText,
+        $helpIcon: $resolvedHelpIcon,
+        $colour: $helpIconColour,
+        $size: $helpIconSize
+);

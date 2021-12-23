@@ -1,0 +1,233 @@
+@import '../lib/mixins';
+@import '../lib/media';
+@import '../../scss/global_variables';
+
+$blockRelatedCoursesItemBorderColour: $borderColour;
+
+$blockRelatedCoursesTileContainerPaddingTablet: var(--gap-2);
+
+$blockRelatedCoursesTileMarginHorizontalSmall: 10px;
+$blockRelatedCoursesTileMarginHorizontalMedium: 10px;
+
+$blockRelatedCoursesTileMarginSmall: var(--gap-1) ($blockRelatedCoursesTileMarginHorizontalSmall / 2);
+$blockRelatedCoursesTileMarginMedium: var(--gap-2) $blockRelatedCoursesTileMarginHorizontalMedium;
+
+$blockRelatedCoursesTileMarginSideRegion: var(--gap-2) $blockRelatedCoursesTileMarginHorizontalSmall;
+
+$blockRelatedCoursesCarouselButtonBackgroundColour : $buttonPrimaryBackgroundColour;
+$blockRelatedCoursesCarouselButtonBackgroundColourHover : $buttonPrimaryBackgroundColourHover;
+
+$blockRelatedCoursesCarouselButtonColour: $buttonPrimaryColour;
+$blockRelatedCoursesCarouselButtonColourHover: $buttonPrimaryColourHover;
+
+$blockRelatedCoursesCarouselButtonBackgroundOpacity : 0.5;
+
+@mixin defineTile($width, $containerPadding, $tileMargin) {
+    padding: $containerPadding;
+    figure.course {
+        flex-basis: $width;
+        margin: $tileMargin;
+        width: auto;
+        float: none;
+    }
+}
+
+@mixin defineList() {
+    figure.course {
+        display: flex;
+        flex-basis: 100%;
+        max-width: calc(100% - 32px);
+        margin: 0 16px 10px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .related-courses-bg-image {
+            display: none;
+        }
+        a {
+            flex-basis: 80%;
+        }
+        button.enrol {
+            margin: 10px;
+            align-self: flex-end;
+        }
+    }
+}
+
+.block_related_courses[data-block="related_courses"] {
+    .content.block-content {
+        padding: 10px 0 0;
+    }
+    .block_related_courses_tags {
+        margin: 10px 16px 0;
+        list-style-type: none;
+    }
+
+    figure.course {
+        margin-bottom: 10px;
+        border-color: $blockRelatedCoursesItemBorderColour;
+        img {
+            width: auto;
+            height: 200px;
+        }
+        button {
+            white-space: pre-wrap;
+        }
+    }
+
+    // Tile and List layouts.
+
+    .block_related_courses_full .block_related_courses_courses {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        width: 100%;
+        figure.course {
+            flex-basis: 100%;
+            width: auto;
+            float: none;
+        }
+    }
+
+    // Carousel.
+    .block-content {
+        .slick-prev,
+        .slick-next {
+            width: 30px;
+            height: 30px;
+            &,
+            &:hover {
+                background-color: transparent;
+                border: none;
+                box-shadow: none;
+            }
+            &:active:focus,
+            &:active {
+                background-color: transparent;
+                outline: none;
+                box-shadow: none;
+            }
+            &:before {
+                @include mixinsFontSize(16);
+                line-height: 2;
+                background-color: $blockRelatedCoursesCarouselButtonBackgroundColour;
+                color: $blockRelatedCoursesCarouselButtonColour;
+                opacity: $blockRelatedCoursesCarouselButtonBackgroundOpacity;
+                padding: 10px;
+                position: relative;
+                top: 0;
+                transition: background-color 0.3s ease-in-out;
+            }
+            &:hover:before {
+                background-color: $blockRelatedCoursesCarouselButtonBackgroundColourHover;
+                color: $blockRelatedCoursesCarouselButtonColourHover;
+            }
+        }
+    }
+}
+
+.block_related_courses[data-block="related_courses"] {
+    .block_related_courses_full .block_related_courses_courses {
+        &[data-layout="block"] {
+            padding: 0 6px;
+            @include defineTile(
+                    $width: calc(100% - #{$blockRelatedCoursesTileMarginHorizontalSmall}),
+                    $containerPadding: 0,
+                    $tileMargin: $blockRelatedCoursesTileMarginHorizontalSmall
+            );
+            [id*="block-region-side"] & {
+                @include defineTile(
+                        $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalSmall} * 2)),
+                        $containerPadding: 0,
+                        $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                );
+            };
+            @include media480() {
+                @include defineTile(
+                        $width: calc(50% - (#{$blockRelatedCoursesTileMarginHorizontalSmall} * 2)),
+                        $containerPadding: 0,
+                        $tileMargin: $blockRelatedCoursesTileMarginHorizontalSmall
+                );
+                [id*="block-region-side"] & {
+                    @include defineTile(
+                            $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalSmall} * 2)),
+                            $containerPadding: 0,
+                            $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                    );
+                };
+            }
+            @include media768() {
+                @include defineTile(
+                        $width: calc(50% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                        $containerPadding: $blockRelatedCoursesTileContainerPaddingTablet,
+                        $tileMargin: $blockRelatedCoursesTileMarginMedium
+                );
+                [id*="block-region-side"] & {
+                    @include defineTile(
+                            $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                            $containerPadding: 0,
+                            $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                    );
+                };
+            }
+            @include media960() {
+                @include defineTile(
+                        $width: calc(33.3% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                        $containerPadding: $blockRelatedCoursesTileContainerPaddingTablet,
+                        $tileMargin: $blockRelatedCoursesTileMarginMedium
+                );
+                [id*="block-region-side"] & {
+                    @include defineTile(
+                            $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                            $containerPadding: 0,
+                            $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                    );
+                };
+            }
+            @include media992() {
+                @include defineTile(
+                        $width: calc(33.3% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                        $containerPadding: $blockRelatedCoursesTileContainerPaddingTablet,
+                        $tileMargin: $blockRelatedCoursesTileMarginMedium
+                );
+                [id*="block-region-side"] & {
+                    @include defineTile(
+                            $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                            $containerPadding: 0,
+                            $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                    );
+                };
+            }
+            @include media1200() {
+                @include defineTile(
+                        $width: calc(25% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                        $containerPadding: $blockRelatedCoursesTileContainerPaddingTablet,
+                        $tileMargin: $blockRelatedCoursesTileMarginMedium
+                );
+                [id*="block-region-side"] & {
+                    @include defineTile(
+                            $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                            $containerPadding: 0,
+                            $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                    );
+                };
+            }
+            @include media1382() {
+                @include defineTile(
+                        $width: calc(20% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                        $containerPadding: $blockRelatedCoursesTileContainerPaddingTablet,
+                        $tileMargin: $blockRelatedCoursesTileMarginMedium
+                );
+                [id*="block-region-side"] & {
+                    @include defineTile(
+                            $width: calc(100% - (#{$blockRelatedCoursesTileMarginHorizontalMedium} * 2)),
+                            $containerPadding: 0,
+                            $tileMargin: $blockRelatedCoursesTileMarginSideRegion
+                    );
+                };
+            }
+        }
+        &[data-layout="list"] {
+            @include defineList();
+        }
+    }
+}

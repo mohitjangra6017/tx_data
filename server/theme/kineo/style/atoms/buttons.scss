@@ -1,0 +1,304 @@
+@import '../lib/mixins';
+
+@mixin buttonFontSize($fontSize) {
+    @include mixinsFontSize($fontSize);
+}
+
+@mixin buttonColours(
+    $colour,
+    $colourHover,
+    $backgroundColour,
+    $backgroundColourHover,
+    $colourActiveFocus,
+    $backgroundColourActiveFocus,
+    $colourDisabled,
+    $backgroundColourDisabled,
+    $borderColour,
+    $borderColourActiveFocus,
+    $borderColourHover
+) {
+    &,
+    &:visited {
+        color: $colour;
+        background-color: $backgroundColour;
+        border-color: $borderColour;
+        transition: all 0.3s ease-in-out;
+    }
+    &:active:focus {
+        color: $colourActiveFocus;
+        background-color: $backgroundColourActiveFocus;
+        border-color: $borderColourActiveFocus;
+    }
+    &:hover,
+    &:focus {
+        color: $colourHover;
+        background-color: $backgroundColourHover;
+        border-color: $borderColourHover;
+    }
+    &.disabled,
+    &[disabled] {
+        &,
+        &:active:focus,
+        &:hover,
+        &:focus {
+            color: $colourDisabled;
+            background-color: $backgroundColourDisabled;
+            border-color: $backgroundColourDisabled;
+        }
+    }
+}
+
+@mixin buttonIcons(
+    $iconMainColour,
+    $iconSuffixColour,
+    $iconColourHover,
+    $iconSuffixColourHover,
+    $iconShadowColour,
+    $iconShadowColourHover
+) {
+    .ft,
+    .ft-fw {
+        transition: all 0.3s ease-in-out;
+        color: $iconMainColour;
+        + span + .header-button-title {
+            padding-left: 0.5em;
+        }
+    }
+    .ft-stack-suffix {
+        transition: all 0.3s ease-in-out;
+        color: $iconSuffixColour !important;
+        text-shadow: -2px 0 0 $iconShadowColour, 2px 0 0 $iconShadowColour, 0 -2px 0 $iconShadowColour, 0 2px 0 $iconShadowColour, 2px 2px 0 $iconShadowColour;
+    }
+    &:hover,
+    &:focus {
+        .ft,
+        .ft-fw {
+            color: $iconColourHover;
+        }
+        .ft-stack-suffix {
+            color: $iconSuffixColourHover !important;
+            text-shadow: -2px 0 0 $iconShadowColourHover, 2px 0 0 $iconShadowColourHover, 0 -2px 0 $iconShadowColourHover, 0 2px 0 $iconShadowColourHover, 2px 2px 0 $iconShadowColourHover;
+        }
+    }
+}
+
+
+.btn,
+.link-as-button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+[class*='__btn'],
+input.form-submit,
+input#id_submitbutton,
+input#id_submitbutton2,
+.path-admin .buttons input[type="submit"],
+td.submit input,
+.userprofile .header-button-group .btn,
+.path-mod-feedback .feedback_form input[type="submit"],
+.btn-default.course-review-liked,
+#btn-enrol-enrolled,
+table.flexible>tbody>tr:nth-of-type(odd) td a.link-as-button,
+#page-footer .page-footer-main-content .btn,
+#notice .singlebutton+.singlebutton input,
+.submit.buttons input[name=cancel],
+.tw-evidence__header_titleBtns_buttons_link {
+    &,
+    &.btn-default,
+    &.btn-info,
+    &.btn-success,
+    &.btn-warning,
+    &.btn-danger {
+        font-family: $buttonFont;
+        border-radius: $buttonBorderRadius;
+        border-width: $buttonBorderWidth;
+        text-transform: $buttonTextTransform;
+        font-weight: $buttonFontWeight;
+        padding: $buttonPadding;
+        @include buttonFontSize($buttonFontSize);
+        @include buttonColours(
+            $colour: $buttonColour,
+            $colourHover: $buttonColourHover,
+            $backgroundColour: $buttonBackground,
+            $backgroundColourHover: $buttonBackgroundHover,
+            $colourActiveFocus: $buttonColourHover,
+            $backgroundColourActiveFocus: $buttonBackgroundHover,
+            $colourDisabled: $disabledButtonColour,
+            $backgroundColourDisabled: $disabledButtonBackgroundColour,
+            $borderColour: $buttonBorderColour,
+            $borderColourHover: $buttonBorderColourHover,
+            $borderColourActiveFocus: $buttonBorderColourActiveFocus
+        );
+    }
+    &.btn-primary,
+    &.btn-primary:link {
+        border-radius: $buttonPrimaryBorderRadius;
+        border-width: $buttonPrimaryBorderWidth;
+        text-transform: $buttonPrimaryTextTransform;
+        font-weight: $buttonPrimaryFontWeight;
+        padding: $buttonPrimaryPadding;
+        text-decoration: none;
+        @include buttonFontSize($buttonPrimaryFontSize);
+        @include buttonColours(
+            $colour: $buttonPrimaryColour,
+            $colourHover: $buttonPrimaryColourHover,
+            $backgroundColour: $buttonPrimaryBackgroundColour,
+            $backgroundColourHover: $buttonPrimaryBackgroundColourHover,
+            $colourActiveFocus: $buttonPrimaryColourHover,
+            $backgroundColourActiveFocus: $buttonPrimaryBackgroundColourHover,
+            $colourDisabled: $buttonPrimaryColourDisabled,
+            $backgroundColourDisabled: $buttonPrimaryBackgroundColourDisabled,
+            $borderColour: $buttonPrimaryBorderColour,
+            $borderColourHover: $buttonPrimaryBorderColourHover,
+            $borderColourActiveFocus: $buttonPrimaryBorderColourActiveFocus
+        );
+    }
+    &.btn-secondary {
+        border-radius: $buttonSecondaryBorderRadius;
+        border-width: $buttonSecondaryBorderWidth;
+        text-transform: $buttonSecondaryTextTransform;
+        font-weight: $buttonSecondaryFontWeight;
+        padding: $buttonSecondaryPadding;
+        @include buttonFontSize($buttonSecondaryFontSize);
+        @include buttonColours(
+            $colour: $buttonSecondaryColour,
+            $colourHover: $buttonSecondaryColourHover,
+            $backgroundColour: $buttonSecondaryBackgroundColour,
+            $backgroundColourHover: $buttonSecondaryBackgroundColourHover,
+            $colourActiveFocus: $buttonSecondaryColourHover,
+            $backgroundColourActiveFocus: $buttonSecondaryBackgroundColourHover,
+            $colourDisabled: $buttonSecondaryColourDisabled,
+            $backgroundColourDisabled: $buttonSecondaryBackgroundColourDisabled,
+            $borderColour: $buttonSecondaryBorderColour,
+            $borderColourHover: $buttonSecondaryBorderColourHover,
+            $borderColourActiveFocus: $buttonSecondaryBorderColourActiveFocus
+        );
+    }
+}
+
+.btn.btn-link {
+    &,
+    &:link {
+        color: $linkColour;
+
+        &,
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: transparent;
+            font-family: $baseFont;
+            font-size: $baseFontSize;
+            border: none;
+        }
+
+        &:hover,
+        &:focus,
+        &:active,
+        &:focus:active,
+        &:active:active:focus {
+            background-color: transparent;
+            color: $linkColourHover;
+            border: none;
+            outline: none;
+            outline-offset: 0;
+            box-shadow: none;
+        }
+    }
+}
+
+.btn,
+.link-as-button,
+[class*='__btn'] {
+    &,
+    .block .block-content & {
+        &:link,
+        &:visited,
+        &:active {
+            @include buttonFontSize($buttonFontSize);
+            @include buttonColours(
+                $colour: $buttonColour,
+                $colourHover: $buttonColourHover,
+                $backgroundColour: $buttonBackground,
+                $backgroundColourHover: $buttonBackgroundHover,
+                $colourActiveFocus: $buttonColourHover,
+                $backgroundColourActiveFocus: $buttonBackgroundHover,
+                $colourDisabled: $disabledButtonColour,
+                $backgroundColourDisabled: $disabledButtonBackgroundColour,
+                $borderColour: $buttonBorderColour,
+                $borderColourHover: $buttonBorderColourHover,
+                $borderColourActiveFocus: $buttonBorderColourActiveFocus
+            );
+        }
+        @include buttonIcons(
+            $iconMainColour: $buttonColour,
+            $iconSuffixColour: $buttonColour,
+            $iconColourHover: $buttonColourHover,
+            $iconSuffixColourHover: $buttonColourHover,
+            $iconShadowColour: $buttonBackground,
+            $iconShadowColourHover: $buttonBackgroundHover
+        );
+    }
+    &.btn-primary {
+        &,
+        .block .block-content & {
+            &:link,
+            &:visited,
+            &:active {
+                @include buttonFontSize($buttonPrimaryFontSize);
+                @include buttonColours(
+                    $colour: $buttonPrimaryColour,
+                    $colourHover: $buttonPrimaryColourHover,
+                    $backgroundColour: $buttonPrimaryBackgroundColour,
+                    $backgroundColourHover: $buttonPrimaryBackgroundColourHover,
+                    $colourActiveFocus: $buttonPrimaryColourHover,
+                    $backgroundColourActiveFocus: $buttonPrimaryBackgroundColourHover,
+                    $colourDisabled: $buttonPrimaryColourDisabled,
+                    $backgroundColourDisabled: $buttonPrimaryBackgroundColourDisabled,
+                    $borderColour: $buttonPrimaryBorderColour,
+                    $borderColourHover: $buttonPrimaryBorderColourHover,
+                    $borderColourActiveFocus: $buttonPrimaryBorderColourActiveFocus
+                );
+            }
+            @include buttonIcons(
+                $iconMainColour: $buttonPrimaryColour,
+                $iconSuffixColour: $buttonPrimaryColour,
+                $iconColourHover: $buttonPrimaryColourHover,
+                $iconSuffixColourHover: $buttonPrimaryColourHover,
+                $iconShadowColour: $buttonPrimaryBackgroundColour,
+                $iconShadowColourHover: $buttonPrimaryBackgroundColourHover
+            );
+        }
+    }
+    &.btn-secondary {
+        &,
+        .block .block-content & {
+            &:link,
+            &:visited,
+            &:active {
+                @include buttonFontSize($buttonSecondaryFontSize);
+                @include buttonColours(
+                    $colour: $buttonSecondaryColour,
+                    $colourHover: $buttonSecondaryColourHover,
+                    $backgroundColour: $buttonSecondaryBackgroundColour,
+                    $backgroundColourHover: $buttonSecondaryBackgroundColourHover,
+                    $colourActiveFocus: $buttonSecondaryColourHover,
+                    $backgroundColourActiveFocus: $buttonSecondaryBackgroundColourHover,
+                    $colourDisabled: $buttonSecondaryColourDisabled,
+                    $backgroundColourDisabled: $buttonSecondaryBackgroundColourDisabled,
+                    $borderColour: $buttonSecondaryBorderColour,
+                    $borderColourHover: $buttonSecondaryBorderColourHover,
+                    $borderColourActiveFocus: $buttonSecondaryBorderColourActiveFocus
+                );
+                @include buttonIcons(
+                    $iconMainColour: $buttonSecondaryColour,
+                    $iconSuffixColour: $buttonSecondaryColour,
+                    $iconColourHover: $buttonSecondaryColourHover,
+                    $iconSuffixColourHover: $buttonSecondaryColourHover,
+                    $iconShadowColour: $buttonSecondaryBackgroundColour,
+                    $iconShadowColourHover: $buttonSecondaryBackgroundColourHover
+                );
+            }
+        }
+    }
+}

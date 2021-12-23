@@ -1,0 +1,57 @@
+{% macro progress(filters, plugin, default) %}
+<nav class="learning isotope completion filters">
+    <span>{{ get_string('radial_progress:status', plugin) }}</span>
+    <div>
+        {{ block('container') }}
+    </div>
+</nav>
+{% endmacro %}
+
+{%- block circle -%}
+<div class="circle">
+    <div class="mask full">
+        <div class="fill"></div>
+    </div>
+    <div class="mask half">
+        <div class="fill"></div>
+        <div class="fill fix"></div>
+    </div>
+    <div class="shadow"></div>
+</div>
+{%- endblock -%}
+
+{%- block inset -%}
+<div class="inset">
+    <div class="percentage">
+        <div class="numbers"><span>-</span>{% for i in 0..100 %}<span>{{ i }}%</span>{% endfor %}</div>
+    </div>
+</div>
+{%- endblock -%}
+
+{%- block inset_all -%}
+<div class="inset">
+    <div class="all">
+        <span>{{ get_string('radial_progress:filter:all', plugin) }}</span>
+    </div>
+</div>
+{%- endblock -%}
+
+{%- block container -%}
+    {% set active = default == 'all' ? 'active' : '' %}
+    <div class="radial-progress all {{ active }}" data-filter="*" data-progress="0" data-progress-value="0">
+        {{ block('circle') }}
+        {{ block('inset_all') }}
+        <p>{{ get_string('radial_progress:filter:reset', plugin) }}</p>
+    </div>
+    {% for filter, percent in filters %}
+        {% set active = default == filter ? 'active' : '' %}
+        <div class="radial-progress {{ filter }} {{ active }}" data-filter=".status-{{ filter }}" data-progress="0" data-progress-value="{{ percent }}">
+            {{ block('circle') }}
+            {{ block('inset') }}
+            <p>{{ get_string('radial_progress:filter:' ~ filter, plugin) }}</p>
+        </div>
+    {% endfor %}
+    {% if default == 'incompleted' %}
+        <div class="active" data-filter="*:not(.status-completed)"></div>
+    {% endif %}
+{%- endblock -%}

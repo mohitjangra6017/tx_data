@@ -1,0 +1,23 @@
+{
+    "name": "tke/local-isotope-skeleton",
+    "type": "totara-local",
+    "description": "Skeleton for holding Isotope Providers as Moodle sub-plugins",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "isotope",
+        "kineo": {
+            "subplugin-path": "providers/",
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/local-isotope-skeleton/wikis/home"
+    }
+}

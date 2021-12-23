@@ -1,0 +1,25 @@
+{{!
+    @template assquestion_html/element_html
+
+    This template generates an assessment question form display
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+     * visible
+     * html
+
+     Example context (json):
+     {
+        "visible": "true",
+        "html": "I output <b>RAW</b> HTML."
+     }
+}}
+
+{{#visible}}
+{{{html}}}
+{{/visible}}

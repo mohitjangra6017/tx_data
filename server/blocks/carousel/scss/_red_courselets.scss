@@ -1,0 +1,12 @@
+.block.block_carousel ._red_courselets{
+    @extend ._red;
+}
+
+.courselet-modal .modal-body{
+    .intro {
+        margin-top: 20px;
+    }
+    .resource-link {
+        margin-top: 20px;
+    }
+}

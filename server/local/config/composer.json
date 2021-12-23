@@ -1,0 +1,19 @@
+{
+    "name": "tke/local-config",
+    "type": "totara-local",
+    "description": "A report to that details all admin setting configuration changes",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "config",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    }
+}

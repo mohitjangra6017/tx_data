@@ -1,0 +1,537 @@
+//Brand Colours
+$brandColourMain:  var(--color-primary);
+$brandColourAccent1: var(--color-secondary);
+$brandColourAccent2: var(--color-tertiary);
+$brandColourAccent3: var(--color-accent-3);
+$brandColourAccent4: var(--color-accent-4);
+$white: var(--color-white);
+$black: var(--color-black);
+$brandGrey1: var(--color-neutral-2);
+$brandGrey2: var(--color-neutral-3);
+$brandGrey3: var(--color-neutral-4);
+$brandGrey4: var(--color-neutral-5);
+$brandGrey5: var(--color-neutral-6);
+
+//page varibles
+$body-bg: var(--color-background);
+$pageBackgroundSize: var(--page-background-size);
+$pageBackgroundRepeat: var(--page-background-repeat);
+$pageBackgroundPosition: var(--page-background-position);
+$pageBackgroundAttachment: var(--page-background-attachment);
+$maxPageWidth: var(--max-page-width);
+
+//Text Colours
+$baseTextColour: var(--color-text);
+$titleColour: var(--color-heading);
+
+//Fonts
+$baseFont: var(--base-font);
+$altFont: var(--heading-font);
+$navigationFont: var(--navigation-font);
+$baseFontSize: var(--base-font-size);
+$baseFontWeight: var(--base-font-weight);
+$bold: bold;
+$h1Font: var(--h1-font);
+$h1FontSize: var(--h1-font-size);
+$h1FontWeight: var(--h1-font-weight);
+$h2Font: var(--h2-font);
+$h2FontSize: var(--h2-font-size);
+$h2FontWeight: var(--h2-font-weight);
+$h3Font: var(--h3-font);
+$h3FontSize: var(--h3-font-size);
+$h3FontWeight: var(--h3-font-weight);
+$h4Font: var(--h4-font);
+$h4FontSize: var(--h4-font-size);
+$h4FontWeight: var(--h4-font-weight);
+$h5Font: var(--h5-font);
+$h5FontSize: var(--h5-font-size);
+$h5FontWeight: var(--h5-font-weight);
+$h6Font: var(--h6-font);
+$h6FontSize: var(--h6-font-size);
+$h6FontWeight: var(--h6-font-weight);
+$h1TextTransform: var(--h1-text-transform);
+$h2TextTransform: var(--h2-text-transform);
+$h3TextTransform: var(--h3-text-transform);
+$h4TextTransform: var(--h4-text-transform);
+$h5TextTransform: var(--h5-text-transform);
+$h6TextTransform: var(--h6-text-transform);
+$h1TextColour: var(--color-h1);
+$h2TextColour: var(--color-h2);
+$h3TextColour: var(--color-h3);
+$h4TextColour: var(--color-h4);
+$h5TextColour: var(--color-h5);
+$h6TextColour: var(--color-h6);
+$blockHeaderTextSize: var(--block-header-text-size);
+$activityInstanceFontSize: var(--activity-instance-font-size);
+$desktopNavFontSize: var(--nav-font-size);
+$breadcrumbFontSize: var(--breadcrumb-font-size);
+
+$h1FontSizeMobile: var(--h1-font-size-mobile);
+$h2FontSizeMobile: var(--h2-font-size-mobile);
+$h3FontSizeMobile: var(--h3-font-size-mobile);
+$h4FontSizeMobile: var(--h4-font-size-mobile);
+$h5FontSizeMobile: var(--h5-font-size-mobile);
+$h6FontSizeMobile: var(--h6-font-size-mobile);
+
+$h1FontSizeTablet: var(--h1-font-size-tablet);
+$h2FontSizeTablet: var(--h2-font-size-tablet);
+$h3FontSizeTablet: var(--h3-font-size-tablet);
+$h4FontSizeTablet: var(--h4-font-size-tablet);
+$h5FontSizeTablet: var(--h5-font-size-tablet);
+$h6FontSizeTablet: var(--h6-font-size-tablet);
+
+//links
+$linkColour: var(--link-color);
+$linkColourHover: var(--link-color-hover);
+$linkColourVisited: var(--link-color-visited);
+$linkColourActive: var(--link-color-active);
+$dimmedText: var(--color-state-disabled);
+
+//borders
+$borderColour: var(--color-border);
+$borderWeight: var(--border-weight);
+
+//Nav
+$navigationFont: var(--navigation-font);
+$subNavigationFont: var(--sub-navigation-font);
+$desktopNavLinkColour:  var(--nav-text-color);
+$desktopNavContainerBackgroundColour: var(--nav-bg-color);
+$subNavContainerBorderWeight: var(--sub-nav-container-border-weight);
+$pageHeaderSticky: var(--page-header-sticky);
+$showSubList: var(--show-sub-list);
+$showMobileMenuBackgroundColour: var(--show-mobile-menu-background-color);
+$desktopNavLinkBackgroundColour: var(--desktop-nav-link-background-color);
+$desktopNavLinkBackgroundColourHover: var(--desktop-nav-link-background-color-hover);
+$desktopNavLinkColourHover: var(--desktop-nav-link-color-hover);
+$desktopSubNavLinkBackgroundColour: var(--desktop-sub-nav-link-background-color);
+$desktopSubNavLinkBackgroundColourHover: var(--desktop-sub-nav-link-background-color-hover);
+$desktopSubNavLinkColour: var(--desktop-sub-nav-link-color);
+$desktopSubNavLinkColourHover: var(--desktop-sub-nav-link-color-hover);
+$desktopSubNavLinkBackgroundColourActive: var(--desktop-sub-nav-background-color-active);
+$desktopSubNavLinkColourActive: var(--desktop-sub-nav-color-active);
+$desktopNavLinkColourActive: var(--desktop-nav-color-active);
+$desktopNavBackgroundColourActive: var(--desktop-nav-background-color-active);
+$navigationPosition: var(--navigation-position);
+$navigationFontWeight: var(--navigation-font-weight);
+$navigationTextTransform: var(--navigation-text-transform);
+$desktopSubNavLinkBorderColour: var(--desktop-sub-nav-link-border-color);
+$desktopSubNavFontSize: var(--desktop-sub-nav-font-size);
+$desktopSubNavFontWeight: var(--desktop-sub-nav-font-weight);
+$desktopSubNavTextTransform: var(--desktop-sub-nav-text-transform);
+$desktopSubNavBorderWeight: var(--desktop-sub-nav-container-border-weight);
+$mobileMenuIconColour: var(--nav-menu-icon-color);
+$mobileMenuIconColourHover: var(--nav-menu-icon-color);
+$mobileMenuIconBackgroundColour: var(--mobile-menu-icon-background-color);
+$hideSeparator: var(--hide-separator);
+
+//User Menu
+$userMenuAvatarStyle: var(--user-menu-avatar-style);
+$userMenuFontSize: var(--user-menu-font-size);
+$userMenuFontWeight: var(--user-menu-font-weight);
+$userMenuTextTransform: var(--user-menu-text-transform);
+$userMenuDropdownBackgroundColour: var(--user-menu-dropdown-background-colour);
+$userMenuDropdownBorderColour: var(--user-menu-dropdown-border-colour);
+$userMenuDropdownBorderWidth: var(--user-menu-dropdown-border-width);
+$userMenuDropdownBorderRadius: var(--user-menu-dropdown-border-radius);
+$userMenuDropdownTextColour: var(--user-menu-dropdown-text-colour);
+$userMenuDropdownTextColourHover: var(--user-menu-dropdown-text-hover-colour);
+$userMenuDropdownBackgroundColourHover: var(--user-menu-dropdown-background-hover-colour);
+$userMenuDropdownFontSize: var(--user-menu-dropdown-font-size);
+$userMenuDropdownFontWeight: var(--user-menu-dropdown-font-weight);
+$userMenuDropdownTextTransform: var(--user-menu-dropdown-text-transform);
+
+// Header Messages
+
+$headerMessagesIconColour: var(--header-messages-icon-color);
+$headerMessagesCountBackgroundColour: var(--header-messages-count-background-color);
+$headerMessagesCountColour: var(--header-messages-count-color);
+
+//Breadcrumb
+$breadcrumbFont: var(--breadcrumb-font);
+$breadcrumbContainerBackgroundColour: var(--breadcrumb-container-background-color);
+$breadcrumbTextColour: var(--breadcrumb-text-color);
+$breadcrumbLinkColour: var(--breadcrumb-link-color);
+$breadcrumbLinkColourHover: var(--breadcrumb-link-hover-color);
+$breadcrumbSeparatorColour: var(--breadcrumb-separator-color);
+$breadcrumbTextTransform: var(--breadcrumb-text-transform);
+$breadcrumbFontWeight: var(--breadcrumb-font-weight);
+$hideBreadcrumb: var(--hide-breadcrumb);
+//Buttons
+$buttonFont: var(--button-font);
+$buttonColour: var(--btn-text-color);
+$buttonBackground: var(--btn-bg-color);
+$buttonColourHover: var(--btn-text-color-hover);
+$buttonBackgroundHover: var(--btn-bg-color-hover);
+$buttonBorderColour: var(--btn-border-color);
+$buttonBorderColourActiveFocus: var(--btn-border-color-active-focus);
+$buttonBorderColourHover: var(--btn-border-color-hover);
+$buttonBorderRadius: var(--btn-radius);
+$buttonBorderWidth: var(--btn-border-width);
+$disabledButtonColour: var(--btn-text-color-disabled);
+$disabledButtonBackgroundColour: var(--btn-bg-color-disabled);
+$buttonFontSize: var(--btn-font-size);
+$buttonTextTransform: var(--btn-text-transform);
+$buttonFontWeight: var(--btn-font-weight);
+$buttonPadding: var(--btn-padding);
+$buttonInputGroupMinHeight: var(--btn-input-group-min-height);
+
+
+$buttonPrimaryColour: var(--btn-prim-text-color);
+$buttonPrimaryColourHover: var(--btn-prim-text-color-hover);
+$buttonPrimaryBackgroundColour: var(--btn-prim-bg-color);
+$buttonPrimaryBackgroundColourHover:var(--btn-prim-bg-color-hover);
+$buttonPrimaryColourDisabled:  var(--btn-prim-text-color-disabled);
+$buttonPrimaryBackgroundColourDisabled: var(--btn-prim-bg-color-disabled);
+$buttonPrimaryBorderColour: var(--btn-prim-border-color);
+$buttonPrimaryBorderColourHover: var(--btn-prim-border-color-hover);
+$buttonPrimaryBorderColourActiveFocus: var(--btn-prim-border-color-active-focus);
+$buttonPrimaryBorderRadius: var(--btn-prim-radius);
+$buttonPrimaryBorderWidth: var(--btn-prim-border-width);
+$buttonPrimaryFontSize: var(--btn-prim-font-size);
+$buttonPrimaryTextTransform: var(--btn-prim-text-transform);
+$buttonPrimaryFontWeight: var(--btn-prim-font-weight);
+$buttonPrimaryPadding: var(--btn-prim-padding);
+
+$buttonSecondaryColour: var(--btn-secondary-text-color);
+$buttonSecondaryColourHover: var(--btn-secondary-text-color-hover);
+$buttonSecondaryBackgroundColour: var(--btn-secondary-bg-color);
+$buttonSecondaryBackgroundColourHover:var(--btn-secondary-bg-color-hover);
+$buttonSecondaryColourDisabled:  var(--btn-secondary-text-color-disabled);
+$buttonSecondaryBackgroundColourDisabled: var(--btn-secondary-bg-color-disabled);
+$buttonSecondaryBorderColour: var(--btn-secondary-border-color);
+$buttonSecondaryBorderColourHover: var(--btn-secondary-border-color-hover);
+$buttonSecondaryBorderColourActiveFocus: var(--btn-secondary-border-color-active-focus);
+$buttonSecondaryBorderRadius: var(--btn-secondary-radius);
+$buttonSecondaryBorderWidth: var(--btn-secondary-border-width);
+$buttonSecondaryFontSize: var(--btn-secondary-font-size);
+$buttonSecondaryTextTransform: var(--btn-secondary-text-transform);
+$buttonSecondaryFontWeight: var(--btn-secondary-font-weight);
+$buttonSecondaryPadding: var(--btn-secondary-padding);
+$buttonSecondaryFontSize: var(--btn-font-size);
+
+//tables
+$tableHeaderFont: var(--table-header-font);
+$tableHeaderFontSize: var(--table-header-font-size);
+$tableHeaderFontWeight: var(--table-header-font-weight);
+$tableHeaderTextTransform: var(--table-header-text-transform);
+$tableBorderWidth: var(--table-border-width);
+$tableBorderColour: var(--table-border-color);
+$tableHeadColour: var(--table-head-color);
+$tableHeadBackgroundColour: var(--table-head-background-color);
+$tableBodyBackgroundColour: var(--table-body-background-color);
+$tablecellcolourodd: var(--table-cell-color-odd);
+$tableStripeOddBackgroundColour: var(--table-stripe-odd-background-color);
+$tableCellColourOddHover: var(--table-cell-color-odd-hover);
+$tableCellBackgroundColourOddHover: var(--table-cell-background-color-odd-hover);
+$tablecellcoloureven: var(--table-cell-color-even);
+$tableStripeEvenBackgroundColour: var(--table-stripe-even-background-color);
+$tableCellColourEvenHover: var(--table-cell-color-even-hover);
+$tableCellBackgroundColourEvenHover: var(--table-cell-background-color-even-hover);
+$tableBodyBackgroundColour: var(--table-body-background-color);
+$tableLinkColour: var(--table-link-color);
+$tableLinkColourHover: var(--table-link-color-hover);
+
+//Regions
+$editingRegionBorder: 8px solid transparent;
+$editingRegionBorderAfter: 2px dotted $brandGrey4;
+$dashboardRegionMainOneBackgroundColour: var(--dashboard-region-main-one-background-color);
+$dashboardRegionMainTwoBackgroundColour: var(--dashboard-region-main-two-background-color);
+$dashboardRegionMainThreeBackgroundColour: var(--dashboard-region-main-three-background-color);
+$dashboardRegionMainFourBackgroundColour: var(--dashboard-region-main-four-background-color);
+$dashboardRegionPageTopBackgroundColour: var(--dashboard-region-page-top-background-color);
+$dashboardRegionContentTopBackgroundColour: var(--dashboard-region-content-top-background-color);
+$dashboardRegionContentBottomBackgroundColour: var(--dashboard-region-content-bottom-background-color);
+$dashboardRegionPageBottomBackgroundColour: var(--dashboard-region-page-bottom-background-color);
+
+$dashboardRegionMainOneBackgroundImage: var(--dashboard-region-main-one-background-image);
+$dashboardRegionMainTwoBackgroundImage: var(--dashboard-region-main-two-background-image);
+$dashboardRegionMainThreeBackgroundImage: var(--dashboard-region-main-three-background-image);
+$dashboardRegionMainFourBackgroundImage: var(--dashboard-region-main-four-background-image);
+$dashboardRegionPageTopBackgroundImage: var(--dashboard-region-page-top-background-image);
+$dashboardRegionContentTopBackgroundImage: var(--dashboard-region-content-top-background-image);
+$dashboardRegionContentBottomBackgroundImage: var(--dashboard-region-content-bottom-background-image);
+$dashboardRegionPageBottomBackgroundImage: var(--dashboard-region-page-bottom-background-image);
+
+$fixDashboardRegionMainOneBackgroundImage: var(--fix-dashboard-region-main-one-background-image);
+$fixDashboardRegionMainTwoBackgroundImage: var(--fix-dashboard-region-main-two-background-image);
+$fixDashboardRegionMainThreeBackgroundImage: var(--fix-dashboard-region-main-three-background-image);
+$fixDashboardRegionMainFourBackgroundImage: var(--fix-dashboard-region-main-four-background-image);
+$fixDashboardRegionPageTopBackgroundImage: var(--fix-dashboard-region-page-top-background-image);
+$fixDashboardRegionContentTopBackgroundImage: var(--fix-dashboard-region-content-top-background-image);
+$fixDashboardRegionContentBottomBackgroundImage: var(--fix-dashboard-region-content-bottom-background-image);
+$fixDashboardRegionPageBottomBackgroundImage: var(--fix-dashboard-region-page-bottom-background-image);
+
+$frontPageRegionOneBackgroundColour: var(--front-page-region-main-one-background-color);
+$frontPageRegionTwoBackgroundColour: var(--front-page-region-main-two-background-color);
+$frontPageRegionThreeBackgroundColour: var(--front-page-region-main-three-background-color);
+$frontPageRegionFourBackgroundColour: var(--front-page-region-main-four-background-color);
+$frontPageRegionContentTopBackgroundColour: var(--front-page-region-content-top-background-color);
+$frontPageRegionContentBottomBackgroundColour: var(--front-page-region-content-bottom-background-color);
+$frontPageRegionPageTopBackgroundColour: var(--front-page-region-page-top-background-color);
+$frontPageRegionPageBottomBackgroundColour: var(--front-page-region-page-bottom-background-color);
+
+$frontPageRegionMainOneBackgroundImage: var(--frontpage-region-main-one-background-image);
+$fixFrontPageRegionMainOneBackgroundImage: var(--fix-frontpage-region-main-one-background-image);
+$frontPageRegionMainTwoBackgroundImage: var(--frontpage-region-main-two-background-image);
+$fixFrontPageRegionMainTwoBackgroundImage: var(--fix-frontpage-region-main-two-background-image);
+$frontPageRegionMainThreeBackgroundImage: var(--frontpage-region-main-three-background-image);
+$fixFrontPageRegionMainThreeBackgroundImage: var(--fix-frontpage-region-main-three-background-image);
+$frontPageRegionMainFourBackgroundImage: var(--frontpage-region-main-four-background-image);
+$fixFrontPageRegionMainFourBackgroundImage: var(--fix-frontpage-region-main-four-background-image);
+$frontpageRegionContentTopBackgroundImage: var(--frontpage-region-content-top-background-image);
+$fixFrontpageContentTopBackgroundImage: var(--fix-frontpage-region-content-top-background-image);
+$frontpageRegionContentBottomBackgroundImage: var(--frontpage-region-content-bottom-background-image);
+$fixFrontpageContentBottomBackgroundImage: var(--fix-frontpage-region-content-bottom-background-image);
+$frontpageRegionPageTopBackgroundImage: var(--frontpage-region-page-top-background-image);
+$fixFrontpagePageTopBackgroundImage: var(--fix-frontpage-region-page-top-background-image);
+$frontpageRegionPageBottomBackgroundImage: var(--frontpage-region-page-bottom-background-image);
+$fixFrontpagePageBottomBackgroundImage: var(--fix-frontpage-region-page-bottom-background-image);
+
+$adminRegionBackgroundColour: var(--admin-region-background-color);
+
+$tableCellFontSize: var(--table-cell-font-size);
+
+//Tabs
+$tabsBackgroundColour: var(--tabs-bg-color);
+$tabsBorderColour: var(--tabs-border-color);
+$tabsTextColour: var(--tabs-text-color);
+$tabsBackgroundColourHover: var(--tabs-bg-color-hover);
+$tabsBorderColourHover: var(--tabs-border-color-hover);
+$tabsTextColourHover: var(--tabs-text-color-hover);
+$tabsBorderRadius: var(--tabs-border-radius);
+$tabsBorderRadiusActive: var(--tabs-border-radius-active);
+$tabsBackgroundColourActive: var(--tabs-bg-color-selected);
+$tabsBorderColourActive: var(--tabs-border-color-selected);
+$tabsTextColourActive: var(--tabs-text-color-active);
+$tabsBackgroundColourActiveHover: var(--tabs-bg-color-active-hover);
+$tabsBorderColourActiveHover: var(--tabs-border-color-active-hover);
+$tabsTextColourActiveHover: var(--tabs-text-color-active-hover);
+$tabsFontSize: var(--tabs-font-size);
+$tabsTextTransform: var(--tabs-text-transform);
+$tabsSelectedBarColour:var(--tabs-selected-bar-color);
+$tabsFontWeight: var(--tabs-font-weight);
+
+$blockContentPaddingNoBorder: 17px;
+$blockContentPaddingWithBorder: 0;
+
+//Blocks
+$blockBackgroundColour: var(--block-background-color);
+$blockBorderWeight: 1px;
+$blockBorderColour: var(--block-border-color);
+$blockBorderRadius: var(--block-border-radius);
+$blockHeaderBackgroundColour: var(--block-header-background-color);
+$blockHeadingColour: var(--block-header-text-color);
+$blockHeaderFontWeight: var(--block-header-font-weight);
+$blockHeadingTextTransform: var(--block-heading-text-transform);
+$blockColour: var(--block-text-color);
+$blockHeaderPaddingWithBorder: var(--block-header-padding);
+$blockContentPaddingWithBorder: var(--block-content-padding);
+$blockHeadingUnderlineColour: var(--block-heading-underline-color);
+//Header Notifications
+$headerNotificationsShow: var(--header-notifications-show);
+$headerNotificationsIconColour: var(--header-notifications-icon-color);
+$headerNotificationsCountBackgroundColour: var(--header-notifications-count-background-color);
+$headerNotificationsCountColour: var(--header-notifications-count-color);
+
+// Header.
+
+$headerBackgroundColour: var(--header-background-color);
+$enableHelpLink: var(--enable-help-link);
+$enableHelpLinkAsIconOrText: var(--enable-help-link-as-icon-or-text);
+$helpIcon: var(--help-icon);
+$helpIconColour: var(--nav-side-text-color);
+$helpIconSize: var(--user-menu-font-size);
+$totaraNavBoxShadow: var(--shadow-2);
+$hideHeaderDropShadow: var(--hide-header-drop-shadow);
+$hideLoginHeaderDropShadow: var(--hide-login-header-drop-shadow);
+
+// Footer.
+$footerBackgroundColour: var(--footer-background-color);
+$footerRegionBackgroundColour: var(--footer-region-background-color);
+$footerRegionBorderBottomWidth: var(--footer-region-border-bottom-width);
+$footerRegionBorderBottomColour: var(--footer-region-border-color-bottom);
+$footerPrimaryColour: var(--footer-color);
+$footerQuickLinksColour: var(--footer-quick-links-color);
+$footerQuickLinksSeparatorColour: var(--footer-quick-links-separator-color);
+$footerQuickLinksTextTransform: var(--footer-quick-links-text-transform);
+$footerQuicklinksFontSize: var(--footer-quick-links-font-size);
+$footerQuicklinksFontWeight: var(--footer-quick-links-font-weight);
+$footerCopyrightTextTransform: var(--footer-copyright-text-transform);
+$footerCopyrightFontSize: var(--footer-copyright-font-size);
+$footerCopyrightFontWeight: var(--footer-copyright-font-weight);
+$footerBlockBackgroundColour: var(--footer-block-background-color);
+$footerBlockBorderColour: var(--footer-block-border-color);
+$footerBlockBorderRadius: var(--footer-block-border-radius);
+$footerBlockHeaderBackgroundColour: var(--footer-block-header-background-color);
+$footerBlockHeaderTextColour: var(--footer-block-header-text-color);
+$footerBlockTextColour: var(--footer-block-text-color);
+$showFooterLinks: var(--show-footer-links);
+$footerSecondaryBackgroundColour: var(--poweredby-background-color);
+$footerSecondaryColour: var(--poweredby-text-color);
+$footerLogoPosition: var(--footer-logo-position);
+$footerBorderColour: var(--footer-border-color);
+$footerCopyrightColour: var(--footer-copyright-color);
+$loginPageFooterCopyrightColour: var(--login-page-footer-copyright-color);
+
+// Login page.
+
+$loginPageBackgroundColour: var(--login-page-background-color);
+$loginPageHeaderBackgroundColour: var(--login-page-header-background-color);
+$loginPageContentBackgroundColour: var(--login-page-content-background-color);
+$panelHeadingSize: var(--panel-heading-size);
+$panelHeadingFontWeight: var(--panel-heading-font-weight);
+
+$loginPanelHeadingTextUnderlineColour: var(--login-panel-heading-text-underline-color);
+$loginPanelBackgroundColour: var(--login-panel-background-color);
+$loginPanelColour: var(--login-panel-color);
+$loginPanelBorderRadius: var(--login-panel-border-radius);
+$loginPanelBorderColor: var(--login-panel-border-color);
+$loginPanelBorderWidth: var(--login-panel-border-width);
+$loginPanelButtonColour: var(--login-panel-button-color);
+$loginPanelButtonColourHover: var(--login-panel-button-color-hover);
+$loginPanelButtonBackground: var(--login-panel-button-background);
+$loginPanelButtonBackgroundHover: var(--login-panel-button-background-hover);
+$loginPanelBorderColour: var(--login-panel-button-border-color);
+$loginPanelBorderColourHover: var(--login-panel-button-border-color-hover);
+$loginPanelButtonBorderRadius: var(--login-panel-button-border-radius);
+$loginPanelButtonTextTransform: var(--login-panel-button-text-transform);
+$loginPanelButtonFontSize: var(--login-panel-button-font-size);
+$loginPanelButtonFontWeight: var(--login-panel-button-font-weight);
+$loginPanelButtonPadding: var(--login-panel-button-padding);
+
+$signupPanelHeadingTextUnderlineColour: var(--signup-panel-heading-text-underline-color);
+$signupPanelBackgroundColour: var(--signup-panel-background-color);
+$signupPanelColour: var(--signup-panel-color);
+$signupPanelBorderRadius: var(--signup-panel-border-radius);
+$signupPanelBorderColor: var(--signup-panel-border-color);
+$signupPanelBorderWidth: var(--signup-panel-border-width);
+$signupPanelButtonColour: var(--signup-panel-button-color);
+$signupPanelButtonColourHover: var(--signup-panel-button-color-hover);
+$signupPanelButtonBackground: var(--signup-panel-button-background);
+$signupPanelButtonBackgroundHover: var(--signup-panel-button-background-hover);
+$signupPanelBorderColour: var(--signup-panel-button-border-color);
+$signupPanelBorderColourHover: var(--signup-panel-button-border-color-hover);
+$signupPanelButtonBorderRadius: var(--signup-panel-button-border-radius);
+$signupPanelButtonTextTransform: var(--signup-panel-button-text-transform);
+$signupPanelButtonFontSize: var(--signup-panel-button-font-size);
+$signupPanelButtonFontWeight: var(--signup-panel-button-font-weight);
+$signupPanelButtonPadding: var(--signup-panel-button-padding);
+
+$loginPageFooterBackgroundColour: var(--login-page-footer-background-color);
+$loginPageFooterColour: var(--login-page-footer-color);
+
+$loginPageBackgroundImage: var(--login-page-background-image);
+$loginPageBackgroundSize: var(--login-page-background-size);
+$loginPageBackgroundRepeat: var(--login-page-background-repeat);
+$loginPageBackgroundPosition: var(--login-page-background-position);
+$loginPageContentBackgroundImage: var(--login-page-content-background-image);
+$loginPageContentBackgroundSize: var(--login-page-content-background-size);
+$loginPageBackgroundAttachment: var(--login-page-background-attachment);
+$hideLoginHeroImage: var(--hide-login-hero-image);
+
+// Isotope.
+
+// Radials Progress Colours.
+
+$radialProgressCircleBackground: var(--radial-progress-circle-background);
+$radialProgressInsetColor: var(--radial-progress-inset-color);
+$radialProgressOverdueFill: var(--radial-progress-overdue-fill);
+$radialProgressCompletedFill: var(--radial-progress-completed-fill);
+$radialProgressNotStartedFill: var(--radial-progress-not-started-fill);
+$radialProgressInProgressFill: var(--radial-progress-in-progress-fill);
+$radialProgressStateWindowOpenFill: var(--radial-progress-state-window-open-fill);
+
+$radialProgressPercentageFontSize: var(--radial-progress-percentage-font-size);
+$radialProgressPercentageColor: var(--radial-progress-percentage-color);
+
+$radialLabelFontSize: var(--radial-label-font-size);
+$radialLabelColour: var(--radial-label-color);
+
+$radialProgressMargin: var(--radial-progress-margin);
+$radialProgressCircleSize: var(--radial-progress-circle-size);
+$radialProgressBorderWidth: var(--radial-progress-border-width);
+$radialLabelMarginTopOffset: var(--radial-label-margin-top-offset);
+$isotopeRadialFilterContainerMinHeight: var(--isotope-radial-filter-container-min-height);
+
+$isotopeRadialProgressEnhancedGradientPrimaryColour: var(--isotope-radial-progress-enhanced-gradient-primary-color);
+$isotopeRadialProgressEnhancedGradientSecondaryColour: var(--isotope-radial-progress-enhanced-gradient-secondary-color);
+$isotopeRadialProgressEnhancedInsetColour: var(--isotope-radial-progress-enhanced-inset-color);
+
+//Isotope
+$isotopeFilterCertificationsBackgroundColour: var(--isotope-filter-certifications-background-color);
+$isotopeFilterCompletedBackgroundColour: var(--isotope-filter-completed-background-color);
+$isotopeFilterCourseBackgroundColour: var(--isotope-filter-course-background-color);
+$isotopeFilterExpiredBackgroundColour: var(--isotope-filter-expired-background-color);
+$isotopeFilterNotRequiredBackgroundColour: var(--isotope-filter-not-required-background-color);
+$isotopeFilterNotStartedBackgroundColour: var(--isotope-filter-not-started-background-color);
+$isotopeFilterOverdueBackgroundColour: var(--isotope-filter-overdue-background-color);
+$isotopeFilterProgramsBackgroundColour: var(--isotope-filter-programs-background-color);
+$isotopeFilterRequiredBackgroundColour: var(--isotope-filter-required-background-color);
+$isotopeFilterAllFiltersBackgroundColour: var(--isotope-filter-all-filters-background-color);
+$isotopeFilterAllTextColour: var(--isotope-filter-all-text-color);
+$isotopeFilterTextColour: var(--isotope-filter-text-colour);
+$isotopeFilterStartedBackgroundColour: var(--isotope-filter-started-background-color);
+$isotopeFilterStateWindowOpenBackgroundColour: var(--isotope-filter-state-window-open-background-color);
+$isotopeItemRequiredTextColour: var(--isotope-item-required-text-color);
+$isotopeItemBackgroundColour: var(--isotope-item-background-color);
+$isotopeItemBackgroundColourHover: var(--isotope-item-background-color-hover);
+$isotopeItemColour: var(--isotope-item-color);
+$isotopeItemDateColour: var(--isotope-item-date-color);
+$isotopeItemInfoBackgroundColour: var(--isotope-item-info-background-color);
+$isotopeItemNameColour: var(--isotope-item-name-color);
+$isotopeItemEnableShadow: var(--isotope-item-enable-shadow);
+$isotopeFilterBorderColour: var(--isotope-filter-border-color);
+$isotopeFilterBorderColourSelected: var(--isotope-filter-border-color-selected);
+//Course
+$sectionNameColour: var(--section-name-color);
+$mainSectionContentBackgroundColour: var(--main-section-content-background-color);
+$sectionBorderColour: var(--section-border-colour);
+$mainSectionContentPadding: var(--main-section-content-padding);
+$courseActivityIconSize: var(--course-activity-icon-size);
+$activityInstanceColour: var(--activity-instance-color);
+$courseActivityIconColour: var(--course-activity-icon-color);
+$hideActivityCompletion: var(--hide-activity-completion);
+$autoCourseCompletionIconSize: var(--auto-course-completion-icon-size);
+$completionIconColour: var(--completion-icon-colour);
+$manualCompletionIconSize: var(--manual-completion-icon-size);
+$pageBackgroundImage: var(--pagebackgroundimage);
+$pageContentBackgroundColour: var(--page-content-background-colour);
+$courseSectionFontSize: var(--course-section-font-size);
+
+$coursePageRegionTopBackgroundColour: var(--course-page-region-top-background-color);
+$coursePageRegionTopBackgroundImage: var(--course-page-region-top-background-image);
+$fixCoursePageRegionTopBackgroundImage: var(--fix-course-page-region-top-background-image);
+$coursePageRegionBottomBackgroundColour: var(--course-page-region-bottom-background-color);
+$coursePageRegionBottomBackgroundImage: var(--course-page-region-bottom-background-image);
+$fixCoursePageRegionBottomBackgroundImage: var(--fix-course-page-region-bottom-background-image);
+$courseRegionPageTopBackgroundColour: var(--course-region-page-top-background-color);
+$courseRegionPageTopBackgroundImage: var(--course-region-page-top-background-image);
+$fixCourseRegionPageTopBackgroundImage: var(--fix-course-region-page-top-background-image);
+$courseRegionPageBottomBackgroundColour: var(--course-region-page-bottom-background-color);
+$courseRegionPageBottomBackgroundImage: var(--course-region-page-bottom-background-image);
+$fixCourseRegionPageBottomBackgroundImage: var(--fix-course-region-page-bottom-background-image);
+//Anders Pink
+$andersPinkBlockBackgroundColour: var(--anders-pink-block-background-colour);
+$andersPinkPrimaryTextColour: var(--anders-pink-primary-text-colour);
+$andersPinkSecondaryTextColour: var(--anders-pink-secondary-text-colour);
+
+//Progress Bars
+$progressValueBackgroundColour: var(--progress-value-bg-color);
+$progressValueTextColour: var(--progress-value-text-color);
+$progressContainerTextColour: var(--progress-container-text-color);
+
+//Secondary Nav
+$navSubTabTextColour: var(--nav-sub-tab-text-color);
+$navSubTabTextHover: var(--nav-sub-tab-text-color-focus);
+$navSubTabTextColourSelected: var(--nav-sub-tab-text-color-selected);
+$secondaryNavigationItemSelectedBorderWeight: var(--nav-sub-tab-selected-border-weight);
+
+//Dialogs
+$dialogFontSize: var(--dialog-font-size);
+
+// Featured Links
+$featuredLinksTransparent: var(--featured-links-transparent);
+
+// Back To Top
+$backToTopEnabled: var(--back-to-top-enabled);
+$backToTopIcon : var(--back-to-top-icon);

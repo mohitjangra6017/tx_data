@@ -1,0 +1,18 @@
+
+@if ($hideLearningNavigationBlock == true) {
+    .path-totara-plan-record,
+    #page-totara-program-required {
+        #block-region-side-pre {
+            width: 0;
+            left: 0;
+            .block_fake {
+                display: none;
+            }
+        }
+        #region-main {
+            width: 100%;
+            left: 0;
+        }
+    }     
+}
+

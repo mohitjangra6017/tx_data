@@ -1,0 +1,23 @@
+{
+    "name": "tke/isotope-provider-mandatory-completion",
+    "type": "totara-isotope-provider",
+    "description": "Shows a drill-down display of the mandatory completions within the organization hierarchy",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0",
+        "tke/local-isotope-skeleton": "~15.0"
+    },
+    "extra": {
+        "installer-name": "mandatory_completion",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-mandatory-completion/wikis/home"
+    }
+}

@@ -1,0 +1,121 @@
+type local_credly_meta {
+    total: Int!,
+    next: Int
+}
+
+input local_credly_filter {
+    name: String!,
+    value: String!
+}
+
+type local_credly_badge {
+    id: Int,
+    credlyId: String!,
+    name: String!,
+    programId: Int,
+    certificationId: Int,
+    courseId: Int,
+    linkedLearningName: String
+    linkType: String
+}
+
+type local_credly_sync_badges {
+    syncfinished: Boolean!
+}
+
+type local_credly_badges {
+    metadata: local_credly_meta!,
+    items: [local_credly_badge!]
+}
+
+type local_credly_program {
+    id: Int!,
+    name: String!,
+    category: String!
+}
+
+type local_credly_programs {
+    metadata: local_credly_meta!,
+    items: [local_credly_program!]
+}
+
+type local_credly_certification {
+    id: Int!,
+    name: String!,
+    category: String!
+}
+
+type local_credly_certifications {
+    metadata: local_credly_meta!,
+    items: [local_credly_certification!]
+}
+
+type local_credly_course {
+    id: Int!,
+    name: String!,
+    category: String!
+}
+
+type local_credly_courses {
+    metadata: local_credly_meta!,
+    items: [local_credly_course!]
+}
+
+enum local_credly_learning_type {
+    unlinked,
+    program,
+    certification,
+    course,
+}
+
+input local_credly_link_badge_input {
+    credlyId: String!,
+    learningType: local_credly_learning_type,
+    learningId: Int,
+}
+
+type local_credly_link_badge {
+    credlyId: String!,
+    learningType: local_credly_learning_type,
+    learningId: Int,
+    learningName: String,
+}
+
+extend type Query {
+    """
+    Gets 50 paginated badges
+    """
+    local_credly_badges(
+        page: param_integer,
+        filters: [local_credly_filter]
+    ): local_credly_badges!
+
+    """
+    Gets all programs
+    """
+    local_credly_programs: local_credly_programs!
+
+    """
+    Gets all certifications
+    """
+    local_credly_certifications: local_credly_certifications!
+
+    """
+    Gets all courses
+    """
+    local_credly_courses: local_credly_courses!
+}
+
+extend type Mutation {
+    """
+    Link or Unlink a badge to a piece of learning
+    A null learning ID will unlink the badge
+    """
+    local_credly_link_badge(link: local_credly_link_badge_input): local_credly_link_badge
+
+
+    """
+    Sync badge request
+    """
+    local_credly_sync_badges: local_credly_sync_badges!
+}

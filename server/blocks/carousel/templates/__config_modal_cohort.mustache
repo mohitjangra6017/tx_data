@@ -1,0 +1,16 @@
+{{< core/modal }}
+    {{$title}}{{#str}} cohortconfig, block_carousel {{/str}}{{/title}}
+    {{$body}}
+        <div class="cohort-container">
+            <div class="row">
+                <div class="col-sm-12" id="cohort-filters">
+
+                </div>
+            </div>
+        </div>
+    {{/body}}
+    {{$footer}}
+        <button type="button" class="btn btn-primary" data-action="save" id="save-cohort">{{#str}} save, block_carousel {{/str}}</button>
+        <button type="button" class="btn btn-secondary" data-action="cancel">{{#str}} cancel {{/str}}</button>
+    {{/footer}}
+{{/ core/modal }}

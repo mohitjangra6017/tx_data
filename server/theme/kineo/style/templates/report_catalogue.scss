@@ -1,0 +1,9 @@
+$reportTitleSpacing: var(--gap-2);
+$reportBackgroundColour: #ffffff;
+.totara_core__myreports__list--grid {
+  .totara_core__myreports__list__item__content__title {
+    margin: 0;
+    padding: $reportTitleSpacing;
+    background: $reportBackgroundColour;
+  }
+}

@@ -1,0 +1,20 @@
+{
+    "name": "kineo/installers",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "description": "A multi-framework Composer library installer",
+    "require": {
+        "composer-plugin-api": "^1.0|^2.0",
+        "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "composer/composer": "^1.7|^2.0"
+    },
+    "autoload": {
+        "psr-4": { "KineoInstaller\\": "src/Kineo/" }
+    },
+    "extra": {
+        "class": "KineoInstaller\\Plugin",
+        "plugin-modifies-downloads": true
+    }
+}

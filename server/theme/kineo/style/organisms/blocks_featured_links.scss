@@ -1,0 +1,60 @@
+// Commented code to be reviewed if we still need it and want to bring in old settings
+
+//$featuredLinksBannerHeadingSize : $h6FontSize;
+//
+//.block-totara-featured-links-layout > div {
+//    .block-totara-featured-links-content {
+//        h3 {
+//            color: $featuredLinksItemTitleColour;
+//        }
+//        p {
+//            color: $featuredLinksItemDescriptionColour;
+//        }
+//    }
+//}
+////Main banner custom class
+//.block-totara-featured-links-layout#mainpagebanner {
+//    margin-top: -10px;
+//    h3 {
+//        margin-bottom: 10px;
+//        @include mixinsFontSize($featuredLinksBannerHeadingSize);
+//        font-weight: bold;
+//    }
+//    .block-totara-featured-links-tile {
+//        -ms-flex-pack: left;
+//        justify-content: left;
+//        -ms-flex-align: left;
+//        align-items: left;
+//    }
+//    .block-totara-featured-links-content-top {
+//        padding:15px;
+//        margin:15px;
+//        max-width:600px;
+//        position: relative;
+//    }
+//}
+//.block-totara-featured-links-layout {
+//    @if ($featuredLinksItemPosition == left) {
+//        justify-content: flex-start;
+//    }
+//    @if ($featuredLinksItemPosition == center) {
+//        justify-content: center;
+//    }
+//    @if ($featuredLinksItemPosition == right) {
+//        justify-content: flex-end;
+//    }
+//    div.block-totara-featured-links {
+//        &-flex-filler {
+//            display: none;
+//        }
+//        &-tile {
+//            flex-grow: 0;
+//            flex-shrink: 0;
+//        }
+//    }
+//}
+@if ($resolvedFeaturedLinksTransparent == true){
+    .block-totara-featured-links-layout .block-totara-featured-links-tile {
+        background-color: transparent !important;
+    }
+}

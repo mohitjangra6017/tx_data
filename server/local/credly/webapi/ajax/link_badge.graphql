@@ -1,0 +1,10 @@
+mutation local_credly_link_badge(
+    $link: local_credly_link_badge_input!
+) {
+    local_credly_link_badge(link: $link) {
+        credlyId,
+        learningId,
+        learningName,
+        learningType
+    }
+}

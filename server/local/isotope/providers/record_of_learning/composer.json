@@ -1,0 +1,23 @@
+{
+    "name": "tke/isotope-provider-record-of-learning",
+    "type": "totara-isotope-provider",
+    "description": "Shows a learners record of learning in the isotope block",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0",
+        "tke/local-isotope-skeleton": "~15.0"
+    },
+    "extra": {
+        "installer-name": "record_of_learning",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/isotope-provider-record-of-learning/wikis/home"
+    }
+}

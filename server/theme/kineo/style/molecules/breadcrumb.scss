@@ -1,0 +1,29 @@
+@import '../lib/mixins';
+
+.breadcrumb-container {
+    background-color: $breadcrumbContainerBackgroundColour;
+    .breadcrumb-nav {
+        &,
+        a,
+        .breadcrumb > li + li:before {
+            font-family: $breadcrumbFont;
+            text-transform: $breadcrumbTextTransform;
+            font-weight: $breadcrumbFontWeight;
+            color: $breadcrumbTextColour;
+            @include mixinsFontSize($breadcrumbFontSize);
+        }
+        a {
+            color: $breadcrumbLinkColour;
+            &:hover {
+               color: $breadcrumbLinkColourHover;
+            }
+        }
+        .breadcrumb {
+            > li {
+                + li:before {
+                    color: $breadcrumbSeparatorColour;
+                }
+            }
+        }
+    }
+}

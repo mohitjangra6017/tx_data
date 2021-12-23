@@ -1,0 +1,34 @@
+{% block table %}
+<table class="generaltable isotope-recordoflearning-table">
+    <thead>
+    <tr>
+        <th class="learning-title">{{ table_head.title }}</th>
+        <th class="learning-status">{{ table_head.status }}</th>
+        <th class="learning-required">{{ table_head.required }}</th>
+        <th class="learning-date">{{ table_head.date }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for learning in items %}
+        <tr class="item status-{{ learning.status }} type-{{ learning.type }} required-{{ learning.required }}">
+            <td><a href="{{ learning.url }}" class="name">{{ learning.fullname | format_html }}</a></td>
+            <td>
+                <span class="label label-default {{ learning.status }}">{% if learning.status == 'notstarted' %} not started {% else %} {{ learning.status }} {% endif %}</span>
+            </td>
+            <td>
+                {% if learning.required == 'required' and config.hide_required == '0' %}
+                    <span class="req"><i class="fa fa-exclamation-circle"></i> Required</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if learning.date is not empty %}
+                    <time class="date">
+                        {{ learning.date }}
+                    </time>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

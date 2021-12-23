@@ -1,0 +1,22 @@
+{
+    "name": "tke/block-required-learning",
+    "type": "totara-block",
+    "description": "Displays the user's Required Learning in a block",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "required_learning",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/block-required-learning/wikis/home"
+    }
+}

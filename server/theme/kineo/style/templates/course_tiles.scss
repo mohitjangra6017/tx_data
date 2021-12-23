@@ -1,0 +1,52 @@
+#page-course-view-tiles {
+  &.jsenabled {
+    .completion-icon {
+      display: inline-block;
+    }
+    .togglecompletion {
+      display: inline-block;
+      width: 50%;
+      .completioncheckbox {
+        &:focus {
+          outline: none;
+        }
+      }
+      .btn {
+        &:active:focus,
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+  .section {
+    .activity {
+      .actions {
+        z-index: 1;
+      }
+    }
+  }
+  &.editing {
+    .section {
+      .activity {
+        .actions {
+          width: 100px;
+        }
+        &.modtype_label {
+          .actions {
+            width: 174px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.format-tiles {
+  li.activity.subtile {
+    padding-top: 10px;
+    &.spacer {
+      padding: 0;
+    }
+  }
+}

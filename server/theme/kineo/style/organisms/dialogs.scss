@@ -1,0 +1,13 @@
+.moodle-dialogue-base {
+  .moodle-dialogue-wrap .moodle-dialogue-hd {
+    &,
+    &.yui3-widget-hd {
+      color: $titleColour;
+      font-size: $dialogFontSize;
+    }
+  }
+  .moodle-dialogue .moodle-dialogue-bd {
+    color: $baseTextColour;
+    font-size: $dialogFontSize;
+  }
+}

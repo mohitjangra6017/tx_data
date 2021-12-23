@@ -1,0 +1,92 @@
+@import '../lib/mixins';
+$blockEnrolButtonColour : $buttonColour;
+$blockEnrolButtonColourHover : $buttonColourHover;
+$enrolButtonIconFontSize : $baseFontSize;
+$enrolButtonBorderRadius : 3px;
+.block_enrol_accordion {
+    button.toggle-all-accordion {
+        &:before {
+            color: $blockEnrolButtonColour;
+        }
+        &:hover {
+            &:before {
+                color: $blockEnrolButtonColourHover;
+            }
+        }
+    }
+    .course-catalogue-inline {
+        margin-left: 0;
+        margin-right: 0;
+        tr {
+            &:first-of-type {
+                td {
+                    border-top: none;
+                }
+            }
+            .cc-enrol-btn {
+                padding-top: 7px;
+                button {
+                    .fa:before {
+                        @include mixinsFontSize($enrolButtonIconFontSize);
+                    }
+                }
+                .btn-default:not(.dropdown-toggle) {
+                    .fa {
+                        color: $blockEnrolButtonColour;
+                    }
+                    &:hover {
+                        .fa {
+                            color: $blockEnrolButtonColourHover;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child,
+    .btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle {
+        -webkit-border-radius: $enrolButtonBorderRadius;
+        -moz-border-radius: $enrolButtonBorderRadius;
+        border-radius: $enrolButtonBorderRadius;
+    }
+    #accordion {
+        .event {
+            -webkit-border-radius: 16px;
+            -moz-border-radius: 16px;
+            border-radius: 16px;
+            &:before {
+                top: 2px;
+                left: 3px;
+            }
+        }
+        .well {
+            span.enroltype {
+                width: 200px;
+                margin-right: 10px;
+            }
+        }
+    }
+    .well + .col-sm-6 .duedate {
+        margin-right: 10px;
+    }
+    .suggestion-buttons {
+        .btn-group {
+            .btn,
+            button {
+                .fa {
+                    line-height: 18px;
+                }
+            }
+        }
+    }
+}
+.block_enrol_accordion {
+  .course-catalogue {
+     .col-xs-12 {
+        .well + .col-xs-12 {
+           width: 100%;
+         }
+      }
+    }
+ }
+

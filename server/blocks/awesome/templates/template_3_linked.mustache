@@ -1,0 +1,13 @@
+<a href="{{url}}" {{#newtab}}target="_blank"{{/newtab}}>
+  <div class="awesome-block template-3 {{additionalclass}}" {{{block_styles}}}>
+    <div class="caption-wrap">
+      <div class="awesome-overlay"></div>
+      {{> block_awesome/image}}
+      <div class="caption" {{{caption_styles}}}>
+        {{#headertext}}<h2 {{{header_styles}}}>{{headertext}}</h2>{{/headertext}}
+        <p {{{content_styles}}}>{{{contenttext}}}</p>
+        <span class="awesome-link" {{{link_styles}}}>{{linktext}}</span>
+      </div>
+    </div>
+  </div>
+</a>

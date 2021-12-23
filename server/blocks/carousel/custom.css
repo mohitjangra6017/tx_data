@@ -1,0 +1,26 @@
+#inst[[settings:blockid]].block_carousel .content > h2 {
+    color: [[settings:headertextcolour]];
+    font-size: [[settings:headerfontsize]];
+    font-weight: [[settings:headerfontweight]];
+}
+#inst[[settings:blockid]].block_carousel .filteredenrolledlist .slick-slide .middiv .progressouter {
+    background-color: [[settings:progressbarbg]];
+}
+#inst[[settings:blockid]].block_carousel .filteredenrolledlist .slick-slide .middiv .progressouter .progressinner {
+    background-color: [[settings:progressbarcolour]];
+}
+#inst[[settings:blockid]].block_carousel figure.tile .caption .title-wrap,
+#inst[[settings:blockid]].block_carousel figure.tile .caption .title-wrap h3,
+#inst[[settings:blockid]].block_carousel figure.tile .caption .summary {
+    color: [[settings:tiletextcolour]];
+}
+#inst[[settings:blockid]].block_carousel .nav-slides article .slide-details h2,
+#inst[[settings:blockid]].block_carousel .nav-slides article .full-summary{
+    color: [[settings:detailstextcolour]];
+}
+#inst[[settings:blockid]].block_carousel .custom-tags .custom-tag,
+#inst[[settings:blockid]].block_carousel .tags .label.label-info{
+    color: [[settings:tagtextcolour]];
+    background-color: [[settings:tagbgcolour]];
+    border-color: [[settings:tagbordercolour]];
+}

@@ -1,0 +1,93 @@
+{% if error is not empty %}
+    <h3>{{ get_string('title', plugin) }}</h3>
+    <p>{{ errormsg|raw }}</p>
+{% else %}
+    {% if name is not empty %}
+        <h3>{{ name|raw }}</h3>
+    {% endif %}
+    <div class="aggregations">
+        <div class="filters">
+            <div class="radial-progress completed" data-filter=".completed" data-progress="0" data-progress-value="{{ completed }}">
+                <div class="circle">
+                    <div class="mask full">
+                        <div class="fill"></div>
+                    </div>
+                    <div class="mask half">
+                        <div class="fill"></div>
+                        <div class="fill fix"></div>
+                    </div>
+                    <div class="shadow"></div>
+                </div>
+                <div class="inset">
+                    <div class="percentage">
+                        <div class="numbers"><span>-</span>{% for i in 0..100 %}<span>{{ i }}%</span>{% endfor %}</div>
+                    </div>
+                </div>
+                <p>{{ get_string('completed', plugin) }}</p>
+            </div>
+            <div class="radial-progress notcompleted" data-filter=".notcompleted" data-progress="0" data-progress-value="{{ notcompleted }}">
+                <div class="circle">
+                    <div class="mask full">
+                        <div class="fill"></div>
+                    </div>
+                    <div class="mask half">
+                        <div class="fill"></div>
+                        <div class="fill fix"></div>
+                    </div>
+                    <div class="shadow"></div>
+                </div>
+                <div class="inset">
+                    <div class="percentage">
+                        <div class="numbers"><span>-</span>{% for i in 0..100 %}<span>{{ i }}%</span>{% endfor %}</div>
+                    </div>
+                </div>
+                <p>{{ get_string('notcompleted', plugin) }}</p>
+            </div>
+            <div class="radial-progress overdue" data-filter=".overdue" data-progress="0" data-progress-value="{{ overdue }}">
+                <div class="circle">
+                    <div class="mask full">
+                        <div class="fill"></div>
+                    </div>
+                    <div class="mask half">
+                        <div class="fill"></div>
+                        <div class="fill fix"></div>
+                    </div>
+                    <div class="shadow"></div>
+                </div>
+                <div class="inset">
+                    <div class="percentage">
+                        <div class="numbers"><span>-</span>{% for i in 0..100 %}<span>{{ i }}%</span>{% endfor %}</div>
+                    </div>
+                </div>
+                <p>{{ get_string('overdue', plugin) }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="mandatorycompletion-breadcrumb-nav">
+        <ol class="breadcrumb">
+            {% for pathitem in breadcrumb %}
+            <li>
+                {% if pathitem.url is not empty %}
+                <a href="{{ pathitem.url }}">{{ pathitem.name }}</a>
+                {% else %}
+                <span>{{ pathitem.name }}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+    <section class="mandatorycompletion isotope container">
+        {% for item in items %}
+            <figure class="isotope item">
+                <a href="{{ item.link }}">
+                    <span class="name">{{ item.name }}</span>
+                    <div class="completion">
+                        <span class="completed">{{ item.completed }}% {{ get_string('completed', plugin) }}</span>
+                        <span class="notcompleted">{{ item.notcompleted }}% {{ get_string('notcompleted', plugin) }}</span>
+                        <span class="overdue">{{ item.overdue }}% {{ get_string('overdue', plugin) }}</span>
+                    </div>
+                </a>
+            </figure>
+        {% endfor %}
+    </section>
+{% endif %}

@@ -1,0 +1,64 @@
+.modal-open .kineomodal.modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .fade.in {
+    opacity: 1;
+  }
+  
+  .kineomodal.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    bottom: auto;
+    right: auto;
+    padding-right: 0 !important;
+    z-index: 1050;
+    outline: 0;
+  }
+  
+  .kineomodal.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+  }
+  
+  .kineomodal .modal-dialog {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100% !important;
+    position: relative;
+    width: auto;
+    margin: 10px;
+    z-index: 1050;
+  }
+  
+  .kineomodal .modal-md .modal-content {
+    width: 50%;
+  }
+  
+  .kineomodal .modal-content {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    background-color: #fff;
+    border: 1px solid var(--color-neutral-5);
+    border-radius: 6px;
+    box-shadow: 5px 5px 20px 0 var(--color-neutral-6);;
+    background-clip: padding-box;
+    outline: 0;
+  }
+  
+  .kineomodal .modal-body {
+    overflow-x: auto;
+    padding: 15px;
+  }
+  
+  .kineomodal .modal-backdrop.in {
+    background-color: black;
+    opacity: .5;
+    filter: alpha(opacity=50);
+    z-index: 1000;
+  }
+  

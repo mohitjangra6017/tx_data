@@ -1,0 +1,12 @@
+query local_credly_courses {
+    courses: local_credly_courses {
+        metadata {
+            total
+        }
+        items {
+            id
+            name
+            category
+        }
+    }
+}

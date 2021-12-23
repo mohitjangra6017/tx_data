@@ -1,0 +1,35 @@
+<form id="curated-configuration-from">
+    <div class="form-group">
+        <label for="cluster-name">{{#str}} clustername, block_carousel {{/str}}</label>
+        <input type="text" class="form-control" name="clustername" value="{{clustername}}">
+    </div>
+    <div class="form-group">
+        <label for="course-search">{{#str}} course_search, block_carousel {{/str}}</label>
+        <select multiple class="form-control select2" id="course-search" name="courseids[]">
+            {{#courses}}
+                <option value="{{id}}" {{#selected}} selected {{/selected}}>{{fullname}}</option>
+            {{/courses}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="tags-search">{{#str}} tags_search, block_carousel {{/str}}</label>
+        <select multiple class="form-control select2" id="tags-search" name="tagids[]">
+            {{#tags}}
+                <option value="{{id}}" {{#selected}} selected {{/selected}}>{{rawname}}</option>
+            {{/tags}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="cluster-hero-image">{{#str}} image, block_carousel {{/str}}</label>
+        <input class="form-control" type="file" name="heroimage" id="cluster-hero-image">
+        <input type="hidden" id="curatedid" name="curatedid" value="{{curatedid}}">
+    </div>
+    {{#currentimage}}
+    <div class="form-group">
+        <label for="cluster-current-image">{{#str}} currentimage, block_carousel {{/str}}</label>
+        <div id="cluster-current-image" class="cluster-current-image">
+            {{{currentimage}}}
+        </div>
+    </div>
+    {{/currentimage}}
+</form>

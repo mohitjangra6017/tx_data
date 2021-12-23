@@ -1,0 +1,52 @@
+{{!
+    @template mod_assessment/question
+
+    This template generates an assessment question form display
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+     * question_template
+     * roleoptions
+     * question
+     * label
+
+     Example context (json):
+     {
+        "form_element": "text",
+        "question_template": "assquestion_text/element_text",
+        "label": "Question 1",
+        "roleoptions" [
+            "required": true,
+            "frozen": false
+            "visible": true,
+            "preview": false
+            "isquestion": true
+            "visiblesubmitted": false,
+            "roleanswer": "You did good, champ.",
+            "rolelabel": "Evaluator's answer",
+            "question_number": 1
+        ]
+     }
+}}
+
+<div class="assesment_question">
+    <legend>{{label}}</legend>
+    {{#roleoptions}}
+        {{#visible}}
+            <div class="tf_element totara_form_element_{{form_element}} role_{{role}}">
+                <div class="tf_element_title">
+                    <span class="legend" data-element-label>{{rolelabel}}{{#required}}{{> totara_form/required_suffix}}{{/required}}</span>
+                    {{> totara_form/help_button}}
+                </div>
+                {{> &&question_template }}
+            </div>
+        {{/visible}}
+    {{/roleoptions}}
+</div>
+
+

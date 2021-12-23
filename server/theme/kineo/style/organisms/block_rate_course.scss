@@ -1,0 +1,125 @@
+@import '../lib/media';
+
+.block_rate_course {
+    .course-reviews-list #course-review-tab {
+        position: static;
+    }
+    .form-horizontal {
+        label {
+            padding-right: 10px;
+        }
+    }
+    .fa-circle {
+        display: none;
+    }
+    .btn-toolbar {
+        margin-left: 0;
+        margin-right: 0;
+        [class*="btn-group"] {
+            margin: 0 10px 10px 0;
+            &:first-of-type {
+                margin-left: 0;
+            }
+            &:nth-child(2) {
+                margin-left: 0;
+            }
+        }
+        [class*="btn-group"] {
+            &:first-of-type {
+                width: 100%;
+            }
+        }
+    }
+}
+
+// Rating pop-up.
+.block_rate_course {
+    .btn-toolbar {
+        position: relative;
+        [class*="btn-group"] {
+            &:nth-child(3),
+            &:nth-child(4) {
+                position: static;
+            }
+        }
+    }
+    .content .dropdown-menu {
+        right: -1px;
+        bottom: 58%;
+        left: -1px;
+        textarea.courserating,
+        .course-review-buttons .userselect2 {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+    .btn-toolbar [class*="btn-group"] {
+        &:nth-child(3) .dropdown-menu {
+            &:before,
+            &:after {
+                left: 70px;
+            }
+        }
+        &:nth-child(4) .dropdown-menu {
+            &:before,
+            &:after {
+                left: 120px;
+            }
+        }
+    }
+}
+
+// Rating pop-up.
+@include media768() {
+    .block_rate_course {
+        .content .dropdown-menu {
+            width: 380px;
+        }
+    }
+    #block-region-side-pre {
+        .block_rate_course {
+            .btn-toolbar {
+                position: static;
+                [class*="btn-group"] {
+                    position: relative;
+                }
+            }
+            .content .dropdown-menu {
+                right: auto;
+                left: -5px;
+                bottom: 118%;
+            }
+            .btn-toolbar [class*="btn-group"] {
+                .dropdown-menu {
+                    &:before,
+                    &:after {
+                        left: 26px;
+                    }
+                }
+            }
+        }
+    }
+    #block-region-side-post {
+        .block_rate_course {
+            .btn-toolbar {
+                position: static;
+                [class*="btn-group"] {
+                    position: relative;
+                }
+            }
+            .content .dropdown-menu {
+                left: auto;
+                right: -5px;
+                bottom: 118%;
+            }
+            .btn-toolbar [class*="btn-group"] {
+                .dropdown-menu {
+                    &:before,
+                    &:after {
+                        left: 356px;
+                    }
+                }
+            }
+        }
+    }
+}

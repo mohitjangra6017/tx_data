@@ -1,0 +1,93 @@
+.program-cell {
+  cursor: pointer;
+  font-size: var(--base-font-size);
+  small {
+    font-size: 12px;
+    display: inline-block;
+    width: 100%;
+  }
+}
+.certificationAdder {
+  .tui-tabs__tabs,
+  .tui-adder__summary,
+  button[disabled] {
+    display: none;
+  }
+  &__count {
+    margin-top: var(--gap-5);
+    font-weight: bold;
+  }
+}
+
+.course-cell {
+  cursor: pointer;
+  font-size: var(--base-font-size);
+  small {
+    font-size: 12px;
+    display: inline-block;
+    width: 100%;
+  }
+}
+.courseAdder {
+  .tui-tabs__tabs,
+  .tui-adder__summary,
+  button[disabled] {
+    display: none;
+  }
+  &__count {
+    margin-top: var(--gap-5);
+    font-weight: bold;
+  }
+}
+
+.program-cell {
+  cursor: pointer;
+  font-size: var(--base-font-size);
+  small {
+    font-size: 12px;
+    display: inline-block;
+    width: 100%;
+  }
+}
+.programAdder {
+  .tui-tabs__tabs,
+  .tui-adder__summary,
+  button[disabled] {
+    display: none;
+  }
+  &__count {
+    margin-top: var(--gap-5);
+    font-weight: bold;
+  }
+}
+
+.content {
+  margin-top: var(--gap-5);
+}
+
+.loadMore {
+  button {
+    display: block;
+    margin: var(--gap-5) auto;
+  }
+}
+.link-to-learning-header {
+  text-align: right;
+  position: relative;
+  right: 4rem;
+}
+.credly-more-menu {
+  float: right;
+  position: relative;
+  right: 4rem;
+}
+.credly-badges {
+  .tui-dataTableRow {
+    margin-left: calc(0px - var(--border-width-thin));
+    border: var(--border-width-thin) solid var(--datatable-expanded-border-color);
+    border-bottom: none;
+    box-shadow: var(--shadow-2);
+    background-color: var(--datatable-expanded-bg-color);
+  }
+}
+

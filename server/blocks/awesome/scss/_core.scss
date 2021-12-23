@@ -1,0 +1,112 @@
+.block_awesome:not(.block_with_controls) {
+    .header {
+        display: none;
+    }
+}
+.block.block_awesome {
+    border-radius: 0;
+    border-color: transparent;
+    box-shadow: none;
+    border-width: 0;
+    background-color: transparent;
+    
+    .content {
+        padding: 0;
+        
+        h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            margin-bottom: 55px;
+        }
+        
+        img {
+            width: 100%;
+        }
+        
+        a:hover,
+        a:focus{
+            text-decoration: none;
+        }
+        .awesome-block {
+            overflow: hidden;
+            .caption {
+                border-width: 1px;
+                border-style: solid;
+                border-color: transparent;
+                border-top: none;
+            }
+        }
+        .awesome-block.has-icon {
+            .caption p{
+                padding-left: 60px;
+                position: relative;
+                
+                span.fa-icon {
+                    position: absolute;
+                    left: 0;
+                    font-size: 32px;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 1.1;
+                    text-align: center;
+                    border-radius: 50%;
+                }
+            }
+            &.has-larger-icon {
+                .caption p {
+                    margin-top: 65px;
+                    margin-bottom: 100px;
+                    padding-left: 130px;
+                    
+                    
+                    span.fa-icon {
+                        font-size: 60px;
+                        width: 100px;
+                        height: 100px;
+                        line-height: 1.5;
+                    }
+                }
+                
+            }
+        }
+        .awesome-block.has-responsive-image {
+            a img {
+                width: 100%;
+            }
+        }
+    }
+    .awesome-block.no-chevron {
+        .awesome-link:after {
+            display: none;
+        }
+    }
+}
+
+table.block-awesome-template-table {
+    width: 100%;
+    tbody tr{
+        td {
+            font-weight: bold;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e4e4e4;
+            padding-top: 20px;
+            font-size: 16px;
+
+            &:last-child {
+                text-align: center;
+            }
+
+            img {
+                max-width: 200px;
+            }
+        }
+    }
+}

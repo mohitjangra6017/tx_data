@@ -1,0 +1,65 @@
+@mixin media480 {
+    @media only screen and (min-width: 480px) {
+        @content;
+    }
+}
+
+@mixin media600 {
+    @media only screen and (min-width: 600px) {
+        @content;
+    }
+}
+
+@mixin media768 {
+    @media only screen and (min-width: 768px) {
+        @content;
+    }
+}
+
+@mixin media960 {
+    @media only screen and (min-width: 960px) {
+        @content;
+    }
+}
+
+@mixin media992 {
+    @media only screen and (min-width: 992px) {
+        @content;
+    }
+}
+
+@mixin media1024 {
+    @media only screen and (min-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin media1200 {
+    @media only screen and (min-width: 1200px) {
+        @content;
+    }
+}
+
+@mixin media1382 {
+    @media only screen and (min-width: 1382px) {
+        @content;
+    }
+}
+
+@mixin mediaPrint {
+    @media print {
+        @content;
+    }
+}
+
+@mixin mediaPointerFine {
+    @media (pointer: fine) {
+        @content;
+    }
+}
+
+@mixin mediaPointerCoarse {
+    @media (pointer: coarse) {
+        @content;
+    }
+}

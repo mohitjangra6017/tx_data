@@ -1,0 +1,78 @@
+{{#title}}
+  {{> block_carousel/_header}}
+
+  <section id="carousel-{{id}}" class="filteredenrolledlist">
+    {{#slides}}
+      <a href="{{url}}">
+        <article class="learning">
+          <div class="topdiv">
+            <div class="toprow">
+                <div class="coursename">
+                    {{title}}
+                </div>
+                <div class="courseicon">
+                    <img src="{{{thumbnail}}}"></img>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="subheading">
+                {{subheading}}
+            </div>
+            <div class="shortsummary">
+                {{shortsummary}}
+            </div>
+          </div>
+          <div class="middiv">
+            <div class="progressouter">
+                <div class="progressinner" style="width:{{progress}}%;"></div>
+            </div>
+          </div>
+          <div class="bottomdiv">
+            <div class="progress-stats">{{progress}}%</div>
+            {{#remaining}}
+                <div class="remaining">{{remaining}}</div>
+            {{/remaining}}
+            <div><button class="btn btn-default">{{buttonlabel}}</button></div>
+          </div>
+        </article>
+      </a>
+    {{/slides}}
+  </section>
+
+  {{#js}}
+    require(['jquery', 'block_carousel/slick'], function($, slick) {
+        const mainsettings = {
+            infinite: false,
+            speed: 300,
+            slidesToShow: 5,
+            slidesToScroll: 4,
+            centerMode: false,
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 3,
+                    }
+                },
+                {
+                    breakpoint: 800,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 550,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        };
+
+        let main = slick.init('#carousel-{{id}}', mainsettings);
+    });
+  {{/js}}
+{{/title}}

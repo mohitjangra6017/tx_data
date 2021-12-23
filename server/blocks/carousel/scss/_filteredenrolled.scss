@@ -1,0 +1,98 @@
+.block.block_carousel {
+    .filteredenrolledlist {
+        a:hover {
+            text-decoration: none;
+        }
+        article {
+            color: black;
+            margin-left:5px;
+            margin-right:5px;
+            border: 1px solid #EBEBEB;
+        }
+        .slick-slide {
+            text-align:center;
+            
+            .topdiv {
+                text-align:left;
+                padding-left:10px;
+                padding-right:10px;
+                padding-top:10px;
+                min-height: 104px;
+                
+                .toprow {
+                    .coursename {
+                        float:left;
+                        width:60%;
+                        font-size:1.20em;
+                        font-weight:700;
+                        padding-top:10px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        height: 40px;
+                        white-space: nowrap;
+                    }
+                    
+                    .courseicon {
+                        float:right;
+                        width:40%;
+                        img {
+                            margin-left: auto;
+                            margin-right: auto;
+                            padding-left:5px;
+                            padding-right:5px;
+                            border:1px solid #EEEEEE;
+                            float:right;
+                        }
+                    }
+                }
+                .subheading {
+                    font-size:1.20em;
+                    font-weight:700;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    height: 40px;
+                    white-space: nowrap;
+                }
+                .shortsummary {
+                    padding-top:10px;
+                    padding-bottom:10px;
+                    font-size:0.8em;
+                    font-weight:600;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    height: 40px;
+                    white-space: nowrap;
+                }
+            }
+            .middiv {
+                .progressouter {
+                    width: 100%;
+                    height: 20px;
+                    background-color:black;
+                    
+                    .progressinner {
+                        height: 20px;
+                        background-color:#E2E10D;
+                    }
+                }
+            }
+            .bottomdiv {
+                min-height: 124px;
+                text-align: center;
+                
+                .progress-stats {
+                    padding-top:10px;
+                    font-size:1.20em;
+                }
+                .remaining {
+                    padding-top:10px;
+                    font-size:0.8em;
+                }
+                button {
+                    margin-top:10px;
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+}

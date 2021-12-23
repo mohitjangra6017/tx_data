@@ -1,0 +1,21 @@
+{% if config.filter_courseset %}
+    <nav class="programs isotope coursesetfilters">
+        <div class="type-filter-buttons">
+        {% if coursesetGroups is not empty %}
+            <span>{{ get_string('filter_navigation:courseset', plugin) }}</span>
+            {% set active = (activecourseset == 0) ? 'active' : '' %}
+            <div class="filter-buttons">
+                <button data-filter="*" class="filter-button all {{ active }}">{{ get_string('filter_navigation:all', plugin) }}</button>
+                {% for coursesetGroup in coursesetGroups %}
+                    {% for courseset in coursesetGroup %}
+                    {% set active = activecourseset == courseset.id ? 'active' : '' %}
+                    <button data-filter=".courseset-{{ courseset.id }}" class="filter-button courseset status-{{ courseset.status }} {{ courseset.status }} {{ active }}">
+                        {{ courseset.label }}
+                    </button>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        </div>
+    </nav>
+{% endif %}

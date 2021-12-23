@@ -1,0 +1,21 @@
+query local_credly_badges(
+    $page: param_integer,
+    $filters: [local_credly_filter]
+) {
+    badges: local_credly_badges(page: $page, filters: $filters) {
+        metadata {
+            total
+            next
+        }
+        items {
+            id
+            credlyId
+            name
+            programId
+            certificationId
+            courseId
+            linkedLearningName
+            linkType
+        }
+    }
+}

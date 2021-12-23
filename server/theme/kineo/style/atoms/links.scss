@@ -1,0 +1,56 @@
+@import "../../scss/_global_variables";
+@import "../lib/mixins";
+a {
+    @include mixinsLinkStateColours;
+}
+
+a.dimmed,
+a.dimmed:link,
+a.dimmed:visited,
+a.dimmed_text,
+a.dimmed_text:link,
+a.dimmed_text:visited,
+.dimmed_text,
+.dimmed_text a,
+.dimmed_text a:link,
+.dimmed_text a:visited,
+.usersuspended,
+.usersuspended a,
+.usersuspended a:link,
+.usersuspended a:visited,
+.dimmed_category,
+.dimmed_category a {
+    color: $dimmedText;
+}
+
+// Actionable icons should retain link colour
+// even if they are inside muted text.
+a.dimmed,
+.dimmed_text a {
+    &:link {
+        .ft {
+            color: $linkColour;
+        }
+    }
+    &:visited {
+        .ft {
+            color: $linkColourVisited;
+        }
+    }
+    &:hover,
+    &:focus {
+        .ft {
+            color: $linkColourHover;
+        }
+    }
+    &:active {
+        .ft {
+            color: $linkColourActive;
+        }
+    }
+}
+
+a.disabled:hover,
+a.disabled {
+    color: $dimmedText;
+}

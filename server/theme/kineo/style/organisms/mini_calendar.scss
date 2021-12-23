@@ -1,0 +1,41 @@
+@import '../lib/mixins';
+$miniCalendarMonthDefaultColour: $titleMonthLinkColour;
+$miniCalendarMonthVisitedColour: $titleMonthLinkColour;
+$miniCalendarMonthHoverColour: $titleMonthLinkColour;
+$miniCalendarMonthActiveColour: $titleMonthLinkColour;
+$miniCalendarMonthFocusColour: $titleMonthLinkColour;
+
+$miniCalendarWeekdaysColour: $miniCalendarTitleColour;
+$miniCalendarWeekdayDayColour: $miniCalendarDayColour;
+$miniCalendarWeekendDayColour: $calendarWeekEndTextColour;
+$miniCalendarTodayDayColour: $miniCalendarTodayColour;
+
+.minicalendar {
+    caption a {
+        &,
+        .block .content & {
+            @include mixinsLinkStateColours(
+                    $miniCalendarMonthDefaultColour,
+                    $miniCalendarMonthVisitedColour,
+                    $miniCalendarMonthHoverColour,
+                    $miniCalendarMonthActiveColour,
+                    $miniCalendarMonthFocusColour
+            );
+        }
+    }
+    .weekdays abbr {
+        color: $miniCalendarWeekdaysColour;
+    }
+    .day {
+        color: $miniCalendarWeekdayDayColour;
+        &.weekend {
+            color: $miniCalendarWeekendDayColour;
+        }
+        &.today {
+            &,
+            .block .content & a {
+                color: $miniCalendarTodayDayColour;
+            }
+        }
+    }
+}

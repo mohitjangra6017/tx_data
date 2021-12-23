@@ -1,0 +1,147 @@
+@import '../lib/mixins';
+@import '../lib/media';
+@import '../../scss/_global_variables';
+$bold: bold;
+$normal: normal;
+
+body {
+    font-family: $baseFont;
+    color: $baseTextColour;
+    font-size: $baseFontSize;
+    font-weight: $baseFontWeight;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: $altFont;
+    color: $titleColour;
+    font-size: $h3FontSize;
+    small,
+    .small {
+        color: $titleColour;
+    }
+}
+
+h1,
+.h1 {
+    @include mixinsFontSize($h1FontSizeMobile);
+    font-family: $h1Font;
+    font-weight: $h1FontWeight;
+    text-transform: $h1TextTransform;
+    &,
+    small,
+    .small {
+        color: $h1TextColour;
+    }
+    @include media768() {
+        @include mixinsFontSize($h1FontSizeTablet);
+    }
+    @include media1024() {
+        @include mixinsFontSize($h1FontSize);
+    }
+}
+
+h2,
+.h2 {
+    @include mixinsFontSize($h2FontSizeMobile);
+    font-family: $h2Font;
+    font-weight: $h2FontWeight;
+    text-transform: $h2TextTransform;
+    &,
+    small,
+    .small {
+        color: $h2TextColour;
+    }
+    @include media768() {
+        @include mixinsFontSize($h2FontSizeTablet);
+    }
+    @include media1024() {
+        @include mixinsFontSize($h2FontSize);
+    }
+}
+
+h3,
+.h3 {
+    @include mixinsFontSize($h3FontSizeMobile);
+    font-family: $h3Font;
+    font-weight: $h3FontWeight;
+    text-transform: $h3TextTransform;
+    &,
+    small,
+    .small {
+        color: $h3TextColour;
+    }
+    @include media768() {
+        @include mixinsFontSize($h3FontSizeTablet);
+    }
+    @include media1024() {
+        @include mixinsFontSize($h3FontSize);
+    }
+}
+
+h4,
+.h4 {
+    @include mixinsFontSize($h4FontSizeMobile);
+    font-family: $h4Font;
+    font-weight: $h4FontWeight;
+    text-transform: $h4TextTransform;
+    &,
+    small,
+    .small {
+        color: $h4TextColour;
+    }
+    @include media768() {
+        @include mixinsFontSize($h4FontSizeTablet);
+    }
+    @include media1024() {
+        @include mixinsFontSize($h4FontSize);
+    }
+}
+
+h5,
+.h5 {
+    @include mixinsFontSize($h5FontSizeMobile);
+    font-family: $h5Font;
+    font-weight: $h5FontWeight;
+    text-transform: $h5TextTransform;
+    &,
+    small,
+    .small {
+        color: $h5TextColour;
+    }
+    @include media768() {
+        @include mixinsFontSize($h5FontSizeTablet);
+    }
+    @include media1024() {
+        @include mixinsFontSize($h5FontSize);
+    }
+}
+
+h6,
+.h6 {
+    @include mixinsFontSize($h6FontSizeMobile);
+    font-family: $h6Font;
+    font-weight: $h6FontWeight;
+    text-transform: $h6TextTransform;
+    &,
+    small,
+    .small {
+        color: $h6TextColour;
+    }
+    @include media768() {
+        @include mixinsFontSize($h6FontSizeTablet);
+    }
+    @include media1024() {
+        @include mixinsFontSize($h6FontSize);
+    }
+}

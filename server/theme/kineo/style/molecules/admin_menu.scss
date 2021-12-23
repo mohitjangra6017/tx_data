@@ -1,0 +1,140 @@
+@import '../lib/mixins';
+$totaraAdminMenuBackgroundColor                : #3d444b;
+$totaraAdminMenuBorderColor                    : #fff;
+$totaraAdminMenuColour                         : #fff;
+$totaraAdminMenuPadding: 10px;
+
+$totaraAdminMenuHeaderMargin: 0 0 10px;
+
+$totaraAdminMenuHrLeft: $totaraAdminMenuPadding;
+$totaraAdminMenuHrMargin: 0 0 8px;
+
+$totaraAdminMenuSearchBackgroundColour         : #000;
+$totaraAdminMenuSearchBorderColour             : #fff;
+$totaraAdminMenuSearchButtonBackgroundColour   : #64717d;
+$totaraAdminMenuSearchButtonColour             : #fff;
+$totaraAdminMenuSearchColour                   : #fff;
+$totaraAdminMenuSearchFontSize                 : 14;
+$totaraAdminMenuSearchFontWeight               : normal;
+$totaraAdminMenuSearchMargin: 0;
+$totaraAdminMenuFontSize                       : 14;
+$totaraAdminMenuFontWeight                     : normal;
+$totaraAdminMenuH2Size                         : 18;
+$totaraAdminMenuH2Weight                       : bold;
+$totaraAdminMenuH3Size                         : 16;
+$totaraAdminMenuH3Weight                       : normal;
+$totaraAdminMenuShadow                         : 0 4px 8px 0 rgba(0,0,0,.075), 0 4px 8px 0 rgba(0,0,0,.25);
+$totaraAdminMenuInputShadow                    : inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255,255,255,.75);
+
+$totaraAdminMenuSectionTitleMargin: 0 0 10px 0;
+
+$totaraAdminMenuSectionItemPadding: 6px 0;
+$totaraAdminMenuSectionItemMargin: 0 0 10px 0;
+$totaraAdminMenuSectionItemFontSize: 14;
+
+@mixin fullWidthDivider($leftValue, $colour) {
+    width: calc(100% + (2 * #{$leftValue}));
+    left: -$leftValue;
+    border-color: $colour;
+}
+
+.totara_core__QuickAccess .totara_core__QuickAccess_menu {
+    background-color: $totaraAdminMenuBackgroundColor;
+    color: $totaraAdminMenuColour;
+    padding: $totaraAdminMenuPadding;
+    .totara_core__QuickAccess {
+        &_menu-header {
+            margin: $totaraAdminMenuHeaderMargin;
+        }
+        &-header_title {
+            color: $totaraAdminMenuColour;
+            @include mixinsFontSize($totaraAdminMenuH2Size);
+            font-weight: $totaraAdminMenuH2Weight;
+        }
+        &_menu_search {
+            float: left;
+            width: 100%;
+            margin: $totaraAdminMenuSearchMargin;
+            &-input {
+                background-color: $totaraAdminMenuSearchBackgroundColour;
+                border-color: $totaraAdminMenuBorderColor;
+                color: $totaraAdminMenuSearchColour;
+                @include mixinsFontSize($totaraAdminMenuSearchFontSize);
+                font-weight: $totaraAdminMenuSearchFontWeight;
+            }
+            &-button {
+                background-color: $totaraAdminMenuSearchButtonBackgroundColour;
+                color: $totaraAdminMenuSearchButtonColour;
+                @include mixinsFontSize($totaraAdminMenuSearchFontSize);
+                font-weight: $totaraAdminMenuSearchFontWeight;
+                span {
+                    color: $totaraAdminMenuSearchButtonColour;
+                    &:before {
+                        color: $totaraAdminMenuSearchButtonColour;
+                        @include mixinsFontSize($totaraAdminMenuSearchFontSize);
+                        font-weight: $totaraAdminMenuSearchFontWeight;
+                    }
+                }
+            }
+        }
+        &_hr {
+            position: relative;
+            @include fullWidthDivider($totaraAdminMenuHrLeft, $totaraAdminMenuBorderColor);
+            float: left;
+            margin: $totaraAdminMenuHrMargin;
+        }
+        &_group {
+            &-title {
+                color: $totaraAdminMenuColour;
+                @include mixinsFontSize($totaraAdminMenuH3Size);
+                font-weight: $totaraAdminMenuH3Weight;
+                margin: $totaraAdminMenuSectionTitleMargin;
+            }
+            &-list {
+                li {
+                    padding: $totaraAdminMenuSectionItemPadding;
+                    margin: $totaraAdminMenuSectionItemMargin;
+                    @include mixinsFontSize($totaraAdminMenuSectionItemFontSize);
+                }
+            }
+        }
+        &_footer {
+            margin: 0;
+            line-height: normal;
+            text-align: right;
+            a {
+                color: $totaraAdminMenuColour;
+                @include mixinsFontSize($totaraAdminMenuFontSize);
+                font-weight: $totaraAdminMenuFontWeight;
+                float: none;
+                vertical-align: middle;
+            }
+            &:before {
+                position: relative;
+                @include fullWidthDivider($totaraAdminMenuHrLeft, $totaraAdminMenuBorderColor);
+            }
+        }
+    }
+    input:focus {
+        box-shadow: $totaraAdminMenuInputShadow;
+    }
+    li a {
+        @include mixinsFontSize($totaraAdminMenuFontSize);
+        font-weight: $totaraAdminMenuFontWeight;
+        &,
+        &:link,
+        &:visited,
+        &:hover,
+        &:active,
+        &:focus {
+            color: $totaraAdminMenuColour;
+        }
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .totara_core__QuickAccess .totara_core__QuickAccess_menu {
+        border: 0;
+        box-shadow: $totaraAdminMenuShadow;
+    }
+}

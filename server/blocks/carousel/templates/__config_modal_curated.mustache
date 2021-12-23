@@ -1,0 +1,22 @@
+{{< core/modal }}
+    {{$title}}{{#str}} curate_contents_config, block_carousel {{/str}}{{/title}}
+    {{$body}}
+        <div class="curated-container">
+            <div class="row">
+                <div class="col-sm-8" id="curated-filters">
+
+                </div>
+                <div class="col-sm-4">
+                    <h4>{{#str}} curated_courselist, block_carousel {{/str}} <span class="hide" id="add-new-cluster"><i class="fa fa-plus"></i> {{#str}} addnewcluster, block_carousel {{/str}}</span></h4>
+                    <div id="curated-contents">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/body}}
+    {{$footer}}
+        <button type="button" class="btn btn-primary" data-action="save" id="save-cluster">{{#str}} save, block_carousel {{/str}}</button>
+        <button type="button" class="btn btn-secondary" data-action="cancel">{{#str}} cancel {{/str}}</button>
+    {{/footer}}
+{{/ core/modal }}

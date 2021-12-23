@@ -1,0 +1,14 @@
+$onClickHightlightColour: #333333;
+.custom-image-table {
+  img {
+    height: 80px;
+  }
+  .custom-image-path {
+    &:hover {
+      cursor: copy;
+    }
+    &.on-click-highlight {
+      background-color: $onClickHightlightColour;
+    }
+  }
+}

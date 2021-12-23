@@ -1,0 +1,29 @@
+<div class="tf_element totara_form_group_collection clearfix">
+    <div class="tf_collection_items">
+        {{#items}}
+            {{#visible}}
+                {{#isquestion}}
+                <div data-item-classification="{{elementclassification}}"
+                     data-element-type="{{elementtype}}"
+                     data-element-id="{{elementid}}"
+                     data-element-template="{{form_item_template}}"
+                     data-element-frozen="{{frozen}}"
+                    {{^frozen}}{{#amdmodule}} data-element-amd-module="{{.}}"{{/amdmodule}}{{/frozen}}
+                     class="nostyles">
+                    <div class="assesment_question">
+                        <div class="tf_element totara_form_element_{{form_element}} role_{{role}}">
+                            <div class="tf_element_title">
+                                <span class="legend" data-element-label>{{label}}{{#required}}{{> totara_form/required_suffix}}{{/required}}</span>
+                                {{> totara_form/help_button}}
+                            </div>
+                            {{> &&question_template }}
+                        </div>
+                    </div>
+                </div>
+                {{/isquestion}}
+                {{^isquestion}}{{> &&form_item_template }}{{/isquestion}}
+            {{/visible}}
+        {{/items}}
+    </div>
+    {{> totara_form/help_button}}
+</div>

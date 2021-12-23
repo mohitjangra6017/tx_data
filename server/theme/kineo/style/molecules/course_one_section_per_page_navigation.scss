@@ -1,0 +1,25 @@
+@import '../lib/mixins';
+$oneSectionPerPageNavigationLinkColour: $linkColour;
+$oneSectionPerPageNavigationTopicHeadingColour: $sectionNameColour;
+$oneSectionPerPageNavigationBackgroundColour: $mainSectionContentBackgroundColour;
+
+.single-section {
+    .section-navigation {
+        background-color: $oneSectionPerPageNavigationBackgroundColour;
+        .sectionname {
+            color: $oneSectionPerPageNavigationTopicHeadingColour;
+        }
+        .mdl-left,
+        .mdl-right {
+            a {
+                @include mixinsLinkStateColours(
+                    $oneSectionPerPageNavigationLinkColour,
+                    $oneSectionPerPageNavigationLinkColour,
+                    $oneSectionPerPageNavigationLinkColour,
+                    $oneSectionPerPageNavigationLinkColour,
+                    $oneSectionPerPageNavigationLinkColour
+                )
+            }
+        }
+    }
+}

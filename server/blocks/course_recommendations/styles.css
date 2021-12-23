@@ -1,0 +1,13 @@
+.block_course_recommendations .action-links {
+    margin-right: 10px;
+}
+.block_course_recommendations .totaratable td.cell.c0 {
+    width: 74%;
+}
+.block_course_recommendations .content .block-info {
+    margin-bottom: 30px;
+}
+
+.block_course_recommendations .block-content {
+    overflow: auto;
+}

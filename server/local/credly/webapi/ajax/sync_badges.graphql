@@ -1,0 +1,5 @@
+mutation local_credly_sync_badges {
+    local_credly_sync_badges {
+        syncfinished
+    }
+}

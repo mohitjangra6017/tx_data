@@ -1,0 +1,6 @@
+$borderSolid: $borderWeight solid $borderColour;
+$borderDash: $borderWeight dashed $borderColour;
+
+hr {
+    border-color: $borderColour;
+}

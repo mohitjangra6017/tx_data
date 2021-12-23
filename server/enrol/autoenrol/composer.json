@@ -1,0 +1,22 @@
+{
+    "name": "tke/enrol-autoenrol",
+    "type": "totara-enrol",
+    "description": "AutoEnrol enrolment plugin",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "autoenrol",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/enrol-autoenrol/wikis/home"
+    }
+}

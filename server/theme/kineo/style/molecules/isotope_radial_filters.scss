@@ -1,0 +1,31 @@
+@import '../../scss/_global_variables.scss';
+
+$containerMinHeight: $isotopeRadialFilterContainerMinHeight;
+
+@mixin isotopeFilterContainer($minHeight) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: $minHeight;
+}
+
+.block_isotope .block-content {
+    .aggregations,
+    .isotope {
+        &.filters.completion,
+        &.progfilters {
+            > div:not(.type-filter-buttons) {
+                @include isotopeFilterContainer($containerMinHeight);
+            }
+            &.progfilters {
+                > div:not(.type-filter-buttons) {
+                    margin-bottom: 70px;
+                }
+            }
+        }
+    }
+    .aggregations > .filters {
+        @include isotopeFilterContainer($containerMinHeight);
+    }
+}

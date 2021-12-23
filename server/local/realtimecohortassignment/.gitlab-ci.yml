@@ -1,0 +1,49 @@
+image: kineo/totara-plugin:latest
+stages:
+  - test
+
+services:
+  - name: postgres:12
+    command:
+      - "-c"
+      - "max_locks_per_transaction=1024"
+
+variables:
+  POSTGRES_DB: totara
+  POSTGRES_USER: kineo
+  POSTGRES_PASSWORD: dockerPass1
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+before_script:
+  # Prepare the plug-in.
+  - cd /var/www/html
+  - php /etc/kineo/plugin_installer.php
+
+  # Set up composer auth.
+  - mkdir ~/.composer
+  - cp /etc/kineo/auth.json ~/.composer/auth.json
+  - cp /etc/kineo/composer.json ~/.composer/composer.json
+  - sed -i 's/$pkey/'${COMPOSER_KEY}'/g' ~/.composer/auth.json
+  - wget https://getcomposer.org/composer-1.phar
+  - php composer-1.phar global update
+  - cp composer-1.phar composer.phar
+
+  # Set up Totara.
+  - cp /etc/kineo/config.php config.php
+
+PHPUnit:
+  stage: test
+  tags:
+    - totara
+  only:
+    - /^integration\/[^ ]+$/
+    - /^master\/[^ ]+$/
+  script:
+    - php composer.phar install
+    - php ./admin/tool/phpunit/cli/parallel_init.php --processes=4
+    - php ./admin/tool/phpunit/cli/parallel_run.php --processes=4 2>&1 | tee ./plugin/phpunit.log
+  artifacts:
+    when: on_failure
+    paths:
+      - phpunit.log
+    expire_in: 1 week

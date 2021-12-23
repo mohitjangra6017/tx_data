@@ -1,0 +1,24 @@
+{
+    "name": "tke/builder",
+    "description": "The automated build system for Totara: Kineo Edition",
+    "type": "composer-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Michael Geering",
+            "email": "michael.geering@kineo.com"
+        }
+    ],
+    "require": {
+        "composer-plugin-api": "^1.0|^2.0",
+        "tke/tke": "~15.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "KineoBuilder\\": "src"
+        }
+    },
+    "extra": {
+        "class": "KineoBuilder\\Plugin"
+    }
+}

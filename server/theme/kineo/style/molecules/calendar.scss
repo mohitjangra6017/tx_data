@@ -1,0 +1,60 @@
+.calendartable .hasevent,
+.calendar_event_global,
+.calendar_event_course,
+.calendar_event_group,
+.calendar_event_user {
+    > a:first-of-type {
+        color: $calendarHasEventColour;
+    }
+}
+
+.calendar_event_global {
+    background-color: $calendarGlobalEventColour;
+}
+
+.calendar_event_course {
+    background-color: $calendarCourseEventColour;
+}
+
+.calendar_event_group {
+    background-color: $calendarGroupEventColour;
+}
+
+.calendar_event_user {
+    background-color: $calendarUserEventColour;
+}
+
+// Main Calender Specific styles.
+
+.path-calendar .maincalendar {
+    thead .header {
+        color: $mainCalendarDayHeaderColour;
+    }
+    .calendar-controls .current {
+        color: $mainCalendarCurrentMonthColour;
+    }
+    .day {
+        color: $mainCalendarDayColour;
+        &.weekend .day {
+            color: $maincalendarWeekEndTextColour;
+        }
+        &.today .day {
+            color: $mainCalendarTodayColour;
+            > a:first-of-type {
+                color: $mainCalendarTodayColour;
+            }
+        }
+    }
+    .calendar_event_global {
+        border-color: $calendarGlobalEventColour;
+    }
+    .calendar_event_course {
+        border-color: $calendarCourseEventColour;
+    }
+    .calendar_event_group {
+        border-color: $calendarGroupEventColour;
+    }
+    .calendar_event_user {
+        border-color: $calendarUserEventColour;
+    }
+}

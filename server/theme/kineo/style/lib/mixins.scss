@@ -1,0 +1,74 @@
+$mixinBoxShadowDefaultBackgroundColour: rgba(0, 0, 0, 0.25);
+
+@mixin mixinsGradientDirectional(
+    $startColor,
+    $startColourStop: 0%,
+    $endColor,
+    $endColourStop: 0%,
+    $deg
+) {
+    background-color: $endColor;
+    background-image: -moz-linear-gradient($deg, $startColor $startColourStop, $endColor $endColourStop);
+    background-image: -ms-linear-gradient($deg, $startColor $startColourStop, $endColor $endColourStop);
+    background-image: -webkit-linear-gradient($deg, $startColor $startColourStop, $endColor $endColourStop);
+    background-image: -o-linear-gradient($deg, $startColor $startColourStop, $endColor $endColourStop);
+    background-image: linear-gradient($deg, $startColor $startColourStop, $endColor $endColourStop);
+    background-repeat: repeat-x;
+}
+
+@mixin mixinsFontSize($size) {
+    font-size: $size;
+}
+
+@mixin mixinsLinkStateColours(
+    $linkDefaultColour: $linkColour,
+    $linkVisitedStateColour: $linkColourVisited,
+    $linkHoverStateColour: $linkColourHover,
+    $linkActiveStateColour: $linkColourActive,
+    $linkFocusStateColour: $linkColourHover
+) {
+    color: $linkDefaultColour;
+    &:visited {
+        color: $linkVisitedStateColour;
+    }
+    &:hover {
+        color: $linkHoverStateColour;
+    }
+    &:active {
+        color: $linkActiveStateColour;
+    }
+    &:focus {
+        color: $linkFocusStateColour;
+    }
+}
+
+@mixin mixinsCentreAbsolute() {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+@mixin mixinsBoxShadow(
+    $shadow: 0 1px 3px $mixinBoxShadowDefaultBackgroundColour
+) {
+    -webkit-box-shadow: $shadow;
+    -moz-box-shadow: $shadow;
+    box-shadow: $shadow;
+}
+
+@mixin mixinsBorderlessBlockControlActionsMargin() {
+    margin: -15px 0 15px;
+}
+
+@mixin mixinsBackgroundImageStyles() {
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@mixin mixinsFixedBackgroundImageStyles() {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}

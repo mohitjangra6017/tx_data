@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/default_filters/db" VERSION="2017082200" COMMENT="XMLDB file for Kineo local/default_filters"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="local_default_filters" COMMENT="Log table">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="reportid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for default filters"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="id" UNIQUE="false" FIELDS="id"/>
+                <INDEX NAME="reportid" UNIQUE="false" FIELDS="reportid"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

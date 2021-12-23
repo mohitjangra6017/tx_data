@@ -1,0 +1,210 @@
+@import '../lib/mixins';
+$customAppearanceSelectBorderColour: $inputBorderColour;
+
+$customAppearanceSelectOptionPadding: 1em;
+$customAppearanceSelectOptionTextAlign: center;
+
+$customAppearanceSelectItemOuterPadding: 0.2em;
+$customAppearanceSelectItemInnerPadding: 0.4em;
+
+$customAppearanceShowcasePadding: 10px;
+$customAppearanceShowcaseBorder: 1px solid $borderColour;
+
+@mixin setSelectItemColour($backgroundColour) {
+    background-color: $backgroundColour;
+    $color-brightness: round((red($backgroundColour) * 299) + (green($backgroundColour) * 587) + (blue($backgroundColour) * 114) / 1000);
+    $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + (blue(#ffffff) * 114) / 1000);
+    @if abs($color-brightness) < ($light-color/2){
+        color: white;
+    }
+
+    @else {
+        color: black;
+    }
+}
+
+@mixin setSelectItemBackgroundColour($colour) {
+    color: $colour;
+    $color-brightness: round((red($colour) * 299) + (green($colour) * 587) + (blue($colour) * 114) / 1000);
+    $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + (blue(#ffffff) * 114) / 1000);
+    @if abs($color-brightness) < ($light-color/2){
+        background-color: white;
+    }
+
+    @else {
+        background-color: black;
+    }
+}
+
+@mixin setSelectItemBorder($borderColour) {
+    span {
+        border: 2px solid $borderColour;
+    }
+    $color-brightness: round((red($borderColour) * 299) + (green($borderColour) * 587) + (blue($borderColour) * 114) / 1000);
+    $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + (blue(#ffffff) * 114) / 1000);
+    @if abs($color-brightness) < ($light-color/2){
+        background-color: white;
+        color: black;
+    }
+
+    @else {
+        background-color: black;
+        color: white;
+    }
+}
+
+[data-select2-id="id_cs_custom_appearance"] {
+    + .select2.select2-container--default {
+        display: block;
+        border-color: $customAppearanceSelectBorderColour;
+        &.select2-container--focus .select2-selection--multiple {
+            border-color: $customAppearanceSelectBorderColour;
+        }
+        .select2-selection__rendered .select2-selection__choice {
+            float: none;
+            max-width: 96%;
+        }
+    }
+}
+
+// Drop-down styles
+
+.select2-container--open {
+    ul#select2-id_cs_custom_appearance-results {
+        .select2-results__options {
+            .select2-results__option[role="group"] {
+                .select2-results__group {
+                    padding: $customAppearanceSelectOptionPadding;
+                    text-align: $customAppearanceSelectOptionTextAlign;
+                }
+            }
+            .select2-results__option {
+                padding: $customAppearanceSelectItemOuterPadding;
+                span {
+                    padding: $customAppearanceSelectItemInnerPadding;
+                    display: block;
+                }
+            }
+            [data-select2-id*="text-colour-color-"] {
+                &[data-select2-id*="black"] {
+                    @include setSelectItemBackgroundColour($resolvedColorBlack);
+                }
+                &[data-select2-id*="white"] {
+                    @include setSelectItemBackgroundColour($resolvedColorWhite);
+                }
+                &[data-select2-id*="primary"] {
+                    @include setSelectItemBackgroundColour($resolvedColorPrimary);
+                }
+                &[data-select2-id*="secondary"] {
+                    @include setSelectItemBackgroundColour($resolvedColorSecondary);
+                }
+                &[data-select2-id*="tertiary"] {
+                    @include setSelectItemBackgroundColour($resolvedColorTertiary);
+                }
+                &[data-select2-id*="accent-3"] {
+                    @include setSelectItemBackgroundColour($resolvedColorAccent3);
+                }
+                &[data-select2-id*="accent-4"] {
+                    @include setSelectItemBackgroundColour($resolvedColorAccent4);
+                }
+                &[data-select2-id*="neutral-2"] {
+                    @include setSelectItemBackgroundColour($resolvedColorNeutral2);
+                }
+                &[data-select2-id*="neutral-3"] {
+                    @include setSelectItemBackgroundColour($resolvedColorNeutral3);
+                }
+                &[data-select2-id*="neutral-4"] {
+                    @include setSelectItemBackgroundColour($resolvedColorNeutral4);
+                }
+                &[data-select2-id*="neutral-5"] {
+                    @include setSelectItemBackgroundColour($resolvedColorNeutral5);
+                }
+                &[data-select2-id*="neutral-6"] {
+                    @include setSelectItemBackgroundColour($resolvedColorNeutral6);
+                }
+            }
+            [data-select2-id*="background-colour-color-"] {
+                &[data-select2-id*="black"] {
+                    @include setSelectItemColour($resolvedColorBlack);
+                }
+                &[data-select2-id*="white"] {
+                    @include setSelectItemColour($resolvedColorWhite);
+                }
+                &[data-select2-id*="primary"] {
+                    @include setSelectItemColour($resolvedColorPrimary);
+                }
+                &[data-select2-id*="secondary"] {
+                    @include setSelectItemColour($resolvedColorSecondary);
+                }
+                &[data-select2-id*="tertiary"] {
+                    @include setSelectItemColour($resolvedColorTertiary);
+                }
+                &[data-select2-id*="accent-3"] {
+                    @include setSelectItemColour($resolvedColorAccent3);
+                }
+                &[data-select2-id*="accent-4"] {
+                    @include setSelectItemColour($resolvedColorAccent4);
+                }
+                &[data-select2-id*="neutral-2"] {
+                    @include setSelectItemColour($resolvedColorNeutral2);
+                }
+                &[data-select2-id*="neutral-3"] {
+                    @include setSelectItemColour($resolvedColorNeutral3);
+                }
+                &[data-select2-id*="neutral-4"] {
+                    @include setSelectItemColour($resolvedColorNeutral4);
+                }
+                &[data-select2-id*="neutral-5"] {
+                    @include setSelectItemColour($resolvedColorNeutral5);
+                }
+                &[data-select2-id*="neutral-6"] {
+                    @include setSelectItemColour($resolvedColorNeutral6);
+                }
+            }
+            [data-select2-id*="border-colour-"] {
+                &[data-select2-id*="black"] {
+                    @include setSelectItemBorder($resolvedColorBlack);
+                }
+                &[data-select2-id*="white"] {
+                    @include setSelectItemBorder($resolvedColorWhite);
+                }
+                &[data-select2-id*="primary"] {
+                    @include setSelectItemBorder($resolvedColorPrimary);
+                }
+                &[data-select2-id*="secondary"] {
+                    @include setSelectItemBorder($resolvedColorSecondary);
+                }
+                &[data-select2-id*="tertiary"] {
+                    @include setSelectItemBorder($resolvedColorTertiary);
+                }
+                &[data-select2-id*="accent-3"] {
+                    @include setSelectItemBorder($resolvedColorAccent3);
+                }
+                &[data-select2-id*="accent-4"] {
+                    @include setSelectItemBorder($resolvedColorAccent4);
+                }
+                &[data-select2-id*="neutral-2"] {
+                    @include setSelectItemBorder($resolvedColorNeutral2);
+                }
+                &[data-select2-id*="neutral-3"] {
+                    @include setSelectItemBorder($resolvedColorNeutral3);
+                }
+                &[data-select2-id*="neutral-4"] {
+                    @include setSelectItemBorder($resolvedColorNeutral4);
+                }
+                &[data-select2-id*="neutral-5"] {
+                    @include setSelectItemBorder($resolvedColorNeutral5);
+                }
+                &[data-select2-id*="neutral-6"] {
+                    @include setSelectItemBorder($resolvedColorNeutral6);
+                }
+            }
+        }
+    }
+}
+
+.custom-appearance-showcase {
+    display: block;
+    padding: $customAppearanceShowcasePadding;
+    border: $customAppearanceShowcaseBorder;
+}

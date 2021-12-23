@@ -1,0 +1,22 @@
+{% macro nav(filters, prefix, plugin, default) %}
+    {# Only show filter navigation if at least 2 filters are visible. Also, only show the filter buttons that have filters visible. #}
+    {% set uniq_types = 0 %}
+    {% for filter, count in filters %}{% if count > 0 %}{% set uniq_types = uniq_types + 1 %}{% endif %}{% endfor %}
+    {% if uniq_types > 1 %}
+        <nav class="learning isotope {{ prefix }} filters">
+        <div class="type-filter-buttons">
+            <span>{{ get_string('filter_navigation:' ~ prefix, plugin) }}</span>
+            {% set active = default == 'all' ? 'active' : '' %}
+            <button data-filter="*" class="filter-button all {{ active }}">{{ get_string('filter_navigation:all', plugin) }}</button>
+            {% for filter, count in filters %}
+                {% if count > 0 %}
+                    {% set active = default == filter ? 'active' : '' %}
+                    <button data-filter=".{{ prefix }}-{{ filter }}" class="filter-button {{ filter }} {{ active }}">
+                        {{ get_string('filter_navigation:' ~ prefix ~ ':' ~ filter, plugin) }}
+                    </button>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </nav>
+    {% endif %}
+{% endmacro %}

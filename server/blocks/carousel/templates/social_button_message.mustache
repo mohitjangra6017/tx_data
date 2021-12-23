@@ -1,0 +1,21 @@
+<div class="carousel-message">
+    <div class="btn-group dropup">
+        <button id="btn-send-message" class="message-button btn btn-default dropdown-toggle send-message-btn" data-toggle="dropdown">
+            <i class="far fa-envelope fa-lg"></i> MSG
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelled-by="btn-send-message">
+            <li>
+                <form action="/blocks/event_feed/message.php" role="form" method="post">
+                    <input type="hidden" name="useridto" value="{{followuserid}}"></input>
+                    <input type="hidden" name="redirecturl" value="{{followredirecturl}}"></input>
+                    <div class="form-group">
+                        <textarea name="message" value="1" class="form-control messagesendbox" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">send</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>

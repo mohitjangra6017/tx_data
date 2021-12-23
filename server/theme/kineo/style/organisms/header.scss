@@ -1,0 +1,25 @@
+@import '../lib/mixins';
+@import '../lib/media';
+@import '../../scss/_global_variables';
+
+@mixin header(
+    $backgroundColour,
+) {
+    .totaraNav_prim {
+        background-color: $backgroundColour;
+    }
+}
+
+@include header(
+        $backgroundColour: $headerBackgroundColour
+);
+@if ($resolvedHideHeaderDropShadow == true) {
+    .totaraNav {
+        box-shadow: none;
+    }
+}
+@if ($resolvedHideHeaderDropShadow == false) {
+    .totaraNav {
+        box-shadow: $totaraNavBoxShadow;
+    }
+}

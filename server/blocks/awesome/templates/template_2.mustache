@@ -1,0 +1,17 @@
+<div class="awesome-block template-2 {{additionalclass}}" {{{block_styles}}}>
+    {{> block_awesome/image}}
+    <div class="caption" {{{caption_styles}}}>
+        {{#headertext}}<h2 {{{header_styles}}}>{{headertext}}</h2>{{/headertext}}
+      {{#subheadertext}}
+        {{#subheaderurl}}<a href="{{subheaderurl}}">{{/subheaderurl}}
+        <h3 {{{subheader_styles}}}>{{subheadertext}}</h3>
+        {{#subheaderurl}}</a>{{/subheaderurl}}
+      {{/subheadertext}}
+        <p {{{content_styles}}}>{{#faicon}}<span class="fa-icon" style="color:{{iconcolour}}; background-color: {{iconbackgroundcolour}};">
+            <i class="fa {{faicon}}"></i></span>{{/faicon}}{{{contenttext}}}
+        </p>
+      {{#url}}
+        <a class="btn btn-default awesome-link" href="{{url}}" {{#newtab}} target="_blank" {{/newtab}} {{{btn_styles}}}>{{linktext}}</a>
+      {{/url}}
+    </div>
+</div>

@@ -1,0 +1,32 @@
+$enrolCalendarOddRowBackground : $brandGrey5;
+#cal-day-box {
+    .cal-day-hour {
+        &:nth-child(odd) {
+            &,
+            .cal-day-hour-part {
+                background-color: $enrolCalendarOddRowBackground;
+            }
+        }
+        @include media992 {
+            .row-fluid .span1 {
+                width: 12.3%;
+                padding-left: 10px;
+            }
+        }
+    }
+}
+.block_enrol_calendar {
+    span[data-cal-date] {
+        opacity: 1;
+    }
+
+    .cal-day-outmonth {
+        span[data-cal-date] {
+            opacity: 0.7;
+        }
+    }
+    .event-item {
+        display: inline-block;
+        width: 100%;
+    }
+}

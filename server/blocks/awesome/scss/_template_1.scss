@@ -1,0 +1,28 @@
+$t1_gutterwidth : 25px;
+$t1_contentbg : #333333;
+$t1_textcolour : #ffffff;
+
+.block.block_awesome .awesome-block.template-1 {
+    .caption {
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: transparent;
+        border-bottom: none;
+        position: relative;
+        min-height: 250px;
+        padding: $t1_gutterwidth;
+        background-color: $t1_contentbg;
+        color: $t1_textcolour;
+        
+        .awesome-link {
+            position: absolute;
+            bottom: $t1_gutterwidth;
+            
+            &:after {
+                content: "\f054";
+                font-family: FontAwesome;
+                padding-left: 10px;
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "name": "tke/mod-assessment",
+    "description": "Appraisal-like module for courses",
+    "type": "totara-mod",
+    "authors": [
+        {
+            "name": "Michael J. Trio",
+            "email": "michael.trio@kineo.com"
+        }
+    ],
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "assessment",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/mod-assessment/wikis/home"
+    }
+}

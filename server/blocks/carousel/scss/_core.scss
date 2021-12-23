@@ -1,0 +1,161 @@
+.block.block_carousel {
+  .content {
+    background-color: transparent;
+
+    > h2 {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .slick-track {
+    margin: 12px 15px 4px 0px;
+
+    .slick-loading & {
+      visibility: hidden;
+    }
+  }
+
+  .slick-list {
+    .slick-loading & {
+      background: #fff "../js/slick/ajax-loader.gif" center center no-repeat;
+    }
+
+    article.learning {
+      figure {
+        margin: 0;
+        padding-top: 60%;
+        position: relative;
+
+        .figure-ratio {
+          bottom: 0;
+          left: 0;
+          overflow: hidden;
+          position: absolute;
+          right: 0;
+          top: 0;
+
+          .figure-ratio-image {
+            background-position: 50%;
+            background-size: cover;
+            height: 100%;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .nav-slides {
+    article {
+      background-repeat: no-repeat;
+      background-position: top right;
+      background-size: contain;
+    }
+  }
+
+  /* Arrows */
+  .slick-prev,
+  .slick-next {
+    z-index: 99;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.75);
+    position: absolute;
+    top: 45%;
+    z-index: 1000;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.5s ease;
+    font-size: 0px;
+
+    &:hover,
+    &:focus {
+      outline: none;
+      // background: transparent;
+      color: transparent;
+      &:before {
+        opacity: 1;
+      }
+    }
+
+    &:before {
+      font-family: $carousel_font_awesome;
+      color: #0776aa;
+      font-size: 36px;
+    }
+
+    &.slick-disabled {
+      visibility: hidden;
+    }
+  }
+
+  .slick-prev {
+    left: -10px;
+    box-shadow: -1px 1px 4px #cccccc;
+    &:before {
+      content: $tfont-var-chevron-left;
+    }
+  }
+
+  .slick-next {
+    right: 0px;
+    box-shadow: 1px 1px 4px #cccccc;
+    &:before {
+      content: $tfont-var-chevron-right;
+    }
+  }
+  .slick-slide img.course_icon {
+    display: inline-block;
+  }
+
+  .progressbar_container {
+    top: 15px;
+  }
+
+  .progressbar__text {
+    margin-top: 1px;
+    display: contents;
+  }
+
+  .dndupload-progress-outer .bar,
+  .progress .bar {
+    min-width: 20px;
+  }
+}
+.ellip {
+  display: block;
+  height: 100%;
+  margin-top: 10px;
+}
+.title-wrap .ellip {
+  margin-top: 3px;
+}
+.ellip-line {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  max-width: 100%;
+}
+.ellip,
+.ellip-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.block_totara_featured_links {
+  .slick-list {
+    .slick-track {
+      .slick-slide > div {
+        height: 100% !important;
+      }
+    }
+  }
+}
+@mixin carouselMedia768 {
+  @media only screen and (min-width: 768px) {
+    @content;
+  }
+}

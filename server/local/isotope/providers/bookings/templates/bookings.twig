@@ -1,0 +1,23 @@
+{% if items is not empty %}
+    <p class="isotope-description">{{ get_string('description', plugin) }}</p>
+    <section class="bookings isotope container">
+        {% for booking in items %}
+            <figure class="isotope item" {% if booking.image %} style="background-image: url({{ booking.image }})" {% endif %}>
+                <a href="{{ booking.url }}">
+                    <h3 class="name">
+                        {{ booking.name | format_html }}
+                    </h3>
+                    <span class="date">
+                        {{ get_string('date', plugin) }}
+                        {% if booking.timestart is not empty %}
+                            <br/><time>{{ booking.timestart|moodle_date }}</time>
+                        {% endif %}
+                        {% if booking.timefinish is not empty and config.display_finish_date == 1 %}
+                            <br/><time>{{ booking.timefinish|moodle_date }}</time>
+                        {% endif %}
+                    </span>
+                </a>
+            </figure>
+        {% endfor %}
+    </section>
+{% endif %}

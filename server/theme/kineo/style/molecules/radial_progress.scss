@@ -1,0 +1,332 @@
+@import '../lib/mixins';
+@import '../../scss/global_variables';
+
+$radialProgressFont: arial;
+
+$radialprogressshadow: 6px 6px 10px rgba(0, 0, 0, 0.2);
+$radialprogressshadowdisplay: none;
+
+$radialFillColourDefault: $radialProgressCircleBackground;
+$insetBackgroundColour: $radialProgressInsetColor;
+
+$radialFillColourOverdue: $radialProgressOverdueFill;
+$radialFillColourCompleted: $radialProgressCompletedFill;
+$radialFillColourStarted: $radialProgressNotStartedFill;
+$radialFillColourInProgress: $radialProgressInProgressFill;
+$radialFillColourStateWindowOpen: $radialProgressStateWindowOpenFill;
+
+// Inset
+
+$radialProgressInsetSize: calc(#{$radialProgressCircleSize} - #{$radialProgressBorderWidth});
+$radialProgressInsetMarginLeft: calc((#{$radialProgressCircleSize} - #{$radialProgressInsetSize}) / 2);
+$radialProgressInsetMarginTop: calc((#{$radialProgressCircleSize} - #{$radialProgressInsetSize}) / 2);
+
+$radialprogresstransitionlength: 2s;
+$radialProgressTransitionEasing: cubic-bezier(0.28, 0.35, 0, 1.12);
+
+$radialValueFontWeight: $bold;
+
+$radialValueContainerHeight: 1em;
+$radialValueHeight: 1em;
+
+$radialLabelFontWeight: $bold;
+$radialLabelMarginTop: calc(#{$radialProgressCircleSize} + #{$radialLabelMarginTopOffset});
+
+$radialprogresspercentagetextwidth: $radialProgressInsetSize;
+
+$radialIncrement: calc(180deg / 100);
+
+$radialShadow: 0 10px 20px 0 rgba(0, 0, 0, 0.3);
+$radialShadowHover: 0 10px 20px 0 rgba(0, 0, 0, 0.5);
+
+// Gradients
+
+$gradientPrimaryColour: $isotopeRadialProgressEnhancedGradientPrimaryColour;
+$gradientSecondaryColour: $isotopeRadialProgressEnhancedGradientSecondaryColour;
+$insetBackgroundColourEnhanced: $isotopeRadialProgressEnhancedInsetColour;
+$insetCompletedBackgroundColour: $radialProgressCompletedFill;
+
+// Shadow
+
+$shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.3);
+$shadowHover: 0 10px 20px 0 rgba(0, 0, 0, 0.5);
+
+@mixin progressColourGradientLoop($primaryColour, $secondaryColour, $j) {
+    @for $j from 0 through 100 {
+        &[data-progress="#{$j}"] .circle .mask {
+            @if ($j <= 50) {
+                &.full .fill {
+                    @include mixinsGradientDirectional($primaryColour, (100 - $j) * 1%, $secondaryColour, 100%, 10deg);
+                }
+            }
+            @if ($j >= 51) {
+                &.full .fill {
+                    @include mixinsGradientDirectional($primaryColour, (100 - $j) * 1%, $secondaryColour, 100%, to top);
+                }
+            }
+        }
+    }
+}
+
+@mixin progressLoop ($i) {
+    @for $i from 0 through 100 {
+        &[data-progress="#{$i}"] {
+            .circle {
+                .mask.full,
+                .fill {
+                    -webkit-transform: rotate(calc(#{$radialIncrement} * #{$i}));
+                    -ms-transform: rotate(calc(#{$radialIncrement} * #{$i}));
+                    transform: rotate(calc(#{$radialIncrement} * #{$i}));
+                }
+                .fill.fix {
+                    -webkit-transform: rotate(calc(#{$radialIncrement} * #{$i} * 2));
+                    -ms-transform: rotate(calc(#{$radialIncrement} * #{$i} * 2));
+                    transform: rotate(calc(#{$radialIncrement} * #{$i} * 2));
+                }
+            }
+            .inset .percentage .numbers {
+                margin-top: -(#{$i} + 1) * 1em;
+            }
+        }
+    }
+}
+
+@if ($resolvedIsotopeRadialProgressUseEnhancedStyling == "false") {
+    .radial-progress {
+        .circle .mask .fill {
+            background-color: $radialFillColourDefault;
+        }
+        .inset {
+            background-color: $insetBackgroundColour;
+        }
+        &.overdue {
+            .circle .mask .fill {
+                background-color: $radialFillColourOverdue;
+            }
+        }
+        &.completed {
+            .circle .mask .fill {
+                background-color: $radialFillColourCompleted;
+            }
+        }
+        &.notstarted {
+            .circle .mask .fill {
+                background-color: $radialFillColourStarted;
+            }
+        }
+        &.started {
+            .circle .mask .fill {
+                background-color: $radialFillColourInProgress;
+            }
+        }
+        &.statewindowopen {
+            .circle .mask .fill {
+                background-color: $radialFillColourStateWindowOpen;
+            }
+        }
+    }
+}
+
+@if ($resolvedIsotopeRadialProgressUseEnhancedStyling == "true") {
+    .filters .radial-progress {
+        .circle .mask {
+            &.half {
+                .fill {
+                    @include mixinsGradientDirectional($gradientPrimaryColour, 0%, $gradientPrimaryColour, 0%, 45deg);
+                }
+            }
+            &.full {
+                z-index: 3;
+                .fill {
+                    @include mixinsGradientDirectional($gradientPrimaryColour, 100%, $gradientPrimaryColour, 0%, 45deg);
+                }
+            }
+        }
+        @include progressColourGradientLoop($gradientPrimaryColour, $gradientSecondaryColour, 0);
+        .inset {
+            background-color: $insetBackgroundColourEnhanced;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+        &[data-progress="100"] {
+            .inset {
+                background-color: $insetCompletedBackgroundColour;
+            }
+        }
+
+        &:after {
+            box-shadow: 0 14px 10px rgba(0, 0, 0, 0.5);
+            content: "";
+            display: block;
+            height: 2px;
+            width: 100%;
+            border-radius: 50%;
+        }
+    }
+}
+
+@if ($resolvedIsotopeRadialEnableShadow == "true") {
+    .radial-progress {
+        box-shadow: $shadow;
+        &:hover {
+            box-shadow: $shadowHover;
+        }
+    }
+}
+
+.radial-progress {
+    background-color: $radialProgressCircleBackground;
+    border-radius: 50%;
+    position: relative;
+    width: $radialProgressCircleSize;
+    height: $radialProgressCircleSize;
+    margin: $radialProgressMargin;
+    &:hover {
+        cursor: pointer;
+    }
+    .circle {
+        .mask,
+        .fill,
+        .shadow {
+            width: $radialProgressCircleSize;
+            height: $radialProgressCircleSize;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .shadow {
+            display: $radialprogressshadowdisplay;
+            box-shadow: $radialprogressshadow;
+        }
+        .mask,
+        .fill {
+            -webkit-backface-visibility: hidden;
+            transition: all 2s;
+            border-radius: 50%;
+        }
+        .mask {
+            clip: rect(0, $radialProgressCircleSize, $radialProgressCircleSize, calc(#{$radialProgressCircleSize} / 2));
+            .fill {
+                clip: rect(0, calc(#{$radialProgressCircleSize} / 2), $radialProgressCircleSize, 0);
+            }
+            &.full {
+                left: 0;
+            }
+        }
+    }
+    @include progressLoop(0);
+    &.overdue {
+        &.active {
+            .inset .percentage {
+                .numbers span {
+                    color: $radialProgressOverdueFill;
+                }
+            }
+            + p {
+                color: $radialProgressOverdueFill;
+            }
+        }
+    }
+    &.completed {
+        &.active {
+            .inset .percentage {
+                .numbers span {
+                    color: $radialProgressCompletedFill;
+                }
+            }
+            + p {
+                color: $radialProgressCompletedFill;
+            }
+        }
+    }
+    &.notstarted {
+        &.active {
+            .inset .percentage {
+                .numbers span {
+                    color: $radialProgressNotStartedFill;
+                }
+            }
+            + p {
+                color: $radialProgressNotStartedFill;
+            }
+        }
+    }
+    &.started {
+        &.active {
+            .inset .percentage {
+                .numbers span {
+                    color: $radialProgressInProgressFill;
+                }
+            }
+            + p {
+                color: $radialProgressInProgressFill;
+            }
+        }
+    }
+    &.overdue,
+    &.completed,
+    &.notstarted,
+    &.started {
+        &.active {
+            transition: color 0.1s;
+            .inset .percentage .numbers span:first-of-type {
+                color: transparent;
+            }
+        }
+    }
+    .inset {
+        width: $radialProgressInsetSize;
+        height: $radialProgressInsetSize;
+        position: absolute;
+        top: 0;
+        margin-top: $radialProgressInsetMarginTop;
+        margin-left: $radialProgressInsetMarginLeft;
+        border-radius: 50%;
+        .percentage,
+        .all {
+            width: $radialProgressInsetSize;
+            height: $radialValueContainerHeight;
+            //@include mixinsFontSize($radialprogresspercentagefontsize);
+            font-size: $radialProgressPercentageFontSize;
+            overflow: hidden;
+            font-weight: $radialValueFontWeight;
+            position: absolute;
+            @include mixinsCentreAbsolute();
+            line-height: 1;
+            span {
+                width: $radialprogresspercentagetextwidth;
+                height: $radialValueHeight;
+                display: inline-block;
+                text-align: center;
+                //@include mixinsFontSize($radialprogresspercentagefontsize);
+                font-size: $radialProgressPercentageFontSize;
+                color: $radialProgressPercentageColor;
+                padding: 0;
+            }
+        }
+        .percentage .numbers {
+            transition: margin-top $radialprogresstransitionlength $radialProgressTransitionEasing;
+            text-align: center;
+            margin-top: -1em;
+            span:first-of-type {
+                color: transparent;
+                opacity: 0;
+            }
+        }
+        .numbers,
+        .all {
+            font-family: $radialProgressFont;
+        }
+        + p {
+            text-align: center;
+            font-weight: $radialLabelFontWeight;
+            //@include mixinsFontSize($radialLabelFontSize);
+            font-size: $radialLabelFontSize;
+            margin-top: $radialLabelMarginTop;
+            color: $radialLabelColour;
+            &.label {
+                display: block;
+                white-space: normal;
+            }
+        }
+    }
+}

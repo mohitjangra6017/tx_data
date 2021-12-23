@@ -1,0 +1,33 @@
+$userMessagesBtnLinkBackground : transparent;
+$userMessagesBtnLinkBorder     : none;
+$userMessagesBackgroundColour     : $white;
+$userMessagesTabSelectedColour: $brandGrey1;
+
+#page-message-index {
+    .btn-link {
+        &,
+        &:hover,
+        &:active,
+        &:focus,
+        &:visited {
+            background-color: $userMessagesBtnLinkBackground;
+            border: $userMessagesBtnLinkBorder;
+            color: $linkColour;
+        }
+    }
+    .messaging-area-container {
+        background-color: $userMessagesBackgroundColour;
+        .messaging-area .contacts-area {
+            .tabs {
+                .tab.selected,
+                .tab:hover {
+                    &,
+                    .ft {
+                        color: $userMessagesTabSelectedColour;
+                    }
+                }
+            }
+        }
+    }
+
+}

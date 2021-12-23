@@ -1,0 +1,43 @@
+.linkToTop-top {
+  position: fixed;
+  right: 30px;
+  bottom: 80px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .3s 0s, visibility 0s .3s;
+  padding: 0;
+  @if ($resolvedBackToTopEnabled == 'false') {
+    display: none;
+  }
+  &:before {
+    font-family: 'tfont';
+    @if ($resolvedBackToTopIcon == "angle") {
+      content: "\ea94";
+    }
+    @if ($resolvedBackToTopIcon == "angle-double") {
+      content: "\ea8e";
+    }
+    @if ($resolvedBackToTopIcon == "arrow") {
+      content: "\e980";
+    }
+    @if ($resolvedBackToTopIcon == "caret") {
+      content: "\ea47";
+    }
+    font-size: 24px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  &.linkToTop-is-visible {
+    visibility: visible;
+    opacity: 0.85;
+    cursor: pointer;
+    transition: opacity .3s 0s;
+  }
+}

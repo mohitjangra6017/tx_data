@@ -1,0 +1,21 @@
+<div class="choose-stage">
+    <div class="actions">
+        <a class="btn btn-default link-as-button" href="{{{urlreturn}}}">{{strreturn}}</a>
+    </div>
+    <div class="stages">
+        {{#stages}}
+        <div class="stage">
+            <div class="title">
+                <span class="number">{{number}}.</span>
+                {{name}}
+            </div>
+            <div class="status">
+                <label>{{strstatus}}:</label>
+                {{status}}
+            </div>
+            <div class="requirements">{{strrequired}}</div>
+            <div class="launch">{{{btnlaunch}}}</div>
+        </div>
+        {{/stages}}
+    </div>
+</div>

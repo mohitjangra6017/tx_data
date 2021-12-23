@@ -1,0 +1,31 @@
+.course-content {
+    .content {
+        background-color: $mainSectionContentBackgroundColour;
+    }
+    ul li.section.main {
+        border-color: $sectionBorderColour;
+    }
+}
+
+.sectionname {
+    color: $sectionNameColour;
+    font-size: $courseSectionFontSize;
+}
+
+.course-content ul {
+    &.topics,
+    &.weeks {
+        li.section {
+            .content {
+                padding: $mainSectionContentPadding;
+            }
+            .side {
+                &.left,
+                &.right {
+                    padding-left: $mainSectionContentPadding;
+                    padding-right: $mainSectionContentPadding;
+                }
+            }
+        }
+    }
+}

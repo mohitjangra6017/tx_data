@@ -1,0 +1,34 @@
+{% import 'radial_progress.twig' as radial %}
+{% import 'filter_navigation.twig' as filter_navigation %}
+{% if progs is not empty %}
+    <p class="isotope-description">{{ get_string('description', plugin) }}</p>
+
+    {% if config.filter_program == 'radial' %}
+        {{ radial.progress(progs, plugin, activeprogid) }}
+    {% elseif config.filter_program == 'basic' %}
+        <nav class="programs isotope progname progfilters">
+            <div class="type-filter-buttons">
+                <span>{{ get_string('filter_navigation:program', plugin) }}</span>
+                <div class="filter-buttons">
+                    {% for prog in progs %}
+                        {% set active = (prog.id == activeprogid) ? 'active' : '' %}
+                        <button data-filter="{{ prog.id }}" data-displayimage="{{ config.display_course_image }}" class="filter-button prog {{ prog.status }} {{ active }}">
+                            {{ prog.fullname | format_html }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </nav>
+    {% endif %}
+
+    {% if coursesetGroups is not empty %}
+        {% if config.filter_completion_status %}
+            {{ filter_navigation.nav(statuses, 'status', plugin) }}
+        {% endif %}
+
+        {% include 'filter_coursesets.twig' %}
+
+        {% include 'coursesets.twig' %}
+
+    {% endif %}
+{% endif %}

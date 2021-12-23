@@ -1,0 +1,19 @@
+{
+    "name": "tke/theme-framework",
+    "description": "Kineo Framework for themes",
+    "type": "totara-theme",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "extra": {
+        "installer-name": "kineo",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": true
+        }
+    }
+}

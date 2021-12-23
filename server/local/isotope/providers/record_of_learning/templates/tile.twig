@@ -1,0 +1,25 @@
+{% block tile %}
+<figure class="isotope item status-{{ learning.status }} type-{{ learning.type }} required-{{ learning.required }} {% if learning.imgstatus %}imgstatus-{{ learning.imgstatus }}{% endif %} {{ image_class }}"
+        {% if config.display_course_image == 'background' and learning.image %}
+            style="background-image: url({{ learning.image }})"
+        {% endif %}
+>
+    <a href="{{ learning.url }}" class="name">
+        {%- if config.display_course_image == 'foreground' and learning.image -%}
+            <img src="{{ learning.image }}">
+        {%- endif -%}
+        <span class="item-name">{{ learning.fullname | format_html }}</span>
+        {% if config.display_learning_type %}
+            <span class="item-type">{{ learning.displaytype }}</span>
+        {% endif %}
+        {% if learning.required == 'required' and config.hide_required == '0' %}
+            <span class="req"><i class="fa fa-exclamation-circle"></i> {{ get_string('required', plugin) }}</span>
+        {% endif %}
+        {% if learning.date is not empty %}
+            <time class="date">
+                {{ learning.date }}
+            </time>
+        {% endif %}
+    </a>
+</figure>
+{% endblock %}

@@ -1,0 +1,83 @@
+@import '../lib/mixins';
+
+$pageAdminMaxPageWidth: 1680px;
+
+html {
+    height: auto;
+    min-height: 100vh;
+}
+body {
+    background-color: $body-bg;
+}
+@if ($resolvedPagebackgroundimage) {
+    body {
+        background-image: url($resolvedPagebackgroundimage);
+        background-size: $resolvedPageBackgroundSize;
+        background-repeat: $resolvedPageBackgroundRepeat;
+        background-position: $pageBackgroundPosition;
+        @if ($resolvedPageBackgroundPosition == top-right) {
+            background-position: top right;
+        }
+        @if ($resolvedPageBackgroundPosition == top-left) {
+            background-position: top left;
+        }
+        @if ($resolvedPageBackgroundPosition == top-center) {
+            background-position: top center;
+        }
+        @if ($resolvedPageBackgroundPosition == center-right) {
+            background-position: center right;
+        }
+        @if ($resolvedPageBackgroundPosition == center-left) {
+            background-position: center left;
+        }
+        @if ($resolvedPageBackgroundPosition == center-center) {
+            background-position: center center;
+        }
+        @if ($resolvedPageBackgroundPosition == bottom-right) {
+            background-position: bottom right;
+        }
+        @if ($resolvedPageBackgroundPosition == bottom-left) {
+            background-position: bottom left;
+        }
+        @if ($resolvedPageBackgroundPosition == bottom-center) {
+            background-position: bottom center;
+        }
+        @if ($resolvedPageBackgroundAttachment == true) {
+            background-attachment: fixed;
+            @if ($resolvedLoginPageBackgroundAttachment == false) {
+                &.path-login {
+                    background-attachment: inherit;
+                }
+            }
+        }
+        @if ($resolvedPageBackgroundSize == fullauto) {
+            background-size: 100% auto;
+        }
+    }
+    @if ($resolvedShowLoginBackgroundImage) {
+        body.path-login {
+            background-image: url($resolvedPagebackgroundimage);
+        }
+    }
+}
+
+@if ($resolvedShowLoginBackgroundImage == false) {
+    .path-login {
+        background-image: none;
+    }
+}
+#page {
+    background-color: $pageContentBackgroundColour;
+}
+.container-fluid {
+    max-width: $maxPageWidth;
+}
+
+.path-admin,
+.path-mod-perform-reporting,
+.path-badges,
+#page-mod-assessment-dashboard {
+    .container-fluid {
+        max-width: $pageAdminMaxPageWidth;
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "name": "moodle-local_leaderboard-dropdown",
+    "builds": {
+        "moodle-local_leaderboard-dropdown": {
+            "jsfiles": [
+                "dropdown.js"
+            ]
+        }
+    }
+}

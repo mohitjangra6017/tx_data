@@ -1,0 +1,18 @@
+<div class="content-info">
+    <div class="info">
+        <div class="status">
+            <label>{{strstatus}}:</label>
+            {{status}}
+            {{#hasaction}}<a class="action" href="{{urlaction}}">{{straction}}</a>{{/hasaction}}
+        </div>
+        <div class="version">
+            <label>{{strversion}}:</label>
+            {{version}}
+        </div>
+    </div>
+    {{#haspreview}}
+        <div class="preview">
+            <a class="btn btn-primary" href="{{urlpreview}}">{{strpreview}}</a>
+        </div>
+    {{/haspreview}}
+</div>

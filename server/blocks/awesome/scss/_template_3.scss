@@ -1,0 +1,45 @@
+$t3_gutterwidth : 25px;
+$t3_contentbg : #333333;
+$t3_textcolour : #ffffff;
+
+.block.block_awesome .awesome-block.template-3 {
+    .caption-wrap {
+        min-height: 250px;
+        position: relative;
+        
+        .awesome-overlay {
+            background-color: rgba(0,0,0,0.5);
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .caption {
+            position: absolute;
+            padding: $t3_gutterwidth;
+            background-color: transparent;
+            color: $t3_textcolour;
+            bottom: 0;
+
+            h2 {
+                font-weight: bold;
+            }
+            
+            p {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .awesome-link {
+                color: $t3_textcolour;
+                font-weight: bold;
+            }
+        }
+    }
+}
+.block.block_awesome.block_with_controls {
+    .awesome-block.template-3 .caption-wrap .caption {
+        position: relative;
+    }
+}

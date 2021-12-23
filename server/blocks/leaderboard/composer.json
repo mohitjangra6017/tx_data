@@ -1,0 +1,31 @@
+{
+    "name": "tke/block-leaderboard",
+    "description": "Show user's score",
+    "type": "totara-block",
+    "authors": [
+        {
+            "name": "Carlos Jurado",
+            "email": "carlos.jurado@kineo.com"
+        }
+    ],
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0",
+        "tke/local-leaderboard": "*"
+    },
+    "replace": {
+        "kineo/block_score": "*",
+        "kineo/block_leaderboard": "*",
+        "kineo/block-leaderboard": "*"
+    },
+    "extra": {
+        "installer-name": "leaderboard",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    }
+}

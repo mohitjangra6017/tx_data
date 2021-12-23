@@ -1,0 +1,21 @@
+$mandatoryCompletionBreadcrumbPadding: 8px 0;
+$mandatoryCompletionBreadcrumbMargin: 10px 8px;
+$mandatoryCompletionBreadcrumbColour: $blockColour;
+
+.mandatorycompletion-breadcrumb-nav {
+    .breadcrumb {
+        padding: $mandatoryCompletionBreadcrumbPadding;
+        margin: $mandatoryCompletionBreadcrumbMargin;
+        &:before {
+            color: $mandatoryCompletionBreadcrumbColour;
+        }
+    }
+}
+.mandatorycompletion {
+    .completion {
+        span {
+            width: 100%;
+            display: inline-block;
+        }
+    }
+}

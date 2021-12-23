@@ -1,0 +1,10 @@
+{
+  "moodle-local_leaderboard-dropdown": {
+    "requires": [
+        "base",
+        "event",
+        "node",
+        "node-event-simulate"
+    ]
+  }
+}

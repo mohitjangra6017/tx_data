@@ -1,0 +1,579 @@
+[
+  {
+    "identifier": "radial-progress-circle-background",
+    "type": "colour",
+    "default": "@color-tertiary",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-inset-color",
+    "type": "colour",
+    "default": "white",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-overdue-fill",
+    "type": "colour",
+    "default": "red",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-completed-fill",
+    "type": "colour",
+    "default": "green",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-not-started-fill",
+    "type": "colour",
+    "default": "grey",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-in-progress-fill",
+    "type": "colour",
+    "default": "orange",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+    {
+    "identifier": "radial-progress-state-window-open-fill",
+    "type": "colour",
+    "default": "orange",
+    "heading": "radial-colours",
+    "tenant_configurable": true,
+      "options": {
+        "validation": [
+          "colour",
+          "required"
+        ]
+      }
+  },
+  {
+    "identifier": "radial-label-font-size",
+    "type": "text",
+    "default": "18px",
+    "heading": "radial-text",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-label-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "radial-text",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-percentage-font-size",
+    "type": "text",
+    "default": "18px",
+    "heading": "radial-text",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-percentage-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "radial-text",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-radial-filter-container-min-height",
+    "type": "text",
+    "default": "180px",
+    "heading": "radial-sizes-and-spacing",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "radial-progress-border-width",
+    "type": "text",
+    "default": "10px",
+    "heading": "radial-sizes-and-spacing",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "radial-label-margin-top-offset",
+    "type": "text",
+    "default": "10px",
+    "heading": "radial-sizes-and-spacing",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "size"
+      ]
+    }
+  },
+  {
+    "identifier": "radial-progress-margin",
+    "type": "text",
+    "default": "1em 1em 3em 1em",
+    "heading": "radial-sizes-and-spacing",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "radial-progress-circle-size",
+    "type": "text",
+    "default": "120px",
+    "heading": "radial-sizes-and-spacing",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "isotope-radial-progress-use-enhanced-styling",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "radial-enhanced-styles",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "true",
+        "false"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "isotope-radial-enable-shadow",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "radial-enhanced-styles",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "true",
+        "false"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "isotope-radial-progress-enhanced-inset-color",
+    "type": "colour",
+    "default": "rgb(156, 156, 156)",
+    "heading": "radial-enhanced-styles",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-radial-progress-enhanced-gradient-primary-color",
+    "type": "colour",
+    "default": "rgb(247, 134, 0)",
+    "heading": "radial-enhanced-styles",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-radial-progress-enhanced-gradient-secondary-color",
+    "type": "colour",
+    "default": "rgb(63, 202, 15)",
+    "heading": "radial-enhanced-styles",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-text-colour",
+    "type": "colour",
+    "default": "@btn-prim-text-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-border-color",
+    "type": "colour",
+    "default": "@btn-border-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-border-color-selected",
+    "type": "colour",
+    "default": "@btn-accent-color-active",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-all-filters-background-color",
+    "type": "colour",
+    "default": "@btn-prim-bg-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-all-text-color",
+    "type": "colour",
+    "default": "@btn-prim-text-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-certifications-background-color",
+    "type": "colour",
+    "default": "@btn-prim-bg-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-completed-background-color",
+    "type": "colour",
+    "default": "green",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-course-background-color",
+    "type": "colour",
+    "default": "@btn-prim-bg-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-expired-background-color",
+    "type": "colour",
+    "default": "red",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-not-required-background-color",
+    "type": "colour",
+    "default": "green",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-not-started-background-color",
+    "type": "colour",
+    "default": "@color-neutral-4",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-overdue-background-color",
+    "type": "colour",
+    "default": "red",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-programs-background-color",
+    "type": "colour",
+    "default": "@btn-prim-bg-color",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-required-background-color",
+    "type": "colour",
+    "default": "red",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-started-background-color",
+    "type": "colour",
+    "default": "orange",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-filter-state-window-open-background-color",
+    "type": "colour",
+    "default": "orange",
+    "heading": "button-filter-colours",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-background-color",
+    "type": "colour",
+    "default": "@color-tertiary",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-background-color-hover",
+    "type": "colour",
+    "default": "@color-neutral-4",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-color",
+    "type": "colour",
+    "default": "#ffffff",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-date-color",
+    "type": "colour",
+    "default": "#ffffff",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-required-text-color",
+    "type": "colour",
+    "default": "red",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-info-background-color",
+    "type": "colour",
+    "default": "@color-neutral-2",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-name-color",
+    "type": "colour",
+    "default": "#ffffff",
+    "heading": "item-colours",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "isotope-item-enable-shadow",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "isotope-enhanced-styles",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  }
+]

@@ -1,0 +1,58 @@
+{{#title}}
+  {{> block_carousel/_header}}
+
+  <section id="carousel-{{id}}" class="events">
+    {{#slides}}
+      <a href="{{url}}">
+        <div>
+          <figure>
+            <img src="{{{thumbnail}}}" alt="{{title}}" />
+            <button class="action"><i class="far fa-arrow-right fa-3x"></i></button>
+          </figure>
+
+          <footer>
+            <h3>{{title}}</h3>
+            <label>{{coachfullname}} coaching {{userfullname}}</label>
+            <label>{{starttime}}</label>
+          </footer>
+        </div>
+      </a>
+    {{/slides}}
+  </section>
+
+  {{#js}}
+    require(['jquery', 'block_carousel/slick'], function($, slick) {
+        const mainsettings = {
+            infinite: false,
+            speed: 300,
+            slidesToShow: 5,
+            slidesToScroll: 4,
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 3,
+                    }
+                },
+                {
+                    breakpoint: 800,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 550,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        };
+
+        let main = slick.init('#carousel-{{id}}', mainsettings);
+    });
+  {{/js}}
+{{/title}}

@@ -1,0 +1,2030 @@
+[
+  {
+    "identifier": "header-background-color",
+    "type": "colour",
+    "default": "#f8f8f8",
+    "heading": "site-header",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "hide-header-drop-shadow",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "site-header",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "footer-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-border-color",
+    "type": "colour",
+    "default": "@color-neutral-5",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-region-background-color",
+    "type": "colour",
+    "default": "@footer-background-color",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-region-border-bottom-width",
+    "type": "text",
+    "default": "0",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "footer-region-border-color-bottom",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-quick-links-color",
+    "type": "colour",
+    "default": "@link-color",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-quick-links-separator-color",
+    "type": "colour",
+    "default": "@footer-quick-links-color",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-quick-links-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "lowercase",
+        "capitalize",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-quick-links-font-weight",
+    "type": "text",
+    "default": "normal",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "footer-quick-links-font-size",
+    "type": "text",
+    "default": "@base-font-size",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-copyright-color",
+    "type": "colour",
+    "default": "@footer-color",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-copyright-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "lowercase",
+        "capitalize",
+        "uppercase"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-copyright-font-size",
+    "type": "text",
+    "default": "@base-font-size",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-copyright-font-weight",
+    "type": "text",
+    "default": "normal",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "footer-block-background-color",
+    "type": "colour",
+    "default": "#ffffff",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-block-border-color",
+    "type": "colour",
+    "default": "@color-neutral-5",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-block-border-radius",
+    "type": "text",
+    "default": "4px",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "footer-block-header-background-color",
+    "type": "colour",
+    "default": "@footer-block-background-color",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-block-header-text-color",
+    "type": "colour",
+    "default": "@color-h2",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "footer-block-text-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "show-footer-links",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ]
+    }
+  },
+  {
+    "identifier": "poweredby-background-color",
+    "type": "colour",
+    "default": "@color-primary",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "poweredby-text-color",
+    "type": "colour",
+    "default": "@footer-color",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "poweredby-visibility",
+    "type": "dropdown",
+    "default": "visible",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "visible",
+        "hidden"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "footer-logo",
+    "type": "image",
+    "default": null,
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true
+    }
+  },
+  {
+    "identifier": "footer-logo-position",
+    "type": "dropdown",
+    "default": "left",
+    "heading": "footer",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "left",
+        "right"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "dashboard-region-page-top-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-page-top-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-page-top-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-content-top-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-content-top-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-content-top-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-one-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-one-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-main-one-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-two-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-two-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-main-two-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-three-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-three-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-main-three-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-four-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-main-four-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-main-four-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-content-bottom-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-content-bottom-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-content-bottom-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "dashboard-region-page-bottom-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "requires_totara_feature": "totaradashboard",
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "dashboard-region-page-bottom-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "fix-dashboard-region-page-bottom-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "dashboard",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true,
+      "requires_totara_feature": "totaradashboard"
+    }
+  },
+  {
+    "identifier": "section-name-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-section-font-size",
+    "type": "text",
+    "default": "@h3-font-size",
+    "heading":  "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation":[
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "main-section-content-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "section-border-colour",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "main-section-content-padding",
+    "type": "text",
+    "default": "10px",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "activity-instance-font-size",
+    "type": "text",
+    "default": "@h4-font-size",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "course-activity-icon-size",
+    "type": "text",
+    "default": "@activity-instance-font-size",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "activity-instance-color",
+    "type": "colour",
+    "default": "@link-color",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-activity-icon-color",
+    "type": "colour",
+    "default": "@activity-instance-color",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "hide-activity-completion",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "auto-course-completion-icon-size",
+    "type": "text",
+    "default": "14px",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "manual-completion-icon-size",
+    "type": "dropdown",
+    "default": "small",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "completion-icon-colour",
+    "type": "colour",
+    "default": "#c1d72e",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-region-page-top-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-region-page-top-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-course-region-page-top-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "course-page-region-top-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-page-region-top-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-course-page-region-top-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "course-page-region-bottom-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-page-region-bottom-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-course-page-region-bottom-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "course-region-page-bottom-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "course-region-page-bottom-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-course-region-page-bottom-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "course-page-settings",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "front-page-region-page-top-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-content-top-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-main-one-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-main-two-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-main-three-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-main-four-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-content-bottom-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "front-page-region-page-bottom-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "frontpage-region-page-top-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-page-top-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-content-top-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-content-top-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-main-one-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-main-one-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-main-two-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-main-two-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-main-three-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-main-three-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-main-four-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-main-four-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-content-bottom-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-content-bottom-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "frontpage-region-page-bottom-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "fix-frontpage-region-page-bottom-background-image",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "frontpage",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-header-background-color",
+    "type": "colour",
+    "default": "#f8f8f8",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "hide-login-header-drop-shadow",
+    "type": "dropdown",
+    "default": "false",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "false",
+        "true"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-background-color",
+    "type": "colour",
+    "default": "#ffffff",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "sitelogin",
+    "type": "image",
+    "default": null,
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+ {
+    "identifier": "hide-login-hero-image",
+    "type": "dropdown",
+    "default": "show",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "show",
+        "hide"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "panel-heading-size",
+    "type": "text",
+    "default": "51px",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "panel-heading-font-weight",
+    "type": "text",
+    "default": "bold",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "panel-heading-text-transform",
+    "type": "dropdown",
+    "default": "none",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "none",
+        "capitalize",
+        "lowercase",
+        "uppercase"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-panel-heading-text-underline-color",
+    "type": "colour",
+    "default": "@color-primary",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-background-color",
+    "type": "colour",
+    "default": "#f8f8f8",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-border-width",
+    "type": "text",
+    "default": "1px",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "login-panel-border-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-border-radius",
+    "type": "text",
+    "default": "4px",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "login-panel-button-color",
+    "type": "colour",
+    "default": "@btn-text-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-color-hover",
+    "type": "colour",
+    "default": "@btn-text-color-hover",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-background",
+    "type": "colour",
+    "default": "@btn-bg-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-background-hover",
+    "type": "colour",
+    "default": "@btn-bg-color-hover",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-border-color",
+    "type": "colour",
+    "default": "@btn-border-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-border-color-hover",
+    "type": "colour",
+    "default": "@btn-border-color-hover",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-border-radius",
+    "type": "text",
+    "default": "@btn-radius",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "login-panel-button-text-transform",
+    "type": "text",
+    "default": "@btn-text-transform",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "login-panel-button-font-size",
+    "type": "text",
+    "default": "@btn-font-size",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "login-panel-button-font-weight",
+    "type": "text",
+    "default": "@btn-font-weight",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "login-panel-button-padding",
+    "type": "text",
+    "default": "@btn-padding",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "signup-panel-heading-text-underline-color",
+    "type": "colour",
+    "default": "@color-primary",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-border-width",
+    "type": "text",
+    "default": "1px",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "signup-panel-border-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-border-radius",
+    "type": "text",
+    "default": "4px",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "signup-panel-button-color",
+    "type": "colour",
+    "default": "@btn-text-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-color-hover",
+    "type": "colour",
+    "default": "@btn-text-color-hover",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-background",
+    "type": "colour",
+    "default": "@btn-bg-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-background-hover",
+    "type": "colour",
+    "default": "@btn-bg-color-hover",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-border-color",
+    "type": "colour",
+    "default": "@btn-border-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-border-color-hover",
+    "type": "colour",
+    "default": "@btn-border-color-hover",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-border-radius",
+    "type": "text",
+    "default": "@btn-radius",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "signup-panel-button-text-transform",
+    "type": "text",
+    "default": "@btn-text-transform",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "signup-panel-button-font-size",
+    "type": "text",
+    "default": "@btn-font-size",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "font_size"
+      ]
+    }
+  },
+  {
+    "identifier": "signup-panel-button-font-weight",
+    "type": "text",
+    "default": "@btn-font-weight",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "signup-panel-button-padding",
+    "type": "text",
+    "default": "@btn-padding",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "login-page-footer-background-color",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-page-footer-color",
+    "type": "colour",
+    "default": "@color-text",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-page-footer-copyright-color",
+    "type": "colour",
+    "default": "@footer-copyright-color",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-page-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-background-size",
+    "type": "dropdown",
+    "default": "initial",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "initial",
+        "cover",
+        "contain",
+        "fullauto"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-background-repeat",
+    "type": "dropdown",
+    "default": "no-repeat",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "no-repeat",
+        "repeat",
+        "repeat-x",
+        "repeat-y",
+        "revert",
+        "round",
+        "space"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-background-position",
+    "type": "dropdown",
+    "default": "top-right",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "top-right",
+        "top-left",
+        "top-center",
+        "center-right",
+        "center-left",
+        "center-center",
+        "bottom-right",
+        "bottom-left",
+        "bottom-center"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-background-attachment",
+    "type": "dropdown",
+    "default": "true",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "true",
+        "false"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-content-background-color",
+    "type": "colour",
+    "default": "@color-neutral-2",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "login-page-content-background-image",
+    "type": "image",
+    "default": null,
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "in_css": true,
+      "is_public": true,
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "login-page-content-background-size",
+    "type": "dropdown",
+    "default": "initial",
+    "heading": "login-signup-page",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "initial",
+        "cover",
+        "contain",
+        "fullauto"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "color-background",
+    "type": "colour",
+    "default": "@color-white",
+    "heading": "general",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "page-content-background-colour",
+    "type": "colour",
+    "default": "transparent",
+    "heading": "general",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "colour",
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "admin-region-background-color",
+    "type": "colour",
+    "default": "@color-neutral-5",
+    "heading": "general",
+    "tenant_configurable": true,
+    "options": {}
+  },
+  {
+    "identifier": "max-page-width",
+    "type": "text",
+    "default": "1680px",
+    "heading": "general",
+    "tenant_configurable": true,
+    "options": {
+      "validation": [
+        "pixel",
+        {
+          "id": "max_number",
+          "value": 1680
+        },
+        {
+          "id": "min_number",
+          "value": 1200
+        },
+        "required"
+      ]
+    }
+  },
+  {
+    "identifier": "back-to-top-enabled",
+    "type": "dropdown",
+    "default": "true",
+    "heading": "general",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "true",
+        "false"
+      ],
+      "scss_var": true
+    }
+  },
+  {
+    "identifier": "back-to-top-icon",
+    "type": "dropdown",
+    "default": "angle",
+    "heading": "general",
+    "tenant_configurable": true,
+    "options": {
+      "dropdown_options": [
+        "angle",
+        "angle-double",
+        "arrow",
+        "caret"
+      ],
+      "scss_var": true
+    }
+  }
+]

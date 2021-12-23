@@ -1,0 +1,24 @@
+{
+    "name": "tke/block-isotope",
+    "type": "totara-block",
+    "description": "",
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0",
+        "twig/twig": "~1.18",
+        "tke/local-isotope-skeleton": "~15.0"
+    },
+    "extra": {
+        "installer-name": "isotope",
+        "kineo": {
+            "code-standards": "moodle",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/block-isotope/wikis/home"
+    }
+}

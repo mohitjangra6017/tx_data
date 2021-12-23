@@ -1,0 +1,12 @@
+query local_credly_certifications {
+    certifications: local_credly_certifications {
+        metadata {
+            total
+        }
+        items {
+            id
+            name
+            category
+        }
+    }
+}

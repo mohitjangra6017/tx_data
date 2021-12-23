@@ -1,0 +1,46 @@
+<div class="carousel-follow">
+{{^followed}}
+    <div class="btn-group dropup">
+        <button id="btn-follow-user" class="follow-button btn btn-default dropdown-toggle followuser-{{followuserid}}" data-toggle="dropdown">
+            <i class="fa fa-users fa-lg"></i> Follow
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelled-by="btn-follow-user">
+            <li>
+                <form action="/blocks/event_feed/follow.php" role="form" method="post">
+                    <input type="hidden" name="followid" value="{{followuserid}}"></input>
+                    <input type="hidden" name="redirecturl" value="{{followredirecturl}}"></input>
+                    <div class="form-group">
+                        <input type="checkbox" name="addtocontacts" value="1" checked="checked"></input>
+                        <label>Add to contacts</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">follow</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+{{/followed}}
+{{#followed}}
+    <div class="btn-group dropup">
+        <button id="btn-follow-user" class="follow-button btn btn-default dropdown-toggle followuser-{{followuserid}}" data-toggle="dropdown">
+            <i class="fa fa-users fa-lg"></i> Unfollow
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelled-by="btn-follow-user">
+            <li>
+                <form action="/blocks/event_feed/unfollow.php" role="form" method="post">
+                    <input type="hidden" name="followid" value="{{followuserid}}"></input>
+                    <input type="hidden" name="redirecturl" value="{{followredirecturl}}"></input>
+                    <div class="form-group">
+                        <input type="checkbox" name="removefromcontacts" value="1" checked="checked"></input>
+                        <label>Remove from contacts</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">unfollow</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+{{/followed}}
+</div>

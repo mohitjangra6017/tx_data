@@ -1,0 +1,6 @@
+<div id="{{rid}}" class="tf_element_input" {{#required}}required{{/required}}>{{> totara_form/validation_errors}}
+{{^frozen}}<input type="hidden" name="{{name}}[-1]" value="" />{{/frozen}}
+{{#roptions}}
+    <input type="checkbox" id="{{oid}}_{{role}}" {{#frozen}}disabled data-{{/frozen}}name="{{name}}[]" value="{{value}}" {{#checked}}checked{{/checked}} /><label for="{{oid}}_{{role}}">{{{text}}}</label>
+{{/roptions}}
+</div>

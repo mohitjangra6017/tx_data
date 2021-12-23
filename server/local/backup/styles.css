@@ -1,0 +1,4 @@
+#page-admin-local-configbackup-preview .generaltable .cell.c1, #page-admin-local-configbackup-preview .generaltable .cell.c2 {
+    max-width: 700px;
+    word-wrap: break-word;
+}

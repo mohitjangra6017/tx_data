@@ -1,0 +1,182 @@
+<section id="carousel-{{id}}" class="{{carouseltype}} {{template}} {{cardsize}} alt-interactions">
+{{#slides}}
+    <article class="learning {{#summary}} has-summary {{/summary}}" data-courseid="{{courseid}}" data-image_src="{{{thumbnail}}}">
+        <figure class="tile" {{^displayinmodal}} title="{{#str}} gotocourse, block_carousel {{/str}}" {{/displayinmodal}} {{#displayinmodal}} title="{{#str}} showdetail, block_carousel {{/str}}" data-displayinmodal="yes" {{/displayinmodal}} data-url="{{url}}">
+            <div class="figure-ratio">
+                <div class="figure-ratio-image" style="background-image: url('{{{thumbnail}}}')"></div>
+            </div>
+            {{#iscomplete}} <span class="completion-status complete"><i class="fas fa-check-circle"></i></span> {{/iscomplete}}
+            {{^iscomplete}} <span class="completion-status not-complete"></span> {{/iscomplete}}
+            <div class="custom-tags">
+                {{#custom_fields}}
+                    <span class="custom-tag">{{.}}</span> 
+                {{/custom_fields}}
+            </div>
+            <div class="caption">
+                <div class="title-wrap">
+                    <div class="icon">
+                        {{{icon}}}
+                    </div>
+                    <h3 class="ellipsis">{{title}}</h3>
+                </div>
+            </div>
+        </figure>
+        {{#hidecardexpanddetails}}
+        <span title="{{#str}} gotocourse, block_carousel {{/str}}"></span>
+        {{/hidecardexpanddetails}}
+        {{^hidecardexpanddetails}}
+        <span class="toggle-card-details" title="{{#str}} showdetail, block_carousel {{/str}}"></span>
+        {{/hidecardexpanddetails}}
+    </article>
+{{/slides}} 
+</section>
+
+<section id="carousel-nav-{{id}}" class="nav-slides {{carouseltype}} {{template}} {{cardsize}}">
+    {{#slides}}
+    <article class="learning-details">
+        {{#thumbnail}} 
+            <img src="{{{thumbnail}}}" crossorigin="anonymous" class="hidden" /> 
+        {{/thumbnail}}
+        <button type="button" class="close-slide-details"><i class="far fa-times"></i></button>
+        <div class="slide-details">
+            <h2>{{{icon}}}  <div class="ellipsis-details">{{fulltitle}}</div></h2>
+            <div class="custom-tags">{{#custom_fields_details}}<span class="custom-tag">{{.}}</span>{{/custom_fields_details}}{{{rating}}}{{{likes}}}{{{completions}}}</div>
+            <div class="full-details">
+                <div class="full-summary">
+                    {{{fullsummary}}}
+                </div>
+                <div class="tags">
+                {{#tags}}
+                    <span class="label label-info">{{.}}</span>
+                {{/tags}}
+                </div>
+                {{#displayinmodal}}
+                    {{{courselet_url}}}
+                {{/displayinmodal}}
+                {{^displayinmodal}}
+                    <a class="btn btn-raised btn-red" href="{{{url}}}">{{#str}} gotocourse, block_carousel {{/str}}</a>
+                {{/displayinmodal}}
+            </div>
+        </div>
+    </article>
+    {{/slides}}
+</section>
+
+{{#js}}
+    require(['jquery', 'block_carousel/ellipsis', 'block_carousel/slick', 'block_carousel/colorthief'], function($, ellipsis, slick, colorthief) {
+        const mainsettings = {
+            asNavFor: '#carousel-nav-{{id}}',
+            slidesToShow: {{cardcount}},
+            slidesToScroll: 1,
+            centerMode: false,
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 1400,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 680,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        };
+
+        const navsettings = {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            draggable: false, 
+            accessibility: false, 
+        };
+
+        let nav = slick.init('#carousel-nav-{{id}}', navsettings);
+        let main = slick.init('#carousel-{{id}}', mainsettings);
+
+        nav.hide();
+
+        $('#carousel-{{id}} article.learning .toggle-card-details').click(function(e){
+            nav.show();
+            $('#carousel-{{id}}').addClass('showing-details');
+            $(window).trigger('resize');  
+            // Sometime the nav slides resize fails
+            // This is a fallback check
+            let track_width = $('#carousel-nav-{{id}} .slick-track').css('width');
+            if(track_width == '0px') {
+                $('#carousel-nav-{{id}} .slick-track').css('width', '100%');
+                $('#carousel-nav-{{id}} .slick-track .slick-slide.slick-active').css('width', '100%');
+            }
+            
+            ellipsis.init('#carousel-nav-{{id}} article .ellipsis-details');
+            setTimeout(function() {
+                ellipsis.init('#carousel-nav-{{id}} article .ellipsis-details');
+            },1000);
+        });
+        
+        $('#carousel-{{id}} article.learning figure.tile').click(function(e){
+            if(!$(this).data('displayinmodal')) {
+                e.stopPropagation();
+                window.location.href = $(this).data('url');
+                return false;
+            }
+            // VODHAS-1949
+            // else open details
+            $(this).siblings('.toggle-card-details').trigger('click');
+        });
+
+        $('#carousel-nav-{{id}} .close-slide-details' ).click(function(e){
+            nav.hide("fast");
+            $('#carousel-{{id}}').removeClass('showing-details');
+            $(window).trigger('resize');
+        });
+        
+        
+        $('#carousel-nav-{{id}} article').each(function (index) {
+            const imageUrl = $(this).find("img.hidden:first").attr('src');
+            const image = new Image();
+
+            image.onload = function () {
+                const colorThief = colorthief.init();
+                const primaryColor = colorThief.getColor(image);
+                var r = primaryColor[0],
+                g = primaryColor[1],
+                b = primaryColor[2];
+                // Take the RGB and convert that into the perceived brightness of the primary colour on a 0 - 1 scale.
+                // More info: https://stackoverflow.com/q/596216
+                const luminance = Math.sqrt((0.299 * r * r) + (0.587 * g * g) + (0.114 * b * b)) / 255;
+                $(this).addClass(luminance > 0.6 ? 'dark-text' : 'light-text');
+                const dominantColor = colorthief.rgbCode(primaryColor, 1);
+                $(this).css('background-image', 'linear-gradient(to right,' + dominantColor + ' 0% 15%, ' + dominantColor + ' 15% 58%, transparent 70% 100%), url(' + imageUrl + ')');
+            }.bind(this);
+            image.src = imageUrl;
+        });
+
+        $('#carousel-nav-{{id}} article.learning-details .launch-courselet').click(function(e){
+            $.ajax({
+                method: "POST",
+                url: '/blocks/carousel/ajax/process_courselet.php',
+                dataType: 'JSON',
+                data: {courseid: $(this).data('courseid'), nodisplay: 1}
+            })
+            .done(function(data) {
+                // do nothing
+            });
+        });
+
+        ellipsis.init('#carousel-{{id}} article .ellipsis');
+    });
+{{/js}}

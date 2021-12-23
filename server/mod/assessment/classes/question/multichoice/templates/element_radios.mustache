@@ -1,0 +1,20 @@
+{{!
+
+    @template assquestion_multichoice/element_radios
+
+    Context variables required for this template:
+    * ruid
+    * required
+    * roptions
+    *
+
+    Other context variables for following partials:
+    * totara_form/help_button
+    * totara_form/validation_errors
+}}
+
+<div id="{{rid}}" class="tf_element_input" {{#required}}required{{/required}}>{{> totara_form/validation_errors}}
+    {{#roptions}}
+    <input type="radio" id="{{oid}}_{{role}}" {{#frozen}}disabled data-{{/frozen}}name="{{name}}" value="{{value}}" {{#checked}}checked{{/checked}} /><label for="{{oid}}_{{role}}">{{{text}}}</label>
+    {{/roptions}}
+</div>

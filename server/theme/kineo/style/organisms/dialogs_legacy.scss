@@ -1,0 +1,88 @@
+@import '../lib/media';
+$dialogFormWidth : 95%;
+.totara-dialog .ui-dialog-titlebar,
+.moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd,
+.moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd.yui3-widget-hd {
+    background: none $dialogueHeaderBackgroundColour;
+    font-weight: bold;
+    text-shadow: none;
+    h2 {
+        color: $dialogueHeaderColour;
+    }
+}
+
+.ui-dialog .ui-dialog-content {
+    background-color: $dialogueBodyBackgroundColour;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    background-color: $dialogueFooterBackgroundColour;
+}
+.moodle-dialogue-base {
+    .moodle-dialogue {
+        max-width: 100%;
+        height: 100%;
+        &.editor_atto_menu {
+          height: auto;
+        }
+        .moodle-dialogue-bd {
+            overflow: auto;
+            width: 100%;
+            max-width: 100%;
+            white-space: normal;
+            .fitem_actionbuttons:not(#fitem_id_newcategory),
+            .submitbuttons {
+                position: fixed;
+                bottom: 1px;
+                z-index: 4;
+                margin-left: 2px;
+                width: 588px;
+                background-color: $dialogueBodyBackgroundColour;
+            }
+            .randomquestionformforpopup {
+                .fitem_actionbuttons:not(#fitem_id_newcategory),
+                .submitbuttons {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+    .moodle-dialogue-fullscreen .moodle-dialogue-content {
+        bottom: 0;
+    }
+}
+.lockscroll {
+    overflow: hidden;
+}
+@include media992 {
+    .moodle-dialogue-bd {
+        .mform {
+            .fitem {
+                .felement {
+                    width: $dialogFormWidth;
+                }
+            }
+        }
+    }
+}
+@include media1200 {
+    .moodle-dialogue-bd {
+        .mform {
+            .fitem {
+                .felement {
+                    width: $dialogFormWidth;
+                }
+            }
+        }
+    }
+}
+.moodle-dialogue-base {
+    .moodle-dialogue.mod_quiz_preflight_popup {
+        .moodle-dialogue-bd {
+            overflow-x: hidden !important;
+        }
+    }
+    .moodle-dialogue-content .moodle-dialogue-bd:first-of-type {
+        cursor: not-allowed !important;
+    }
+}

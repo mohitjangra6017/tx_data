@@ -1,0 +1,68 @@
+<div id="carousel-nested-{{id}}">
+    <section class="main-cluster {{carouseltype}} {{template}} {{cardsize}} alt-interactions">
+    {{#clusters}}
+        <article class="learning" data-image_src="{{{thumbnail}}}">
+            <figure class="tile">
+                <div class="figure-ratio">
+                    <div class="figure-ratio-image" style="background-image: url('{{{thumbnail}}}')"></div>
+                </div>
+                <div class="custom-tags">
+                    {{#clustercount}}
+                        <span class="custom-tag">{{clustercount}}</span> 
+                    {{/clustercount}}
+                </div>
+                <div class="caption">
+                    <div class="title-wrap">
+                        <div class="icon cluster-icons">
+                            <i class="far fa-square"></i>
+                            <i class="far fa-square"></i>
+                            <i class="far fa-square"></i>
+                            <i class="far fa-square"></i>
+                        </div>
+                        <h3>{{name}}</h3>
+                    </div>
+                    <div class="summary"></div>
+                </div>
+            </figure>
+            <span class="toggle-card-details" data-cardcount={{cardcount}} data-carouselid={{blockinstanceid}} data-courseids={{courseids}} title="{{#str}} showdetail, block_carousel {{/str}}"></span>
+        </article>
+    {{/clusters}} 
+    </section>    
+</div>
+<div id="carousel-nested-clusters-{{id}}" class="_red_nested_contents"></div>
+{{#js}}
+    require(['jquery', 'block_carousel/slick', 'block_carousel/colorthief'], function($, slick, colorthief) {
+        const mainsettings = {
+            slidesToShow: {{cardcount}},
+            centerMode: false,
+            infinite: true,
+            cssEase: 'linear',
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 1400,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 680,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        };
+        
+        let main = slick.init('#carousel-nested-{{id}} .main-cluster', mainsettings);
+    });
+{{/js}}

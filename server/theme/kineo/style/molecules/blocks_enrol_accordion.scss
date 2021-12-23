@@ -1,0 +1,15 @@
+$enrolAccordionTitleFontsize : $baseFontSize;
+$enrolAccordionColor : $brandGrey4;
+.block_enrol_accordion {
+    .content {
+        .panel-title {
+            @include mixinsFontSize($enrolAccordionTitleFontsize);
+        }
+        .well {
+            p,
+            .pull-right {
+                color: $enrolAccordionColor;
+            }
+        }
+    }
+}

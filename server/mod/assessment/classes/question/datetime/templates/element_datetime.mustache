@@ -1,0 +1,54 @@
+{{!
+    @template assquestion_datetime/element_datetime
+
+    Example context (json):
+    {
+        "id": "test",
+        "role": 10,
+        "frozen": false,
+        "rvalue": 05/25/1977,
+        "required": false,
+        "showtime": true
+    }
+}}
+
+<div class="tf_element_input" >
+    {{> totara_form/validation_errors}}
+    <input type="text" id="{{id}}_{{role}}" {{#frozen}}disabled data-{{/frozen}}name="{{name}}" value="{{rvalue}}" {{#required}}required{{/required}} placeholder="{{#str}}datepickerlongyearplaceholder, totara_core{{/str}}"/>
+</div>
+
+{{#js}}
+    {{^frozen}}
+    require(['jquery', 'jqueryui', 'core/str', 'totara_form/polyfill_date-lazy'], function($, jqui, str) {
+        str.get_string('datepickerlongyeardisplayformat', 'totara_core').done(function (dateformat) {
+            var icon = ['t/calendar','totara_core'];
+            var element = $("#{{id}}_{{role}}");
+
+            {{#showtime}}
+                element.datetimepicker({
+                    controlType: 'select',
+                    timeFormat: 'hh:mm tt',
+                    oneLine: true,
+                    stepMinute: 5,
+                    dateFormat: dateformat,
+                    showOn: 'both',
+                    buttonImage: M.util.image_url(icon[0], icon[1]),
+                    buttonImageOnly: true,
+                    constrainInput: true,
+                    isRTL: right_to_left()
+                });
+            {{/showtime}}
+            {{^showtime}}
+                element.datepicker({
+                    dateFormat: dateformat,
+                    showOn: 'both',
+                    buttonImage: M.util.image_url(icon[0], icon[1]),
+                    buttonImageOnly: true,
+                    constrainInput: true,
+                    isRTL: right_to_left()
+                });
+            {{/showtime}}
+        });
+    });
+    {{/frozen}}
+{{/js}}

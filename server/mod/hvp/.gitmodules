@@ -1,0 +1,4 @@
+[submodule "reporting"]
+	path = reporting
+	url = https://github.com/h5p/h5p-php-report.git
+	branch = stable

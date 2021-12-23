@@ -1,0 +1,25 @@
+.block.block_carousel ._red_programs{
+    @extend ._red;
+
+    .progressbar_container {
+        position: absolute;
+        width: calc(100% - 50px);
+        top: 6px;
+        left: 25px;
+    }
+    .progress,
+    .dndupload-progress-outer {
+        border: none;
+        box-shadow: none;
+        height: 20px;
+        border-radius: 10px;
+
+        .bar {
+            line-height: 20px;
+            box-shadow: none;
+        }
+    }
+    .dndupload-progress-inner {
+        line-height: 20px;
+    }   
+}

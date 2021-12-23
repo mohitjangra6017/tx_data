@@ -1,0 +1,280 @@
+@import "../../scss/_global_variables";
+@import "../lib/media";
+@import "../lib/mixins";
+
+$footerFooterMainPadding: var(--gap-3);
+$footerFooterMainChildContainersPadding: 0 var(--gap-1);
+
+$footerLogoContainerMaxWidth: 200px;
+$footerLogoContainerWidth: 20%;
+
+$footerLogoMaxWidth: 200px;
+$footerLogoMinWidth: 120px;
+
+$footerLogoContainerWidthWhenLogoPositionLeft: 20%;
+$footerCopyrightContainerWidthLargeWhenLogoPositionLeft: 40%;
+$footerLinksContainerWidthLargeWhenLogoPositionLeft: 40%;
+
+$footerLogoContainerWidthWhenLogoPositionRight: 100%;
+
+#page-footer {
+    // 'Primary'
+    background-color: $footerBackgroundColour;
+    color: $footerPrimaryColour;
+    border-top-color: $footerBorderColour;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: $footerPrimaryColour;
+    }
+    a:not(.btn) {
+        &,
+        &:link,
+        &:visited,
+        &:hover,
+        &:active,
+        &:focus {
+            color: $footerPrimaryColour;
+        }
+    }
+  .block {
+      a:not(.btn) {
+          &,
+          &:link,
+          &:focus {
+              color: $linkColour;
+          }
+          &:hover {
+              color: $linkColourHover;
+          }
+		  &:visited {
+              color: $linkColourVisited;
+          }
+          &:active {
+              color: $linkColourActive;
+          }
+      }
+  }
+    // 'Secondary'.
+    .page-footer-poweredby {
+
+        @if ($resolvedPoweredbyVisibility == hidden) {
+            display: none;
+        }
+
+        background-color: $footerSecondaryBackgroundColour;
+        color: $footerSecondaryColour;
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: $footerSecondaryColour;
+        }
+        a:not(.btn) {
+            &,
+            &:link,
+            &:visited,
+            &:hover,
+            &:active,
+            &:focus {
+                color: $footerSecondaryColour;
+            }
+        }
+    }
+    #block-region-footer-region {
+        background-color: $footerRegionBackgroundColour;
+        border-bottom-width: $footerRegionBorderBottomWidth;
+        border-bottom-color: $footerRegionBorderBottomColour;
+        border-bottom-style: solid;
+        margin-bottom: 10px;
+    }
+    .block {
+        background-color: $footerBlockBackgroundColour;
+        border-color: $footerBlockBorderColour;
+        border-radius: $footerBlockBorderRadius;
+        text-align: left;
+        .block-header {
+            background-color: $footerBlockHeaderBackgroundColour;
+            &,
+            .block-control-actions {
+                border-top-left-radius: $footerBlockBorderRadius;
+                border-top-right-radius: $footerBlockBorderRadius;
+            }
+            h2 {
+               color: $footerBlockHeaderTextColour;
+            }
+        }
+        .content {
+            color: $footerBlockTextColour;
+        }
+    }
+    .copyright-container {
+        text-transform: $footerCopyrightTextTransform;
+        font-size: $footerCopyrightFontSize;
+        font-weight: $footerCopyrightFontWeight;
+        color: $footerCopyrightColour;
+        @include media960 {
+            float: left;
+            width: 50%;
+        }
+    }
+    .footer-top,
+    .footer-bottom,
+    .footer-links-container {
+        width: 100%;
+        float: left;
+    }
+    .footer-bottom {
+        margin-top: 25px;
+    }
+    .copyright-container,
+    .footer-links-container {
+        margin-bottom: 25px;
+    }
+    .logo-container,
+    .footer-links-container,
+    .copyright-container {
+        text-align: left;
+        vertical-align: bottom;
+    }
+    .footer-links-container {
+        ul {
+            width: 100%;
+            margin-left: 0;
+            li {
+                list-style: none;
+                float: left;
+                padding-left: 10px;
+                &:not(:last-of-type) {
+                    border-right: 1px solid $footerQuickLinksSeparatorColour;
+                    padding-right: 10px;
+                }
+                a {
+                    &,
+                    &:link,
+                    &:visited,
+                    &:hover,
+                    &:active,
+                    &:focus {
+                        color: $footerQuickLinksColour;
+                        text-decoration: none;
+                    }
+                    text-transform: $footerQuickLinksTextTransform;
+                    font-size: $footerQuicklinksFontSize;
+                    font-weight: $footerQuicklinksFontWeight;
+                }
+            }
+        }
+        @include media960 {
+            float: right;
+            width: 50%;
+        }
+    }
+    .container-fluid {
+        max-width: inherit;
+    }
+}
+
+#page-footer .footer-main {
+    padding: $footerFooterMainPadding;
+    [class*="-container"] {
+        padding: $footerFooterMainChildContainersPadding;
+    }
+    &.has-footer-logo {
+        display: flex;
+        flex-wrap: wrap;
+        .logo-container {
+            width: $footerLogoContainerWidthWhenLogoPositionLeft;
+            display: block;
+            img {
+                width: 100%;
+                max-width: $footerLogoMaxWidth;
+                min-width: $footerLogoMinWidth;
+            }
+        }
+        @if ($resolvedFooterLogoPosition == 'right') {
+            .logo-container {
+                min-width: 100%;
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    }
+    .footer-bottom {
+        display: flex;
+        .copyright-container,
+        .footer-links-container {
+            width: auto;
+        }
+        .footer-links-container {
+            margin-left: auto;
+        }
+    }
+}
+@include media600() {
+    #page-footer .footer-main {
+        .footer-links-container {
+            float: right;
+        }
+        .copyright-container,
+        .footer-links-container {
+            margin-bottom: 0;
+            width: auto;
+        }
+        .copyright-container {
+            float: left;
+        }
+        &.has-footer-logo {
+            display: block;
+        }
+        .footer-bottom {
+            display: block;
+        }
+    }
+}
+@include media768() {
+    #page-footer .footer-main {
+        padding: $footerFooterMainPadding;
+        &.has-footer-logo {
+            .copyright-container,
+            .footer-links-container {
+                min-width: 0;
+                flex-grow: 1;
+                flex-shrink: 1;
+            }
+            @if ($resolvedFooterLogoPosition == 'left') {
+                .logo-container {
+                    width: $footerLogoContainerWidthWhenLogoPositionLeft;
+                }
+                .copyright-container {
+                    max-width: $footerCopyrightContainerWidthLargeWhenLogoPositionLeft;
+                }
+                .footer-links-container {
+                    max-width: $footerLinksContainerWidthLargeWhenLogoPositionLeft;
+                }
+            }
+            @if ($resolvedFooterLogoPosition == 'right') {
+                .logo-container {
+                    width: $footerLogoContainerWidthWhenLogoPositionRight;
+                }
+            }
+        }
+    }
+}
+
+@if ($showFooterLinks == true) {
+    .footer-links-container {
+        display: inline-block;
+    }
+}
+@if ($showFooterLinks == false) {
+    .footer-links-container {
+        display: none;
+    }
+}

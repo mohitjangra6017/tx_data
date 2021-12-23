@@ -1,0 +1,167 @@
+/* This file is part of Totara Enterprise Extensions.*/
+/**/
+/* Copyright (C) 2020 onwards Totara Learning Solutions LTD*/
+/**/
+/* Totara Enterprise Extensions is provided only to Totara*/
+/* Learning Solutions LTD's customers and partners, pursuant to*/
+/* the terms and conditions of a separate agreement with Totara*/
+/* Learning Solutions LTD or its affiliate.*/
+/**/
+/* If you do not have an agreement with Totara Learning Solutions*/
+/* LTD, you may not access, use, modify, or distribute this software.*/
+/* Please contact [licensing@totaralearning.com] for more information.*/
+/**/
+/* @author    Kevin Hottinger <kevin.hottinger@totaralearning.com>*/
+/* @module tuickage   tui*/
+
+/* This variable file includes special comments with the syntax `theme:var` and*/
+/* `theme:derive`.*/
+/**/
+/* `theme:var` comments tell the build system that this is a configurable*/
+/* variable and causes information about it to be exported. This is neccesary*/
+/* for it to show up in the theme panel.*/
+/**/
+/* `theme:derive` comments add information to the entry for a theme:var variable*/
+/* telling the theme panel that it is derived from another variable.*/
+/* This informatation is used to generate a new value for the variable if the*/
+/* value of any variable it is derived from has changed.*/
+
+:root {
+
+  /* Interactive state colours*/
+
+  /* Default state colour, shows an element is interactive*/
+  /* theme:var */
+  --color-state: var(--color-primary);
+
+  /* Hover state colour, shown when cursor is over interactive element*/
+  /* theme:var */
+  --color-state-hover: var(--color-secondary);
+  /* Focus state colour, shown when element has focus (keyboard tabbing)*/
+  /* theme:var */
+  --color-state-focus: var(--color-secondary);
+  /* Active state colour, shown when element is active (clicked)*/
+  /* theme:var */
+  --color-state-active: var(--color-secondary);
+  /* Highlight, visual clue for things that need to be highlighted more*/
+  /* prominently than highlight-neutral.*/
+  /* theme:var */
+  --color-state-highlight: #f6f9d7;
+  /* Neutral highlight, visual clue for hover/focus on components such as a list row*/
+  /* theme:var */
+  --color-state-highlight-neutral: var(--color-neutral-3);
+  /* Disabled colour of interactive elements*/
+  /* theme:var */
+  --color-state-disabled: var(--color-neutral-5);
+
+  /* Content colours*/
+  /* theme:var */
+  --color-border: var(--color-neutral-5);
+  /* theme:var */
+  --color-text: #000000;
+  /* theme:var */
+  --color-text-disabled: var(--color-neutral-5);
+  /* theme:var */
+  --color-text-hint: var(--color-neutral-6);
+
+  /* Buttons*/
+  /* theme:var */
+  --btn-accent-color: var(--color-state);
+  /* theme:var */
+  --btn-accent-color-active: var(--color-state-active);
+  /* theme:var */
+  --btn-accent-color-focus: var(--color-state-focus);
+  /* theme:var */
+  --btn-accent-color-disabled: var(--color-state-disabled);
+
+  /* theme:var */
+  --btn-prim-accent-color: var(--color-state);
+  /* theme:var */
+  --btn-prim-accent-color-active: var(--color-state-active);
+  /* theme:var */
+  --btn-prim-accent-color-focus: var(--color-state-focus);
+  /* theme:var */
+  --btn-prim-accent-color-disabled: var(--color-state-disabled);
+
+  /* theme:var */
+  --border-weight: thin;
+  /* Buttons*/
+  /* theme:var */
+  --btn-bg-color-active: var(--color-neutral-1);
+  /* theme:var */
+  --btn-bg-color-disabled: var(--color-neutral-3);
+  /* theme:var */
+  --btn-bg-color-focus: var(--color-neutral-3);
+  /* theme:var */
+  --btn-text-color-active: var(--color-state-hover);
+  /* theme:var */
+  --btn-text-color-disabled: var(--color-neutral-6);
+  /* theme:var */
+  --btn-text-color-focus: var(--color-state-hover);
+  /* theme:var */
+  --btn-border-color-active-focus: var(--btn-text-color-hover);
+  /* theme:var */
+  --btn-border-color-disabled: var(--btn-bg-color-disabled);
+  /* theme:var */
+  --btn-prim-bg-color-active: var(--btn-text-color-active);
+  /* theme:var */
+  --btn-prim-bg-color-disabled: var(--btn-bg-color-disabled);
+  /* theme:var */
+  --btn-prim-bg-color-focus: var(--color-secondary);
+  /* theme:var */
+  --btn-prim-border-color-active-focus: var(--btn-prim-border-color);
+  /* theme:var */
+  --btn-prim-border-color-disabled: var(--btn-bg-color-disabled);
+
+  /* Tabs*/
+  /* theme:var */
+  --tabs-bg-color-disabled: var(--color-neutral-3);
+  /* theme:var */
+  --tabs-bg-color-focus: var(--color-neutral-3);
+  /* theme:var */
+  --tabs-text-color-disabled: var(--color-state-disabled);
+  /* theme:var */
+  --tabs-text-color-focus: var(--color-state-hover);
+  /* theme:var */
+  --tabs-text-color-selected: var(--tabs-text-color-active);
+  /* theme:var */
+  --tabs-border-color-disabled: var(--color-neutral-4);
+  /* theme:var */
+  --tabs-border-radius-active: 0;
+  /* theme:var */
+  --tabs-selected-bar-color: var(--color-primary);
+  /* theme:var */
+  --tabs-border-radius-active: 0;
+
+  /* User Menu*/
+  /* theme:var */
+  --user-menu-dropdown-border-colour: transparent;
+
+  /* Side Panel*/
+  /* theme:var */
+  --side-panel-heading-font-size: var(--h4-font-size);
+  /* theme:var */
+  --side-panel-heading-font: var(--h4-font);
+  /* theme:var */
+  --side-panel-inner-background: var(--color-neutral-3);
+
+  /* theme:var */
+  --color-prompt-info: var(--link-color);
+
+  /* theme:var */
+  --nav-quick-item-text-color: var(--link-color);
+  /* theme:var */
+  --nav-quick-item-text-color-focus: var(--link-color-hover);
+
+  /* theme:var */
+  --progress-border-color: var(--progress-value-bg-color);
+}
+
+/*Tui font mixin*/
+@mixin tui-font-body {
+  color: var(--color-text);
+  font-weight: normal;
+  font-size: var(--base-font-size);
+  line-height: var(--font-body-line-height);
+}
+

@@ -1,0 +1,96 @@
+@import '../lib/mixins';
+
+.activity {
+    .activityicon {
+        font-size: $courseActivityIconSize;
+        color: $courseActivityIconColour;
+        padding: 0 0.25em 0 0;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .activityinstance {
+        > a:first-of-type {
+            font-size: $activityInstanceFontSize;
+            color: $activityInstanceColour;
+            vertical-align: middle;
+            text-decoration: none;
+            &.dimmed {
+                color: $dimmedText;
+            }
+        }
+        .instancename {
+            vertical-align: middle;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+.autocompletion,
+.completion-icon {
+    &,
+    .ft,
+    .ft-fw {
+        font-size: $autoCourseCompletionIconSize;
+        color: $completionIconColour;
+    }
+}
+input[type="checkbox"] {
+    @if ($resolvedManualCompletionIconSize == "small") {
+        &.completion-icon {
+            transform: inherit;
+        }
+    }
+    @if ($resolvedManualCompletionIconSize == "medium") {
+        &.completion-icon {
+            transform: scale(1.5);
+        }
+    }
+    @if ($resolvedManualCompletionIconSize == "large") {
+        &.completion-icon {
+            transform: scale(2.5);
+        }
+    }
+}
+
+@if ($resolvedHideActivityCompletion == "true") {
+    .autocompletion,
+    .completion-icon,
+    .jsenabled .completion-icon {
+        display: none;
+    }
+}
+.section {
+    .activity {
+        .actions {
+            width: 50px;
+            text-align: center;
+            position: relative;
+            float: right;
+            margin-bottom: 10px;
+        }
+    }
+}
+.editing .section {
+    .activity {
+        .actions {
+            position: absolute;
+        }
+    }
+}
+
+.course-content {
+    .section {
+        .summary {
+            table {
+                td,
+                th {
+                    padding: 10px;
+                }
+            }
+        }
+    }
+    .section-summary {
+        border: 0;
+    }
+}

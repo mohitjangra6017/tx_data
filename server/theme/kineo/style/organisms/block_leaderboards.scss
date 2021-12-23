@@ -1,0 +1,104 @@
+@import '../lib/mixins';
+@import '../lib/media';
+$headingFontSize: $h3FontSize;
+$headingFontSizeTablet: $h3FontSize;
+$headingFontSizeDesktop: $h3FontSize;
+$headingMargin: 0 0 10px;
+$headingMarginTablet: 0 0 10px;
+$headingMarginDesktop: 0 0 10px;
+$scoreFontSize: $h1FontSize;
+$scoreFontSizeTablet: $h1FontSize;
+$scoreFontSizeDesktop: $h1FontSize;
+$scoreMargin: 0 0 10px;
+$scoreMarginTablet: 0 0 10px;
+$scoreMarginDesktop: 0 0 10px;
+$rankFontSize: $h5FontSize;
+$rankFontSizeTablet: $h5FontSize;
+$rankFontSizeDesktop: $h5FontSize;
+$rankMargin: 0 0 10px;
+$rankMarginTablet: 0 0 10px;
+$rankMarginDesktop: 0 0 10px;
+$linkFontSize: $baseFontSize;
+$linkFontSizeTablet: $baseFontSize;
+$linkFontSizeDesktop: $baseFontSize;
+$linkMargin: 0;
+$linkMarginTablet: 0;
+$linkMarginDesktop: 0;
+$linkIconColour: $linkColour;
+$paddingNoBorder: $blockContentPaddingNoBorder;
+$paddingBorder: $blockContentPaddingWithBorder;
+$contentTextAlign: center;
+
+.block_leaderboard .block-content {
+    h3 {
+        @include mixinsFontSize($headingFontSize);
+        margin: $headingMargin;
+        @include media768 {
+            @include mixinsFontSize($headingFontSizeTablet);
+            margin: $headingMarginTablet;
+        }
+        @include media1024 {
+            @include mixinsFontSize($headingFontSizeDesktop);
+            margin: $headingMarginDesktop;
+        }
+    }
+    .score {
+        @include mixinsFontSize($scoreFontSize);
+        margin: $scoreMargin;
+        @include media768 {
+            @include mixinsFontSize($scoreFontSizeTablet);
+            margin: $scoreMarginTablet;
+        }
+        @include media1024 {
+            @include mixinsFontSize($scoreFontSizeDesktop);
+            margin: $scoreMarginDesktop;
+        }
+    }
+    .rank {
+        @include mixinsFontSize($rankFontSize);
+        margin: $rankMargin;
+        @include media768 {
+            @include mixinsFontSize($rankFontSizeTablet);
+            margin: $rankMarginTablet;
+        }
+        @include media1024 {
+            @include mixinsFontSize($rankFontSizeDesktop);
+            margin: $rankMarginDesktop;
+        }
+    }
+    .leaderboard {
+        @include mixinsFontSize($linkFontSize);
+        margin: $linkMargin;
+        @include media768 {
+            @include mixinsFontSize($linkFontSizeTablet);
+            margin: $linkMarginTablet;
+        }
+        @include media1024 {
+            @include mixinsFontSize($linkFontSizeDesktop);
+            margin: $linkMarginDesktop;
+        }
+        &:before {
+            content: "\f091";
+            font-family: FontAwesome;
+            padding: 0 0.4em 0 0;
+            color: $linkIconColour;
+        }
+    }
+}
+.block_leaderboard {
+    &.chromeless {
+        .block-content {
+            padding: 0;
+        }
+        .block-content > div {
+            padding: $paddingNoBorder;
+        }
+    }
+    .block-content {
+        text-align: $contentTextAlign;
+        padding: 0;
+        > div {
+            padding: $paddingBorder;
+        }
+    }
+}

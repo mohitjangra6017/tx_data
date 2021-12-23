@@ -1,0 +1,17 @@
+<div class="block_related_courses_courses" data-layout="{{ display }}">
+    {{#courses}}
+        <figure class="course{{#tags}} tag_{{.}}{{/tags}}" data-layout="{{ display }}">
+            <a href="{{url}}">
+                 <div class="related-courses-bg-image" style="background-image: url({{imageurl}});"></div>
+                 <figcaption>
+                    <h3 class="name">{{fullname}}</h3>
+                    <p>{{{summary}}}</p>
+                </figcaption>
+            </a>
+            <button class="enrol" data-course-id="{{id}}">{{#str}}enrol, block_related_courses{{/str}}</button>
+            {{#fullviewurl}}
+                <a class="link-as-button" href="{{fullviewurl}}">{{#str}}viewall, block_related_courses{{/str}}</a>
+            {{/fullviewurl}}
+        </figure>
+    {{/courses}}
+</div>

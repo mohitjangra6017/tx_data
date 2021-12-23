@@ -1,0 +1,36 @@
+<div class="panel-group" id="cluster-preview" role="tablist" aria-multiselectable="true">
+    {{#clusters}}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="heading-{{clusterid}}">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#cluster-preview" href="#collapse-{{clusterid}}" aria-expanded="true" aria-controls="collapse-{{clusterid}}">
+                    {{clustername}}
+                </a>
+                {{#showedit}}
+                    <div class="cluster-actions btn-group">
+                        <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <span class="confirm-msg">{{#str}} confirmdelete, block_carousel {{/str}}</span>
+                            
+                            <button type="button" class="btn btn-danger delete-cluster" data-curatedid="{{clusterid}}">Delete</button>
+                            <button type="button" class="btn btn-secondary btn-cancel">Cancel</button>
+                        </div>
+                    </div>
+                    <span class="cluster-actions edit-cluster" data-curatedid="{{clusterid}}"><i class="fa fa-cog"></i></span>
+                {{/showedit}}
+            </h4>
+        </div>
+        <div id="collapse-{{clusterid}}" class="panel-collapse collapse {{#panel_expanded}} in {{/panel_expanded}}" role="tabpanel" aria-labelledby="heading-{{clusterid}}">
+            <div class="panel-body">
+                <ul>
+                    {{#courses}}
+                        <li>{{fullname}}</li>
+                    {{/courses}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {{/clusters}}
+</div>

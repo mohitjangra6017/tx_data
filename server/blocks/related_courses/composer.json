@@ -1,0 +1,32 @@
+{
+    "name": "tke/block-related-courses",
+    "description": "Show courses based on ones with the same tags as the completed courses by the user",
+    "type": "totara-block",
+    "authors": [
+        {
+            "name": "Carlos Jurado",
+            "email": "carlos.jurado@kineo.com"
+        },
+        {
+            "name": "Simon Adams",
+            "email": "simon.adams@kineo.com"
+        }
+    ],
+    "extra": {
+        "installer-name": "related_courses",
+        "kineo": {
+            "code-standards": "psr-12",
+            "has-config-init": false,
+            "has-core-modifications": false,
+            "has-htaccess": false,
+            "has-totara-component": false
+        }
+    },
+    "require": {
+        "kineo/installers": "~1.3",
+        "tke/tke": "~15.0"
+    },
+    "support": {
+        "wiki": "https://gitlab.kineodev.com/plugins/block-related-courses/wikis/home"
+    }
+}

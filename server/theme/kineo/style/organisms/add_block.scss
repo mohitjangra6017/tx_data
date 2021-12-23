@@ -1,0 +1,22 @@
+@import '../lib/mixins';
+$headingColour: $black;
+
+
+.block.block_addblock {
+    .addBlockPopover--heading {
+        h2 {
+            color: $headingColour;
+        }
+    }
+    .addBlockPopover--results {
+        a {
+            @include mixinsLinkStateColours(
+                $linkColour,
+                $linkColour,
+                $linkColour,
+                $linkColour,
+                $linkColour
+            )
+        }
+    }
+}

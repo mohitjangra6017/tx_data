@@ -1,0 +1,77 @@
+@import '../lib/mixins';
+@mixin alertContentStyle(
+$alertBackgroundColour:$notificationsInfoBackgroundColour,
+$alertBorderColour:$notificationsInfoBorderColour,
+$alertIconColour:$notificationsInfoIconColour,
+$alertLinkColour:$notificationsInfoLinkColour,
+$alertTextColour:$notificationsInfoTextColour
+) {
+    background-color: $alertBackgroundColour;
+    border-color: $alertBorderColour;
+    color: $alertTextColour;
+    .alert-icon,
+    .alert-close {
+       background-color: $alertIconColour;
+       color: $alertBackgroundColour;
+       .ft,
+       .ft-fw {
+          color: $alertBackgroundColour;
+       }
+    }
+    a {
+      @include mixinsLinkStateColours(
+        $alertLinkColour,
+        $alertLinkColour,
+        $alertLinkColour,
+        $alertLinkColour,
+        $alertLinkColour
+      );
+    }
+   .ft,
+   .ft-fw {
+      color: $alertIconColour;
+    }
+   /* required to override totara core .ft-state-info rule defined in theme\base\less\totara\ft.less */
+   .ft-state-info {
+      color: $alertIconColour !important;
+  }
+}
+
+.alert {
+    &.alert-info {
+      @include alertContentStyle(
+        $notificationsInfoBackgroundColour,
+        $notificationsInfoBorderColour,
+        $notificationsInfoIconColour,
+        $notificationsInfoLinkColour,
+        $notificationsInfoTextColour
+      );
+  }
+    &.alert-success {
+      @include alertContentStyle(
+        $notificationsSuccessBackgroundColour,
+        $notificationsSuccessBorderColour,
+        $notificationsSuccessIconColour,
+        $notificationsSuccessLinkColour,
+        $notificationsSuccessTextColour
+      );
+    }
+    &.alert-warning {
+      @include alertContentStyle(
+        $notificationsWarningBackgroundColour,
+        $notificationsWarningBorderColour,
+        $notificationsWarningIconColour,
+        $notificationsWarningLinkColour,
+        $notificationsWarningTextColour
+      );
+    }
+    &.alert-danger {
+      @include alertContentStyle(
+        $notificationsDangerBackgroundColour,
+        $notificationsDangerBorderColour,
+        $notificationsDangerIconColour,
+        $notificationsDangerLinkColour,
+        $notificationsDangerTextColour
+      );
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "tke/local-backup",
+  "description": "Backup and Restore of Dashboards, Blocks and Site Configuration",
+  "license": "proprietary",
+  "type": "totara-local",
+  "require": {
+    "kineo/installers": "~1.3",
+    "tke/tke": "~15.0"
+  },
+  "extra": {
+    "installer-name": "backup",
+    "kineo": {
+      "code-standards": "psr-12",
+      "has-config-init": false,
+      "has-core-modifications": false,
+      "has-htaccess": false,
+      "has-totara-component": false
+    }
+  },
+  "support": {
+    "wiki": "https://gitlab.kineodev.com/plugins/local-backup/wikis/home"
+  }
+}
