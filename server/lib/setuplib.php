@@ -692,7 +692,7 @@ function get_docs_url($path = null) {
     global $CFG;
 
     // Absolute URLs are used unmodified.
-    if (substr($path, 0, 7) === 'http://' || substr($path, 0, 8) === 'https://') {
+    if (substr($path, 0, 7) === 'https://' || substr($path, 0, 8) === 'https://') {
         return $path;
     }
 

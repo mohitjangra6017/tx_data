@@ -37,9 +37,9 @@ define('BEHAT_UTIL', true);
 define('CLI_SCRIPT', true);
 define('CACHE_DISABLE_ALL', true);
 
-define('TOOL_BEHAT_DIR_ROOT', realpath(__DIR__ . '/../../../../..'));
+define('TOOL_BEHAT_DIR_ROOT', realpath(__DIR__ . '/../../../../../'));
 define('TOOL_BEHAT_DIR_SERVER', realpath(TOOL_BEHAT_DIR_ROOT . '/server'));
-define('TOOL_BEHAT_DIR_VENDOR', realpath(TOOL_BEHAT_DIR_ROOT . '/test/behat/vendor'));
+define('TOOL_BEHAT_DIR_VENDOR', realpath(TOOL_BEHAT_DIR_ROOT . '/vendor'));
 
 require_once(__DIR__ . '/../../../../lib/init.php');
 $CFG = \core\internal\config::initialise_behat_util();
