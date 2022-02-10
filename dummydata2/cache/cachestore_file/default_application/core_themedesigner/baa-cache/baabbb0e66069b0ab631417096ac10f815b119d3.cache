@@ -1,0 +1,13 @@
+a:2:{s:4:"data";s:265:"/** Path: plugin block_recent_activity .' **/
+.block_recent_activity .activitydate {
+    font-weight: bold;
+}
+.block_recent_activity .activityhead {
+    margin-bottom: 20px;
+}
+
+.block_recent_activity.block .content h3.sectionname {
+    font-size: 24px;
+}
+
+";s:7:"created";i:1644399340;}

@@ -1,0 +1,75 @@
+a:2:{s:4:"data";s:1617:"/** Path: plugin mod_assessment .' **/
+.path-mod-assessment .choose-stage .stage {
+    border: 1px solid #444;
+    margin: 10px 0;
+    padding: 5px;
+}
+
+.path-mod-assessment .choose-stage .stage > div {
+    display: inline-block;
+    padding: 5px;
+}
+
+@media (min-width: 768px) {
+    .path-mod-assessment .choose-stage .stage .title {
+        width: 20%;
+    }
+
+    .path-mod-assessment .choose-stage .stage .status {
+        width: 20%;
+    }
+
+    .path-mod-assessment .choose-stage .stage .requirements {
+        width: 40%;
+    }
+}
+
+.path-mod-assessment .content-info {
+    clear: both;
+    overflow: auto;
+}
+.path-mod-assessment .content-info .info {
+    float: left;
+}
+.path-mod-assessment .content-info .preview {
+    float: right;
+}
+
+.path-mod-assessment .assessment-page > .controls {
+    clear: both;
+    overflow: auto;
+}
+.path-mod-assessment .assessment-page > .controls .return-nav {
+    float: left;
+}
+.path-mod-assessment .assessment-page > .controls .status {
+    float: right;
+}
+.path-mod-assessment .assessment-page > .controls .viewing-user {
+    display: table;
+    margin: auto;
+    text-align: center;
+}
+
+.path-mod-assessment form.totara_form div[data-item-classification="element"] {
+    clear: both;
+}
+
+.path-mod-assessment span.evaluator-rule-type,
+.path-mod-assessment span.assignment-rule-type  {
+    display: inline-block;
+    width: 60px;
+    text-align: right;
+}
+
+.path-mod-assessment ul.questionlist .actions {
+    float: right;
+}
+
+.path-mod-assessment ul.questionlist li {
+    list-style: none;
+    padding: 6px;
+}
+
+
+";s:7:"created";i:1644399339;}

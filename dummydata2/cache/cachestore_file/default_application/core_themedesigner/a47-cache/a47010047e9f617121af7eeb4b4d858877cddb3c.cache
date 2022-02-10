@@ -1,0 +1,443 @@
+a:2:{s:4:"data";s:18432:"/** Path: plugin block_related_courses .' **/
+/* Related Courses block */
+
+.block.block_related_courses .content {
+  padding-right: 0;
+  padding-left: 0;
+  padding-bottom: 0;
+}
+
+
+
+.block_related_courses_full .block_related_courses_tags {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-pack: start;
+      justify-content: flex-start;
+  -ms-flex-align: start;
+      align-items: flex-start;
+  margin: 0 0 10px 0;
+}
+.block_related_courses_full .block_related_courses_tags li {
+  -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+  padding: 0 10px 0 0;
+  list-style-type: none;
+}
+.block_related_courses .block_related_courses_tags {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-pack: start;
+      justify-content: flex-start;
+  -ms-flex-align: start;
+      align-items: flex-start;
+  margin: 0 0 0 0;
+}
+.block_related_courses .block_related_courses_tags li {
+  -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+  padding: 0 10px 10px 0;
+}
+
+
+
+
+
+.block_related_courses .block_related_courses_courses figure a {
+  color: #333;
+}
+.block_related_courses .block_related_courses_courses figure a:hover,
+.block_related_courses .block_related_courses_courses figure a:active,
+.block_related_courses .block_related_courses_courses figure a:focus {
+  text-decoration: none;
+}
+.block_related_courses .block_related_courses_courses figure figcaption {
+  color: #333;
+  padding: 10px;
+}
+.block_related_courses .block_related_courses_courses figure .name {
+  padding: 0;
+  margin: 0 0 .25em 0;
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.block_related_courses .block_related_courses_courses figure .likes {
+  display: inline-block;
+  width: 100%;
+  color: #333;
+  text-align: right;
+  padding: 0;
+  font-size: 16px;
+  font-size: 1.6rem;
+}
+.block_related_courses .block_related_courses_courses figure p {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.block_related_courses .block_related_courses_courses figure p:last-of-type {
+  margin-bottom: 0;
+}
+.block_related_courses .block_related_courses_courses figure p:first-of-type:last-of-type {
+  margin-bottom: 0;
+}
+
+
+
+
+
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"],
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] {
+  position: relative;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-list,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-list {
+  padding: 0 0 10px 0;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] figure,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] figure {
+  margin: 0 25px;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] figure button.enrol,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] figure button.enrol {
+  width: 100%;
+  margin: 0;
+  display: block;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] figure button.enrol + .link-as-button,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] figure button.enrol + .link-as-button {
+  margin: 10px auto 0;
+  display: block;
+}
+
+
+
+
+
+
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next {
+  -webkit-appearance: none;
+  display: inline-block;
+   padding: 0 0;
+  margin: 0 0 6px 0;
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  font-size: 0px;
+  font-size: 0rem;
+  font-weight: normal;
+  color: #ffffff;
+  text-align: center;
+  background-color: #ccc;
+  border: 1px solid #b3b3b3;
+  border-radius: 0;
+  cursor: pointer;
+  *margin-left: .3em;
+  text-transform: capitalize;
+  position: absolute;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+  margin: 0;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next .flex-icon:before {
+  color: #ffffff;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:visited,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:visited,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:visited,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:visited {
+  color: #ffffff;
+  background-color: #ccc;
+  text-decoration: none;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:hover,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:hover,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:hover,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:hover {
+  color: #000000;
+  background-color: #ffffff;
+  text-decoration: none;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:hover .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:hover .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:hover .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:hover .flex-icon:before {
+  color: #000000;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:hover,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:hover,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:hover,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:hover {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:active,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:focus,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:focus,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:focus,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:focus {
+  background-color: #ffffff;
+  color: #000000;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:active:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:active:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:active:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:active:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:focus:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:focus:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:focus:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:focus:before {
+  color: #000000;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:active .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:active .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:active .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:active .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:focus .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:focus .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:focus .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:focus .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:active .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:active .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:active .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:active .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:focus .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:focus .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:focus .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:focus .ft-stack-main:before {
+  color: #000000;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev .flex-icon,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev .flex-icon,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next .flex-icon,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next .flex-icon,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev .ft-stack-main,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev .ft-stack-main,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next .ft-stack-main,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next .ft-stack-main {
+  padding-right: 10px;
+  vertical-align: baseline;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next .flex-icon:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next .ft-stack-main:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next .ft-stack-main:before {
+  color: #ffffff;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:before {
+  display: block;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:hover:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:hover:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:hover:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:hover:before {
+  color: #000000;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev {
+  left: 0;
+  z-index: 200;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-prev:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-prev:before {
+  font-family: fontAwesome;
+  font-size: 16px;
+  font-size: 1.6rem;
+  color: #ffffff;
+  content: "\f053";
+  padding: 2px 3px 0 0;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next {
+  right: 0;
+}
+.block_related_courses_carousel .block_related_courses_courses[data-layout="block"] .slick-next:before,
+.block_related_courses_carousel .block_related_courses_courses[data-layout="list"] .slick-next:before {
+  font-family: fontAwesome;
+  font-size: 16px;
+  font-size: 1.6rem;
+  color: #ffffff;
+  content: "\f054";
+  padding: 2px 0 0 3px;
+}
+
+
+
+
+
+.block_related_courses_full .block_related_courses_courses[data-layout="block"] {
+  display: block;
+  width: 100.83333333%;
+  margin: 0 -0.41666667%;
+  *zoom: 1;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="block"]:before,
+.block_related_courses_full .block_related_courses_courses[data-layout="block"]:after {
+  display: table;
+  content: "";
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="block"]:after {
+  clear: both;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="block"] figure.course {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  display: inline;
+  float: left;
+  width: 99.16666667%;
+  margin: 0 0.41666667%;
+  margin-bottom: 0.83333333%;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="block"] figure.course img {
+  width: 100%;
+  height: auto;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="block"] figure.course button.enrol,
+.block_related_courses_full .block_related_courses_courses[data-layout="list"] figure.course button.enrol {
+  margin: 0 10px 10px;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="list"] figure.course {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="list"] figure.course a {
+  height: auto;
+  display: inline-block;
+  width: 100%;
+}
+.block_related_courses_full .block_related_courses_courses[data-layout="list"] figure.course img {
+  height: auto;
+  max-width: 100%;
+  -o-object-fit: none;
+     object-fit: none;
+}
+
+
+
+
+.related-courses-bg-image {
+  background-color: #efefef;
+  background-position: 50%;
+  background-size: cover;
+  padding: 0 0 40%;
+}
+
+
+
+
+
+
+
+/* Slick slider block */
+.slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+.slick-list {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+.slick-list:focus {
+  outline: none;
+}
+.slick-list.dragging {
+  cursor: pointer;
+  cursor: hand;
+}
+.slick-slider .slick-track,
+.slick-slider .slick-list {
+  transform: translate3d(0, 0, 0);
+}
+.slick-track {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+}
+.slick-track:before,
+.slick-track:after {
+  display: table;
+  content: '';
+}
+.slick-track:after {
+  clear: both;
+}
+.slick-loading .slick-track {
+  visibility: hidden;
+}
+.slick-slide {
+  display: none;
+  float: left;
+  height: 100%;
+  min-height: 1px;
+}
+[dir='rtl'] .slick-slide {
+  float: right;
+}
+.slick-slide img {
+  display: block;
+}
+.slick-slide.slick-loading img {
+  display: none;
+}
+.slick-slide.dragging img {
+  pointer-events: none;
+}
+.slick-initialized .slick-slide {
+  display: block;
+}
+.slick-loading .slick-slide {
+  visibility: hidden;
+}
+.slick-vertical .slick-slide {
+  display: block;
+  height: auto;
+  border: 1px solid transparent;
+}
+.slick-arrow.slick-hidden {
+  display: none;
+}
+
+
+";s:7:"created";i:1644399340;}

@@ -1,0 +1,14 @@
+a:2:{s:4:"data";s:229:"/** Path: plugin assquestion_rating .' **/
+.tf_element_input .slider {
+    max-width: 70%;
+}
+
+.tf_element_input .slider .maxval {
+    float: right;
+}
+
+.tf_element_input .slider .selectedval {
+    text-align: center;
+}
+
+";s:7:"created";i:1644399342;}

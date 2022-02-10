@@ -1,0 +1,8 @@
+a:2:{s:4:"data";s:111:"/** Path: plugin atto_htmlplus .' **/
+.dir-rtl .CodeMirror {
+    text-align: left;
+    direction: ltr;
+}
+
+
+";s:7:"created";i:1644399342;}

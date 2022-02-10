@@ -1065,7 +1065,8 @@ class navigation_node_collection implements IteratorAggregate, Countable {
      *
      * @return int
      */
-    public function count() {
+    public function count(): int
+    {
         return $this->count;
     }
     /**

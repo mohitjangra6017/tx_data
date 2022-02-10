@@ -1,0 +1,12 @@
+a:2:{s:4:"data";s:219:"/** Path: plugin totara_coursecatalog .' **/
+#catalogcourses,
+#catalogprograms,
+#catalogcertifications {
+    min-width: 80%;
+}
+
+#catalogcourses .toolbar-right-table .singlebutton {
+    display: inline-block;
+}
+
+";s:7:"created";i:1644399341;}

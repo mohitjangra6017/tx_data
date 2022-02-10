@@ -1,0 +1,19 @@
+a:2:{s:4:"data";s:347:"/** Path: plugin block_totara_program_completion .' **/
+.block-prog-completions-list .more {
+    display: none;
+}
+
+.block-prog-completions-list .row {
+    margin: 1px 0;
+}
+
+.block-prog-completions-list div.name {
+    display: inline-block;
+}
+
+.block-prog-completions-list div.value {
+    display: inline-block;
+    float: right;
+}
+
+";s:7:"created";i:1644399340;}

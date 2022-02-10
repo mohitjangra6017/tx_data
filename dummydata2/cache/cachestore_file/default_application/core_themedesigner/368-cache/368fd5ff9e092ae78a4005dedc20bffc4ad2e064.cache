@@ -1,0 +1,7 @@
+a:2:{s:4:"data";s:113:"/** Path: plugin atto_fontfamily .' **/
+.atto_fontfamily_button .dropdown-menu a {
+  line-height: normal;
+}
+
+
+";s:7:"created";i:1644399342;}

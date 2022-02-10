@@ -1,0 +1,7 @@
+a:2:{s:4:"data";s:219:"/** Path: plugin local_backup .' **/
+#page-admin-local-configbackup-preview .generaltable .cell.c1, #page-admin-local-configbackup-preview .generaltable .cell.c2 {
+    max-width: 700px;
+    word-wrap: break-word;
+}
+
+";s:7:"created";i:1644399343;}

@@ -1,0 +1,12 @@
+a:2:{s:4:"data";s:207:"/** Path: plugin block_totara_certifications .' **/
+.dir-rtl .block_totara_certifications .name {
+    float: right;
+}
+
+.block_totara_certifications ul {
+    list-style-type: none;
+    margin: 0;
+}
+
+
+";s:7:"created";i:1644399340;}

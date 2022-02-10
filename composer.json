@@ -5,7 +5,7 @@
   "type": "tke",
   "homepage": "https://www.kineo.com",
   "require": {
-    "php": "7.3.4 ",
+    "php": "8.1",
     "kineo/installers": "~1.3",
     "tke/builder": "15.0.0",
     "tke/atto-fontfamily": "15.0.0",

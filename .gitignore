@@ -67,3 +67,5 @@ CVS
 **/__pycache__/
 **/.pyc
 /extensions/ml_service/data/
+node_modules
+node_modules

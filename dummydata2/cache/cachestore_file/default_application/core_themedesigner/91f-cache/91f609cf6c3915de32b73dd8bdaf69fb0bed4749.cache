@@ -1,0 +1,9 @@
+a:2:{s:4:"data";s:105:"/** Path: plugin totara_mssql .' **/
+
+textarea.sqlsnippet {
+    width: 100%;
+    height: 200px;
+}
+
+
+";s:7:"created";i:1644399341;}

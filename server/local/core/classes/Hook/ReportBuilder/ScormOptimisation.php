@@ -20,6 +20,7 @@ class ScormOptimisation
     public static function onInstall()
     {
         global $CFG, $DB;
+            return;
         if (empty($CFG->upgraderunning)) {
             return;
         }
