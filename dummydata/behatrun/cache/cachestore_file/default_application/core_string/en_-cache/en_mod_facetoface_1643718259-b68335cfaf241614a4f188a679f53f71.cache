@@ -1,0 +1,1045 @@
+a:1980:{s:7:"actions";s:7:"Actions";s:8:"activate";s:8:"Activate";s:6:"active";s:6:"Active";s:22:"activitycompletiontask";s:44:"Trigger delayed seminar activity completions";s:16:"activitydefaults";s:17:"Activity defaults";s:12:"addattendees";s:9:"Add users";s:16:"addattendeestep1";s:33:"Select users to add (step 1 of 2)";s:16:"addattendeestep2";s:23:"Add users (step 2 of 2)";s:21:"addattendeesviaidlist";s:25:"Add users via list of IDs";s:25:"addattendeesviafileupload";s:25:"Add users via file upload";s:8:"addasset";s:12:"Add an asset";s:21:"addeditattendeeserror";s:24:"Add/edit attendees error";s:23:"addeditattendeesresults";s:26:"Add/edit attendees results";s:23:"addeditattendeessuccess";s:26:"Add/edit attendees success";s:17:"addedsuccessfully";s:18:"Added successfully";s:14:"addfacilitator";s:17:"Add a facilitator";s:13:"addingsession";s:26:"Adding a new event in {$a}";s:20:"addingseminarsession";s:28:"Adding a new Seminar to {$a}";s:25:"additionalfeaturesheading";s:19:"Additional features";s:11:"addnewasset";s:15:"Add a new asset";s:17:"addnewfacilitator";s:21:"Add a new facilitator";s:11:"addnewfield";s:22:"Add a new custom field";s:15:"addnewfieldlink";s:25:"Create a new custom field";s:10:"addnewroom";s:14:"Add a new room";s:15:"addnotification";s:16:"Add notification";s:23:"addnotificationtemplate";s:25:"Add notification template";s:7:"address";s:7:"Address";s:18:"addremoveattendees";s:20:"Add/remove attendees";s:28:"addremoveattendeeswaitlisted";s:76:"Please Note: Attendees added will be automatically added to the waiting list";s:7:"addroom";s:10:"Add a room";s:10:"addsession";s:9:"Add event";s:10:"addstudent";s:11:"Add learner";s:17:"addtositewidelist";s:20:"Add to sitewide list";s:17:"afterendofsession";s:38:"after event (closing session end time)";s:15:"allfacilitators";s:3:"All";s:17:"alljamanagersdesc";s:63:"Managers from all job assignments will be chosen if left empty.";s:12:"alllocations";s:13:"All locations";s:8:"allocate";s:24:"Allocate spaces for team";s:14:"allocatenoteam";s:56:"There are no team members you can allocate to this event";s:24:"allocationfull_noreserve";s:95:"Without replacing your current reservations, you can only allocate {$a} space(s) for this event";s:22:"allocationfull_reserve";s:50:"You can only allocate {$a} space(s) for this event";s:19:"allowassetconflicts";s:23:"Allow booking conflicts";s:24:"allowassetconflicts_help";s:111:"Checking this box will allow an asset to be assigned to two or more sessions that are running at the same time.";s:24:"allowcancellationanytime";s:11:"At any time";s:23:"allowcancellationcutoff";s:22:"Until specified period";s:22:"allowcancellationnever";s:5:"Never";s:18:"allowcancellations";s:19:"Allow cancellations";s:25:"allowcancellationsdefault";s:27:"Allow cancellations default";s:30:"allowcancellationsdefault_help";s:109:"Whether events in this activity will allow cancellations by default, can be overridden in the event settings.";s:23:"allowcancellations_help";s:62:"Whether event attendees will be able to cancel their bookings.";s:25:"allowfacilitatorconflicts";s:23:"Allow booking conflicts";s:30:"allowfacilitatorconflicts_help";s:116:"Checking this box will allow a facilitator to be assigned to two or more sessions that are running at the same time.";s:13:"allowoverbook";s:15:"Enable waitlist";s:18:"allowroomconflicts";s:23:"Allow booking conflicts";s:23:"allowroomconflicts_help";s:51:"This will allow room scheduling conflicts to exist.";s:25:"allowroomconflictswarning";s:136:"Note: Room scheduling conflicts are not automatically prevented. Please ensure that this room is available before creating this booking.";s:22:"allowscheduleconflicts";s:26:"Allow scheduling conflicts";s:24:"allowschedulingconflicts";s:23:"Override user conflicts";s:29:"allowschedulingconflicts_help";s:243:"If trainers or users are already assigned or booked onto another seminar event at the same time as this event then the administrator will be warned, but can override such warnings and proceed anyway by selecting **Yes** from the dropdown menu.";s:32:"allowselectedschedulingconflicts";s:35:"Allow selected scheduling conflicts";s:8:"allrooms";s:3:"All";s:13:"allsessionsin";s:18:"All events in {$a}";s:21:"allfilteredsessionsin";s:14:"Events in {$a}";s:15:"alreadysignedup";s:53:"You have already signed-up for this seminar activity.";s:7:"anytime";s:8:"Any time";s:6:"answer";s:7:"Sign in";s:12:"answercancel";s:8:"Sign out";s:16:"appearanceheader";s:10:"Appearance";s:12:"approvalreqd";s:17:"Approval required";s:11:"applyfilter";s:12:"Apply filter";s:25:"approval_activityapprover";s:30:"{$a} (activity level approver)";s:20:"approval_addapprover";s:12:"Add approver";s:14:"approval_admin";s:35:"Manager and Administrative approval";s:16:"approval_manager";s:16:"Manager Approval";s:22:"approval_managerselect";s:20:"Users Select Manager";s:13:"approval_none";s:11:"No Approval";s:13:"approval_role";s:13:"Role Approval";s:13:"approval_self";s:36:"Learner accepts terms and conditions";s:21:"approval_siteapprover";s:26:"{$a} (site level approver)";s:13:"approvalusers";s:23:"Approval Administrators";s:18:"approvalusers_help";s:169:"The approval administrators will receive a notification about your request to book into this session. If there are none displayed, please contact the Site administrator.";s:18:"approvalnocapacity";s:126:"There are {$a->waiting} learners awaiting approval but no spaces available, you cannot approve any more learners at this time.";s:26:"approvalnocapacitywaitlist";s:129:"There are {$a->waiting} learners awaiting approval but no spaces available - any approvals will be added to the waitlist instead.";s:15:"approvaloptions";s:19:"Require approval by";s:20:"approvaloptions_help";s:1028:"Available options are defined by the approval options setting on the seminar administration settings page:
+
+* **No approval**: A user will be immediately booked into an event when signing up.
+* **Learner accepts terms and conditions**: A user will be presented the text defined in the text area below, and required to accept the terms and conditions.
+* **Event role*: All user's assigned to the role in the event will be immediately sent a notification with instructions to approve the user's request to sign-up for the event.
+* **Manager approval**: The learner's manager will be immediately sent a notification with instructions to approve the user's request to sign-up for the event.
+* **Manager and Administrative approval**: All users selected as an approver will be immediately sent a notification with instructions to approve the user's request to sign-up for the event. Approval can then be given by the Manager followed by the Administrator, or the Administrator may finalise the request without Manager approval.";s:18:"approvalrequiredby";s:22:"Approval required by: ";s:20:"approvalovercapacity";s:173:"There are {$a->waiting} learners awaiting approval but only {$a->available} spaces available. Only the first {$a->available} learners you approve will be added to the event.";s:28:"approvalovercapacitywaitlist";s:232:"There are {$a->waiting} learners awaiting approval but only {$a->available} spaces available.<br /> Only the first {$a->available} learners you approve will be added to the event - additional approvals will be added to the waitlist.";s:13:"approvalterms";s:20:"Terms and conditions";s:12:"approvaltime";s:13:"Time approved";s:7:"approve";s:7:"Approve";s:8:"approved";s:8:"Approved";s:16:"approverdatetime";s:18:"Approval Date/Time";s:13:"approveremail";s:14:"Approver Email";s:12:"approvername";s:13:"Approver name";s:16:"approverrolename";s:13:"Approver role";s:12:"approvertime";s:13:"Approval Time";s:16:"approveuserevent";s:27:"Approve {$a} for this event";s:30:"archivewarning_removeattendees";s:94:"The disabled attendees can not be removed because they hold archived course completion records";s:29:"archivewarning_takeattendance";s:94:"The disabled attendees can not be updated because they hold archived course completion records";s:15:"archive_nousers";s:28:"No users have been archived.";s:15:"archive_warning";s:77:"Notifications will NOT be sent to restored archived users and their managers.";s:15:"archive_success";s:35:"Successfully restored {$a} user(s).";s:15:"archive_restore";s:22:"Restore selected users";s:25:"areyousureconfirmwaitlist";s:90:"This will be over the event maximum bookings allowance. Are you sure you want to continue?";s:14:"assessmentyour";s:15:"Your assessment";s:5:"asset";s:5:"Asset";s:18:"assetalreadybooked";s:38:" (asset unavailable on selected dates)";s:18:"assetcreatesuccess";s:26:"Successfully created asset";s:19:"assetcustomfieldtab";s:6:" Asset";s:12:"assetdeleted";s:13:"Asset deleted";s:16:"assetdescription";s:11:"Description";s:12:"assetdetails";s:13:"Asset details";s:17:"assetdoesnotexist";s:20:"Asset does not exist";s:9:"assethide";s:65:"Hide from users when choosing an asset on the Add/Edit event page";s:11:"assethidden";s:25:"Asset hidden successfully";s:9:"assetname";s:4:"Name";s:20:"assetnameedittoolong";s:53:"Asset name can only be upto {$a} characters in length";s:6:"assets";s:6:"Assets";s:9:"assetshow";s:63:"Show to users when choosing an asset on the Add/Edit event page";s:10:"assetshown";s:24:"Asset shown successfully";s:18:"assetupdatesuccess";s:26:"Successfully updated asset";s:10:"attendance";s:10:"Attendance";s:14:"attendancename";s:4:"Name";s:15:"attendancetaken";s:16:"Attendance taken";s:25:"attendancerequestsupdated";s:27:"Attendance requests updated";s:15:"attendedsession";s:14:"Attended event";s:16:"attendancestatus";s:17:"Attendance status";s:22:"attendancetimeofsignup";s:15:"Time of sign-up";s:15:"attendeeactions";s:16:"Attendee actions";s:12:"attendeenote";s:15:"Attendee's note";s:9:"attendees";s:9:"Attendees";s:21:"attendeestablesummary";s:49:"People planning on or having attended this event.";s:9:"available";s:9:"Available";s:12:"backtoassets";s:14:"Back to assets";s:18:"backtofacilitators";s:20:"Back to facilitators";s:11:"backtorooms";s:13:"Back to rooms";s:13:"backtoseminar";s:13:"Go to seminar";s:22:"beforeregistrationends";s:44:"before end of Sign-up period (cut-off point)";s:20:"beforestartofsession";s:41:"before event (opening session start time)";s:4:"body";s:4:"Body";s:9:"body_help";s:8262:"This is the body of the notification to be sent.
+
+In the notification there are a number of placeholders that can be used, these placeholders will be replaced with the appropriate values when the message is sent.
+
+All place holders are enclosed within square brackets.
+There are several types of place holders, the patterns for each are as follows:
+
+* Event details: [placeholder]
+* Event custom fields: [session:placeholder]
+* Event cancellation custom fields: [sessioncancel:placeholder]
+* Multiple session event details: [#sessions][session:placeholder][/sessions]
+* Room/Asset/Facilitator details for each session: [#sessions][session:rooms][/sessions]
+* Room/Asset/Facilitator individual fields for each session: [#sessions][session:room:placeholder][/sessions]
+* Room/Asset/Facilitator custom fields for each session: [#sessions][session:room:cf_placeholder][/sessions]
+* User details: [placeholder]
+* User custom fields: [user:placeholder]
+
+You can find out which placeholder are available, and how custom field placeholders work for each type under the relevant heading below.
+
+### 1. Event details
+
+The details of the seminar can be added to the notification by using the desired placeholders from the following list.
+
+* [coursename] - Name of course
+* [coursenamelink] - Name of course with link
+* [seminarname] - Name of seminar activity
+* [seminarnamelink] - Name of seminar activity with link
+* [seminardescription] - Seminar description
+* [eventpagelink] - Link to the event page
+* [cost] - Cost of event
+* [reminderperiod] - Amount of time before the event that the reminder message is sent
+* [sessiondate] - Date of the event the learner is booked on
+* [startdate] - Date at the start of the event. If there are multiple sessions it will use the first one.
+* [finishdate] - Date at the end of the event. If there are multiple sessions it will use the first one.
+* [starttime] - Start time of the event. If there are multiple sessions it will use the first one.
+* [finishtime] - Finish time of the event. If there are multiple sessions it will use the first one.
+* [duration] - Length of the event
+* [details] - Details about the event
+* [attendeeslink] - Link to the attendees page for the event
+* [lateststarttime] - Start time of the event. If there are multiple sessions it will use the last one.
+* [lateststartdate] - Date at the start of the event. If there are multiple sessions it will use the last one.
+* [latestfinishtime] - Finish time of the event. If there are multiple sessions it will use the last one.
+* [latestfinishdate] - Date at the end of the event. If there are multiple sessions it will use the last one.
+* [registrationcutoff] - The deadline for registrations, if not set this will default to [starttime].
+* [booked] - Number of attendees booked for the event
+* [capacity] - Total number of seats available in an event
+* [mincapacity] - Minimum bookings setting for the event
+
+### 2. Event custom fields
+
+If you have created event custom fields, and wish to use these in your notification body you can do so using the following placeholder, replacing 'placeholder' with the shortname for the custom field.
+
+    [session:placeholder]
+
+For example if you have an event custom field with the shortname 'department', to use the value recorded in the custom field in the notification body you would use the placeholder [session:department].
+
+### 3. Event cancellation custom fields
+
+If you have created event cancellation custom fields, and wish to use these in your notification body you can do so using the following placeholder, replacing 'placeholder' with the shortname for the custom field.
+
+    [sessioncancel:placeholder]
+
+For example if you have an event custom field with the shortname 'cancellationreason', to use the value recorded in the custom field in the notification body you would use the placeholder [sessioncancel:cancellationreason].
+
+### 4. Multiple session event details
+
+It is possible to include details of each session if you have multiple sessions for an event.
+A segment of the notification can be repeated to include the details of each individual session. To do this, add [#sessions] where you would like the loop to start, add [/sessions] where you would like it to end.
+
+You can then add the following placeholders between these tags:
+
+* [session:starttime] - start time of the session.
+* [session:startdate] - start date of the session.
+* [session:finishtime] - finish time of the session.
+* [session:finishdate] - finish date of the session.
+* [session:timezone] - timezone of the session.
+* [session:duration] - session duration.
+
+### 4.1. Room details for each session
+
+The details of any rooms used for the session can also be added to the notification by using the desired placeholders from the following list.
+
+* [session:rooms] - room or list of rooms assigned to this session, each with building, location, and link to details.
+* [session:room:name] - name of each room assigned to this session.
+* [session:room:link] - link to details page for each room.
+
+Room custom field information for each session can be added to the notification by using the following placeholder, replacing 'placeholder' with the shortname for the custom field.
+
+    [session:room:cf_placeholder]
+
+For example if you have a room custom field with the shortname 'building', to use the value recorded in the custom field in the notification body you would use the placeholder [session:room:cf_building].
+
+### 4.2. Asset details for each session
+
+The details of any assets used for the session can also be added to the notification by using the desired placeholders from the following list.
+
+* [session:assets] - asset or list of assets assigned to this session, with link(s) to details.
+* [session:asset:name] - name of each asset assigned to this session.
+* [session:asset:link] - link to details page for each asset.
+* [session:asset:cf_placeholder] - asset custom field information for each session, replacing 'placeholder' with the shortname for the custom field.
+
+### 4.3. Facilitator details for each session
+
+The details of any facilitators used for the session can also be added to the notification by using the desired placeholders from the following list.
+
+* [session:facilitators] - facilitator or list of facilitators assigned to this session, with link(s) to details.
+* [session:facilitator:name] - name of each facilitator assigned to this session.
+* [session:facilitator:link] - link to details page for each facilitator.
+* [session:facilitator:cf_placeholder] - facilitator custom field information for each session, replacing 'placeholder' with the shortname for the custom field.
+
+### 5. User details
+
+Available user placeholders:
+
+* [firstname] - User's first name
+* [lastname] - User's last name
+* [middlename] - User's middle name
+* [firstnamephonetic] - Phonetic spelling of the User's first name
+* [lastnamephonetic] - Phonetic spelling of the User's last name
+* [alternatename] - Alternate name the user is known by
+* [fullname] - User's full name
+* [username] - User's username
+* [idnumber] - User's ID Number
+* [email] - User's email address
+* [address] - User's address
+* [city] - User's city
+* [country] - User's country
+* [department] - User's department
+* [description] - User's description
+* [institution] - User's institution
+* [lang] - User's language
+* [skype] - User's Skype ID
+* [phone1] - User's phone number
+* [phone2] - User's mobile phone number
+* [timezone] - User's timezone
+* [url] - User's URL
+
+### 6. User custom fields
+
+There are also placeholders available for user custom profile fields that can be added to the notification by using the following placeholder, replacing the word placeholder with the user custom profile field shortname:
+
+    [user:placeholder]
+
+For example if you have a user custom profile field with the shortname 'suburb' that you wish to use in the notification you would [user:suburb] as the placeholder.
+
+### 7. Trusted content
+
+To use placeholders in URL's, an admin will need to enable the **Enable trusted content** setting and grant **Trust submitted content** capability to approved roles.";s:6:"booked";s:6:"Booked";s:13:"booked_status";s:13:"Booked ({$a})";s:16:"bookingcancelled";s:32:"Your booking has been cancelled.";s:15:"bookingconflict";s:16:"Booking conflict";s:16:"bookingcompleted";s:26:"Your request was accepted.";s:33:"bookingcompleted_approvalrequired";s:51:"Your request was sent to your manager for approval.";s:37:"bookingcompleted_roleapprovalrequired";s:64:"Your request was sent for approval to each {$a} in this session.";s:38:"bookingcompleted_roleapprovalrequired2";s:65:"Your request was sent for approval to the following user(s): {$a}";s:11:"bookingfull";s:12:"Booking full";s:11:"bookingopen";s:12:"Booking open";s:14:"bookingoptions";s:15:"Booking options";s:17:"bookingrestricted";s:18:"Booking restricted";s:8:"bookings";s:8:"Bookings";s:13:"bookingstatus";s:38:"You are booked for the following event";s:23:"bookingsessioncancelled";s:15:"Event cancelled";s:8:"building";s:8:"Building";s:11:"bulkactions";s:12:"Bulk actions";s:21:"bulkaddattendeeserror";s:24:"Bulk add attendees error";s:23:"bulkaddattendeesresults";s:26:"Bulk add attendees results";s:23:"bulkaddattendeessuccess";s:26:"Bulk add attendees success";s:15:"bulkaddhelptext";s:88:"Note: Users must be referenced by their {$a} and must be delimited by a comma or newline";s:21:"bulkaddsourceidnumber";s:9:"ID number";s:19:"bulkaddsourceuserid";s:7:"user id";s:21:"bulkaddsourceusername";s:8:"username";s:24:"bulkremoveattendeeserror";s:24:"Bulk remove users errors";s:26:"bulkremoveattendeessuccess";s:25:"Bulk remove users success";s:31:"calendareventdescriptionbooking";s:57:"You are booked for this <a href="{$a}">Seminar event</a>.";s:34:"calendareventdescriptionfacilitato";s:71:"You are a facilitator on this <a href="{$a}">Seminar event</a> session.";s:31:"calendareventdescriptionsession";s:55:"You have created this <a href="{$a}">Seminar event</a>.";s:15:"calendaroptions";s:16:"Calendar options";s:16:"cancelattendance";s:14:"Cancel changes";s:15:"cancelattendees";s:20:"Remove from waitlist";s:13:"cancelsession";s:12:"Cancel event";s:16:"cancelingsession";s:24:"Cancelling event in {$a}";s:20:"cancelsessionconfirm";s:115:"Cancelling this event will remove all of its booking, attendance and grade records. All attendees will be notified.";s:18:"cancellationfields";s:19:"Cancellation fields";s:28:"cancellationfieldslimitation";s:66:"The values entered below will be populated for all selected users.";s:15:"cancelledstatus";s:16:"Cancelled status";s:21:"eventsessioncancelled";s:15:"Event cancelled";s:13:"cancelbooking";s:14:"Cancel booking";s:16:"cancelbookingfor";s:23:"Cancel booking for {$a}";s:10:"canceltype";s:17:"Cancellation type";s:12:"cancellation";s:12:"Cancellation";s:19:"cancellationconfirm";s:59:"Are you sure you want to cancel your booking to this event?";s:26:"cancellationcustomfieldtab";s:17:"User cancellation";s:19:"cancellationmessage";s:20:"Cancellation message";s:13:"cancellations";s:13:"Cancellations";s:36:"cancellationreasoncourseunenrollment";s:68:"{$a->username} has been unenrolled from the course {$a->coursename}.";s:16:"cancellationsent";s:52:"You should immediately receive a cancellation email.";s:19:"cancellationnotsent";s:52:"Seminar activity email notifications are turned off.";s:19:"cancellationsentmgr";s:69:"You and your manager should immediately receive a cancellation email.";s:25:"cancellationstablesummary";s:54:"List of people who have cancelled their event signups.";s:12:"cancelreason";s:6:"Reason";s:14:"cancelwaitlist";s:15:"Cancel waitlist";s:17:"cancelwaitlistfor";s:37:"Cancel place on the waitlist for {$a}";s:8:"capacity";s:8:"Capacity";s:21:"capacityallowoverbook";s:23:"{$a} (waitlist enabled)";s:24:"capacitycurrentofmaximum";s:29:"{$a->current} / {$a->maximum}";s:32:"capacitycurrentofmaximumwaitlist";s:58:"{$a->current} / {$a->maximum} ({$a->waitlist} on waitlist)";s:18:"capacityoverbooked";s:13:" (Overbooked)";s:22:"capacityoverbookedlong";s:56:"This event is overbooked ({$a->current} / {$a->maximum})";s:17:"cancelreservation";s:18:"Cancel reservation";s:17:"cannotsignupguest";s:20:"Cannot sign up guest";s:29:"cannotsignupsessioninprogress";s:45:"You cannot sign up, this event is in progress";s:23:"cannotsignupsessionover";s:39:"You cannot sign up, this event is over.";s:9:"ccmanager";s:12:"Manager copy";s:14:"ccmanager_note";s:54:"Send a copy of this notification to the user's manager";s:19:"changeselectedusers";s:21:"Change selected users";s:15:"chooseapprovers";s:31:"Select activity level approvers";s:12:"chooseassets";s:13:"Choose assets";s:17:"choosefacilitator";s:18:"Choose facilitator";s:18:"choosefacilitators";s:19:"Choose facilitators";s:11:"chooserooms";s:12:"Choose rooms";s:23:"cannotapproveatcapacity";s:62:"You cannot approve any more attendees as this session is full.";s:11:"cleanuptask";s:15:"Cleanup seminar";s:8:"clearall";s:9:"Clear all";s:5:"close";s:5:"Close";s:6:"closed";s:6:"Closed";s:22:"closeregistrationstask";s:33:"Close seminar events registration";s:7:"confirm";s:7:"Confirm";s:16:"confirmattendees";s:7:"Confirm";s:20:"confirmlotteryheader";s:20:"Confirm Play Lottery";s:18:"confirmlotterybody";s:230:""Play Lottery" randomly chooses attendees from the selected users in order to fill the event to its capacity. The chosen users will be immediately booked to the event and sent a booking confirmation email. Do you want to continue?";s:13:"confirmanager";s:31:"Confirm manager's email address";s:12:"confirmation";s:12:"Confirmation";s:19:"confirmationmessage";s:20:"Confirmation message";s:16:"confirmationsent";s:54:"You will receive a booking confirmation email shortly.";s:19:"confirmationsentmgr";s:42:"You will be notified about their decision.";s:11:"connectedas";s:17:"Connected as {$a}";s:12:"connectedasx";s:37:"Connected as {$a->name} ({$a->email})";s:24:"completionstatusrequired";s:14:"Require status";s:29:"completionstatusrequired_help";s:209:"Checking one or more statuses will require a user to achieve at least one of the checked statuses in order to be marked complete in this seminar activity, as well as any other Activity Completion requirements.";s:15:"completiondelay";s:22:"Require event over for";s:26:"completiondelayrequirement";s:29:"Event is over for {$a} day(s)";s:35:"completiondelayrequirement_achieved";s:35:"Event has been over for {$a} day(s)";s:38:"completiondelayrequirement_notachieved";s:39:"Event has not been over for {$a} day(s)";s:21:"completiondelay_error";s:85:""Require event over for" must be a whole number between {$a->min} and {$a->max} days.";s:20:"completiondelay_help";s:357:"Checking this completion criteria will require the event to be over by the number of days set. The activity will not be considered complete until this time has lapsed.
+
+Use this setting to allow trainers to mark attendance and/or grades without triggering activity completions. The setting of 0 days will delay activity completion until the event is over.";s:19:"completiondelaydays";s:4:"days";s:16:"connectionfailed";s:18:"Connnection failed";s:14:"copyingsession";s:30:"Copying as a new event in {$a}";s:16:"copynotification";s:17:"Copy notification";s:23:"copynotificationcreated";s:36:"Copy of the notification is created.";s:23:"copynotificationconfirm";s:72:"Confirm you would like to copy the notification <strong>"{$a}"</strong>:";s:21:"copynotificationtitle";s:12:"Copy of {$a}";s:12:"copyroomlink";s:14:"Copy room link";s:11:"copysession";s:10:"Copy event";s:4:"cost";s:4:"Cost";s:17:"currentlyselected";s:18:"Currently selected";s:16:"customfieldother";s:4:"{$a}";s:15:"customfieldroom";s:10:"Room: {$a}";s:18:"customfieldsession";s:11:"Event: {$a}";s:6:"cutoff";s:7:"Cut-off";s:10:"cutoffnote";s:19:"before event starts";s:11:"cutoff_help";s:221:"The amount of time before the first event that messages about minimum bookings will be sent.
+This must be at least 24 hours before the event.
+The start date of the earliest event must be at least this far in the future.";s:7:"created";s:7:"Created";s:14:"createnewasset";s:16:"Create new asset";s:20:"createnewfacilitator";s:22:"Create new facilitator";s:13:"createnewroom";s:15:"Create new room";s:11:"csvtextfile";s:13:"CSV text file";s:16:"csvtextfile_help";s:206:"Preparing a file for upload: Use .CSV text file with a heading row and one or more data rows.
+
+Mandatory columns
+
+* 'username' **OR** 'idnumber' **OR** 'email' (use only one)
+{$a->requiredcustomfields}";s:31:"csvtextfileoptionalcolumns_help";s:42:"
+
+Optional columns
+
+{$a->customfields}";s:12:"csvtextinput";s:14:"CSV text input";s:18:"currentallocations";s:52:"Allocated team members ({$a->allocated} / {$a->max})";s:16:"currentattendees";s:17:"Current attendees";s:14:"currentmanager";s:17:"Current manager: ";s:17:"currentlyassigned";s:30:"Currently assigned to an event";s:19:"customfieldsheading";s:13:"Custom fields";s:25:"customfieldsheadingaction";s:18:"{$a} Custom Fields";s:12:"dataoptional";s:17:"data may be empty";s:4:"date";s:4:"Date";s:7:"dateadd";s:17:"Add a new session";s:11:"dateandtime";s:13:"Date and time";s:10:"dateremove";s:16:"Remove this date";s:10:"dateselect";s:11:"Select date";s:8:"datetext";s:26:"You are signed in for date";s:10:"deactivate";s:10:"Deactivate";s:11:"decidelater";s:12:"Decide Later";s:15:"declareinterest";s:16:"Declare interest";s:20:"declareinterest_help";s:225:"Displays an option within the seminar activity to allow a user to flag their interest and write a message without signing up.
+Information about those who have declared an interest can be reported on from within the activity.";s:21:"declareinterestalways";s:6:"Always";s:29:"declareinterestfiltercheckbox";s:54:"Show only users who declared interest in this activity";s:17:"declareinterestin";s:24:"Declare interest in {$a}";s:24:"declareinterestinconfirm";s:134:"You can declare an interest in {$a} in order to be considered when new events are added or places become available in existing events.";s:21:"declareinterestenable";s:26:"Users can declare interest";s:20:"declareinterestnever";s:5:"Never";s:25:"declareinterestnoupcoming";s:49:"When no upcoming events are available for booking";s:21:"declareinterestreason";s:20:"Reason for interest:";s:21:"declareinterestreport";s:24:"Declared interest report";s:25:"declareinterestreportdate";s:25:"Date of declared interest";s:27:"declareinterestreportreason";s:26:"Stated reason for interest";s:23:"declareinterestwithdraw";s:17:"Withdraw interest";s:27:"declareinterestwithdrawfrom";s:39:"Withdraw interest declaration from {$a}";s:34:"declareinterestwithdrawfromconfirm";s:70:"Are you sure you want to withdraw your interest declaration from {$a}?";s:21:"decluttersessiontable";s:33:"Events table - hide empty columns";s:26:"decluttersessiontable_help";s:164:"Enable this setting to hide empty columns in event sessions table. Hiding empty columns improves readability and reduces visual clutter on course and seminar pages.";s:16:"descriptionlabel";s:11:"Description";s:19:"defaultcsvdelimiter";s:26:"Default CSV file delimiter";s:24:"defaultcsvdelimiter_desc";s:38:"Default CSV file delimiter description";s:19:"defaultsessiontimes";s:19:"Default event times";s:16:"defaultstarttime";s:18:"Default start time";s:20:"defaultstarttimehelp";s:33:"Default start time for new events";s:17:"defaultfinishtime";s:19:"Default finish time";s:21:"defaultfinishtimehelp";s:34:"Default finish time for new events";s:29:"defaultdaysbetweenstartfinish";s:37:"Default days between start and finish";s:34:"defaultdaysbetweenstartfinish_desc";s:62:"The default number of days between the event start and finish.";s:23:"defaultdaysskipweekends";s:36:"Default days ahead on week days only";s:28:"defaultdaysskipweekends_desc";s:63:"When defaulting the start and finish dates only count week days";s:20:"defaultdaystosession";s:35:"Default days ahead for added events";s:25:"defaultdaystosession_desc";s:98:"When creating a new event its start and finish dates will default to this many days in the future.";s:9:"deleteall";s:10:"Delete all";s:18:"deleteassetconfirm";s:62:"Are you sure you want to delete asset <strong>"{$a}"</strong>:";s:26:"deletecancelsessionconfirm";s:113:"Deleting this event will remove all of its booking, attendance and grade records. All attendees will be notified.";s:24:"deletefacilitatorconfirm";s:68:"Are you sure you want to delete facilitator <strong>"{$a}"</strong>:";s:25:"deletenotificationconfirm";s:74:"Confirm you would like to delete the notification <strong>"{$a}"</strong>:";s:33:"deletenotificationtemplateconfirm";s:83:"Confirm you would like to delete the notification template <strong>"{$a}"</strong>:";s:17:"deletereservation";s:19:"Delete reservations";s:24:"deletereservationconfirm";s:78:"Are you sure you want to delete all reservations in this event made by "{$a}"?";s:17:"deleteroomconfirm";s:61:"Are you sure you want to delete room <strong>"{$a}"</strong>:";s:13:"deletesession";s:12:"Delete event";s:20:"deletesessionconfirm";s:81:"Deleting this event will remove all of its booking, attendance and grade records.";s:26:"deletesessionconfirmdelete";s:6:"Delete";s:15:"deletingsession";s:22:"Deleting event in {$a}";s:15:"decideuserlater";s:21:"Decide later for {$a}";s:7:"decline";s:7:"Decline";s:16:"declineuserevent";s:27:"Decline {$a} for this event";s:9:"delimiter";s:18:"CSV file delimiter";s:14:"delimiter:auto";s:9:"Automatic";s:15:"delimiter:colon";s:9:"Colon (:)";s:15:"delimiter:comma";s:9:"Comma (,)";s:19:"delimiter:semicolon";s:14:"Semi-colon (;)";s:13:"delimiter:tab";s:8:"Tab (\t)";s:11:"description";s:17:"Introduction text";s:7:"details";s:7:"Details";s:14:"discardmessage";s:15:"Discard message";s:12:"discountcode";s:13:"Discount code";s:12:"discountcost";s:13:"Discount cost";s:20:"discountcosthinttext";s:0:"";s:7:"dismiss";s:7:"Dismiss";s:16:"dismissedwarning";s:56:"The warning will no longer be displayed for this seminar";s:8:"download";s:8:"Download";s:19:"downloadsigninsheet";s:23:"Download sign-in sheet:";s:3:"due";s:3:"due";s:8:"duration";s:8:"Duration";s:5:"early";s:10:"{$a} early";s:9:"editasset";s:10:"Edit asset";s:16:"editcustomassetx";s:33:"Edit custom asset {$a} in session";s:22:"editcustomfacilitatorx";s:39:"Edit custom facilitator {$a} in session";s:15:"editcustomroomx";s:32:"Edit custom room {$a} in session";s:8:"editdate";s:12:"Edit session";s:15:"editfacilitator";s:16:"Edit facilitator";s:33:"editmessagerecipientsindividually";s:28:"Edit recipients individually";s:17:"editnotificationx";s:11:"Edit "{$a}"";s:24:"editnotificationtemplate";s:26:"Edit notification template";s:11:"editsession";s:10:"Edit event";s:8:"editroom";s:9:"Edit room";s:14:"editingsession";s:21:"Editing event in {$a}";s:12:"emailmanager";s:22:"Send notice to manager";s:15:"email:instrmngr";s:18:"Notice for manager";s:13:"email:message";s:7:"Message";s:13:"email:subject";s:7:"Subject";s:22:"embedded:seminarassets";s:23:"Seminars: Manage assets";s:30:"embedded:seminarassetsupcoming";s:37:"Seminars: Upcoming events using asset";s:31:"embedded:seminareventattendance";s:25:"Seminars: Event attendees";s:34:"embedded:seminareventcancellations";s:39:"Seminars: Event cancellations attendees";s:22:"embedded:seminarevents";s:32:"Seminars: View and manage events";s:29:"embedded:seminareventwaitlist";s:35:"Seminars: Event wait-list attendees";s:28:"embedded:seminarfacilitators";s:29:"Seminars: Manage facilitators";s:36:"embedded:seminarfacilitatorsupcoming";s:43:"Seminars: Upcoming events using facilitator";s:24:"embedded:seminarinterest";s:27:"Seminars: Declared interest";s:21:"embedded:seminarrooms";s:22:"Seminars: Manage rooms";s:29:"embedded:seminarroomsupcoming";s:36:"Seminars: Upcoming events using room";s:33:"embedded:seminarsessionattendance";s:29:"Seminars: Event sign-in sheet";s:24:"embedded:seminarsessions";s:34:"Seminars: View and manage sessions";s:23:"embedded:seminarsignups";s:18:"Seminars: Sign ups";s:13:"emptylocation";s:18:"Location was empty";s:17:"enablemincapacity";s:23:"Enable minimum bookings";s:29:"enablemincapacitynotification";s:29:"Notify about minimum bookings";s:34:"enablemincapacitynotification_help";s:275:"If the minimum bookings have not been reached by the cut-off point, then the appropriate users will be notified. Users to be notified is determined by the role assignments and the configuration setting under *Site administration > Seminars > General Settings > Notification*.";s:8:"encoding";s:17:"CSV file encoding";s:8:"enrolled";s:8:"enrolled";s:24:"error_idnumber_not_found";s:57:"No user was found with the following user ID number: {$a}";s:21:"error_email_not_found";s:48:"No user was found with the following email: {$a}";s:24:"error_username_not_found";s:51:"No user was found with the following username: {$a}";s:21:"error:alreadysignedup";s:17:"Already signed up";s:32:"error:addalreadysignedupattendee";s:57:"This user is already signed-up for this seminar activity.";s:39:"error:addalreadysignedupattendeeaddself";s:52:"You are already signed-up for this seminar activity.";s:17:"error:addattendee";s:32:"Could not add {$a} to the event.";s:28:"error:approvaladminnotactive";s:52:"Manager and Administrative approval is not activated";s:28:"error:approvalinvalidmanager";s:60:"Attendee {$a} is currently not assigned to you in this event";s:27:"error:approvalinvalidstatus";s:39:"Invalid signup status for attendee {$a}";s:22:"error:approverinactive";s:46:"User ID: {$a} does not exist or is not active.";s:25:"error:approvernotselected";s:25:"Please select an approver";s:22:"error:approverselected";s:34:"User {$a} selected more than once.";s:20:"error:approversystem";s:62:"User {$a} is system wide approver and cannot be selected here.";s:18:"error:assetisinuse";s:40:"This asset is used in one or more events";s:20:"error:assetconflicts";s:27:"Asset has conflicting usage";s:23:"error:assetdoesnotexist";s:20:"Asset does not exist";s:23:"error:assetnotpublished";s:31:"Asset is not publicly available";s:29:"error:cancellationsnotallowed";s:43:"You are not allowed to cancel this booking.";s:19:"error:cancelbooking";s:43:"There was a problem cancelling your booking";s:27:"error:cannotdeclareinterest";s:49:"Cannot declare interest in this seminar activity.";s:23:"error:cannotapprovefull";s:101:"One or more users were not assigned because the event is fully booked and over booking is not allowed";s:18:"error:cannotcancel";s:25:"Cannot cancel this signup";s:27:"error:cannotchangestateuser";s:58:"Could not change booking state for {$a->user}: {$a->error}";s:30:"error:cannoteditcancelledevent";s:58:"This event has been cancelled and can no longer be edited.";s:24:"error:cannotemailmanager";s:167:"Sent reminder mail for submission id {$a->submissionid} to user {$a->userid}, but could not send the message for the user's manager email address ({$a->manageremail}).";s:21:"error:cannotemailuser";s:100:"Could not send out mail for submission id {$a->submissionid} to user {$a->userid} ({$a->useremail}).";s:26:"error:cannotrepublishasset";s:53:"This asset can not be published, it is already public";s:32:"error:cannotrepublishfacilitator";s:59:"This facilitator can not be published, it is already public";s:25:"error:cannotrepublishroom";s:52:"This room can not be published, it is already public";s:35:"error:cannotsendconfirmationmanager";s:144:"A confirmation message was sent to your email account, but there was a problem sending the confirmation message to your manager's email address.";s:38:"error:cannotsendconfirmationthirdparty";s:180:"A confirmation message was sent to your email account and your manager's email account, but there was a problem sending the confirmation message to the third party's email address.";s:32:"error:cannotsendconfirmationuser";s:75:"There was a problem sending the confirmation message to your email account.";s:27:"error:cannotsendrequestuser";s:77:"There was a problem sending the signup request message to your email account.";s:30:"error:cannotsendrequestmanager";s:87:"There was a problem sending the signup request message to your manager's email account.";s:39:"error:cannotsendconfirmationusermanager";s:99:"A confirmation message could not be sent to your email address and to your manager's email address.";s:32:"error:cannotsignuptoeventasguest";s:42:"Guests can not sign up for seminar events.";s:36:"error:cannotsignupforacancelledevent";s:74:"This event has been cancelled. It is no longer possible to sign up for it.";s:43:"error:canttakeattendanceforunstartedsession";s:59:"Can not take attendance for an event that has yet to start.";s:28:"error:capabilityaddattendees";s:58:"You do not have the necessary permissions to add attendees";s:32:"error:capabilityapprovalrequired";s:72:"You do not have the necessary permissions to view Approval Required page";s:31:"error:capabilityremoveattendees";s:61:"You do not have the necessary permissions to remove attendees";s:28:"error:capabilitysendmessages";s:58:"You do not have the necessary permissions to send messages";s:24:"error:capacitynotnumeric";s:38:"Event maximum bookings is not a number";s:18:"error:capacityzero";s:48:"Event maximum bookings must be greater than zero";s:24:"error:conflictingsession";s:52:"The user {$a} is already signed up for another event";s:22:"error:couldnotaddfield";s:33:"Could not add custom event field.";s:23:"error:couldnotaddnotice";s:26:"Could not add site notice.";s:24:"error:couldnotaddtrainer";s:40:"Could not save new seminar event trainer";s:25:"error:couldnotcopysession";s:20:"Could not copy event";s:28:"error:couldnotdeclinerequest";s:41:"Could not decline event for the user {$a}";s:25:"error:couldnotdeletefield";s:35:"Could not delete custom event field";s:26:"error:couldnotdeletenotice";s:28:"Could not delete site notice";s:27:"error:couldnotdeletesession";s:22:"Could not delete event";s:27:"error:couldnotcancelsession";s:24:"Could not cancel session";s:27:"error:couldnotdeletetrainer";s:40:"Could not delete a seminar event trainer";s:25:"error:couldnotfindsession";s:39:"Could not find the newly inserted event";s:29:"error:couldnotsavecustomfield";s:27:"Could not save custom field";s:23:"error:couldnotsaveevent";s:20:"Could not save event";s:22:"error:couldnotsaveroom";s:75:"There is a room conflict - another event is using the room at the same time";s:28:"error:couldnotupdatecalendar";s:39:"Could not update event in the calendar.";s:25:"error:couldnotupdatefield";s:36:"Could not update custom event field.";s:29:"error:couldnotupdatef2frecord";s:50:"Could not update seminar signup record in database";s:26:"error:couldnotupdatenotice";s:29:"Could not update site notice.";s:25:"error:coursemisconfigured";s:23:"Course is misconfigured";s:16:"error:cronprefix";s:20:"Error: seminar cron:";s:20:"error:csvcannotparse";s:32:"Cannot parse submitted CSV file.";s:25:"error:csvinconsistentrows";s:80:"Rows {$a} of your file contain a different number of columns than the header row";s:19:"error:csvnoidfields";s:194:"The column called 'username', 'email', or 'idnumber' was not detected. Please check that the column header matches one of these fields and the CSV file delimiter setting below matches your file.";s:21:"error:csvnorequiredcf";s:42:"You did not provide a column called '{$a}'";s:24:"error:csvtoomanyidfields";s:91:"Your file contained more than one of the following columns: 'username', 'email', 'idnumber'";s:22:"error:csvtoomanyfields";s:95:"Your file contained too many columns. Please provide the columns as per below help description.";s:20:"error:cutofftooclose";s:124:"The cut-off time for minimum bookings is too close to the events earliest start date, please set at least a 24 hours cut-off";s:19:"error:cutofftoolate";s:111:"The cut-off for minimum bookings is after the events earliest start date, it must be before to have any effect.";s:27:"error:datesunavailablestuff";s:193:"The new dates you have selected are unavailable due to a scheduling conflict with the following resources:<br/>{$a}Please choose different dates or change the selected room/facilitators/assets.";s:23:"error:delimiternotfound";s:42:"Supported CSV file delimiter is not found.";s:18:"error:disconnected";s:23:"Authorisation required.";s:19:"error:emptylocation";s:19:"Location was empty.";s:16:"error:emptyvenue";s:16:"Venue was empty.";s:21:"error:enrolmentfailed";s:37:"Could not enrol {$a} into the course.";s:19:"error:eventoccurred";s:53:"You cannot cancel an event that has already occurred.";s:26:"error:facilitatorconflicts";s:33:"Facilitator has conflicting usage";s:29:"error:facilitatordoesnotexist";s:26:"Facilitator does not exist";s:23:"error:facilitatorexists";s:52:"{$a} facilitator is already exists with this user id";s:24:"error:facilitatorisinuse";s:46:"This facilitator is used in one or more events";s:29:"error:facilitatornotpublished";s:37:"Facilitator is not publicly available";s:28:"error:facilitatornotselected";s:27:"Facilitator is not selected";s:26:"error:facilitatortypewrong";s:51:"Facilitator type is wrong, please select 'External'";s:22:"error:fieldidincorrect";s:27:"Field ID is incorrect: {$a}";s:27:"error:f2ffailedupdatestatus";s:42:"Seminar failed to update the user's status";s:22:"error:incorrectassetid";s:22:"Asset ID was incorrect";s:23:"error:incorrectcourseid";s:23:"Course ID was incorrect";s:27:"error:incorrectcoursemodule";s:26:"Course module is incorrect";s:29:"error:incorrectcoursemoduleid";s:30:"Course Module ID was incorrect";s:34:"error:incorrectcoursemodulesession";s:41:"Course Module Seminar Event was incorrect";s:27:"error:incorrectfacetofaceid";s:24:"Seminar ID was incorrect";s:28:"error:incorrectfacilitatorid";s:28:"Facilitator ID was incorrect";s:31:"error:incorrectnotificationtype";s:36:"Incorrect notification type supplied";s:19:"error:invalidstatus";s:21:"Invalid signup status";s:21:"error:incorrectroomid";s:21:"Room ID was incorrect";s:18:"error:invalidvalue";s:9:"(invalid)";s:19:"error:invaliduserid";s:15:"Invalid user ID";s:21:"error:isalreadybooked";s:22:"{$a} is already booked";s:37:"error:jobassignementsonsignupdisabled";s:75:"Select job assignments on sign up is not enabled for this Seminar activity.";s:23:"error:lotterynocapacity";s:51:""Play Lottery" disabled. The event is fully booked.";s:32:"error:manageremailaddressmissing";s:97:"You are currently not assigned to a manager in the system. Please contact the site administrator.";s:24:"error:mincapacitymissing";s:41:"Session minimum bookings value is missing";s:27:"error:mincapacitynotnumeric";s:38:"Event minimum bookings is not a number";s:25:"error:mincapacitytoolarge";s:58:"Event minimum bookings cannot be greater than the capacity";s:21:"error:mincapacityzero";s:37:"Event minimum bookings cannot be zero";s:28:"error:missingrequiredmanager";s:88:"This seminar requires manager approval. Users without a manager cannot join the seminar.";s:25:"error:missingrequiredrole";s:117:"This seminar requires role approval. There are no users assigned to this role. Please contact the site administrator.";s:28:"error:missingselectedmanager";s:83:"This seminar requires manager approval. Please select a manager to request approval";s:39:"error:mustspecifycoursemodulefacetoface";s:44:"Must specify a course module or a seminar ID";s:25:"error:mustspecifytimezone";s:39:"You must set the timezone for each date";s:20:"error:nodatasupplied";s:16:"No data supplied";s:24:"error:nomanagersemailset";s:23:"No manager email is set";s:26:"error:nopermissiontosignup";s:58:"You don't have permission to signup to this seminar event.";s:29:"error:nojobassignmentselected";s:74:"You must have a suitable job assignment to sign up for this seminar event.";s:37:"error:nojobassignmentselectedactivity";s:77:"You must have a suitable job assignment to sign up for this seminar activity.";s:33:"error:nojobassignmentselectedlist";s:73:"You must select a suitable job assignment for all attendees in this list.";s:24:"error:nopredefinedassets";s:21:"No pre-defined assets";s:30:"error:nopredefinedfacilitators";s:27:"No pre-defined facilitators";s:23:"error:nopredefinedrooms";s:20:"No pre-defined rooms";s:26:"error:norecipientsselected";s:61:"You must choose which learners will receive this notification";s:23:"error:noticeidincorrect";s:28:"Notice ID is incorrect: {$a}";s:30:"error:notificationdoesnotexist";s:27:"Notification does not exist";s:30:"error:notificationnonduplicate";s:46:"Can not delete non-duplicate auto notification";s:33:"error:notificationtemplatemissing";s:95:"The following notification templates are missing (notifications could not be created for them):";s:24:"error:notificationnocopy";s:25:"Notification copy failed.";s:24:"error:plugin_is_disabled";s:41:"Virtual meeting is disabled on this event";s:22:"error:problemsigningup";s:35:"There was a problem signing you up.";s:20:"error:removeattendee";s:37:"Could not remove {$a} from the event.";s:19:"error:roomconflicts";s:26:"Room has conflicting usage";s:17:"error:roomisinuse";s:14:"Room is in use";s:22:"error:roomdoesnotexist";s:19:"Room does not exist";s:22:"error:roomnotpublished";s:30:"Room is not publicly available";s:21:"error:roomunavailable";s:39:"The "{$a}" room is no longer available.";s:18:"error:rolerequired";s:88:"Seminar require approval by "{$a}" role. Please select at least one user with {$a} role.";s:25:"error:selfapprovalupgrade";s:133:"Self approval has been moved from sessions to a seminar setting, please run the admin tool to resolve any conflicts before upgrading.";s:26:"error:sessionstartafterend";s:35:"Event start date/time is after end.";s:26:"error:sessiondatesconflict";s:54:"This date conflicts with an earlier date in this event";s:33:"error:sessiondatesbookingconflict";s:154:"Booking conflict: {$a->users} user(s) have another booking on the selected date and time. Change event time or exclude these users to continue. {$a->link}";s:28:"error:signedupinothersession";s:118:"You are already signed up in another event for this activity. You can only sign up for one event per seminar activity.";s:26:"error:shortnamecustomfield";s:57:"This shortname is reserved by Totara seminar custom field";s:20:"error:takeattendance";s:41:"An error occurred while taking attendance";s:24:"error:therearexconflicts";s:57:"There are ({$a}) conflicts with the proposed time period.";s:22:"error:thereisaconflict";s:50:"There is a conflict with the proposed time period.";s:28:"error:toomanyvirtualmeetings";s:111:"Too many virtual meetings. Please ensure that <strong>only one</strong> virtual meeting is assigned per session";s:30:"error:unrecognisedapprovaltype";s:73:"Unrecognised approval type passed to facetoface_get_approvaltype_string()";s:26:"error:unknownbuttonclicked";s:53:"No action associated with the button that was clicked";s:22:"error:unknownuserfield";s:44:"This field is not supported for user search.";s:15:"error:urlformat";s:18:"Invalid URL format";s:40:"error:userassignedsessionconflictsameday";s:187:"{$a->fullname} is already assigned as a '{$a->participation}' for {$a->session} at {$a->timestart} to {$a->timefinish} on {$a->datestart}. Please select another user or change the session";s:50:"error:userassignedsessionconflictsamedayselfsignup";s:128:"You are already assigned as a '{$a->participation}' for {$a->session} at {$a->timestart} to {$a->timefinish} on {$a->datestart}.";s:38:"error:userbookedsessionconflictsameday";s:164:"{$a->fullname} is already booked to attend {$a->session} at {$a->timestart} to {$a->timefinish} on {$a->datestart}. Please select another user or change the session";s:48:"error:userbookedsessionconflictsamedayselfsignup";s:105:"You are already booked to attend {$a->session} at {$a->timestart} to {$a->timefinish} on {$a->datestart}.";s:41:"error:userassignedsessionconflictmultiday";s:176:"{$a->fullname} is already assigned as a '{$a->participation}' for {$a->session} at {$a->datetimestart} to {$a->datetimefinish}. Please select another user or change the session";s:51:"error:userassignedsessionconflictmultidayselfsignup";s:117:"You are already assigned as a '{$a->participation}' for {$a->session} at {$a->datetimestart} to {$a->datetimefinish}.";s:39:"error:userbookedsessionconflictmultiday";s:153:"{$a->fullname} is already booked to attend {$a->session} at {$a->datetimestart} to {$a->datetimefinish}. Please select another user or change the session";s:49:"error:userbookedsessionconflictmultidayselfsignup";s:94:"You are already booked to attend {$a->session} at {$a->datetimestart} to {$a->datetimefinish}.";s:17:"error:userdeleted";s:45:"Can not add deleted user {$a} to the seminar.";s:30:"error:userimportuseridnotanint";s:62:"Cannot add user with user id {$a} because it is not an integer";s:18:"error:usernotfound";s:11:"(not found)";s:19:"error:usersuspended";s:47:"Can not add suspended user {$a} to the seminar.";s:24:"error:xinvalidjaidnumber";s:73:"Job assignment with idnumber {$a->idnumber} not found for user {$a->user}";s:27:"eventapprovalrequiredviewed";s:24:"Approval required viewed";s:21:"eventattendanceheader";s:16:"Event Attendance";s:31:"eventattendancerequestsapproved";s:28:"Attendance requests approved";s:31:"eventattendancerequestsdeclined";s:28:"Attendance requests declined";s:22:"eventattendanceupdated";s:18:"Attendance updated";s:24:"eventattendeenoteupdated";s:21:"Attendee note updated";s:33:"eventattendeejobassignmentupdated";s:31:"Attendee job assignment updated";s:20:"eventattendeesedited";s:16:"Attendees edited";s:20:"eventattendeesviewed";s:16:"Attendees viewed";s:18:"eventbookingbooked";s:12:"Event booked";s:21:"eventbookingcancelled";s:23:"Event booking cancelled";s:27:"eventbookingrequestapproved";s:30:"Event booking request approved";s:21:"eventbookingrequested";s:29:"Event booking request created";s:25:"eventbookingrequestedrole";s:36:"Event booking request (role) created";s:27:"eventbookingrequestrejected";s:30:"Event booking request rejected";s:18:"eventbookingstatus";s:13:"Event booking";s:22:"eventbookingwaitlisted";s:30:"Event signup added to waitlist";s:12:"eventdetails";s:13:"Event details";s:16:"eventgradeheader";s:11:"Event Grade";s:19:"eventinfo:allevents";s:10:"All events";s:16:"eventinfo:assets";s:6:"Assets";s:22:"eventinfo:cancelcancel";s:6:"Cancel";s:32:"eventinfo:details:bookedcapacity";s:15:"Booked/Capacity";s:29:"eventinfo:details:sessiondate";s:5:"Times";s:31:"eventinfo:details:sessionstatus";s:6:"Status";s:19:"eventinfo:eventinfo";s:5:"Event";s:19:"eventinfo:attendees";s:16:"Manage attendees";s:19:"eventinfo:movetotop";s:11:"Back to top";s:15:"eventinfo:rooms";s:5:"Rooms";s:18:"eventinfo:sessions";s:8:"Sessions";s:21:"eventinterestdeclared";s:17:"Interest declared";s:25:"eventinterestreportviewed";s:22:"Interest report viewed";s:22:"eventinterestwithdrawn";s:18:"Interest withdrawn";s:16:"eventmessagesent";s:12:"Message sent";s:23:"eventmessageusersviewed";s:20:"Message users viewed";s:13:"eventmoreinfo";s:10:"Event info";s:12:"eventsreport";s:13:"Events report";s:22:"eventstatususerbooking";s:6:"({$a})";s:10:"eventsview";s:11:"Events view";s:14:"eventreportcnt";s:20:"Seminar events: {$a}";s:19:"eventsessioncreated";s:13:"Event created";s:19:"eventsessiondeleted";s:13:"Event deleted";s:19:"eventsessionupdated";s:13:"Event updated";s:18:"eventsessionsignup";s:12:"Event signup";s:18:"eventsessionstatus";s:14:"Session status";s:24:"eventsigninsheetexported";s:22:"Sign-in sheet exported";s:18:"eventsignupdeleted";s:14:"Signup deleted";s:24:"eventsignupstatusupdated";s:21:"Signup status updated";s:12:"eventsummary";s:80:"Event summary: {$a->total} session(s) ({$a->upcoming} upcoming; {$a->over} over)";s:9:"eventover";s:12:"Event (over)";s:15:"eventinprogress";s:19:"Event (in progress)";s:13:"eventupcoming";s:16:"Event (upcoming)";s:11:"excelformat";s:5:"Excel";s:16:"existingbookings";s:24:"Bookings in other events";s:18:"existingrecipients";s:19:"Existing recipients";s:6:"export";s:6:"Export";s:19:"exportattendanceods";s:28:"Export attendance form (ods)";s:19:"exportattendancetxt";s:28:"Export attendance form (txt)";s:19:"exportattendancexls";s:28:"Export attendance form (xls)";s:12:"exporttofile";s:14:"Export to file";s:16:"exportattendance";s:17:"Export attendance";s:21:"exportattendance_help";s:171:"Please note: when exporting attendees report from this page any deleted users will be excluded. To include deleted users you must go to Report Builder and export it there.";s:25:"exportcustomprofilefields";s:28:"Export custom profile fields";s:30:"exportcustomprofilefields_desc";s:95:"Include these custom user profile fields (short names) in seminar exports, separated by commas.";s:23:"exportuserprofilefields";s:26:"Export user profile fields";s:28:"exportuserprofilefields_desc";s:78:"Include these user profile fields in the seminar exports, separated by commas.";s:9:"exportxls";s:21:"XLS (Microsoft Excel)";s:9:"exportods";s:18:"ODS (OpenDocument)";s:9:"exportcsv";s:3:"CSV";s:18:"exportcsvforupload";s:21:"CSV export for Upload";s:8:"external";s:20:"Allow room conflicts";s:20:"f2f-waitlist-actions";s:7:"Actions";s:25:"f2f-waitlist-actions_help";s:372:"The actions are:
+
+* **Confirm**: Book the selected users into the event and remove them from the wait-list.
+* **Cancel**: Cancel the selected user's requests and remove them from the wait-list.
+* **Play Lottery**: Fill the available places on the events with a random selection of the users from the wait-list. Users who are not selected will be left on the wait-list.";s:10:"facetoface";s:7:"Seminar";s:23:"facetoface:addattendees";s:32:"Add attendees to a seminar event";s:22:"facetoface:addinstance";s:17:"Add a new seminar";s:24:"facetoface:addrecipients";s:37:"Add recipients to a seminar's message";s:28:"facetoface:approveanyrequest";s:28:"Approve any booking requests";s:32:"facetoface:configurecancellation";s:89:"Allow the configuration of booking cancellations, upon adding/editing a seminar activity.";s:38:"facetoface:changesignedupjobassignment";s:31:"Change signed up job assignment";s:21:"facetoface:editevents";s:41:"Add, edit, copy and delete seminar events";s:27:"facetoface:exportattendance";s:33:"Export attendance from all events";s:35:"facetoface:exportsessionsigninsheet";s:40:"Export the seminar session sign-in sheet";s:29:"facetoface:joinanyvirtualroom";s:25:"View 'Join now' room link";s:28:"facetoface:manageadhocassets";s:20:"Manage ad-hoc assets";s:34:"facetoface:manageadhocfacilitators";s:26:"Manage ad-hoc facilitators";s:27:"facetoface:manageadhocrooms";s:19:"Manage ad-hoc rooms";s:34:"facetoface:managearchivedattendees";s:25:"Manage archived attendees";s:30:"facetoface:manageattendeesnote";s:29:"Manage event attendee's notes";s:28:"facetoface:managecustomfield";s:28:"Manage seminar custom fields";s:31:"facetoface:managesitewideassets";s:22:"Manage sitewide assets";s:37:"facetoface:managesitewidefacilitators";s:28:"Manage sitewide facilitators";s:30:"facetoface:managesitewiderooms";s:21:"Manage sitewide rooms";s:29:"facetoface:managereservations";s:32:"Manage reservations for an event";s:17:"facetoface:signup";s:20:"Sign-up for an event";s:27:"facetoface:signuppastevents";s:32:"Sign-up for an event in the past";s:25:"facetoface:signupwaitlist";s:22:"Sign-up to full events";s:30:"facetoface:surpasssignupperiod";s:67:"Add attendees to a seminar event before or after the sign-up window";s:26:"facetoface:removeattendees";s:37:"Remove attendees from a seminar event";s:27:"facetoface:removerecipients";s:42:"Remove recipients from a seminar's message";s:23:"facetoface:reserveother";s:35:"Reserve on behalf of other managers";s:23:"facetoface:reservespace";s:43:"Reserve or allocate spaces for team members";s:25:"facetoface:takeattendance";s:17:"Take attendance: ";s:26:"facetoface:viewallsessions";s:25:"View all seminar sessions";s:15:"facetoface:view";s:34:"View seminar activities and events";s:24:"facetoface:viewattendees";s:34:"View attendance list and attendees";s:28:"facetoface:viewattendeesnote";s:27:"View event attendee's notes";s:28:"facetoface:viewcancellations";s:18:"View cancellations";s:30:"facetoface:viewemptyactivities";s:29:"View empty seminar activities";s:29:"facetoface:viewinterestreport";s:37:"View seminar declared interest report";s:17:"facetofacebooking";s:15:"Seminar booking";s:14:"facetofacename";s:12:"Seminar name";s:17:"facetofacesession";s:13:"Seminar event";s:11:"facilitator";s:11:"Facilitator";s:24:"facilitatoralreadybooked";s:44:" (facilitator unavailable on selected dates)";s:24:"facilitatorcreatesuccess";s:32:"Successfully created facilitator";s:25:"facilitatorcustomfieldtab";s:11:"Facilitator";s:27:"facilitatordescriptionlabel";s:3:"Bio";s:18:"facilitatordeleted";s:19:"Facilitator deleted";s:22:"facilitatordisplayname";s:27:"{$a->name} ({$a->fullname})";s:18:"facilitatordetails";s:19:"Facilitator details";s:19:"facilitatorexternal";s:8:"External";s:19:"facilitatorinternal";s:8:"Internal";s:21:"facilitatorlinkeduser";s:11:"Linked user";s:17:"facilitatorhidden";s:31:"Facilitator hidden successfully";s:15:"facilitatorname";s:4:"Name";s:26:"facilitatornameedittoolong";s:59:"Facilitator name can only be upto {$a} characters in length";s:12:"facilitators";s:12:"Facilitators";s:16:"facilitatorshown";s:30:"Facilitator shown successfully";s:15:"facilitatortype";s:4:"Type";s:21:"facilitatortype_label";s:16:"Facilitator type";s:20:"facilitatortype_help";s:248:"* **Internal facilitator** must be linked to a site user. This user will see their facilitator sessions on their calendar.
+* **External facilitator** doesn't require linking to a site user, therefore it can be anyone in or out of the organisation.";s:24:"facilitatorupdatesuccess";s:32:"Successfully updated facilitator";s:22:"facilitatoruserchanged";s:65:"Changing facilitator user will affect all upcoming seminar events";s:22:"facilitatoruserdeleted";s:104:"This facilitator/user has an inactive account or had been deleted, please contact the site administrator";s:22:"facilitatoruserwarning";s:75:"{$a} has an inactive account or had been deleted, please update this record";s:8:"feedback";s:8:"Feedback";s:15:"feedbackupdated";s:33:"Feedback updated for \{$a} people";s:10:"field:text";s:4:"Text";s:17:"field:multiselect";s:18:"Multiple selection";s:12:"field:select";s:15:"Menu of choices";s:18:"fielddeleteconfirm";s:58:"Delete field '{$a}' and all event data associated with it?";s:8:"filterby";s:6:"Filter";s:16:"filterbyadvanced";s:8:"Advanced";s:15:"filterbybooking";s:7:"Booking";s:17:"filterbyeventtime";s:5:"Event";s:19:"filterbyfacilitator";s:11:"Facilitator";s:12:"filterbyroom";s:4:"Room";s:21:"filter_assetavailable";s:17:"Available between";s:26:"filter_assetavailable_help";s:116:"This filter allows you to find assets that are available for a session by specifying the session start and end date.";s:27:"filter_facilitatoravailable";s:17:"Available between";s:32:"filter_facilitatoravailable_help";s:122:"This filter allows you to find facilitators that are available for a session by specifying the session start and end date.";s:20:"filter_roomavailable";s:17:"Available between";s:25:"filter_roomavailable_help";s:115:"This filter allows you to find rooms that are available for a session by specifying the session start and end date.";s:19:"filter_advanced:all";s:3:"All";s:30:"filter_advanced:attendanceopen";s:15:"Take attendance";s:31:"filter_advanced:attendancesaved";s:16:"Attendance saved";s:26:"filter_advanced:overbooked";s:20:"Over maximum booking";s:27:"filter_advanced:underbooked";s:21:"Under minimum booking";s:18:"filter_booking:all";s:3:"All";s:19:"filter_booking:open";s:4:"Open";s:21:"filter_booking:booked";s:6:"Booked";s:25:"filter_booking:waitlisted";s:11:"Wait-listed";s:24:"filter_booking:requested";s:9:"Requested";s:24:"filter_booking:cancelled";s:9:"Cancelled";s:16:"filter_event:all";s:3:"All";s:22:"filter_event:cancelled";s:9:"Cancelled";s:19:"filter_event:future";s:13:"Upcoming only";s:23:"filter_event:inprogress";s:11:"In progress";s:17:"filter_event:over";s:4:"Over";s:17:"filter_event:past";s:9:"Past only";s:21:"filter_event:upcoming";s:8:"Upcoming";s:23:"filter_event:waitlisted";s:11:"Wait-listed";s:19:"filtertoggle:closed";s:12:"Show filters";s:17:"filtertoggle:open";s:12:"Hide filters";s:5:"floor";s:5:"Floor";s:24:"forceselectjobassignment";s:63:"Prevent signup if no job assignment is selected or can be found";s:6:"format";s:6:"Format";s:11:"freebetween";s:32:"Free between the following times";s:16:"freebetweendates";s:38:"Free between {$a->start} and {$a->end}";s:4:"full";s:22:"Date is fully occupied";s:15:"generalsettings";s:16:"General settings";s:19:"gettointerestreport";s:135:"To view the declare interest report go to the seminar activity and follow the 'Declared interest report' link in the module admin menu.";s:17:"gettosigninreport";s:101:"To view the sign-in sheet go to the event attendees page and press the Download sign-in sheet button.";s:14:"globalsettings";s:15:"Global settings";s:6:"goback";s:7:"Go back";s:11:"gotosession";s:11:"Go to event";s:8:"guestsno";s:52:"Sorry, guests are not allowed to sign up for events.";s:20:"header:approvalstate";s:16:"Manager Approval";s:19:"header:approvaltime";s:13:"Approval Time";s:18:"header:managername";s:14:"Manager's Name";s:16:"icalendarheading";s:21:"iCalendar Attachments";s:2:"id";s:2:"Id";s:15:"icaldescription";s:85:"This calendar event is for the "{$a->name}" seminar event you have been booked on to.";s:27:"icallocationstringdelimiter";s:1:",";s:33:"ignoreapprovalwhenaddingattendees";s:37:"Book users without requiring approval";s:6:"import";s:6:"Import";s:28:"importexportattendancelegend";s:24:"Import/Export attendance";s:8:"inactive";s:8:"Inactive";s:11:"individuals";s:11:"Individuals";s:4:"info";s:4:"Info";s:10:"inprogress";s:11:"In progress";s:8:"internal";s:24:"Custom virtual room link";s:10:"itemstoadd";s:12:"Items to add";s:13:"jobassignment";s:14:"Job assignment";s:12:"joinwaitlist";s:13:"Join waitlist";s:21:"joinwaitlistcompleted";s:52:"You have been placed on the waitlist for this event.";s:15:"lastreservation";s:164:"Last reservations are {$a->reservedays} days before the event starts. Unallocated reservations will be deleted {$a->reservecanceldays} days before the event starts.";s:4:"late";s:10:"\{$a} late";s:8:"location";s:8:"Location";s:15:"locationtimetbd";s:40:"Location and time to be announced later.";s:7:"lookfor";s:6:"Search";s:12:"manageassets";s:13:"Manage assets";s:23:"managearchivedattendees";s:21:"Manage archived users";s:12:"manageevents";s:22:"View and manage events";s:18:"managefacilitators";s:19:"Manage facilitators";s:27:"managenotificationtemplates";s:29:"Manage notification templates";s:11:"managerooms";s:12:"Manage rooms";s:15:"managerbookings";s:36:"Bookings / reservations made by {$a}";s:11:"managername";s:14:"Manager's name";s:16:"managername_help";s:197:"Your manager will receive a notification about your request to book into this session. If the name and email address shown here do not belong to your manager, please contact the Site Administrator.";s:18:"managereservations";s:19:"Manage reservations";s:13:"managerprefix";s:19:"Manager copy prefix";s:25:"managerreservationdeleted";s:40:"Manager reservation deleted successfully";s:32:"managerreservationdeletionfailed";s:35:"Manager reservation deletion failed";s:14:"managerreserve";s:26:"Allow manager reservations";s:19:"managerreserve_help";s:82:"Managers are able to make reservations or bookings on behalf of their team members";s:20:"managerreserveheader";s:20:"Manager reservations";s:14:"managesessions";s:24:"View and manage sessions";s:25:"managevirtualmeetingstask";s:23:"Manage virtual meetings";s:16:"mark_selected_as";s:11:"and mark as";s:11:"maxbookings";s:16:"Maximum bookings";s:16:"maxbookings_help";s:277:"**Maximum bookings** is the number of seats available in an event.
+
+When a seminar event reaches maximum bookings the event details do not appear on the course page. The details will appear greyed out on the **View all events** page and the learner cannot enrol on the event.";s:13:"maximumpoints";s:24:"Maximum number of points";s:11:"maximumsize";s:27:"Maximum number of attendees";s:18:"maxmanagerreserves";s:20:"Maximum reservations";s:23:"maxmanagerreserves_help";s:85:"The maximum number of reservations / bookings that a manager can make for their team.";s:7:"message";s:277:"Change in booking in the course {$a->coursename}!
+
+There has been a free place in the event on {$a->duedate} ({$a->name}) in the course {$a->coursename}.
+You have been registered. If the date does not suit you anymore, please unregister at <a href='{$a->url}'>{$a->url}</a>.";s:11:"messagebody";s:4:"Body";s:9:"messagecc";s:23:"CC recipient's managers";s:13:"messageheader";s:7:"Message";s:17:"messagerecipients";s:10:"Recipients";s:22:"messagerecipientgroups";s:16:"Recipient Groups";s:24:"messagesenttostaffmember";s:61:"The following message has been sent to your staff member {$a}";s:14:"messagesubject";s:7:"Subject";s:12:"messageusers";s:13:"Message users";s:11:"minbookings";s:16:"Minimum bookings";s:16:"minbookings_help";s:174:"Sessions with a minimum bookings are highlighted when the number of booked users is less than the minimum bookings. To prevent highlighting, set the minimum bookings to zero.";s:11:"mincapacity";s:16:"Minimum bookings";s:16:"mincapacity_help";s:291:"If the minimum bookings has not been reached by the cut-off point, then the appropriate users will be automatically notified. Users to be notified is determined by role assignments and the configuration setting under Site administration > Seminars > Global Settings > Notification recipients";s:20:"missingjobassignment";s:47:"The job assignment was <strong>deleted</strong>";s:10:"modulename";s:7:"Seminar";s:16:"modulenameplural";s:8:"Seminars";s:11:"moreactions";s:12:"More actions";s:9:"multidate";s:12:"(multi-date)";s:15:"namewithmanager";s:38:"{$a->attendeename} ({$a->managername})";s:30:"noactionableunapprovedrequests";s:33:"No actionable unapproved requests";s:15:"nocancellations";s:32:"There have been no cancellations";s:14:"nocustomfields";s:36:"<p>No custom fields are defined.</p>";s:16:"nocustomroomedit";s:50:"Custom Room can only be edited in event dialog box";s:10:"nodatesyet";s:150:"This event has no sessions. Attendees can sign-up to the waitlist for this event and will be booked automatically once one or more sessions are added.";s:18:"nodownloadfiletype";s:50:"No file type was found for downloading the content";s:13:"nofacetofaces";s:31:"There are no seminar activities";s:15:"nojobassignment";s:34:"User has no active job assignments";s:4:"none";s:4:"None";s:15:"nonotifications";s:16:"No notifications";s:29:"nonotificationsmatchingsearch";s:32:"No notifications matching search";s:25:"nonotificationsofthistype";s:29:"No notifications of this type";s:23:"nonotificationtemplates";s:25:"No notification templates";s:37:"nonotificationtemplatesmatchingsearch";s:41:"No notification templates matching search";s:18:"nopendingapprovals";s:20:"No pending approvals";s:12:"norecipients";s:13:"No recipients";s:10:"normalcost";s:11:"Normal cost";s:18:"normalcosthinttext";s:0:"";s:23:"noremindersneedtobesent";s:29:"No reminders need to be sent.";s:14:"noreservations";s:4:"None";s:24:"noreservationsforsession";s:41:"There are no reservations for this event.";s:14:"nosessionfound";s:32:"No sessions found for this event";s:15:"nosignedupusers";s:39:"No users have signed-up for this event.";s:26:"nosignedupusersnumrequests";s:75:"No users are fully booked for this event. {$a} users are awaiting approval.";s:25:"nosignedupusersonerequest";s:70:"No users are fully booked for this event. 1 user is awaiting approval.";s:11:"nostarttime";s:18:"No dates specified";s:18:"notallowedtocancel";s:57:"You are not allowed to cancel your booking in this event.";s:13:"notapplicable";s:3:"N/A";s:4:"note";s:4:"Note";s:8:"notefull";s:237:"Even if the event is fully booked you can still register. You will be queued (marked in red). If someone signs out, the first learner in the queue will be moved into registered learners and a notification will be sent to him/her by mail.";s:30:"notification_attendance_status";s:17:"Attendance status";s:27:"notification_booking_status";s:14:"Booking status";s:25:"notification_other_status";s:5:"Other";s:23:"notificationalreadysent";s:68:"This notification has already been sent, so can no longer be edited.";s:19:"notificationdeleted";s:20:"Notification deleted";s:27:"notificationduplicatesfound";s:149:"Duplicates of auto notifications found. Please remove them manually on <a href="{$a}">Notifications page</a> to avoid wrong notifications being sent.";s:29:"notificationduplicatesmessage";s:66:"This message has duplicate. Please remove all duplicates manually.";s:33:"notificationnotesetonintendeddate";s:68:"NOTE: This notification was not sent on its originally intended date";s:13:"notifications";s:13:"Notifications";s:15:"notificationsin";s:21:"Notifications in {$a}";s:17:"notificationsaved";s:18:"Notification saved";s:30:"notificationssuccessfullyreset";s:32:"Notifications successfully reset";s:27:"notificationtemplatedeleted";s:29:"Notification template deleted";s:28:"notificationtemplaterestored";s:59:"Notification template restored. {$a} seminars are affected.";s:21:"notificationtemplates";s:22:"Notification templates";s:26:"notificationtemplatestatus";s:28:"Notification template status";s:31:"notificationtemplatestatus_help";s:205:"This status allows a notification template to be marked as **Active** or **Inactive**. Inactive notification templates will not be available to be used when setting up notifications for a seminar activity.";s:25:"notificationtemplatesaved";s:27:"Notification template saved";s:17:"notificationtitle";s:18:"Notification title";s:16:"notificationtype";s:23:"Receive confirmation by";s:18:"notificationtype_1";s:7:"Instant";s:18:"notificationtype_2";s:9:"Scheduled";s:18:"notificationtype_4";s:4:"Auto";s:16:"notificationboth";s:32:"Email with iCalendar appointment";s:17:"notificationemail";s:10:"Email only";s:16:"notificationnone";s:24:"Do not send confirmation";s:18:"notifications_help";s:60:"Here you can manage notifications for this Seminar activity.";s:19:"notifycancelleduser";s:26:"Notify cancelled attendees";s:26:"notifycancelledusermanager";s:36:"Notify cancelled attendees' managers";s:13:"notifynewuser";s:42:"Send booking confirmation to new attendees";s:20:"notifynewusermanager";s:52:"Send booking confirmation to new attendees' managers";s:20:"notificationsheading";s:13:"Notifications";s:11:"notrequired";s:12:"Not required";s:11:"notsignedup";s:37:"You are not signed up for this event.";s:12:"notspecified";s:3:"N/A";s:15:"notsubmittedyet";s:17:"Not yet evaluated";s:20:"nottenantparticipant";s:36:"The user is not a tenant participant";s:9:"noresults";s:10:"No results";s:10:"noupcoming";s:32:"<p><i>No upcoming events</i></p>";s:24:"noupcomingsessionsinroom";s:31:"No upcoming events in this room";s:10:"nosessions";s:9:"No events";s:17:"numberofattendees";s:19:"Number of attendees";s:10:"uploadfile";s:11:"Upload file";s:10:"occuredonx";s:16:"Occurred on {$a}";s:17:"occurswhenenabled";s:19:"Occurs when enabled";s:26:"occurswhenuserbookssession";s:36:"Occurs when a learner books an event";s:48:"occurswhenuserrequestssessionwithmanagerapproval";s:75:"Occurs when a user attempts to book an event with manager approval required";s:47:"occurswhenuserrequestssessionwithmanagerdecline";s:79:"Occurs when a user attempts to declined an event with manager approval required";s:33:"occurswhenusersbookingiscancelled";s:44:"Occurs when a learner's booking is cancelled";s:30:"occurswhenuserwaitlistssession";s:47:"Occurs when a learner is waitlisted on an event";s:39:"occurswhenseminareventtrainerunassigned";s:58:"Occurs when a trainer is unassigned from a seminar's event";s:37:"occurswhenseminareventtrainerassigned";s:54:"Occurs when a trainer is assigned to a seminar's event";s:28:"occurswhenseminareventcancel";s:42:"Occurs when a seminar's event is cancelled";s:35:"occurswhenseminareventsignupexpired";s:80:"Occurs when the registration period of a seminar's event session has been closed";s:19:"occursxaftersession";s:30:"Occurs {$a} after end of event";s:20:"occursxbeforesession";s:33:"Occurs {$a} before start of event";s:9:"odsformat";s:12:"OpenDocument";s:7:"onehour";s:6:"1 hour";s:9:"oneminute";s:8:"1 minute";s:7:"options";s:7:"Options";s:12:"optionscolon";s:8:"Options:";s:2:"or";s:2:"or";s:5:"order";s:5:"Order";s:13:"otherbookedby";s:25:"Booked by another manager";s:9:"otherroom";s:10:"Other room";s:12:"othersession";s:31:"Other event(s) in this activity";s:4:"over";s:4:"Over";s:5:"place";s:4:"Room";s:19:"placeholder:address";s:9:"[address]";s:25:"placeholder:alternatename";s:15:"[alternatename]";s:18:"placeholder:booked";s:8:"[booked]";s:20:"placeholder:capacity";s:10:"[capacity]";s:16:"placeholder:city";s:6:"[city]";s:19:"placeholder:country";s:9:"[country]";s:22:"placeholder:department";s:12:"[department]";s:23:"placeholder:description";s:13:"[description]";s:17:"placeholder:email";s:7:"[email]";s:21:"placeholder:firstname";s:11:"[firstname]";s:29:"placeholder:firstnamephonetic";s:19:"[firstnamephonetic]";s:20:"placeholder:fullname";s:10:"[fullname]";s:20:"placeholder:idnumber";s:10:"[idnumber]";s:23:"placeholder:institution";s:13:"[institution]";s:16:"placeholder:lang";s:6:"[lang]";s:20:"placeholder:lastname";s:10:"[lastname]";s:28:"placeholder:lastnamephonetic";s:18:"[lastnamephonetic]";s:22:"placeholder:middlename";s:12:"[middlename]";s:23:"placeholder:mincapacity";s:13:"[mincapacity]";s:18:"placeholder:phone1";s:8:"[phone1]";s:18:"placeholder:phone2";s:8:"[phone2]";s:30:"placeholder:registrationcutoff";s:20:"[registrationcutoff]";s:20:"placeholder:location";s:18:"[session:location]";s:17:"placeholder:venue";s:15:"[session:venue]";s:16:"placeholder:room";s:14:"[session:room]";s:17:"placeholder:skype";s:7:"[skype]";s:20:"placeholder:timezone";s:10:"[timezone]";s:15:"placeholder:url";s:5:"[url]";s:20:"placeholder:username";s:10:"[username]";s:11:"playlottery";s:12:"Play Lottery";s:18:"potentialattendees";s:19:"Potential Attendees";s:9:"published";s:9:"Published";s:20:"requeststablesummary";s:41:"People requesting to attended this event.";s:7:"reserve";s:23:"Reserve spaces for team";s:19:"reserveallallocated";s:115:"You have already allocated the maximum number of spaces you are able for this activity, you cannot reserve any more";s:24:"reserveallallocatedother";s:136:"This manager has already allocated the maximum number of spaces they are able to for this activity, you cannot reserve any more for them";s:13:"reservecancel";s:33:"Automatically cancel reservations";s:17:"reservecanceldays";s:29:"Reservation cancellation days";s:22:"reservecanceldays_help";s:111:"The number of days in advance of the event that reservations will be automatically cancelled, if not confirmed.";s:22:"reservecapacitywarning";s:108:"* Any new reservations over the current event maximum bookings ({$a} left) will be added to the waiting list";s:8:"reserved";s:8:"Reserved";s:10:"reservedby";s:15:"Reserved ({$a})";s:11:"reservedays";s:20:"Reservation deadline";s:16:"reservedays_help";s:133:"The number of days before the event starts after which no more reservations are allowed (must be greater than the cancellation days).";s:15:"reservegtcancel";s:67:"The reservation deadline must be greater than the cancellation days";s:12:"reserveintro";s:147:"You can use this form to change the number of reservations you have for this event - to cancel existing reservations, just reduce the number below.";s:17:"reserveintroother";s:147:"You can use this form to change the number of reservations {$a} has for this event - to cancel existing reservations, just reduce the number below.";s:17:"reservelinkformat";s:45:"{$a->link} ({$a->capacity}/{$a->maxcapacity})";s:17:"reservenocapacity";s:128:"There are no spaces left on this course, so you will not be able to make any reservations unless one of the participants cancels";s:24:"reservenopermissionother";s:68:"This manager does not have capabilities to reserve places in Seminar";s:12:"reserveother";s:27:"Reserve for another manager";s:19:"reservepastdeadline";s:79:"You cannot make any further reservations within {$a} days of the event starting";s:14:"resetattendees";s:16:"Delete attendees";s:19:"resetattendees_help";s:54:"Clear all attendees, waitlists and cancelled bookings.";s:18:"resetseminarevents";s:17:"Delete all events";s:23:"resetseminarevents_help";s:68:"Delete all events and keep seminar description and general settings.";s:7:"restore";s:59:"Restore this default notification template for all seminars";s:34:"restoremissingdefaultnotifications";s:37:"Restore missing default notifications";s:41:"restoremissingdefaultnotificationsconfirm";s:198:"This will restore any missing default notifications for "{$a}" these notifications are used by built in seminar functionality and may result in messages being sent to users. Do you want to continue?";s:6:"result";s:6:"Result";s:6:"return";s:6:"Return";s:4:"room";s:4:"Room";s:17:"roomalreadybooked";s:19:" (Room unavailable)";s:12:"roomcapacity";s:8:"Capacity";s:17:"roomcreatesuccess";s:25:"Successfully created room";s:10:"roomcustom";s:13:"(Custom Room)";s:18:"roomcustomfieldtab";s:4:"Room";s:11:"roomdeleted";s:12:"Room deleted";s:16:"roomdoesnotexist";s:19:"Room does not exist";s:15:"roomdescription";s:16:"Room description";s:19:"roomdescriptionedit";s:11:"Description";s:11:"roomdetails";s:12:"Room details";s:8:"roomgoto";s:10:"Go to room";s:9:"roomgotox";s:12:"Go to '{$a}'";s:10:"roomhidden";s:24:"Room hidden successfully";s:8:"roomhide";s:63:"Hide from users when choosing a room on the Add/Edit event page";s:8:"roomhost";s:12:"Host meeting";s:9:"roomhostx";s:31:"Start meeting as host of '{$a}'";s:12:"roomhostjoin";s:16:"Join as attendee";s:13:"roomhostjoinx";s:23:"Join '{$a}' as attendee";s:23:"roomidentifier_nameonly";s:9:"Room name";s:28:"roomidentifier_name_building";s:22:"Room name and building";s:36:"roomidentifier_name_building_address";s:31:"Room name, building and address";s:11:"roomisinuse";s:14:"Room is in use";s:11:"roomjoinnow";s:8:"Join now";s:12:"roomjoinnowx";s:15:"Join '{$a}' now";s:34:"roommustbebookedtoexternalcalendar";s:77:"Note: Please ensure that this room is available before creating this booking.";s:8:"roomname";s:9:"Room name";s:12:"roomnameedit";s:4:"Name";s:19:"roomnameedittoolong";s:52:"Room name can only be upto {$a} characters in length";s:10:"roomnumber";s:9:"Room {$a}";s:5:"rooms";s:5:"Rooms";s:8:"roomshow";s:61:"Show to users when choosing a room on the Add/Edit event page";s:9:"roomshown";s:23:"Room shown successfully";s:8:"roomtype";s:9:"Room type";s:13:"roomtype_help";s:96:"If checked, allows the room to be booked for different events that are running at the same time.";s:17:"roomupdatesuccess";s:25:"Successfully updated room";s:7:"roomurl";s:17:"Virtual room link";s:12:"roomurl_help";s:213:"Use this setting to add your third-party video conferencing URL. When this room is assigned to a session, booked learners will see "Join now" button 15 minutes before session start time and throughout the session.";s:22:"placeholder:coursename";s:12:"[coursename]";s:26:"placeholder:facetofacename";s:16:"[facetofacename]";s:23:"placeholder:seminarname";s:13:"[seminarname]";s:30:"placeholder:seminardescription";s:20:"[seminardescription]";s:16:"placeholder:cost";s:6:"[cost]";s:20:"placeholder:alldates";s:10:"[alldates]";s:26:"placeholder:reminderperiod";s:16:"[reminderperiod]";s:23:"placeholder:sessiondate";s:13:"[sessiondate]";s:23:"placeholder:sessionrole";s:13:"[sessionrole]";s:21:"placeholder:startdate";s:11:"[startdate]";s:22:"placeholder:finishdate";s:12:"[finishdate]";s:21:"placeholder:starttime";s:11:"[starttime]";s:22:"placeholder:finishtime";s:12:"[finishtime]";s:20:"placeholder:duration";s:10:"[duration]";s:19:"placeholder:details";s:9:"[details]";s:25:"placeholder:attendeeslink";s:15:"[attendeeslink]";s:27:"placeholder:lateststarttime";s:17:"[lateststarttime]";s:27:"placeholder:lateststartdate";s:17:"[lateststartdate]";s:28:"placeholder:latestfinishtime";s:18:"[latestfinishtime]";s:28:"placeholder:latestfinishdate";s:18:"[latestfinishdate]";s:17:"pleaseselectusers";s:38:"Please select users before continuing.";s:20:"pluginadministration";s:22:"Seminar administration";s:10:"pluginname";s:7:"Seminar";s:6:"points";s:6:"Points";s:12:"pointsplural";s:6:"Points";s:20:"potentialallocations";s:34:"Available team members ({$a} left)";s:19:"potentialrecipients";s:20:"Potential recipients";s:24:"previouseventstimeperiod";s:27:"Previous events time period";s:29:"previouseventstimeperiod_help";s:86:"This specifies the length of time you want to see the previous events in Seminar page.";s:16:"previoussessions";s:11:"Past events";s:20:"previoussessionslist";s:49:"List of all past events for this seminar activity";s:14:"printversionid";s:27:"Print version: without name";s:16:"printversionname";s:24:"Print version: with name";s:6:"really";s:58:"Do you really want to delete all results for this seminar?";s:10:"recipients";s:10:"Recipients";s:20:"recipients_allbooked";s:31:"All events (present and future)";s:23:"recipients_attendedonly";s:13:"Attended only";s:22:"recipients_noshowsonly";s:13:"No shows only";s:12:"registeredon";s:13:"Registered On";s:13:"registrations";s:13:"Registrations";s:8:"reminder";s:8:"Reminder";s:15:"remindermessage";s:16:"Reminder message";s:12:"removeassetx";s:30:"Remove asset {$a} from session";s:15:"removeattendees";s:12:"Remove users";s:19:"removeattendeestep1";s:36:"Select users to remove (step 1 of 2)";s:19:"removeattendeestep2";s:26:"Remove users (step 2 of 2)";s:19:"removecfdatawarning";s:65:"Removing users from this session also deletes their sign up data.";s:19:"removedsuccessfully";s:20:"Removed successfully";s:18:"removefacilitatorx";s:36:"Remove facilitator {$a} from session";s:15:"removeroominuse";s:33:"This room is currently being used";s:11:"removeroomx";s:29:"Remove room {$a} from session";s:18:"replaceallocations";s:45:"Create reservations when removing allocations";s:19:"replacereservations";s:44:"Replace reservations when adding allocations";s:19:"reports:selectasset";s:79:"To view this report, first <a href="{$a}">select an asset</a> you want to view.";s:25:"reports:selectfacilitator";s:84:"To view this report, first <a href="{$a}">select a facilitator</a> you want to view.";s:18:"reports:selectroom";s:77:"To view this report, first <a href="{$a}">select a room</a> you want to view.";s:14:"requestmessage";s:15:"Request message";s:12:"reservations";s:19:"{$a} reservation(s)";s:34:"restorenotificationtemplateconfirm";s:110:"Confirm you would like to restore <strong>"{$a}"</strong> notification template for the ALL existing seminars:";s:15:"saveallfeedback";s:18:"Save all responses";s:14:"saveattendance";s:15:"Save attendance";s:8:"savenote";s:9:"Save note";s:15:"schedule_unit_1";s:10:"{$a} hours";s:24:"schedule_unit_1_singular";s:6:"1 hour";s:15:"schedule_unit_2";s:9:"{$a} days";s:24:"schedule_unit_2_singular";s:5:"1 day";s:15:"schedule_unit_4";s:10:"{$a} weeks";s:24:"schedule_unit_4_singular";s:6:"1 week";s:16:"scheduledsession";s:15:"Scheduled event";s:17:"scheduledsessions";s:16:"Scheduled events";s:10:"scheduling";s:10:"Scheduling";s:14:"seatsavailable";s:15:"Seats available";s:11:"searchlabel";s:14:"Search keyword";s:8:"selected";s:8:"Selected";s:6:"select";s:8:" Select ";s:9:"selectall";s:10:"Select all";s:11:"selectallop";s:3:"All";s:12:"selectassets";s:13:"Select assets";s:11:"selectedjob";s:14:"Job on sign up";s:26:"selectedjobassignment_help";s:52:"Select the job assignment that this training is for.";s:21:"selectedjobassignment";s:25:"Job assignment on sign up";s:25:"selectedjobassignmentedit";s:14:"Job assignment";s:25:"selectedjobassignmentname";s:30:"Job assignment name on sign up";s:21:"selectedposition_help";s:46:"Select the position that this training is for.";s:16:"selectedposition";s:19:"Position on sign up";s:12:"selectexport";s:27:"Export (select file format)";s:18:"selectfacilitators";s:19:"Select facilitators";s:16:"selectfileformat";s:18:"Select file format";s:19:"selectjobassignment";s:23:"Select a job assignment";s:25:"selectjobassignmentsignup";s:31:"Select job assignment on signup";s:10:"selectnone";s:11:"Select none";s:12:"selectnoneop";s:4:"None";s:14:"selectnotsetop";s:7:"Not Set";s:13:"selectlearner";s:15:"Select learners";s:13:"selectmanager";s:14:"Select manager";s:18:"selectoptionbefore";s:75:" Please choose an option (All, Set or Not set) before selecting this option";s:9:"selectone";s:14:"Select one ...";s:11:"selectrooms";s:12:"Select rooms";s:13:"selectsession";s:14:"Select session";s:11:"selectsetop";s:3:"Set";s:17:"selectuserwithdot";s:14:"Select user...";s:13:"selectwithdot";s:9:"Select...";s:17:"selfauthorisation";s:18:"Self authorisation";s:22:"selfauthorisation_help";s:86:"You must read and agree to the terms and conditions before signing up for the session.";s:21:"selfauthorisationdesc";s:93:"By checking this box, I confirm that I have read and agreed to the {$a} (opens a new window).";s:12:"selfapproval";s:13:"Self Approval";s:17:"selfapproval_help";s:374:"This setting allows a user to confirm that they have sought approval to attend the event. Instead of their manager needing to approve their booking the user is presented with a check box when signing up and must confirm they have met the specified terms and conditions.
+This setting will be disabled unless **Requires approval** is enabled in the seminar activity settings.";s:18:"selfapprovalsought";s:20:"Self Approval Sought";s:23:"selfapprovalsoughtbrief";s:34:"I accept the terms and conditions.";s:22:"selfapprovalsoughtdesc";s:93:"By checking this box, I confirm that I have read and agreed to the {$a} (opens a new window).";s:17:"selfapprovaltandc";s:34:"Self Approval Terms and Conditions";s:22:"selfapprovaltandc_help";s:158:"Where an activity has approval required and an event has self approval enabled these are the terms and conditions that will be displayed when a user signs up.";s:25:"selfapprovaltandccontents";s:71:"Check the box to confirm your eligibility to sign up to this seminar.
+";s:10:"selfbooked";s:11:"Self booked";s:9:"seminarid";s:10:"Seminar ID";s:9:"sendlater";s:10:"Send later";s:11:"sendmessage";s:12:"Send message";s:21:"sendnotificationstask";s:26:"Send seminar notifications";s:7:"sendnow";s:8:"Send now";s:4:"sent";s:4:"Sent";s:18:"sentxnotifications";s:23:"Send {$a} notifications";s:19:"sentremindermanager";s:35:"Sent reminder email to user manager";s:16:"sentreminderuser";s:27:"Sent reminder email to user";s:16:"sessionattendees";s:17:"Session attendees";s:16:"sessioncancelled";s:9:"Cancelled";s:21:"sessioncustomfieldtab";s:5:"Event";s:16:"sessionsdatelist";s:39:"List of sessions for this seminar event";s:12:"sessionslist";s:40:"List of events for this seminar activity";s:20:"sessionslist:actions";s:7:"Actions";s:31:"sessionslist:attendancetracking";s:19:"Attendance tracking";s:30:"sessionslist:bookedandcapacity";s:6:"Booked";s:17:"sessionslist:date";s:13:"Session dates";s:24:"sessionslist:eventstatus";s:12:"Event status";s:24:"sessionslist:roomdetails";s:12:"View details";s:26:"sessionslist:sessionstatus";s:14:"Session status";s:17:"sessionslist:time";s:13:"Session times";s:28:"sessionslist:timeandtimezone";s:13:"Session times";s:23:"sessionstatus:cancelled";s:9:"Cancelled";s:24:"sessionstatus:inprogress";s:19:"Session in progress";s:18:"sessionstatus:over";s:12:"Session over";s:22:"sessionstatus:upcoming";s:8:"Upcoming";s:24:"sessionstatus:waitlisted";s:11:"Wait-listed";s:11:"signinsheet";s:13:"Sign-in sheet";s:20:"signupworkflowheader";s:16:"Sign-up Workflow";s:25:"tenantmemberisolationmode";s:83:"Tenant isolation enabled. Members cannot attend events outside their tenant domain.";s:29:"upcomingsessionsinfacilitator";s:40:"Upcoming sessions using this facilitator";s:16:"uploadattendance";s:23:"Upload event attendance";s:21:"uploadattendance_help";s:434:"Preparing a file for upload: Use .CSV text file with a heading row and one or more data rows.
+
+All rows must have the following columns:
+
+* **'username'** OR **'idnumber'** OR **'email'** OR **'signupid'** (use only one)
+* **'eventattendance'** - one of the following codes:
+ * 4 - Fully attended
+ * 3 - Partially attended
+ * 2 - Unable to attend
+ * 1 - No show
+
+Optional column: **'eventgrade'** - a number between 0 - 100";s:20:"uploadattendancestep";s:51:"Upload event attendance and grades (step {$a} of 2)";s:23:"uploadattendanceresults";s:42:"Upload event attendance and grades results";s:22:"uploadattendancereview";s:41:"Review and confirm changes ({$a} records)";s:13:"uploadcsvfile";s:15:"Upload CSV file";s:13:"viewallassets";s:13:"Manage assets";s:19:"viewallfacilitators";s:19:"Manage facilitators";s:12:"viewallrooms";s:12:"Manage rooms";s:15:"viewfacilitator";s:16:"View facilitator";s:7:"visible";s:7:"Visible";s:24:"attendancetrackingheader";s:31:"Attendance tracking and grading";s:23:"attendancetracking:open";s:15:"Take attendance";s:28:"attendancetracking:openatend";s:29:"Will open at session end time";s:30:"attendancetracking:openatstart";s:31:"Will open at session start time";s:30:"attendancetracking:noattendees";s:12:"No attendees";s:24:"attendancetracking:saved";s:16:"Attendance saved";s:14:"completionpass";s:13:"Require grade";s:19:"completionpass_help";s:138:"In order to complete this seminar, learners must receive a grade. Pass and fail icons may be displayed if `Passing grade` is not set to 0.";s:17:"completionpass:no";s:2:"No";s:18:"completionpass:any";s:28:"Yes, any grade (0&ndash;100)";s:19:"completionpass:pass";s:18:"Yes, passing grade";s:29:"completionpassrequirement:any";s:33:"Achieving any grade (0&ndash;100)";s:30:"completionpassrequirement:pass";s:23:"Achieving passing grade";s:39:"completionstatusrequirement_notachieved";s:16:"Has not attended";s:19:"eventattendancetime";s:28:"Event attendance – mark at";s:23:"eventattendancetime:any";s:33:"Unrestricted – mark at any time";s:30:"eventattendancetime:firststart";s:26:"Beginning of first session";s:29:"eventattendancetime:laststart";s:26:"Beginning of final session";s:27:"eventattendancetime:lastend";s:20:"End of final session";s:24:"eventattendancetime_help";s:126:"Set when to unlock event attendance marking for trainers. Note that 'Beginning' is effectively 15 minutes before session time.";s:28:"eventattendancetracking:open";s:21:"Take event attendance";s:29:"eventattendancetracking:saved";s:20:"Attendance submitted";s:18:"eventgradingmanual";s:20:"Manual event grading";s:23:"eventgradingmanual_help";s:134:"Separate event grades from attendance records. Event Grades will not be calculated by the system and will need to be entered manually.";s:18:"eventgradingmethod";s:14:"Grading method";s:23:"eventgradingmethod_help";s:169:"Method used to determine the seminar grade for users who attend multiple events, based on highest event grade, lowest event grade, first event grade or last event grade.";s:26:"eventgradingmethod:highest";s:19:"Highest event grade";s:25:"eventgradingmethod:lowest";s:18:"Lowest event grade";s:24:"eventgradingmethod:first";s:17:"First event grade";s:23:"eventgradingmethod:last";s:16:"Last event grade";s:22:"eventgradingoutofrange";s:71:"Event grade value "{$a->val}" has to be between {$a->min} and {$a->max}";s:16:"gradeinput_label";s:18:"{$a}'s event grade";s:22:"gradeinput_placeholder";s:5:"Empty";s:9:"gradepass";s:13:"Passing grade";s:14:"gradepass_help";s:193:"A number between 0&ndash;100. Default values for attendance-based grades are: <ul><li>Fully attended: 100</li><li>Partially attended: 50</li><li>Unable to attend: 0</li><li>No show: 0</li></ul>";s:15:"gradepass_error";s:54:"Passing grade must be between {$a->min} and {$a->max}.";s:23:"sessionattendanceheader";s:18:"Session Attendance";s:21:"sessionattendancetime";s:27:"Session attendance tracking";s:25:"sessionattendancetime:any";s:33:"Unrestricted – mark at any time";s:30:"sessionattendancetime:disabled";s:33:"Disabled – don't track sessions";s:25:"sessionattendancetime:end";s:14:"End of session";s:27:"sessionattendancetime:start";s:20:"Beginning of session";s:26:"sessionattendancetime_help";s:139:"Set when to unlock session attendance marking, or disable the feature. Note that 'Beginning' is effectively 15 minutes before session time.";s:33:"sessioncancellationcustomfieldtab";s:18:"Event cancellation";s:11:"sessiondate";s:7:"Session";s:22:"sessiondatecolumn_html";s:82:"{$a->startdate} {$a->starttime} -<br>{$a->enddate} {$a->endtime}<br>{$a->timezone}";s:15:"sessiondatetime";s:15:"Event date/time";s:27:"sessiondatetimecourseformat";s:76:"{$a->startdate}, {$a->starttime} - {$a->endtime} (time zone: {$a->timezone})";s:42:"sessiondatetimecourseformatwithouttimezone";s:48:"{$a->startdate}, {$a->starttime} - {$a->endtime}";s:12:"sessiondates";s:24:"Specify sessions details";s:16:"sessiondatestart";s:18:"Session Start Date";s:15:"sessiondefaults";s:14:"Event defaults";s:14:"sessionenddate";s:16:"Session end date";s:22:"sessionenddatewithtime";s:43:"{$a->enddate}, {$a->endtime} {$a->timezone}";s:27:"sessionsdetailstablesummary";s:38:"Full description of the current event.";s:17:"sessionfinishdate";s:19:"Session Finish Date";s:22:"sessionfinishdateshort";s:11:"Finish date";s:21:"sessionfinishdatetime";s:24:"Session Finish Date/Time";s:25:"sessionfinishdatetimelink";s:45:"Session Finish Date/Time (linked to activity)";s:17:"sessionfinishtime";s:17:"Event finish time";s:22:"sessionfinishtime_help";s:327:"When creating or editing an event, the event timezone may differ from the timezone for the **Finish time**. This is because the timezone for **Finish time** is determined by the timezone of the user creating or editing the event. The timezone of the user creating or editing the event does not affect the event timezone itself.";s:18:"sessioninformation";s:40:"- Session: {$a->datetime} ({$a->status})";s:17:"sessioninprogress";s:11:"In progress";s:13:"sessionisfull";s:85:"This event is now full. You will need to pick another time or talk to the instructor.";s:28:"sessionnoattendeesaswaitlist";s:144:"This event does not have any attendees because it does not have a known date and time.<br />See the wait-list tab for users that have signed up.";s:11:"sessionover";s:4:"Over";s:13:"sessionreport";s:16:"Seminar sessions";s:16:"sessionreportcnt";s:22:"Seminar sessions: {$a}";s:8:"sessions";s:6:"Events";s:20:"sessionsoncoursepage";s:31:"Events displayed on course page";s:13:"sessionstatus";s:26:"{$a->statuslabel} sessions";s:23:"sessionstartdateandtime";s:63:"{$a->startdate}, {$a->starttime} - {$a->endtime} {$a->timezone}";s:38:"sessionstartdateandtimewithouttimezone";s:48:"{$a->startdate}, {$a->starttime} - {$a->endtime}";s:24:"sessionstartdatewithtime";s:47:"{$a->startdate}, {$a->starttime} {$a->timezone}";s:29:"sessionstartfinishdateandtime";s:78:"{$a->startdate}, {$a->starttime} - {$a->enddate}, {$a->endtime} {$a->timezone}";s:44:"sessionstartfinishdateandtimewithouttimezone";s:63:"{$a->startdate}, {$a->starttime} - {$a->enddate}, {$a->endtime}";s:12:"sessionsview";s:13:"Sessions view";s:30:"sessionrequiresmanagerapproval";s:45:"This event requires manager approval to book.";s:12:"sessionroles";s:11:"Event roles";s:14:"sessionsreport";s:15:"Sessions report";s:16:"sessionstartdate";s:13:"Session start";s:21:"sessionstartdateshort";s:10:"Start date";s:16:"sessionstarttime";s:16:"Event start time";s:21:"sessionstarttime_help";s:325:"When creating or editing an event, the event timezone may differ from the timezone for the **Start time**. This is because the timezone for **Start time** is determined by the timezone of the user creating or editing the event. The timezone of the user creating or editing the event does not affect the event timezone itself.";s:22:"sessiontimedescription";s:23:"{$a->start} - {$a->end}";s:15:"sessiontimezone";s:18:"Timezone displayed";s:20:"sessiontimezone_help";s:335:"Select the timezone you want this event to be displayed in e.g. 'Pacific/Auckland'. This will display the start time, finish time and timezone in accordance with the timezone selected. If you choose **User timezone**, this will display the start time, finish date and timezone in relation to the timezone of the user viewing the event.";s:22:"sessiontimezoneunknown";s:16:"Unknown Timezone";s:15:"sessionupcoming";s:8:"Upcoming";s:12:"sessionvenue";s:11:"Event venue";s:9:"setactive";s:10:"Set active";s:11:"setinactive";s:12:"Set inactive";s:31:"setting:approvaloptions_caption";s:26:"Available Approval Options";s:31:"setting:approvaloptions_default";s:478:"The options selected above will be available in the 'require approval by' setting for all seminar activities. Text entered below the 'Learner accepts terms and conditions' option will be default for all activities and can be edited for each activity. Selected 'site level administrative approvers' are automatically added to all seminar activities and can not be removed from within any given activity (note: other administrative approvers can be added to each seminar activity)";s:29:"setting:managerselect_caption";s:20:"Users Select Manager";s:28:"setting:managerselect_format";s:371:"Recommended when manager assignment data is not available. When enabled and an activity requires approval by Manager, the event sign-up page will force users to search for and select a user to approve their request to attend an event each time they sign-up. The selected user will receive a notification about the request and instructions on how to approve or decline it.";s:34:"setting:termsandconditions_caption";s:20:"Terms and conditions";s:33:"setting:termsandconditions_format";s:140:"Text entered in this setting will be the default for the 'Learner accepts terms and conditions' setting but can be edited for each activity.";s:34:"setting:termsandconditions_default";s:71:"Check the box to confirm your eligibility to sign up to this seminar.
+";s:30:"setting:adminapprovers_caption";s:35:"Site level administrative approvers";s:29:"setting:adminapprovers_format";s:233:"Selected users 'site level administrative approvers' are automatically added to all seminar activities and can not be removed from within any given activity (note: other administrative approvers can be added to each seminar activity)";s:21:"setting:approval_none";s:20:"No approval required";s:21:"setting:approval_self";s:36:"Learner accepts terms and conditions";s:21:"setting:approval_role";s:21:"Session role approved";s:24:"setting:approval_manager";s:16:"Manager approval";s:22:"setting:approval_admin";s:35:"Manager and Administrative approval";s:40:"setting:allowschedulingconflicts_caption";s:30:"Allow override user conflicts:";s:32:"setting:allowschedulingconflicts";s:69:"Allow or disallow user conflicts to exist while creating a new event.";s:37:"setting:allowwaitlisteveryone_caption";s:24:"Everyone on waiting list";s:29:"setting:allowwaitlisteveryone";s:154:"When enabled a setting will appear in seminar event settings to put all users onto the waiting list when they signup regardless of event maximum bookings.";s:23:"setting:calendarfilters";s:67:"Selected fields will be displayed as filters in the user's calendar";s:30:"setting:calendarfilterscaption";s:21:"Add calendar filters:";s:36:"setting:defaultcancellationinstrmngr";s:46:"Default cancellation message sent to managers.";s:44:"setting:defaultcancellationinstrmngr_caption";s:31:"Cancellation message (managers)";s:43:"setting:defaultcancellationinstrmngrdefault";s:168:"*** Advice only ****
+
+This is to advise that [firstname] [lastname] is no longer signed-up for the following course and listed you as their Team Leader / Manager.
+
+";s:47:"setting:defaultcancellationinstrmngrdefault_v92";s:222:"*** Advice only ****
+
+This is to advise that [firstname] [lastname] is no longer signed up for the following course and listed you as their Team Leader / Manager.
+
+Below is the message that was sent to the learner:
+
+";s:45:"setting:defaultcancellationinstrmngrcopybelow";s:70:"*** [firstname] [lastname]'s booking cancellation is copied below ****";s:34:"setting:defaultcancellationmessage";s:46:"Default cancellation message sent to the user.";s:42:"setting:defaultcancellationmessage_caption";s:20:"Cancellation message";s:41:"setting:defaultcancellationmessagedefault";s:336:"This is to advise that your booking on the following course has been cancelled:
+
+***BOOKING CANCELLED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:44:"setting:defaultcancellationmessagedefault_v9";s:414:"This is to advise that your booking on the following course has been cancelled:
+
+***BOOKING CANCELLED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:34:"setting:defaultcancellationsubject";s:45:"Default subject line for cancellation emails.";s:42:"setting:defaultcancellationsubject_caption";s:20:"Cancellation subject";s:41:"setting:defaultcancellationsubjectdefault";s:33:"Face-to-face booking cancellation";s:44:"setting:defaultcancellationsubjectdefault_v9";s:28:"Seminar booking cancellation";s:50:"setting:defaultcancelallreservationssubjectdefault";s:26:"All reservations cancelled";s:53:"setting:defaultcancelallreservationssubjectdefault_v9";s:26:"All reservations cancelled";s:50:"setting:defaultcancelallreservationsmessagedefault";s:349:"This is to advise you that all unallocated reservations for the following course have been automatically cancelled, as the course will be starting soon:
+
+***ALL RESERVATIONS CANCELLED***
+
+Course:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:53:"setting:defaultcancelallreservationsmessagedefault_v9";s:432:"This is to advise you that all unallocated reservations for the following course have been automatically cancelled, as the course will be starting soon:
+
+***ALL RESERVATIONS CANCELLED***
+
+Course:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:46:"setting:defaultcancelreservationsubjectdefault";s:24:"Reservation cancellation";s:49:"setting:defaultcancelreservationsubjectdefault_v9";s:24:"Reservation cancellation";s:46:"setting:defaultcancelreservationmessagedefault";s:278:"This is to advise you that your reservation for the following course has been cancelled:
+
+***RESERVATION CANCELLED***
+
+Course:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]";s:49:"setting:defaultcancelreservationmessagedefault_v9";s:363:"This is to advise you that your reservation for the following course has been cancelled:
+
+***RESERVATION CANCELLED***
+
+Course:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:31:"setting:defaultdeclineinstrmngr";s:41:"Default decline message sent to managers.";s:39:"setting:defaultdeclineinstrmngr_caption";s:26:"Decline message (managers)";s:38:"setting:defaultdeclineinstrmngrdefault";s:168:"*** Advice only ****
+
+This is to advise that [firstname] [lastname] is no longer signed-up for the following course and listed you as their Team Leader / Manager.
+
+";s:42:"setting:defaultdeclineinstrmngrdefault_v92";s:222:"*** Advice only ****
+
+This is to advise that [firstname] [lastname] is no longer signed-up for the following course and listed you as their Team Leader / Manager.
+
+Below is the message that was sent to the learner:
+
+";s:40:"setting:defaultdeclineinstrmngrcopybelow";s:65:"*** [firstname] [lastname]'s booking decline is copied below ****";s:29:"setting:defaultdeclinemessage";s:41:"Default decline message sent to the user.";s:37:"setting:defaultdeclinemessage_caption";s:15:"Decline message";s:36:"setting:defaultdeclinemessagedefault";s:334:"This is to advise that your booking on the following course has been declined:
+
+***BOOKING DECLINED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:39:"setting:defaultdeclinemessagedefault_v9";s:412:"This is to advise that your booking on the following course has been declined:
+
+***BOOKING DECLINED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:29:"setting:defaultdeclinesubject";s:40:"Default subject line for decline emails.";s:37:"setting:defaultdeclinesubject_caption";s:15:"Decline subject";s:36:"setting:defaultdeclinesubjectdefault";s:28:"Face-to-face booking decline";s:39:"setting:defaultdeclinesubjectdefault_v9";s:23:"Seminar booking decline";s:36:"setting:defaultconfirmationinstrmngr";s:46:"Default confirmation message sent to managers.";s:44:"setting:defaultconfirmationinstrmngr_caption";s:31:"Confirmation message (managers)";s:43:"setting:defaultconfirmationinstrmngrdefault";s:392:"*** Advice only ****
+
+This is to advise that [firstname] [lastname] has been booked for the following course and listed you as their Team Leader / Manager.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.  If you have concerns about your staff member taking this course please discuss this with them directly.
+
+";s:47:"setting:defaultconfirmationinstrmngrdefault_v92";s:446:"*** Advice only ****
+
+This is to advise that [firstname] [lastname] has been booked for the following course and listed you as their Team Leader / Manager.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.  If you have concerns about your staff member taking this course please discuss this with them directly.
+
+Below is the message that was sent to the learner:
+
+";s:45:"setting:defaultconfirmationinstrmngrcopybelow";s:70:"*** [firstname] [lastname]'s booking confirmation is copied below ****";s:34:"setting:defaultconfirmationmessage";s:43:"Default confirmation message sent to users.";s:42:"setting:defaultconfirmationmessage_caption";s:20:"Confirmation message";s:41:"setting:defaultconfirmationmessagedefault";s:662:"This is to confirm that you are now booked on the following course:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Cost:   [cost]
+
+Duration:    [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+
+***Please arrive ten minutes before the course starts***
+
+To re-schedule or cancel your booking
+To re-schedule your booking you need to cancel this booking and then re-book a new session.  To cancel your booking, return to the site, then to the page for this course, and then select 'cancel' from the booking information screen.
+
+[details]
+";s:44:"setting:defaultconfirmationmessagedefault_v9";s:737:"This is to confirm that you are now booked on the following course:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+Cost:   [cost]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+***Please arrive ten minutes before the course starts***
+
+To re-schedule or cancel your booking
+To re-schedule your booking you need to cancel this booking and then re-book a new event.  To cancel your booking, return to the site, then to the page for this course, and then select 'cancel' from the booking information screen.
+
+[details]
+";s:34:"setting:defaultconfirmationsubject";s:45:"Default subject line for confirmation emails.";s:42:"setting:defaultconfirmationsubject_caption";s:20:"Confirmation subject";s:41:"setting:defaultconfirmationsubjectdefault";s:89:"Face-to-face booking confirmation: [seminarname], [starttime]-[finishtime], [sessiondate]";s:44:"setting:defaultconfirmationsubjectdefault_v9";s:84:"Seminar booking confirmation: [seminarname], [starttime]-[finishtime], [sessiondate]";s:43:"setting:defaultdatetimechangemessagedefault";s:265:"Your session date/time has changed:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:46:"setting:defaultdatetimechangemessagedefault_v9";s:371:"The session you are booked on (or on the waitlist) has changed:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:36:"setting:defaultdatetimechangesubject";s:49:"Default subject line for date/time change emails.";s:44:"setting:defaultdatetimechangesubject_caption";s:24:"Date/time change subject";s:41:"setting:defaultpendingreqclosureinstrmngr";s:54:"Default registration closure message sent to managers.";s:50:"setting:defaultpendingreqclosureinstrmngrcopybelow";s:288:"*** Advice only ****
+Your staff member [firstname] [lastname] had a pending request to attend the below seminar event and has also received this closure email.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.
+";s:54:"setting:defaultpendingreqclosureinstrmngrcopybelow_v92";s:344:"*** Advice only ****
+Your staff member [firstname] [lastname] had a pending request to attend the below seminar event and has also received this closure email.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.
+
+Below is the message that was sent to the learner:
+
+";s:39:"setting:defaultpendingreqclosuremessage";s:46:"Default cancellation message sent to the user.";s:47:"setting:defaultpendingreqclosuremessage_caption";s:28:"Registration closure message";s:49:"setting:defaultpendingreqclosuremessagedefault_v9";s:494:"This is to advise that your pending booking request for the following seminar event has expired:
+This seminar events registration period has closed while your request was pending, please request a booking on a different event.
+
+Course: [coursename]
+
+Seminar: [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:39:"setting:defaultpendingreqclosuresubject";s:53:"Default subject line for registration closure emails.";s:47:"setting:defaultpendingreqclosuresubject_caption";s:28:"registration closure subject";s:46:"setting:defaultpendingreqclosuresubjectdefault";s:34:"Seminar event registration closure";s:48:"setting:defaultregistrationexpiredsubjectdefault";s:83:"Seminar registration closed: [seminarname], [starttime]-[finishtime], [sessiondate]";s:43:"setting:defaultregistrationexpiredinstrmngr";s:286:"
+*** Advice only ****
+
+This is to advise that [firstname] [lastname] has been sent the following email and you are listed as their Team Leader / Manager.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.
+
+";s:47:"setting:defaultregistrationexpiredinstrmngr_v92";s:340:"
+*** Advice only ****
+
+This is to advise that [firstname] [lastname] has been sent the following email and you are listed as their Team Leader / Manager.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.
+
+Below is the message that was sent to the learner:
+
+";s:48:"setting:defaultregistrationexpiredmessagedefault";s:338:"The registration period for the following session has been closed:
+
+Course: [coursename]
+
+Face-to-face: [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:51:"setting:defaultregistrationexpiredmessagedefault_v9";s:333:"The registration period for the following session has been closed:
+
+Course: [coursename]
+
+Seminar: [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:43:"setting:defaultdatetimechangesubjectdefault";s:94:"Face-to-face booking date/time changed: [seminarname], [starttime]-[finishtime], [sessiondate]";s:46:"setting:defaultdatetimechangesubjectdefault_v9";s:81:"Seminar date/time changed: [seminarname], [starttime]-[finishtime], [sessiondate]";s:26:"setting:defaultminbookings";s:24:"Default minimum bookings";s:31:"setting:defaultminbookings_help";s:126:"Default value for all seminar events. All events can still have a custom minimum bookings when setting up a new seminar event.";s:32:"setting:defaultreminderinstrmngr";s:42:"Default reminder message sent to managers.";s:40:"setting:defaultreminderinstrmngr_caption";s:27:"Reminder message (managers)";s:39:"setting:defaultreminderinstrmngrdefault";s:276:"*** Reminder only ****
+
+Your staff member [firstname] [lastname] is booked to attend and above course and has also received this reminder email.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.
+
+";s:43:"setting:defaultreminderinstrmngrdefault_v92";s:330:"*** Reminder only ****
+
+Your staff member [firstname] [lastname] is booked to attend and above course and has also received this reminder email.
+
+If you are not their Team Leader / Manager and believe you have received this email by mistake please reply to this email.
+
+Below is the message that was sent to the learner:
+
+";s:41:"setting:defaultreminderinstrmngrcopybelow";s:64:"*** [firstname] [lastname]'s reminder email is copied below ****";s:30:"setting:defaultremindermessage";s:39:"Default reminder message sent to users.";s:38:"setting:defaultremindermessage_caption";s:16:"Reminder message";s:37:"setting:defaultremindermessagedefault";s:657:"This is a reminder that you are booked on the following course:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Cost:   [cost]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+
+***Please arrive ten minutes before the course starts***
+
+To re-schedule or cancel your booking
+To re-schedule your booking you need to cancel this booking and then re-book a new session.  To cancel your booking, return to the site, then to the page for this course, and then select 'cancel' from the booking information screen.
+
+[details]
+";s:40:"setting:defaultremindermessagedefault_v9";s:733:"This is a reminder that you are booked on the following course:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+Cost:   [cost]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+***Please arrive ten minutes before the course starts***
+
+To re-schedule or cancel your booking
+To re-schedule your booking you need to cancel this booking and then re-book a new event.  To cancel your booking, return to the site, then to the page for this course, and then select 'cancel' from the booking information screen.
+
+[details]
+";s:30:"setting:defaultremindersubject";s:41:"Default subject line for reminder emails.";s:38:"setting:defaultremindersubject_caption";s:16:"Reminder subject";s:37:"setting:defaultremindersubjectdefault";s:85:"Face-to-face booking reminder: [seminarname], [starttime]-[finishtime], [sessiondate]";s:40:"setting:defaultremindersubjectdefault_v9";s:80:"Seminar booking reminder: [seminarname], [starttime]-[finishtime], [sessiondate]";s:42:"setting:defaultrequestinstrmngrdefault_v24";s:402:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as their Team Leader / Manager.
+
+Course:   [seminarname]
+Cost:   [cost]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+
+Please follow the link below to approve the request:
+[attendeeslink]
+
+";s:38:"setting:defaultrequestinstrmngrdefault";s:299:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as their Team Leader / Manager.
+
+Please review this request before registration closes on [registrationcutoff]
+
+Follow the link below to approve the request:
+[attendeeslink]
+";s:42:"setting:defaultrequestinstrmngrdefault_v92";s:355:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as their Team Leader / Manager.
+
+Please review this request before registration closes on [registrationcutoff]
+
+Follow the link below to approve the request:
+[attendeeslink]
+
+Below is the message that was sent to the learner:
+
+";s:40:"setting:defaultrequestinstrmngrcopybelow";s:65:"*** [firstname] [lastname]'s booking request is copied below ****";s:36:"setting:defaultrequestmessagedefault";s:323:"Your request to book into the following course has been sent to your manager:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Cost:   [cost]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:39:"setting:defaultrequestmessagedefault_v9";s:453:"Your request to book into the following course has been sent to your manager:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+Cost:   [cost]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+This request will expire on [registrationcutoff]
+";s:36:"setting:defaultrequestsubjectdefault";s:84:"Face-to-face booking request: [seminarname], [starttime]-[finishtime], [sessiondate]";s:39:"setting:defaultrequestsubjectdefault_v9";s:53:"Seminar booking request: [seminarname], [eventperiod]";s:42:"setting:defaultrolerequestinstrmngrdefault";s:302:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as a [sessionrole] for the session.
+
+Please review this request before registration closes on [registrationcutoff]
+
+Follow the link below to review the request:
+[attendeeslink]
+";s:46:"setting:defaultrolerequestinstrmngrdefault_v92";s:358:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as a [sessionrole] for the session.
+
+Please review this request before registration closes on [registrationcutoff]
+
+Follow the link below to review the request:
+[attendeeslink]
+
+Below is the message that was sent to the learner:
+
+";s:44:"setting:defaultrolerequestinstrmngrcopybelow";s:65:"*** [firstname] [lastname]'s booking request is copied below ****";s:40:"setting:defaultrolerequestmessagedefault";s:340:"Your request to book into the following course has been sent to the sessions [sessionrole](s):
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Cost:   [cost]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:43:"setting:defaultrolerequestmessagedefault_v9";s:470:"Your request to book into the following course has been sent to the sessions [sessionrole](s):
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+Cost:   [cost]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+This request will expire on [registrationcutoff]
+";s:40:"setting:defaultrolerequestsubjectdefault";s:58:"Seminar booking role request: [seminarname], [eventperiod]";s:43:"setting:defaultadminrequestinstrmngrdefault";s:299:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as an approver for the session.
+
+Please review this request before registration closes on [registrationcutoff]
+
+Follow the link below to approve the request:
+[attendeeslink]
+";s:47:"setting:defaultadminrequestinstrmngrdefault_v92";s:355:"This is to advise that [firstname] [lastname] has requested to be booked into the following course, and you are listed as an approver for the session.
+
+Please review this request before registration closes on [registrationcutoff]
+
+Follow the link below to approve the request:
+[attendeeslink]
+
+Below is the message that was sent to the learner:
+
+";s:45:"setting:defaultadminrequestinstrmngrcopybelow";s:65:"*** [firstname] [lastname]'s booking request is copied below ****";s:41:"setting:defaultadminrequestmessagedefault";s:333:"Your request to book into the following course has been sent to the sessions approvers:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Cost:   [cost]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:44:"setting:defaultadminrequestmessagedefault_v9";s:463:"Your request to book into the following course has been sent to the sessions approvers:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+Cost:   [cost]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+This request will expire on [registrationcutoff]
+";s:41:"setting:defaultadminrequestsubjectdefault";s:59:"Seminar booking admin request: [seminarname], [eventperiod]";s:48:"setting:defaultfacilitatorassignedmessagedefault";s:521:"This is to confirm that you are now assigned to deliver training on the following seminar session(s):
+
+Facilitator: [firstname] [lastname]
+Course: [coursenamelink]
+Seminar: [seminarnamelink]
+
+Date(s) and location(s):
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+Room: [session:room:name]
+Building: [session:room:cf_building]
+Location: [session:room:cf_location]
+[session:room:link]
+[/sessions]
+
+[details]";s:48:"setting:defaultfacilitatorassignedsubjectdefault";s:40:"Seminar session facilitator confirmation";s:46:"setting:defaultfacilitatorcancelmessagedefault";s:535:"This is to advise that the seminar session(s) you are assigned to as facilitator have been cancelled:
+
+***SESSION CANCELLED***
+
+Facilitator: [firstname] [lastname]
+Course: [coursenamelink]
+Seminar: [seminarnamelink]
+
+Date(s) and location(s):
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+Room: [session:room:name]
+Building: [session:room:cf_building]
+Location: [session:room:cf_location]
+[session:room:link]
+[/sessions]";s:46:"setting:defaultfacilitatorcancelsubjectdefault";s:40:"Seminar session facilitator cancellation";s:50:"setting:defaultfacilitatortimechangemessagedefault";s:508:"The seminar session(s) you are assigned to facilitate have been changed:
+
+Facilitator: [firstname] [lastname]
+Course: [coursenamelink]
+Seminar: [seminarnamelink]
+
+The updated information is:
+Date(s) and location(s):
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+Room: [session:room:name]
+Building: [session:room:cf_building]
+Location: [session:room:cf_location]
+[session:room:link]
+[/sessions]";s:50:"setting:defaultfacilitatortimechangesubjectdefault";s:89:"Seminar session date/time changed: [seminarname], [starttime]-[finishtime], [sessiondate]";s:50:"setting:defaultfacilitatorunassignedmessagedefault";s:534:"This is to advise that you have been unassigned from facilitating the following seminar session(s):
+
+***SESSION UNASSIGNED***
+
+Facilitator: [firstname] [lastname]
+Course: [coursenamelink]
+Seminar: [seminarnamelink]
+
+Date(s) and location(s):
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+Room: [session:room:name]
+Building: [session:room:cf_building]
+Location: [session:room:cf_location]
+[session:room:link]
+[/sessions]";s:50:"setting:defaultfacilitatorunassignedsubjectdefault";s:38:"Seminar session facilitator unassigned";s:41:"setting:defaulttrainerconfirmationmessage";s:59:"Default message sent to trainers when assigned to an event.";s:49:"setting:defaulttrainerconfirmationmessage_caption";s:28:"Trainer confirmation message";s:48:"setting:defaulttrainerconfirmationmessagedefault";s:393:"This is to confirm that you are now assigned to deliver training on the following course:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:    [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+
+***Please arrive ten minutes before the course starts***
+
+[details]
+";s:51:"setting:defaulttrainerconfirmationmessagedefault_v9";s:470:"This is to confirm that you are now assigned to deliver training on the following course:
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+***Please arrive ten minutes before the course starts***
+
+[details]
+";s:41:"setting:defaulttrainerconfirmationsubject";s:53:"Default subject line for trainer confirmation emails.";s:49:"setting:defaulttrainerconfirmationsubject_caption";s:28:"Trainer confirmation subject";s:48:"setting:defaulttrainerconfirmationsubjectdefault";s:89:"Face-to-face trainer confirmation: [seminarname], [starttime]-[finishtime], [sessiondate]";s:51:"setting:defaulttrainerconfirmationsubjectdefault_v9";s:58:"Seminar trainer confirmation: [seminarname], [eventperiod]";s:48:"setting:defaulttrainersessioncancellationmessage";s:55:"Default event cancellation message sent to the trainer.";s:56:"setting:defaulttrainersessioncancellationmessage_caption";s:34:"Trainer event cancellation message";s:55:"setting:defaulttrainersessioncancellationmessagedefault";s:351:"This is to advise that your assigned training session the following course has been cancelled:
+
+***SESSION CANCELLED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:58:"setting:defaulttrainersessioncancellationmessagedefault_v9";s:425:"This is to advise that your assigned training event the following course has been cancelled:
+
+***EVENT CANCELLED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:48:"setting:defaulttrainersessioncancellationsubject";s:59:"Default subject line for trainer event cancellation emails.";s:56:"setting:defaulttrainersessioncancellationsubject_caption";s:34:"Trainer event cancellation subject";s:55:"setting:defaulttrainersessioncancellationsubjectdefault";s:41:"Face-to-face session trainer cancellation";s:58:"setting:defaulttrainersessioncancellationsubjectdefault_v9";s:34:"Seminar event trainer cancellation";s:46:"setting:defaulttrainersessionunassignedmessage";s:53:"Default event unassigned message sent to the trainer.";s:54:"setting:defaulttrainersessionunassignedmessage_caption";s:32:"Trainer event unassigned message";s:53:"setting:defaulttrainersessionunassignedmessagedefault";s:341:"This is to advise that you have been unassigned from training for following course:
+
+***SESSION UNASSIGNED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:56:"setting:defaulttrainersessionunassignedmessagedefault_v9";s:417:"This is to advise that you have been unassigned from training for following course:
+
+***EVENT UNASSIGNED***
+
+Participant:   [firstname] [lastname]
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:46:"setting:defaulttrainersessionunassignedsubject";s:57:"Default subject line for trainer event unassigned emails.";s:54:"setting:defaulttrainersessionunassignedsubject_caption";s:32:"Trainer event unassigned subject";s:53:"setting:defaulttrainersessionunassignedsubjectdefault";s:39:"Face-to-face session trainer unassigned";s:56:"setting:defaulttrainersessionunassignedsubjectdefault_v9";s:32:"Seminar event trainer unassigned";s:42:"setting:defaultundercapacitysubjectdefault";s:47:"Event under minimum bookings for: [seminarname]";s:42:"setting:defaultundercapacitymessagedefault";s:403:"The following event is under minimum bookings:
+
+***EVENT UNDER CAPACITY***
+
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Capacity: [booked] / [capacity] (minimum: [mincapacity])
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]";s:20:"setting:defaultvalue";s:13:"Default value";s:50:"setting:defaultvirtualmeetingfailuresubjectdefault";s:32:"Virtual meeting creation failure";s:50:"setting:defaultvirtualmeetingfailuremessagedefault";s:641:"This is to advise that the system failed to create virtual meetings for the following event. Please try again by deleting and recreating these virtual rooms in the event. If the error persists check your connection to the virtual meeting service provider or contact site administrators:
+
+
+***VIRTUAL MEETING CREATION FAILURE***
+
+Course: [coursename]
+Seminar: [facetofacename]
+
+Event times and virtual meeting details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+Room: [session:room:name]
+[seminareventdetailslink]
+[/sessions]";s:46:"setting:defaultwaitlistautocleansubjectdefault";s:25:"Waitlisted signup expired";s:46:"setting:defaultwaitlistautocleanmessagedefault";s:393:"This is to advise you that your waitlisted signup for the following course has been cancelled due to the event starting:
+
+***WAITLIST CANCELLATION***
+
+Course:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]";s:32:"setting:defaultwaitlistedmessage";s:42:"Default wait-listed message sent to users.";s:40:"setting:defaultwaitlistedmessage_caption";s:19:"Wait-listed message";s:39:"setting:defaultwaitlistedmessagedefault";s:543:"This is to advise that you have been added to the waitlist for:
+
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Location:  [session:location]
+Participant:   [firstname] [lastname]
+
+***Please note this is not a course booking confirmation***
+
+By waitlisting you have registered your interest in this course and will be contacted directly when sessions become available.
+
+To remove yourself from this waitlist please return to this course and click Cancel waitlist. Please note there is no waitlist removal confirmation email.
+";s:43:"setting:defaultwaitlistedmessagedefault_v27";s:542:"This is to advise that you have been added to the waitlist for:
+
+Course:   [coursename]
+Face-to-face:   [seminarname]
+Location:  [session:location]
+Participant:   [firstname] [lastname]
+
+***Please note this is not a course booking confirmation***
+
+By waitlisting you have registered your interest in this course and will be contacted directly when sessions become available.
+
+To remove yourself from this waitlist please return to this course and click Cancel Booking. Please note there is no waitlist removal confirmation email.
+";s:42:"setting:defaultwaitlistedmessagedefault_v9";s:588:"This is to advise that you have been added to the waitlist for:
+
+Course:   [coursename]
+Seminar:   [seminarname]
+Participant:   [firstname] [lastname]
+
+Location(s):
+[#sessions]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+
+***Please note this is not a course booking confirmation***
+
+By waitlisting you have registered your interest in this course and will be contacted directly when events become available.
+
+To remove yourself from this waitlist please return to this course and click Cancel waitlist. Please note there is no waitlist removal confirmation email.
+";s:52:"setting:defaultsessioncancellationinstrmngrcopybelow";s:70:"*** [firstname] [lastname]'s session cancellation is copied below ****";s:41:"setting:defaultsessioncancellationmessage";s:54:"Default session cancellation message sent to the user.";s:49:"setting:defaultsessioncancellationmessage_caption";s:28:"Session cancellation message";s:48:"setting:defaultsessioncancellationmessagedefault";s:280:"This is to advise that the following session has been cancelled:
+
+***EVENT CANCELLED***
+
+Course:   [coursename]
+Face-to-face:   [seminarname]
+
+Duration:   [duration]
+Date(s):
+[alldates]
+
+Location:   [session:location]
+Venue:   [session:venue]
+Room:   [session:room]
+";s:51:"setting:defaultsessioncancellationmessagedefault_v9";s:358:"This is to advise that the following session has been cancelled:
+
+***EVENT CANCELLED***
+
+Course:   [coursename]
+Seminar:   [seminarname]
+
+Details:
+[#sessions]
+[session:startdate], [session:starttime] - [session:finishdate], [session:finishtime] [session:timezone]
+Duration: [session:duration]
+[session:rooms]
+[session:facilitators]
+[/sessions]
+";s:41:"setting:defaultsessioncancellationsubject";s:53:"Default subject line for session cancellation emails.";s:49:"setting:defaultsessioncancellationsubject_caption";s:26:"Event cancellation subject";s:48:"setting:defaultsessioncancellationsubjectdefault";s:26:"Seminar event cancellation";s:32:"setting:defaultwaitlistedsubject";s:44:"Default subject line for wait-listed emails.";s:40:"setting:defaultwaitlistedsubject_caption";s:19:"Wait-listed subject";s:39:"setting:defaultwaitlistedsubjectdefault";s:36:"Waitlisting advice for [seminarname]";s:42:"setting:defaultwaitlistedsubjectdefault_v9";s:36:"Waitlisting advice for [seminarname]";s:31:"setting:displaysessiontimezones";s:155:"When enabled the timezone of the Seminar event will be shown otherwise it will be hidden (selecting a timezone for an event will also be enabled/disabled).";s:39:"setting:displaysessiontimezones_caption";s:23:"Display event timezones";s:25:"setting:disableicalcancel";s:58:"Disable cancellation emails with an iCalendar information.";s:33:"setting:disableicalcancel_caption";s:32:"Disable iCalendar cancellations:";s:30:"setting:lotteryenabled_caption";s:16:"Waitlist lottery";s:22:"setting:lotteryenabled";s:34:"Enable or disable waitlist lottery";s:22:"setting:managerreserve";s:20:"Allow reserve/assign";s:27:"setting:managerreserve_desc";s:82:"Managers are able to make reservations or bookings on behalf of their team members";s:28:"setting:managerreserveheader";s:20:"Manager reservations";s:26:"setting:maxmanagerreserves";s:16:"Max reservations";s:31:"setting:maxmanagerreserves_desc";s:82:"The total number of reservations / bookings that a manager can make for their team";s:22:"setting:oneemailperday";s:227:"Send multiple confirmation emails for multi-date events. Note: If there is more than one event date on a single day then each session will generate an email. One session spanning over multiple days will generate only one email.";s:30:"setting:oneemailperday_caption";s:21:"One message per date:";s:16:"setting:hidecost";s:66:"Hide the normal cost, discount cost and user discount code fields.";s:24:"setting:hidecost_caption";s:23:"Hide cost and discount:";s:20:"setting:hidediscount";s:53:"Hide the discount cost and user discount code fields.";s:28:"setting:hidediscount_caption";s:14:"Hide discount:";s:41:"setting:selectjobassignmentonsignupglobal";s:31:"Select job assignment on signup";s:49:"setting:selectjobassignmentonsignupglobal_caption";s:161:"When enabled a setting will appear in seminar activity settings to force users with multiple job assignments to choose which capacity they will be signing up on.";s:22:"setting:possiblevalues";s:23:"List of possible values";s:25:"setting:reservecanceldays";s:29:"Reservation cancellation days";s:30:"setting:reservecanceldays_desc";s:111:"The number of days in advance of the event that reservations will be automatically cancelled, if not confirmed.";s:19:"setting:reservedays";s:20:"Reservation deadline";s:24:"setting:reservedays_desc";s:132:"The number of days before the event starts after which no more reservations are allowed (must be greater than the cancellation days)";s:22:"setting:roomidentifier";s:15:"Room identifier";s:27:"setting:roomidentifier_help";s:151:"Controls the level of detail when displaying rooms as part of seminar events. Note: Room name is always linked to 'Room details' page with all details.";s:21:"setting:showinsummary";s:25:"Show in exports and lists";s:20:"setting:sessionroles";s:87:"Users assigned to the selected roles in a course can be tracked with each seminar event";s:28:"setting:sessionroles_caption";s:12:"Event roles:";s:26:"setting:sessionrolesnotify";s:275:"This setting affects <b>minimum booking</b> and <b>minimum booking cut-off</b> notifications. Make sure you select roles that can manage seminar events. Automated warnings will be sent to all users with selected role(s) in seminar activity, course, category, or system level.";s:34:"setting:sessionrolesnotify_caption";s:23:"Notification recipients";s:12:"setting:type";s:10:"Field type";s:27:"setting:notificationdisable";s:57:"Turn on/off seminar activity notification emails to users";s:35:"setting:notificationdisable_caption";s:21:"Disable notifications";s:17:"showattendeesnote";s:20:"Show attendee's note";s:14:"showbylocation";s:16:"Show by location";s:16:"showcancelreason";s:24:"Show cancellation reason";s:14:"showoncalendar";s:25:"Calendar display settings";s:27:"showpreviousevents:link:all";s:8:"show all";s:28:"showpreviousevents:link:less";s:9:"show less";s:28:"showpreviousevents:state:all";s:27:"Showing all previous events";s:32:"showpreviousevents:state:partial";s:34:"Showing events form last {$a} days";s:8:"sign-ups";s:8:"Sign-ups";s:9:"signature";s:9:"Signature";s:17:"signinsheetreport";s:24:"Session attendance sheet";s:6:"signup";s:7:"Sign-up";s:15:"signupandaccept";s:16:"Agree and submit";s:16:"signupandrequest";s:16:"Request approval";s:20:"signupcustomfieldtab";s:7:"Sign-up";s:10:"signupdata";s:12:"Sign-up data";s:12:"signupfields";s:14:"Sign-up fields";s:22:"signupfieldslimitation";s:145:"The values entered below will be populated for all selected users. To enter different values for each user use the <a href="{$a}">file import</a>";s:9:"signupfor";s:16:"Sign-up for {$a}";s:16:"signupforsession";s:39:"Sign-up for an available upcoming event";s:20:"signupforthissession";s:30:"Sign-up for this seminar event";s:24:"signupforthissessionlink";s:43:"Go to this <a href="{$a}">Seminar event</a>";s:7:"signups";s:8:"Sign-ups";s:17:"signupunavailable";s:19:"Sign-up unavailable";s:14:"spacesreserved";s:15:"Spaces reserved";s:14:"startdateafter";s:16:"Start date after";s:16:"finishdatebefore";s:18:"Finish date before";s:7:"subject";s:64:"Change in booking in the course {$a->coursename} ({$a->duedate})";s:11:"submissions";s:11:"Submissions";s:9:"submitted";s:9:"Submitted";s:6:"submit";s:6:"Submit";s:17:"suppressccmanager";s:67:"Suppress notifications to manager about added and removed attendees";s:13:"suppressemail";s:27:"Suppress email notification";s:25:"suppressemailforattendees";s:128:"Suppress the confirmation and calendar invite emails for newly added attendees and the cancellation emails for removed attendees";s:27:"state_actorcanoverbook_desc";s:31:"Current user can overbook event";s:27:"state_actorcanoverbook_fail";s:49:"You do not have capability to overbook this event";s:34:"state_actorcanremoveattendees_desc";s:63:"The current user has capability to remove attendees from events";s:34:"state_actorcanremoveattendees_fail";s:73:"The current user does not have capability to remove attendees from events";s:35:"state_actorcansignuppastevents_desc";s:79:"The current user has capability to signup on events in progress and past events";s:35:"state_actorcansignuppastevents_fail";s:89:"The current user does not have capability to signup on events in progress and past events";s:38:"state_actorcansurpasssignupperiod_desc";s:88:"The current user has capability to signup for events outside Sign-up registration period";s:38:"state_actorcansurpasssignupperiod_fail";s:98:"The current user does not have capability to signup for events outside Sign-up registration period";s:23:"state_actorhasrole_desc";s:52:"The current user has the approval role for the event";s:23:"state_actorisadmin_desc";s:50:"The current user is an administrator for the event";s:23:"state_actorisadmin_fail";s:54:"The current user is not an administrator for the event";s:25:"state_actorismanager_desc";s:51:"The current user is the manager for the signup user";s:25:"state_actorismanager_fail";s:49:"The current user is not the manager when expected";s:35:"state_approvaladminnotrequired_desc";s:38:"Administrator approval is not required";s:32:"state_approvaladminrequired_desc";s:34:"Administrator approval is required";s:30:"state_approvalnotrequired_desc";s:24:"Approval is not required";s:27:"state_approvalrequired_desc";s:20:"Approval is required";s:24:"state_bookingcommon_desc";s:37:"Common booking conditions must be met";s:21:"state_hasmanager_desc";s:54:"Seminar requires user to have a manager during signup.";s:35:"state_hasrequiredjobassignment_desc";s:71:"Seminar requires user must have job assignment selected during sign up.";s:27:"state_isnotreservation_desc";s:25:"Signup is not reservation";s:24:"state_isreservation_desc";s:21:"Signup is reservation";s:35:"state_eventallowscancellations_desc";s:34:"Seminar event allows cancellations";s:35:"state_eventallowscancellations_fail";s:42:"Seminar event does not allow cancellations";s:27:"state_eventhascapacity_desc";s:39:"The event has capacity for more signups";s:29:"state_eventhasnocapacity_desc";s:37:"The event is at or exceeding capacity";s:28:"state_eventhasnosession_desc";s:27:"The event has no session(s)";s:31:"state_eventhasroleapprover_desc";s:44:"The event must have role approver for signup";s:31:"state_eventhasroleapprover_fail";s:97:"This seminar requires role approver but event has no role approver. Please contact administrator.";s:26:"state_eventhassession_desc";s:24:"The event has session(s)";s:27:"state_eventinthefuture_desc";s:30:"The event starts in the future";s:27:"state_eventinthefuture_fail";s:29:"The event has already started";s:25:"state_eventinthepast_desc";s:30:"The event has already finished";s:25:"state_eventinthepast_fail";s:30:"The event has not finished yet";s:27:"state_eventiscancelled_desc";s:22:"The event is cancelled";s:27:"state_eventiscancelled_fail";s:52:"The event is not cancelled when it is expected to be";s:30:"state_eventisnotcancelled_desc";s:26:"The event is not cancelled";s:28:"state_eventnotinthepast_desc";s:89:"Event is started or has no dates, or user has permission to signup for events in the past";s:39:"state_eventregistrationisavailable_desc";s:138:"We are currently within the registration period of the event, as definied by the registrationtimestart and registrationtimefinish settings";s:44:"state_eventregistrationisavailable_failstart";s:54:"The sign-up period for the event has not been open yet";s:32:"state_eventtakingattendance_desc";s:39:"The event taking attendance has started";s:32:"state_eventtakingattendance_fail";s:47:"The event taking attendance has not started yet";s:30:"state_hassignupcapability_desc";s:99:"User must have "mod/facetoface:signup" capability or seminar enrolment module is enabled for course";s:29:"state_multisignup_common_desc";s:75:"Check whether the user is signed up for multiple events in the same seminar";s:31:"state_multisignup_exceeded_fail";s:51:"Learner sign-up limit for this seminar was reached.";s:33:"state_multisignup_restricted_fail";s:55:"Attendance in other events restrict booking this event.";s:25:"state_noothersignups_desc";s:121:"User must not have active signups in other events of the same activity, unless multiple signups is enabled for the event.";s:33:"state_signup_awaits_approval_desc";s:41:"The user's signup is waiting for approval";s:33:"state_signup_awaits_approval_fail";s:45:"The user's signup is not waiting for approval";s:30:"state_signup_not_archived_desc";s:71:"The user does not hold an archived sign-up record for the seminar event";s:30:"state_signup_not_archived_fail";s:63:"The user holds an archived sign-up record for the seminar event";s:26:"state_userisenrolable_desc";s:54:"The user being signed up can be enrolled on the course";s:26:"state_userisenrolable_fail";s:78:"User is not enrolled and cannot be enrolled by signing up to the seminar event";s:29:"state_userhasnoconflicts_desc";s:49:"The signup user does not have conflicting signups";s:29:"state_userhasnoconflicts_fail";s:39:"The signup user has conflicting signups";s:25:"state_userhasmanager_desc";s:35:"The signup user must have a manager";s:25:"state_waitlistcommon_desc";s:38:"Common waitlist conditions must be met";s:26:"state_waitlistenabled_desc";s:34:"The event has the waitlist enabled";s:35:"state_waitlisteveryonedisabled_desc";s:82:"The waitlist everyone setting is disabled either globally or locally for the event";s:34:"state_waitlisteveryoneenabled_desc";s:80:"The waitlist everyone setting is enabled both globally and locally for the event";s:21:"statemessage_declined";s:52:"Your request to attend this event has been declined.";s:27:"statemessage_user_cancelled";s:44:"Your signup to the event has been cancelled.";s:6:"status";s:6:"Status";s:15:"status_approved";s:8:"Approved";s:15:"status_attended";s:8:"Attended";s:13:"status_booked";s:6:"Booked";s:26:"status_capacity_waitlisted";s:16:"{$a} on waitlist";s:15:"status_declined";s:8:"Declined";s:22:"status_event_cancelled";s:15:"Event Cancelled";s:25:"status_events_in_progress";s:18:"Events in progress";s:21:"status_fully_attended";s:14:"Fully attended";s:14:"status_no_show";s:7:"No show";s:14:"status_not_set";s:7:"Not set";s:25:"status_partially_attended";s:18:"Partially attended";s:18:"status_past_events";s:11:"Past events";s:23:"status_pending_requests";s:16:"Pending Requests";s:16:"status_requested";s:9:"Requested";s:20:"status_requestedrole";s:9:"Requested";s:21:"status_requestedadmin";s:17:"Requested (2step)";s:23:"status_unable_to_attend";s:16:"Unable to attend";s:22:"status_upcoming_events";s:15:"Upcoming events";s:21:"status_user_cancelled";s:14:"User Cancelled";s:17:"status_waitlisted";s:11:"On waitlist";s:13:"submitcsvtext";s:15:"Submit CSV text";s:33:"successfullyaddededitedxattendees";s:41:"Successfully added/edited {$a} attendees.";s:29:"successfullyremovedxattendees";s:36:"Successfully removed {$a} attendees.";s:7:"summary";s:7:"Summary";s:14:"takeattendance";s:15:"Take attendance";s:20:"takeattendance_label";s:17:"{$a}'s attendance";s:19:"takeattendance_tick";s:11:"Select {$a}";s:22:"takeattendance_tickall";s:20:"Select all attendees";s:8:"template";s:8:"Template";s:20:"templateadminrequest";s:21:"Booking admin request";s:28:"templateallreservationcancel";s:26:"All reservations cancelled";s:20:"templatecancellation";s:12:"Cancellation";s:20:"templateconfirmation";s:28:"Booking request confirmation";s:31:"templatecontainsoldplaceholders";s:47:"This template contains a deprecated placeholder";s:15:"templatedecline";s:24:"Booking request declined";s:22:"templatemanagerrequest";s:23:"Booking manager request";s:25:"templatefacilitatorcancel";s:34:"Session cancellation (facilitator)";s:27:"templatefacilitatorassigned";s:20:"Facilitator assigned";s:29:"templatefacilitatortimechange";s:34:"Session time changed (facilitator)";s:29:"templatefacilitatorunassigned";s:22:"Facilitator unassigned";s:24:"templatesoldplaceholders";s:130:"Some templates contain deprecated placeholders. Please review the templates marked with a warning icon and update where necessary.";s:16:"templatereminder";s:8:"Reminder";s:25:"templatereservationcancel";s:21:"Reservation cancelled";s:19:"templaterolerequest";s:20:"Booking role request";s:18:"templatetimechange";s:12:"Time changed";s:21:"templatetrainercancel";s:17:"Trainer cancelled";s:22:"templatetrainerconfirm";s:17:"Trainer confirmed";s:23:"templatetrainerunassign";s:26:"Trainer unassigned learner";s:16:"templatewaitlist";s:10:"Waitlisted";s:11:"thissession";s:10:"This event";s:4:"time";s:4:"Time";s:15:"timeandtimezone";s:18:"Time and Time Zone";s:7:"timedue";s:21:"Registration deadline";s:10:"timefinish";s:11:"Finish time";s:9:"timestart";s:10:"Start time";s:13:"timecancelled";s:14:"Time Cancelled";s:13:"timerequested";s:14:"Time Requested";s:12:"timesignedup";s:14:"Time Signed Up";s:15:"timestampbyuser";s:24:"{$a->time} by {$a->user}";s:14:"timezoneformat";s:14:"Timezone: {$a}";s:5:"title";s:5:"Title";s:26:"timezoneupgradeinfomessage";s:291:"WARNING : This upgrade to seminar adds the ability to specify the timezone in which a seminar event will occur.<br /><br />It is <b>strongly</b> recommended that you check the event timezones, start times and end times for all upcoming seminar events that were created prior to this upgrade.";s:5:"tutor";s:5:"Tutor";s:12:"datesignedup";s:14:"Date Signed Up";s:22:"thirdpartyemailaddress";s:29:"Third-party email address(es)";s:18:"thirdpartywaitlist";s:43:"Notify third-party about wait-listed events";s:4:"type";s:4:"Type";s:18:"unapprovedrequests";s:19:"Unapproved Requests";s:11:"unavailable";s:11:"Unavailable";s:24:"unavailablenotifications";s:205:"This seminar has unavailable notifications.<br/><a href='{$a->url1}'>Restore them for this seminar only</a> or go to <a href='{$a->url2}'>Manage notification templates</a> to restore them for all seminars.";s:17:"unavailableplugin";s:13:"(Unavailable)";s:20:"unavailabletemplates";s:170:"{$a} notification templates below are <strong>unavailable</strong> to any seminars created in an older version of this product. Please review and restore where necessary.";s:4:"undo";s:4:"Undo";s:11:"unknowndate";s:14:"(unknown date)";s:11:"unknowntime";s:14:"(unknown time)";s:8:"upcoming";s:8:"Upcoming";s:16:"upcomingsessions";s:15:"Upcoming events";s:20:"upcomingsessionslist";s:53:"List of all upcoming events for this seminar activity";s:23:"upcomingsessionsinasset";s:34:"Upcoming sessions using this asset";s:22:"upcomingsessionsinroom";s:30:"Upcoming sessions in this room";s:26:"upcomingsessionsinroomlist";s:53:"A list of upcoming sessions taking place in this room";s:16:"updateactivities";s:21:"Update all activities";s:21:"updateactivities_help";s:319:"When checked any saved content changes will update the corresponding content of all seminar activities which have notifications using this template.
+
+The 'status' of seminar activity notifications will not be affected.
+
+Seminar activity notifications whose title or content has been customised will not be affected.";s:23:"updateactivitieswarning";s:233:"<b>Warning:</b> When checked any saved content changes will update the corresponding content of all seminar activities which have notifications using this template. The 'status' of seminar activity notifications will not be affected.";s:25:"updateattendeessuccessful";s:31:"Successfully updated attendance";s:27:"updateattendeesunsuccessful";s:54:"An error has occurred, attendance could not be updated";s:19:"updatejobassignment";s:21:"Update job assignment";s:14:"updaterequests";s:15:"Update requests";s:14:"updatewaitlist";s:15:"Update waitlist";s:45:"upgradefixstatusapprovedlimbousersdescription";s:119:"Learners with an invalid seminar signup status were detected.
+The following learners were removed from events:<br>{$a}";s:40:"upgradefixstatusapprovedlimbousersdetail";s:45:"{$a->user} was removed from seminar {$a->f2f}";s:23:"upgradeprocessinggrades";s:76:"Processing seminar grades, this may take a while if there are many events...";s:15:"usercancelledon";s:22:"User cancelled on {$a}";s:24:"userdataitemcustomfields";s:38:"Sign-up and cancellation custom fields";s:23:"userdataitemfacilitator";s:19:"Facilitator records";s:36:"userdataitemfacilitator_customfields";s:25:"Facilitator custom fields";s:20:"userdataiteminterest";s:17:"Declared interest";s:31:"userdataitemroom_virtualmeeting";s:41:"Virtual meeting rooms created by the user";s:19:"userdataitemsignups";s:18:"Attendance records";s:16:"userdoesnotexist";s:54:"User with {$a->fieldname} "{$a->value}" does not exist";s:18:"useriddoesnotexist";s:34:"User with ID "{$a}" does not exist";s:15:"useroomcapacity";s:17:"Use room capacity";s:10:"userstoadd";s:12:"Users to add";s:17:"userstoaddcomment";s:24:"Enter one user per line:";s:14:"userstobeadded";s:17:"Users to be added";s:13:"userstoremove";s:15:"Users to remove";s:26:"allowbookingscancellations";s:19:"Allow cancellations";s:33:"allowbookingscancellationsdefault";s:64:"Default &lsquo;allow cancellations&rsquo; setting for all events";s:31:"allowbookingscancellations_help";s:126:"Allow users to cancel their bookings; at any time, never, or until cut-off reached (x amount of time before the event starts).";s:38:"allowbookingscancellationsdefault_help";s:183:"Set the default cancellation settings for this seminar and allow users to cancel their bookings at any time, never or until cut-off reached (x amount of time before the event starts).";s:12:"usercalentry";s:29:"Show entry on user's calendar";s:13:"usercancelled";s:17:"User cancellation";s:27:"usercancellationnoteheading";s:24:"{$a} - Cancellation note";s:20:"userdatapurgedcancel";s:25:"User data has been purged";s:17:"userdeletedcancel";s:21:"User has been deleted";s:24:"userjobassignmentheading";s:37:"{$a} - update selected job assignment";s:19:"usersuspendedcancel";s:23:"User has been suspended";s:15:"usernotsignedup";s:21:"Status: not signed up";s:8:"usernote";s:12:"Sign-up note";s:15:"usernoteupdated";s:23:"Attendee's note updated";s:15:"usernoteheading";s:18:"{$a} - update note";s:23:"usernoteheadingarchived";s:16:"{$a} - view note";s:12:"usersignedup";s:17:"Status: signed up";s:20:"usersignedupmultiple";s:29:"User signed up on {$a} events";s:14:"usersignedupon";s:22:"User signed up on {$a}";s:20:"userwillbewaitlisted";s:98:"This event is currently full. Upon successful sign-up, you will be placed on the event's waitlist.";s:29:"validation:needatleastonedate";s:77:"You need to provide at least one date, or else mark the event as wait-listed.";s:5:"venue";s:5:"Venue";s:14:"versioncontrol";s:15:"Version control";s:15:"viewallsessions";s:15:"View all events";s:9:"viewasset";s:10:"View asset";s:13:"viewattendees";s:14:"View attendees";s:11:"viewdetails";s:12:"View details";s:11:"viewresults";s:12:"View results";s:8:"viewroom";s:9:"View room";s:15:"viewsubmissions";s:16:"View submissions";s:15:"virtual_meeting";s:15:"Virtual meeting";s:19:"virtual_meeting_add";s:21:"Add virtual room link";s:23:"virtual_meeting_connect";s:7:"Connect";s:27:"virtual_meeting_date_locked";s:64:"This session uses a virtual room that you do not have control of";s:26:"virtual_meeting_disconnect";s:10:"Disconnect";s:25:"virtual_meeting_not_owner";s:46:"You are not the owner of the {$a} virtual room";s:32:"virtual_meeting_service_provider";s:24:"Service provider account";s:37:"virtual_meeting_service_provider_help";s:169:"Once you connect your service provider account and save this virtual room, the session will appear as a scheduled meeting under your authorised service provider account.";s:16:"virtual_meetings";s:16:"Virtual meetings";s:22:"virtual_meeting_failed";s:63:"Failed to sync with virtual meeting provider. Please try again.";s:25:"virtualroom_card_willopen";s:53:"Virtual room will open 15 minutes before next session";s:28:"virtualroom_card_unavailable";s:27:"Virtual room is unavailable";s:26:"virtualroom_card_preparing";s:21:"Updating virtual room";s:21:"virtualroom_card_over";s:35:"Virtual room is no longer available";s:21:"virtualroom_card_wait";s:14:"Please wait…";s:24:"virtualroom_banner_retry";s:92:"Failed to update the virtual room. <a href="{$a}">Please click to assign the room again.</a>";s:19:"virtualroom_creator";s:20:"Virtual room creator";s:19:"virtualroom_heading";s:12:"Virtual room";s:20:"virtualroom_headingx";s:18:"Virtual room: {$a}";s:27:"virtualroom_details_seminar";s:7:"Seminar";s:32:"virtualroom_details_session_time";s:12:"Session time";s:17:"waitlistautoclean";s:23:"Clear expired waitlists";s:22:"waitlistautoclean_help";s:189:"The waitlist for events gets cleared when they start, allowing users to signup to a new event. The "Waitlisted signup expired" notification can be used to inform users about this happening.";s:17:"waitlistedmessage";s:19:"Wait-listed message";s:16:"waitlisteveryone";s:37:"Send all bookings to the waiting list";s:21:"waitlisteveryone_help";s:71:"Everyone who signs up for this event will be added to the waiting list.";s:28:"waitlistselectoneormoreusers";s:41:"Please select one or more users to update";s:9:"wait-list";s:9:"Wait-list";s:11:"wait-listed";s:11:"Wait-listed";s:32:"warning:meetingmaynotbepreserved";s:231:"Editing this session may reset virtual room settings with the external provider. For example, who can present or bypass the lobby. Please check the meeting settings with your provider to ensure they are still correct after editing.";s:30:"xerrorsencounteredduringimport";s:42:"{$a} problem(s) encountered during import.";s:6:"xhours";s:12:"{$a} hour(s)";s:15:"xmessagesfailed";s:30:"{$a} message(s) failed to send";s:24:"xmessagessenttoattendees";s:46:"{$a} message(s) successfully sent to attendees";s:35:"xmessagessenttoattendeesandmanagers";s:65:"{$a} message(s) successfully sent to attendees and their managers";s:8:"xminutes";s:14:"{$a} minute(s)";s:6:"xusers";s:12:"{$a} user(s)";s:12:"youarebooked";s:38:"You are booked for the following event";s:12:"yourbookings";s:28:"Your bookings / reservations";s:16:"youremailaddress";s:18:"Your email address";s:30:"youwillbeaddedtothewaitinglist";s:65:"Please Note: You will be added to the waiting list for this event";s:20:"error:shortnametaken";s:49:"Custom field with this short name already exists.";s:18:"allowoverbook_help";s:315:"When **Enable waitlist** is checked, learners will be able to sign up for a seminar event even if it is already full.
+
+When a learner signs up for an event that is already full, they will receive an email advising that they have been waitlisted for the event and will be notified when a booking becomes available.";s:17:"approvalreqd_help";s:129:"When **Approval required** is checked, a learner will need approval from their manager to be permitted to attend a seminar event.";s:21:"cancellationinstrmngr";s:20:"# Notice for manager";s:26:"cancellationinstrmngr_help";s:172:"When **Send notice to manager** is checked, the text in the **Notice for manager** field is sent to a learner's manager advising that they have cancelled a seminar booking.";s:24:"cancellationmessage_help";s:74:"This message is sent out whenever users cancel their booking for an event.";s:21:"confirmationinstrmngr";s:20:"# Notice for manager";s:26:"confirmationinstrmngr_help";s:173:"When **Send notice to manager** is checked, the text in the **Notice for manager** field is sent to a manager advising that a staff member has signed up for a seminar event.";s:24:"confirmationmessage_help";s:61:"This message is sent out whenever users sign up for an event.";s:16:"description_help";s:160:"**Description** is the course description that displays when a learner enrols on a seminar event.
+
+The **Description** also displays in the training calendar.";s:12:"details_help";s:257:"Details are tracked per event basis.
+If text is populated in the details field, the details text will be displayed on the user signup page.
+By default, the details text also appears in the confirmation, reminder, waitlist, and cancellation email messages.";s:17:"discountcode_help";s:209:"Discount code is the code required for the discount cost to be tracked for the training of a staff member.
+If the staff member does not enter the discount code, the normal cost appears in the training record.";s:19:"discountcodelearner";s:13:"Discount Code";s:24:"discountcodelearner_help";s:126:"If you know the discount code enter it here. If you leave this field blank you will be charged the normal cost for this event.";s:17:"discountcost_help";s:78:"Discount cost is the amount charged to staff members who have a membership ID.";s:13:"duration_help";s:252:"**Duration** is the total length of the training in hours.
+If the training occurs over two or more time periods, the duration is the combined total.
+If the session date is known then this value is automatically recalculated when the session is saved.";s:24:"emailmanagercancellation";s:24:"# Send notice to manager";s:29:"emailmanagercancellation_help";s:149:"When **Send notice to manager** is checked, an email will be sent to the learner's manager advising them that the seminar booking has been cancelled.";s:24:"emailmanagerconfirmation";s:24:"# Send notice to manager";s:29:"emailmanagerconfirmation_help";s:149:"When **Send notice to manager** is checked, a confirmation email will be sent to the learner's manager when the learner signs up for a seminar event.";s:20:"emailmanagerreminder";s:24:"# Send notice to manager";s:25:"emailmanagerreminder_help";s:155:"When **Send notice to manager** is checked, a reminder message will be sent to the learner's manager a few days before the start date of the seminar event.";s:13:"location_help";s:285:"**Location** describes the vicinity of the event (city, county, region, etc).
+
+**Location** displays on the course page, **Sign-up page**, the **View all events** page, and in all email notifications.
+
+On the **View all events** page, the listed events can be filtered by location.";s:15:"modulename_help";s:592:"The seminar activity module enables a trainer to set up a booking system for one or many in-person/classroom based events.
+
+Each event within a seminar activity can have customised settings around room, start time, finish time, cost, capacity, etc. These can be set to run over multiple days or allow for unscheduled and waitlisted events.
+
+An Activity may be set to require manager approval and trainers can configure automated notifications and event reminders for attendees.
+
+learners can view and sign-up for events with their attendance tracked and recorded within the Grades area.";s:9:"mods_help";s:385:"Seminar activities are used to keep track of in-person trainings which require advance booking.
+
+Each activity is offered in one or more identical events. These events can be given over multiple days.
+
+Reminder messages are sent to users and their managers a few days before the event is scheduled to start. Confirmation messages are sent when users sign-up for an event or cancel.";s:25:"multisignupfailure_common";s:36:"Existing sign-up(s) for this seminar";s:29:"multisignupfailure_limitation";s:52:", have already reached the maximum of {$a} signup(s)";s:30:"multisignupfailure_restriction";s:45:", are not in the required attendance state(s)";s:17:"multisignupamount";s:36:"How many times the user can sign-up?";s:22:"multisignupamount_help";s:200:"Limits the total number of sign-ups a user can have within the seminar. A value of 1 for this setting disables multiple signups. Note: This setting does not take cancelled sign-ups into consideration.";s:27:"multisignupamount_unlimited";s:9:"Unlimited";s:19:"multisignuprestrict";s:31:"Restrict subsequent sign-ups to";s:24:"multisignuprestrict_desc";s:513:"Restrict subsequent sign-ups based on the state of previous signups. Enabling any of these state restrictions will limit users to a single concurrent sign-up within a single seminar, as they will not be able to sign-up to another event until their current sign-up has its attendance set to one of the selected states. If none of these restrictions are enabled users can have as many concurrent sign-ups within the seminar as the maximum limitation allows. Note: Cancelled signups are not taken into consideration.";s:24:"multisignuprestrict_help";s:508:"Restrict subsequent sign-ups based on the state of previous signups. Enabling any of these state restrictions will limit users to a single concurrent sign-up within the seminar, as they will not be able to sign-up to another event until their current sign-up has its attendance set to one of the selected states. If none of these restrictions are enabled users can have as many concurrent sign-ups within the seminar as the maximum limitation allows. Note: Cancelled signups are not taken into consideration.";s:15:"normalcost_help";s:83:"Normal cost is the amount charged to staff members who do not have a membership ID.";s:21:"notificationtype_help";s:204:"Notification Type allows the learner to select how they would like to be notified of their booking.
+
+* Email notification and iCalendar appointment.
+* Email notification only.
+* No Email notification.";s:15:"recipients_help";s:273:"Use this setting to target learners based on their status.
+
+Booking status:<br>Past events, events in progress, upcoming events.
+
+Attendance status:<br>Fully attended, partially attended, unable to attend, no show.
+
+Other:<br>On waitlist, cancelled, pending requests.";s:17:"reminderinstrmngr";s:20:"# Notice for Manager";s:22:"reminderinstrmngr_help";s:174:"When **Send notice to manager** is checked, the text in the **Notice for Manager** field is sent to a learner's manager advising that they have signed up for a seminar event.";s:20:"remindermessage_help";s:65:"This message is sent out a few days before an event's start date.";s:15:"requestapproval";s:16:"Request approval";s:19:"requestmessage_help";s:657:"When **Approval required** is enabled, the **Request message** section is available.
+
+The **Request message** section displays the notices sent to the learner and their manager regarding the approval process for the learner to attend the seminar event.
+
+* **Subject:** Is the subject line that appears on the request approval emails sent to the manager and the learner.
+* **Message:** Is the email text sent to the learner advising them that their request to attend the seminar event has been sent to their manager for approval.
+* **Notice for manager:** Is the email text sent to the learner's manager requesting approval to attend the seminar event.";s:9:"room_help";s:197:"**Room** is the name/number/identifier of the room being used for the training event.
+
+The **Room** displays on the **Sign-up** page, the **View all events** page, and in all email notifications.";s:25:"sessionsoncoursepage_help";s:98:"This is the number of events for each seminar activity that will be shown on the main course page.";s:9:"shortname";s:12:"# Short Name";s:14:"shortname_help";s:126:"**Short name** is the description of the event that appears on the training calendar when **Show on the calendar** is enabled.";s:19:"showoncalendar_help";s:560:"When **Site** is selected the seminar activity events will be displayed on the site calendar as a Global Event.  All site users will be able to view these events.
+
+When **Course** is selected all of the seminar activity events will be displayed on the course calendar and as Course Event on the site level calendar and visible to all users enrolled in the course.
+
+When **None** is selected, seminar activity events will only be displayed as User Events on a confirmed attendee's calendar, provided the **Show on user's calendar** option has been selected.";s:18:"suppressemail_help";s:171:"Use this option if you want to silently add/remove users from a seminar event. When this option is toggled, the usual email confirmation is not sent to the selected users.";s:27:"thirdpartyemailaddress_help";s:347:"**Third-party email address(es)** is an optional field used to specify the email address of a third-party (such as an external instructor) who will then receive confirmation messages whenever a user signs-up for an event.
+When entering **multiple email addresses**, separate each address with a comma. For example: bob@example.com,joe@example.com";s:23:"thirdpartywaitlist_help";s:314:"When **Notify third-party about wait-listed events** is selected the third-party(s) will be notified when a learner signs up for a wait-listed event. When
+
+**Notify third-party about wait-listed events** is not enabled third-party(s) will only be notified when a user signs up (or cancels) for a scheduled event.";s:15:"timefinish_help";s:44:"Finish time is the time when the event ends.";s:14:"timestart_help";s:45:"Start time is the time when the event begins.";s:14:"useridentifier";s:15:"User identifier";s:17:"usercalentry_help";s:254:"When active this setting adds a User Event entry to the calendar of an attendee of a seminar event. When turned off this prevents a duplicate event appearing in an event attendee's calendar, where you have calendar display settings set to Course or Site.";s:10:"venue_help";s:164:"**Venue** is the building the event will be held in.
+
+The **Venue** displays on the **Sign-up** page, the **View all events** page and in all email notifications.";s:22:"waitlistedmessage_help";s:72:"This message is sent out whenever users sign-up for a wait-listed event.";s:13:"usernote_help";s:120:"Any specific requirements that the event organiser might need to know about:
+
+* Dietary requirements.
+* Disabilities.";s:18:"approveinstruction";s:43:"To approve event registration, press accept";s:16:"bookedforsession";s:21:"Booked for event {$a}";s:19:"cancelledforsession";s:24:"Cancelled for event {$a}";s:17:"cancelusersession";s:43:"Cancelled for {$a->usermsg} event {$a->url}";s:17:"rejectinstruction";s:42:"To reject event registration, press reject";s:19:"registrationnotopen";s:16:"Booking not open";s:24:"registrationnotopenalert";s:81:"The Sign-up period for your selected session is currently not open, it opens {$a}";s:18:"registrationclosed";s:14:"Booking closed";s:23:"registrationclosedalert";s:86:"The Sign-up period for your selected session has closed, please select another session";s:26:"registrationhoverhintstart";s:54:"Sign-up period opens: {$a->startdate}, {$a->starttime}";s:28:"registrationhoverhintstarttz";s:82:"Sign-up period opens: {$a->startdate}, {$a->starttime} (time zone: {$a->timezone})";s:24:"registrationhoverhintend";s:51:"Sign-up period closes: {$a->enddate}, {$a->endtime}";s:26:"registrationhoverhintendtz";s:79:"Sign-up period closes: {$a->enddate}, {$a->endtime} (time zone: {$a->timezone})";s:20:"registrationdatetime";s:24:"Sign-up period date/time";s:21:"registrationtimestart";s:13:"Sign-up opens";s:26:"registrationtimestart_help";s:135:"If enabled, learners will not be able to sign up for this session and managers will not be able to approve until this time has arrived.";s:22:"registrationtimefinish";s:14:"Sign-up closes";s:27:"registrationtimefinish_help";s:133:"If enabled, learners will not be able to sign up for this session and managers will not be able to approve once this time has passed.";s:28:"registrationerrorstartfinish";s:60:"Sign-up period start time must be before sign-up finish time";s:24:"registrationstartsession";s:61:"Sign-up period opening time must be before session start time";s:25:"registrationfinishsession";s:67:"Sign-up period closing time must be on or before session start time";s:19:"registrationdetails";s:14:"Sign-up period";s:17:"registrationopens";s:5:"Opens";s:18:"registrationcloses";s:6:"Closes";s:24:"registrationclosingblurb";s:108:"The following people have indicated their interest. You may wish to inform them if you create a new session.";s:31:"registrationclosingconfirmation";s:67:"Are you sure you want to close the sign-up period for this session?";s:20:"requestattendsession";s:30:"Request to attend session {$a}";s:28:"requestattendsession_message";s:51:"Request to attend event {$a->linkname} {$a->status}";s:28:"requestattendsession_subject";s:61:"Request to attend event {$a->name} {$a->status} by {$a->user}";s:24:"requestattendsessionsent";s:44:"Request to attend event {$a} sent to manager";s:24:"requestuserattendsession";s:51:"Request for {$a->usermsg} to attend event {$a->url}";s:22:"nosignupperiodopendate";s:3:"Now";s:23:"nosignupperiodclosedate";s:18:"Session start date";s:16:"sessiondate_help";s:46:"Session is the date on which the event occurs.";s:13:"signupexpired";s:83:"Sending expired sign-up period date notifications to the admin user of that session";s:18:"signupperiodheader";s:14:"Sign-up period";s:24:"signupregistrationclosed";s:90:"The sign-up period for your selected session closed {$a->date}, {$a->time} {$a->timezone}.";s:28:"signupregistrationnotyetopen";s:115:"The sign-up period for your selected session is currently not open, it opens {$a->date}, {$a->time} {$a->timezone}.";s:41:"signupstartdateandtimeonlywithouttimezone";s:38:"After {$a->startdate}, {$a->starttime}";s:14:"signupstartend";s:32:"{$a->startdate} to {$a->enddate}";s:16:"signupstartsonly";s:21:"After {$a->startdate}";s:39:"signupenddateandtimeonlywithouttimezone";s:35:"Before {$a->enddate}, {$a->endtime}";s:14:"signupendsonly";s:20:"Before {$a->enddate}";s:17:"waitlistcancelled";s:46:"Your place on the waitlist has been cancelled.";s:27:"waitlistcancellationconfirm";s:78:"Are you sure you want to cancel your place on the waiting list for this event?";s:21:"waitlistautocleantask";s:65:"Clear the waitlist for seminar events after the event has started";s:20:"waitlistedforsession";s:25:"Waitlisted for event {$a}";s:11:"waitlistfor";s:17:"Waitlist for {$a}";s:14:"waitliststatus";s:57:"You have a place on the waitlist of the following session";s:26:"warning:mixedapprovaltypes";s:137:"This seminar was previously using mixed approval types, it is currently set to manager approval. Please check all self approval sessions.";s:21:"showallpreviousevents";s:24:"Show all previous events";s:22:"attendanceinstructions";s:36:"Select users who attended the event:";s:14:"attendancetime";s:18:"Mark attendance at";s:18:"attendancetime_any";s:23:"Any time (unrestricted)";s:18:"attendancetime_end";s:24:"Event / session end time";s:19:"attendancetime_help";s:124:"Unlock attendance marking for trainers 15 minutes prior to event / session start time, end time, or any time (unrestricted).";s:20:"attendancetime_start";s:26:"Event / session start time";s:10:"chooseroom";s:13:"Choose a room";s:13:"currentstatus";s:14:"Current status";s:8:"moreinfo";s:9:"More info";s:12:"publishreuse";s:33:"Publish for reuse by other events";s:12:"seeattendees";s:13:"See attendees";s:10:"selectroom";s:11:"Select room";s:17:"sessionattendance";s:27:"Session attendance tracking";s:22:"sessionattendance_help";s:78:"Track learners attendance on a per session basis as well as a per event basis.";s:26:"state_eventhassession_fail";s:27:"Event does not have session";s:30:"state_multisignup_enabled_fail";s:36:"Existing sign-up(s) for this seminar";s:33:"state_multisignup_limitation_fail";s:52:", have already reached the maximum of {$a} signup(s)";s:34:"state_multisignup_restriction_fail";s:45:", are not in the required attendance state(s)";s:22:"addmanageremailaddress";s:25:"Add manager email address";s:26:"addmanageremailinstruction";s:111:"You have not previously entered your manager's email address. Please enter it below to sign-up for this event. ";s:12:"addnewnotice";s:21:"Add a new site notice";s:16:"addnewnoticelink";s:24:"Create a new site notice";s:22:"allowsignupnotedefault";s:70:"Default &lsquo;Users can enter requests when signing up&rsquo; setting";s:27:"allowsignupnotedefault_help";s:110:"Whether events in this activity will allow a sign-up note by default, can be overridden in the event settings.";s:19:"availablesignupnote";s:40:"Users can enter requests when signing up";s:24:"availablesignupnote_help";s:213:"When **Users can enter requests when signing up** is checked, learners will be able to enter any specific requirements that the event organiser might need to know about:
+
+* Dietary requirements.
+* Disabilities.";s:24:"bulkaddattendeesfromfile";s:28:"Bulk add attendees from file";s:25:"bulkaddattendeesfrominput";s:34:"Bulk add attendees from text input";s:14:"bulkaddheading";s:8:"Bulk Add";s:22:"calendarfiltersheading";s:24:"Seminar calendar filters";s:25:"changemanageremailaddress";s:28:"Change manager email address";s:29:"changemanageremailinstruction";s:62:"Please enter the email address for your current manager below.";s:10:"conditions";s:10:"Conditions";s:21:"conditionsexplanation";s:86:"All of these criteria must be met for the notice to be shown on the training calendar:";s:26:"confirmmanageremailaddress";s:29:"Confirm manager email address";s:34:"confirmmanageremailaddressquestion";s:60:"Is <strong>{$a}</strong> still your manager's email address?";s:31:"confirmmanageremailinstruction1";s:69:"You previously entered the following as your manager's email address:";s:31:"confirmmanageremailinstruction2";s:43:"Is this still your manager's email address?";s:11:"costheading";s:12:"Session Cost";s:32:"error:couldnotupdatemanageremail";s:39:"Could not update manager email address.";s:23:"error:emptymanageremail";s:28:"Manager email address empty.";s:27:"error:mismatchdatesdetected";s:88:"Mismatch in dates detected. Start time and finish time should be provided for each date.";s:18:"error:nodatesfound";s:14:"No dates found";s:20:"error:nomanageremail";s:52:"You didn't provide an email address for your manager";s:24:"error:nopositionselected";s:77:"You must have a suitable position assigned to sign up for this seminar event.";s:32:"error:nopositionselectedactivity";s:80:"You must have a suitable position assigned to sign up for this seminar activity.";s:28:"error:nostatetransitionfound";s:64:"There is no direct way to change signup status to required state";s:28:"eventattendeepositionupdated";s:25:"Attendee position updated";s:13:"exportheading";s:6:"Export";s:36:"facetoface:changesignedupjobposition";s:29:"Change signed up job position";s:19:"forceselectposition";s:57:"Prevent signup if no position is selected or can be found";s:12:"manageradded";s:47:"Your manager's email address has been accepted.";s:14:"managerchanged";s:46:"Your manager's email address has been changed.";s:12:"manageremail";s:15:"Manager's email";s:19:"manageremailheading";s:14:"Manager Emails";s:19:"manageremailaddress";s:23:"Manager's email address";s:18:"manageremailformat";s:62:"The email address must be of the format '{$a}' to be accepted.";s:23:"manageremailinstruction";s:141:"In order to sign-up for a training event, a confirmation email must be sent to your email address and copied to your manager's email address.";s:30:"manageremailinstructionconfirm";s:57:"Please confirm that this is your manager's email address:";s:14:"managerupdated";s:46:"Your manager's email address has been updated.";s:22:"newmanageremailaddress";s:23:"Manager's email address";s:10:"noposition";s:31:"User has no positions assigned.";s:13:"nositenotices";s:35:"<p>No site notices are defined.</p>";s:19:"noticedeleteconfirm";s:72:"Delete site notice '{$a->name}'?<br/><blockquote>{$a->text}</blockquote>";s:10:"noticetext";s:11:"Notice text";s:8:"position";s:8:"Position";s:21:"savewithuserconflicts";s:18:"Save with conflict";s:28:"savewithuserconflicts_header";s:33:"User scheduling conflict detected";s:26:"selectedpositionassignment";s:30:"Position Assignment on sign up";s:20:"selectedpositionname";s:24:"Position Name on sign up";s:20:"selectedpositiontype";s:24:"Position Type on sign up";s:14:"selectposition";s:17:"Select a position";s:22:"selectpositiononsignup";s:25:"Select position on signup";s:29:"setting:addchangemanageremail";s:44:"Ask users for their manager's email address.";s:36:"setting:addchangemanageremaildefault";s:44:"Ask users for their manager's email address.";s:37:"setting:addchangemanageremail_caption";s:16:"Manager's email:";s:29:"setting:bulkaddsource_caption";s:15:"Bulk add field:";s:21:"setting:bulkaddsource";s:56:"When bulk adding attendees, match to the selected field.";s:28:"setting:manageraddressformat";s:97:"Suffix which must be present in the email address of the manager in order to be considered valid.";s:36:"setting:manageraddressformat_caption";s:16:"Required suffix:";s:35:"setting:manageraddressformatdefault";s:0:"";s:36:"setting:manageraddressformatreadable";s:127:"Short description of the restrictions on a manager's email address.  This setting has no effect if the previous one is not set.";s:44:"setting:manageraddressformatreadable_caption";s:15:"Format example:";s:43:"setting:manageraddressformatreadabledefault";s:30:"firstname.lastname@company.com";s:36:"setting:selectpositiononsignupglobal";s:25:"Select position on signup";s:44:"setting:selectpositiononsignupglobal_caption";s:155:"When enabled a setting will appear in seminar activity settings to force users with multiple positions to choose which capacity they will be signing up on.";s:19:"setting:sitenotices";s:54:"Notices only appear on the Seminar Calendar found {$a}";s:23:"setting:sitenoticeshere";s:4:"here";s:18:"sitenoticesheading";s:12:"Site Notices";s:14:"updateposition";s:15:"Update position";s:19:"userpositionheading";s:31:"{$a} - update selected position";s:35:"userschedulingconflictdetected_body";s:198:"Saving this event as it is will cause a scheduling conflict for {$a->userscount} individual/s:
+{$a->users}.
+
+Please cancel and go back to change the settings (recommended), or save with conflict.";s:36:"userschedulingconflictdetected_title";s:33:"User scheduling conflict detected";s:6:"cancel";s:6:"Cancel";s:13:"capacity_help";s:269:"**Capacity** is the number of seats available in an event.
+
+When a Seminar event reaches capacity the event details do not appear on the course page. The details will appear greyed out on the **View all events** page and the learner cannot enrol on the event.
+&nbsp;";s:4:"copy";s:4:"Copy";s:21:"datetimeknownhinttext";s:0:"";s:6:"delete";s:6:"Delete";s:4:"edit";s:4:"Edit";s:24:"error:couldnotaddsession";s:19:"Could not add event";s:27:"error:couldnotupdatesession";s:22:"Could not update event";s:30:"error:notificationtitletoolong";s:189:"The title you have used is too long. The title is typically used as an email subject and should be no more than 78 characters long. Longer titles may be truncated by the users email client.";s:24:"status_session_cancelled";s:15:"Event Cancelled";s:20:"sessiondatetimeknown";s:23:"Session date/time known";s:25:"sessiondatetimeknown_help";s:1574:"**If a session's date/time is known**
+
+If **Yes** is entered for this setting, the session date and time will be displayed on the course page (if the session is upcoming and available), the **View all sessions page**, the session sign-up page, as well as all email notifications related to the session.
+
+When a staff member signs up for a session with a known date and time:
+
+* The staff member and the staff member's manager will be sent a confirmation email (i.e., the one formatted per the **Confirmation message** section of the Seminar activity settings).
+* The staff member will be sent a reminder email message (i.e., the one formatted per the **Reminder message** section of the seminar activity settings). The reminder will be sent a number of days before the session, according to the **Days before message is sent** setting also found in the **Reminder message** section of the Seminar activity settings.
+
+**If a session's date/time is not known (or wait-listed)**
+
+If **No** is entered for this setting, the text 'wait-listed' will be displayed on the course page, the **View all sessions page**, the session sign-up page, as well as all email notifications related to the session.
+
+When a staff member signs up for a wait-listed session:
+
+* The staff member will be sent a confirmation email (i.e. the one formatted per the **Wait-listed message** section of the Seminar activity settings).
+* The staff member will not be sent a reminder email message.
+* The staff member's manager will not be sent confirmation and cancellation email messages.";s:23:"facetoface:editsessions";s:46:"Add, edit, copy and delete face-to-face events";s:19:"facetoface:overbook";s:23:"Sign-up to full events.";s:27:"missingdefaultnotifications";s:45:"There are {$a} missing default notifications.";s:18:"missingdefaultsfix";s:52:"Click here to restore missing default notifications.";s:4:"xhxm";s:27:"{$a->hours}h {$a->minutes}m";s:24:"setting:multiplesessions";s:58:"Default value for allowing multiple events signup per user";s:32:"setting:multiplesessions_caption";s:23:"Multiple events default";s:23:"multiplesessionsheading";s:31:"Multiple events signup settings";s:16:"multiplesessions";s:36:"Users can sign-up to multiple events";s:21:"multiplesessions_help";s:151:"When this option is toggled, users can sign up for multiple events within a seminar, subject to the restrictions and limitations of the settings below.";s:29:"setting:signupapproval_header";s:16:"Signup Approvals";s:21:"approvaloptionsheader";s:16:"Approval Options";s:12:"gradesheader";s:5:"Grade";s:27:"setting:fromaddress_caption";s:15:"Sender address:";s:19:"setting:fromaddress";s:135:"What will appear in the From field of email reminders sent by this module, unless "Always send email from the no-reply address" is set.";s:26:"setting:fromaddressdefault";s:18:"totara@example.com";s:15:"schedule_unit_3";s:10:"{$a} weeks";s:24:"schedule_unit_3_singular";s:6:"1 week";s:16:"scvtextfile_help";s:557:"The file should be a CSV text file containing a heading row and one or more data rows. If a row contains multiple columns they should be separated by a comma (,). Every row must have the same number of columns. Below is a list of the heading names you can use:
+
+* **username**: The username of the user to add.
+* **idnumber**: The ID number of the user to add.
+* **email**: The email address of the user to add.
+{$a->customfields}
+
+The following fields must be provided:
+
+* Either username, idnumber, or email (only one)
+{$a->requiredcustomfields}";s:20:"sessionundercapacity";s:38:"Event under minimum bookings for: {$a}";s:25:"sessionundercapacity_body";s:178:"The following event is under minimum bookings:
+
+Name: {$a->name}
+Event start: {$a->starttime}
+Capacity: {$a->booked} / {$a->capacity} (minimum: {$a->mincapacity})
+{$a->link}";s:25:"declareinterestonlyiffull";s:58:"Show "Declare Interest" link only if all events are closed";s:30:"declareinterestonlyiffull_help";s:90:"Only show the declare interest option if there are no events with spaces or waiting lists.";s:15:"placeholder:icq";s:5:"[icq]";s:15:"placeholder:msn";s:5:"[msn]";s:17:"placeholder:yahoo";s:7:"[yahoo]";s:15:"placeholder:aim";s:5:"[aim]";s:22:"error:idnumbernotfound";s:123:"No users were added because no users match the following user ID numbers: {$a}. Please remove invalid numbers and try again";s:19:"error:emailnotfound";s:51:"No users were found with the following emails: {$a}";s:22:"error:usernamenotfound";s:54:"No users were found with the following usernames: {$a}";}

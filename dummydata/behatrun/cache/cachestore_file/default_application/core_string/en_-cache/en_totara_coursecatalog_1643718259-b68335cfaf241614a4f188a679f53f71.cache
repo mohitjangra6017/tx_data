@@ -1,0 +1,71 @@
+a:117:{s:16:"addcertification";s:20:"Create Certification";s:9:"addcourse";s:13:"Create Course";s:10:"addprogram";s:14:"Create Program";s:17:"backtoallcategory";s:22:"Back to all Categories";s:15:"backtoallcourse";s:19:"Back to all courses";s:16:"backtoallprogram";s:20:"Back to all programs";s:15:"backtocategoryx";s:12:"Back to {$a}";s:19:"backtocourselisting";s:22:"Back to course listing";s:12:"backtoparent";s:22:"&laquo; Back to parent";s:16:"browsebycategory";s:18:"Browse by category";s:12:"businessdays";s:13:"Business days";s:14:"certifications";s:14:"Certifications";s:17:"completiontotrack";s:19:"Completion to track";s:38:"coursecatalog:manageaudiencevisibility";s:32:"Manage audience-based visibility";s:7:"courses";s:7:"Courses";s:15:"deletedreminder";s:36:"Successfully deleted reminder "{$a}"";s:14:"deletereminder";s:22:"Delete reminder "{$a}"";s:8:"dontsend";s:23:"Don't send this message";s:19:"editcoursereminders";s:21:"Edit course reminders";s:23:"error:courseidincorrect";s:23:"Course ID was incorrect";s:24:"error:courseidorcategory";s:46:"Either course id or category must be specified";s:20:"error:createreminder";s:33:"Could not create reminder message";s:20:"error:deletereminder";s:33:"Could not delete reminder message";s:20:"error:updatereminder";s:33:"Could not update reminder message";s:10:"escalation";s:10:"Escalation";s:24:"escalationmessagedefault";s:545:"This is to advise that the following staff member has an outstanding course evaluation:
+
+[firstname] [lastname]
+[coursename]
+
+Course evaluations are important to the business and help inform on the value specific training provides and if they are being delivered in the most effective way.
+As you maybe aware your involvement with your staff member around this training is also measured.
+
+There are no further reminders of this but please be aware that the return rates are noted and reported at the business unit & business group level.";s:24:"escalationsubjectdefault";s:57:"Outstanding Course evaluation from [firstname] [lastname]";s:12:"findlearning";s:13:"Find Learning";s:20:"findlearningdisabled";s:33:"Find Learning (Legacy catalogues)";s:10:"invitation";s:10:"Invitation";s:17:"invitationmessage";s:7:"Message";s:22:"invitationmessage_help";s:418:"This is the message for the invitation email.
+
+The message can include a number of placeholders:
+
+* [firstname] : Users firstname.
+* [lastname] : Users lastname.
+* [coursepageurl] : A clickable link to the course homepage.
+* [coursename] : Name of the course.
+* [managername] : Name of users manager.
+* [days counter up] : Number of days since completion.
+* [days count down] : Number of days until deadline.";s:24:"invitationmessagedefault";s:553:"Dear [firstname]
+
+Congratulations on completing [coursename].
+
+We would now like you to complete a course evaluation. This is important as it informs those responsible for training what is and what isn’t working. The course evaluation is mostly multiple choice questions and takes 2 to 3 minutes to complete.
+
+Please visit the course page link below to access the evaluation:
+
+[coursepageurl]
+
+Please action this within three days.
+
+Should this still be outstanding in [days count down] days time we will escalate this to your Team Leader.";s:16:"invitationperiod";s:6:"Period";s:21:"invitationperiod_help";s:49:"The period before the invitation is sent in days.";s:17:"invitationsubject";s:28:"Invitiation Reminder Subject";s:22:"invitationsubject_help";s:430:"This is the subject of the invitation email that is sent.
+
+The subject can include a number of placeholders:
+
+* [firstname] : Users firstname.
+* [lastname] : Users lastname.
+* [coursepageurl] : A clickable link to the course homepage.
+* [coursename] : Name of the course.
+* [managername] : Name of users manager.
+* [days counter up] : Number of days since completion.
+* [days count down] : Number of days until deadline.";s:24:"invitationsubjectdefault";s:28:"Please evaluate [coursename]";s:7:"message";s:7:"Message";s:12:"missingtitle";s:13:"Missing title";s:3:"new";s:7:"Add New";s:7:"nextday";s:8:"Next day";s:33:"noactivitieswithcompletionenabled";s:88:"Course reminders are unavailable as no activities in this course have completion enabled";s:21:"nocertificationsfound";s:50:"No certifications were found with the words "{$a}"";s:10:"noeditsite";s:47:"You cannot edit the site course using this form";s:20:"nofeedbackactivities";s:83:"Course reminders are unavailable as there are no Feedback activities in this course";s:16:"nomanagermessage";s:16:"(no manager set)";s:15:"noprogramsfound";s:44:"No programs were found with the words "{$a}"";s:20:"orviewcertifications";s:46:"or view certifications in this category ({$a})";s:13:"orviewcourses";s:39:"or view courses in this category ({$a})";s:14:"orviewprograms";s:40:"or view programs in this category ({$a})";s:29:"performsearchoncertifications";s:40:"or perform this search on certifications";s:22:"performsearchoncourses";s:33:"or perform this search on courses";s:23:"performsearchonprograms";s:34:"or perform this search on programs";s:6:"period";s:6:"Period";s:10:"pluginname";s:14:"Course Catalog";s:8:"programs";s:8:"Programs";s:8:"reminder";s:8:"Reminder";s:15:"remindermessage";s:7:"Message";s:20:"remindermessage_help";s:416:"This is the message for the reminder email.
+
+The message can include a number of placeholders:
+
+* [firstname] : Users firstname.
+* [lastname] : Users lastname.
+* [coursepageurl] : A clickable link to the course homepage.
+* [coursename] : Name of the course.
+* [managername] : Name of users manager.
+* [days counter up] : Number of days since completion.
+* [days count down] : Number of days until deadline.";s:22:"remindermessagedefault";s:325:"Dear [firstname]
+
+This is a reminder to complete your course evaluation of [coursename].
+
+This is important and only takes 2 to 3 minutes of your time.
+
+Please visit the course page link below to access the evaluation:
+
+[coursepageurl]
+
+Should this remain outstanding we will escalate that this to your team leader.";s:14:"reminderperiod";s:6:"Period";s:19:"reminderperiod_help";s:47:"The period before the reminder is sent in days.";s:17:"remindersmenuitem";s:9:"Reminders";s:15:"remindersubject";s:7:"Subject";s:20:"remindersubject_help";s:416:"This is the subject for the reminder email.
+
+The subject can include a number of placeholders:
+
+* [firstname] : Users firstname.
+* [lastname] : Users lastname.
+* [coursepageurl] : A clickable link to the course homepage.
+* [coursename] : Name of the course.
+* [managername] : Name of users manager.
+* [days counter up] : Number of days since completion.
+* [days count down] : Number of days until deadline.";s:22:"remindersubjectdefault";s:33:"Reminder to evaluate [coursename]";s:25:"reportbasedcertifications";s:38:"Report-based catalogue: certifications";s:18:"reportbasedcourses";s:31:"Report-based catalogue: courses";s:19:"reportbasedprograms";s:32:"Report-based catalogue: programs";s:11:"requirement";s:11:"Requirement";s:16:"requirement_help";s:58:"The Required feedback activity that needs to be completed.";s:7:"sameday";s:8:"Same day";s:6:"search";s:6:"Search";s:11:"searchagain";s:12:"Search again";s:19:"searchallcategories";s:21:"Search all categories";s:23:"searchallcertifications";s:25:"Search all certifications";s:16:"searchallcourses";s:18:"Search all courses";s:17:"searchallprograms";s:19:"Search all programs";s:16:"searchcategories";s:17:"Search categories";s:29:"searchcategoriesmatchesplural";s:49:"{$a->count} categories match search "{$a->terms}"";s:29:"searchcategoriesmatchessingle";s:39:"1 category matches search "{$a->terms}"";s:23:"searchcategoriesshowall";s:22:"Showing all categories";s:33:"searchcertificationsmatchesplural";s:53:"{$a->count} certifications match search "{$a->terms}"";s:33:"searchcertificationsmatchessingle";s:44:"1 certification matches search "{$a->terms}"";s:27:"searchcertificationsshowall";s:26:"Showing all certifications";s:13:"searchcourses";s:14:"Search courses";s:26:"searchcoursesmatchesplural";s:46:"{$a->count} courses match search "{$a->terms}"";s:26:"searchcoursesmatchessingle";s:37:"1 course matches search "{$a->terms}"";s:20:"searchcoursesshowall";s:19:"Showing all courses";s:27:"searchprogramsmatchesplural";s:47:"{$a->count} programs match search "{$a->terms}"";s:27:"searchprogramsmatchessingle";s:38:"1 program matches search "{$a->terms}"";s:21:"searchprogramsshowall";s:20:"Showing all programs";s:16:"showallcategorys";s:19:"Show all categories";s:21:"showallcertifications";s:23:"Show all certifications";s:14:"showallcourses";s:16:"Show all courses";s:15:"showallprograms";s:17:"Show all programs";s:11:"skipmanager";s:35:"Don't send to Team Leader / Manager";s:7:"subject";s:7:"Subject";s:26:"therearenocoursestodisplay";s:31:"There are no courses to display";s:5:"title";s:5:"Title";s:10:"title_help";s:46:"A title that is used to identify the reminder.";s:8:"tracking";s:19:"Completion to track";s:13:"tracking_help";s:166:"The reminder can be sent based on the completion of the course or individual activities. Only activities which are part of course completion criteria may be selected.";s:17:"viewallcategories";s:19:"View all categories";s:21:"viewallcertifications";s:23:"View all certifications";s:14:"viewallcourses";s:16:"View all courses";s:21:"catalogcertifications";s:32:"Enhanced catalog: certifications";s:14:"catalogcourses";s:25:"Enhanced catalog: courses";s:15:"catalogprograms";s:26:"Enhanced catalog: programs";s:22:"placeholder:coursename";s:12:"[coursename]";s:25:"placeholder:coursepageurl";s:15:"[coursepageurl]";s:31:"placeholder:dayssincecompletion";s:17:"[days counter up]";s:29:"placeholder:daysuntildeadline";s:17:"[days count down]";s:21:"placeholder:firstname";s:11:"[firstname]";s:20:"placeholder:lastname";s:10:"[lastname]";s:23:"placeholder:managername";s:13:"[managername]";}

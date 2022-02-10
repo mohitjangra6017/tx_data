@@ -1,0 +1,11 @@
+a:19:{s:12:"configplugin";s:31:"Configuration for upload plugin";s:15:"pluginname_help";s:24:"Upload a file to Totara.";s:10:"pluginname";s:13:"Upload a file";s:18:"mimetype_whitelist";s:18:"Mimetype whitelist";s:23:"mimetype_whitelist_help";s:382:"Use this setting to restrict the file types that users can upload into the site. Add one mimetype per line.
+
+image/jpeg<br />
+image/png<br />
+image/svg<br />
+application/zip
+
+This setting is forced on all files uploaded via this repository. Areas permitting files to be uploaded may further restrict accepted types.
+
+When the whitelist is empty all mimetypes are allowed.
+";s:23:"mimetype_whitelist_link";s:37:"Repositories#Repositories-Uploadafile";s:36:"mimetype_whitelist_validation_errors";s:83:"The provided mimetype whitelist is not valid, the following errors were found: {$a}";s:37:"mimetype_whitelist_validation_empties";s:56:"Empty values are invalid, please remove any empty lines.";s:40:"mimetype_whitelist_validation_duplicates";s:53:"Duplicate values have been found, please remove them.";s:42:"mimetype_whitelist_validation_invalid_type";s:43:"The following is not a valid mimetype: {$a}";s:11:"upload:view";s:28:"Use uploading in file picker";s:21:"upload_error_ini_size";s:71:"The uploaded file exceeds the upload_max_filesize directive in php.ini.";s:22:"upload_error_form_size";s:90:"The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";s:20:"upload_error_partial";s:46:"The uploaded file was only partially uploaded.";s:20:"upload_error_no_file";s:21:"No file was uploaded.";s:23:"upload_error_no_tmp_dir";s:34:"PHP is missing a temporary folder.";s:23:"upload_error_cant_write";s:29:"Failed to write file to disk.";s:22:"upload_error_extension";s:40:"A PHP extension stopped the file upload.";s:25:"upload_error_invalid_file";s:78:"The file '{$a}' is either empty or a folder. To upload folders zip them first.";}
