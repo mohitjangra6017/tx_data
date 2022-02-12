@@ -26,7 +26,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
    Then I should see "Average rating"
     And I log out
 
-  @javascript
+  @javascript @123
   Scenario: Students can like a course
     Given I log in as "teststudent1"
       And I am on homepage

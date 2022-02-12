@@ -1,3 +1,6 @@
-[10-Feb-2022 19:44:11 Australia/Perth] 
-[10-Feb-2022 19:44:11 Australia/Perth] Behat suite start: default
-[10-Feb-2022 19:44:13 Australia/Perth] Behat suite finish: default
+[12-Feb-2022 22:31:40 Australia/Perth] 
+[12-Feb-2022 22:31:40 Australia/Perth] Behat suite start: default
+[12-Feb-2022 22:31:42 Australia/Perth] Feature start: User can rate a course and see how well the course is rated with the block rate course # D:\Kineo\testing-xperts-automation\server\blocks\rate_course\tests\behat\rate_course.feature
+[12-Feb-2022 22:32:19 Australia/Perth] Failed step: I follow "Course 1" # D:\Kineo\testing-xperts-automation\server\blocks\rate_course\tests\behat\rate_course.feature:23
+[12-Feb-2022 22:32:19 Australia/Perth] Exception: Link matching locator "'Course 1'" not found. (Behat\Mink\Exception\ElementNotFoundException)
+[12-Feb-2022 22:32:21 Australia/Perth] Behat suite finish: default

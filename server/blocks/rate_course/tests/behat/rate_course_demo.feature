@@ -20,71 +20,61 @@ Feature: User can add rate course block on dashboard and rate a course
       | txuser1 | C1     | learner |
       | txuser2 | C1     | learner |
 
-    And I log in as "admin"
-    And I am on homepage
-    And I follow "Manager Dashboard"
-    And I follow "Your Dashboard"
-    And I follow "Turn editing on"
-    And I add the "Course Rating" block
 
-  @javascript
-  Scenario: Verify that Learner can give the rating of course
-    Given I log in as "teststudent1"
-    And I am on homepage
-    When I follow "Course 1"
-    Then I should see "Course Rating"
-    And I click button "Like Course" in rate course block
-    Then I should see the button "Like Course" selected
-    And I reload the page
-    And I should see the button "Like Course" selected
-    Then I click button "Like Course" in rate course block
-    And I should see the button "Like Course" deselected
-    And I reload the page
-    And I should see the button "Like Course" deselected
-
-  @javascript
-  Scenario: Students can enrol themselves to a course
+  @javascript @Kineo_RC_01 @Kineo_RC_03
+  Scenario: Verify that Admin can delete the rating of course
     Given I log in as "admin"
     And I am on homepage
-    And I follow "Course 1"
-    And I click on "Edit settings" "link" in the "Administration" "block"
-    And I set the following fields to these values:
-      | Allow guest access | Yes |
-    And I press "Save changes"
-    And I log out
-    Then I log in as "teststudent3"
-    And I follow "Course 1"
-    And I click button "Enrol course" in rate course block
-    And I should see "Enrol"
-    Then I set the field "Start" to "01/01/2015"
-    And I click button "Enrol course" in rate course block
-    And I press "Enrol"
-    Then I expand "My courses" node
-    And I should see "C1"
-    And I should see the button "Enrol course" disabled
-
-  @javascript
-  Scenario: Students can rate a course
-    Given I log in as "teststudent1"
-    And I am on homepage
-    And I follow "Course 1"
-    And I click button "Rate course" in rate course block
-    Then I should see "Submit my rating"
-    Given I set the course rating to "5" stars
-    Then I should see "5" stars highlighted
-    And I should see "Five Stars"
-    And I set the field "Review" to "Highly recommended for new staff"
-    And I click button "Rate course" in rate course block
-    And I press "Submit my rating"
-    And I should see "Average rating" with "5" stars highlighted
-    And I should see "Highly recommended for new staff"
+    And I am on "Your Dashboard"
+    And I follow "Turn editing on"
+    And I add the "Course Rating" block
+    When I should see "Rate Course Block"
+    And I delete the course rating
     Then I log out
-    Given I log in as "teststudent2"
-    And I follow "Course 1"
-    Then I should see "Average rating" with "5" stars highlighted
-    And I click button "Rate course" in rate course block
-    And I set the course rating to "3" stars
-    And I set the field "Review" to "Easy to follow"
-    And I click button "Rate course" in rate course block
-    And I press "Submit my rating"
-    And I should see "Average rating" with "4" stars highlighted
+
+  @javascript @Kineo_RC_07
+  Scenario: Verify that admin can disable the show button under General block settings
+    Given I log in as "admin"
+    And I am on homepage
+    And I am on "Your Dashboard"
+    And I follow "Turn editing on"
+    When I should see "Rate Course Block"
+    And I configure show button as disabled under general block setting
+    Then I log out
+
+  @javascript @Kineo_RC_06
+  Scenario: Verify that admin user can configure the rate course block
+    Given I log in as "admin"
+    And I am on homepage
+    And I am on "Your Dashboard"
+    And I follow "Turn editing on"
+    When I should see "Rate Course Block"
+    And I configure rate course block
+    Then I log out
+
+  @javascript @Kineo_RC_02
+  Scenario: Verify that Learner can give the rating of course
+    Given I log in as "learner"
+    And I am on "Your Dashboard"
+    When I should see "Rate Course Block"
+    And I click button "Rate this course" in rate course block
+    And I set the course rating to "5" stars
+    Then I log out
+
+  @javascript @Kineo_RC_04
+  Scenario: Verify that Learner can recommend the course
+    Given I log in as "learner"
+    And I am on "Your Dashboard"
+    When I should see "Rate Course Block"
+    And I recommended the course to another User
+    Then I log out
+
+  @javascript @Kineo_RC_08
+  Scenario: Verify that learner can view average ratings for the course with a count of ratings,and View number of course completions on course rate block
+    Given I log in as "learner"
+    And I am on "Your Dashboard"
+    When I should see "Rate Course Block"
+    And I see average rating with count and number of course
+    Then I log out
+
+
