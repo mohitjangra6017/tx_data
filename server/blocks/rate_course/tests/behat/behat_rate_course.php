@@ -36,7 +36,7 @@ class behat_rate_course extends behat_base {
 
     /**
      * Assert that the like course button is selected
-     * 
+     *
      * @Given /^I should see the button "([^"]+)" selected$/
      */
     public function i_should_see_like_course_selected($buttonname) {
@@ -45,7 +45,7 @@ class behat_rate_course extends behat_base {
 
     /**
      * Assert that the like course button is selected
-     * 
+     *
      * @Given /^I should see the button "([^"]+)" deselected$/
      */
     public function i_should_see_like_course_notselected($buttonname) {
@@ -54,7 +54,7 @@ class behat_rate_course extends behat_base {
 
     /**
      * Assert that the like course button is selected
-     * 
+     *
      * @Given /^I should see the button "([^"]+)" disabled$/
      */
     public function i_should_see_button_disabled($buttonname) {
@@ -68,7 +68,7 @@ class behat_rate_course extends behat_base {
 
     /**
      * Set the course rating to a number of stars
-     * 
+     *
      * @Given /^I set the course rating to "([^"]+)" stars$/
      */
     public function i_set_the_course_rating($starnum) {
@@ -81,7 +81,7 @@ class behat_rate_course extends behat_base {
 
     /**
      * Check if the number of stars highlighted is correct
-     * 
+     *
      * @Given /^I should see "([^"]+)" stars highlighted$/
      */
     public function i_should_see_stars_highlighted($starnum) {
@@ -91,7 +91,7 @@ class behat_rate_course extends behat_base {
 
     /**
      * Check if the number of stars in the average rating is correct
-     * 
+     *
      * @Given /^I should see "Average rating" with "([^"]+)" stars highlighted$/
      */
     public function i_should_see_average_rating_stars_highlighted($starnum) {
@@ -151,4 +151,9 @@ class behat_rate_course extends behat_base {
     protected function wait_for_ajax() {
         $this->getSession()->wait(self::TIMEOUT*1000, '($.active===0)');
     }
+
+
+
 }
+
+
