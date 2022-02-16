@@ -46,7 +46,7 @@ class behat_blocks extends behat_base {
      * @param string $blockname
      */
     public function i_add_the_block($blockname) {
-        $this->i_add_the_block_to_region($blockname, 'side-pre');
+        $this->i_add_the_block_to_region($blockname, 'side-post');
     }
 
     /**

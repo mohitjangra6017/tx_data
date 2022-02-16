@@ -151,7 +151,7 @@ class block_rate_course_renderer extends plugin_renderer_base {
      * @return string
      * @throws coding_exception
      */
-    public function display_myreview($id, $numstars, $content, $liked=false, $numlikes) {
+    public function display_myreview($id, $numstars, $content,  $numlikes, $liked=false) {
         $o = html_writer::start_div('well well-sm my-course-review-display');
         $o .= html_writer::tag('p', get_string('completed', 'block_rate_course').$this->display_star_rating($numstars),
             array('class' => 'course-review-rating'));

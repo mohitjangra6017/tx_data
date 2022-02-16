@@ -1,0 +1,29 @@
+a:30:{s:10:"pluginname";s:23:"Config Backup & Restore";s:11:"page:backup";s:6:"Backup";s:12:"page:restore";s:7:"Restore";s:22:"dashboardconfiguration";s:33:"Dashboard and block configuration";s:17:"allsiteandplugins";s:26:"Whole site and all plugins";s:14:"backupdownload";s:20:"Download backup file";s:16:"uploadbackupfile";s:18:"Upload backup file";s:27:"uploadbackupfile_help_title";s:30:"Restore Configuration Guidance";s:21:"uploadbackupfile_help";s:742:"
+<p><strong>Block permissions</strong>
+<br>Note that block permissions are not included in the backup.</p>
+<p><strong>Unsupported blocks</strong>
+<br>The following blocks are not currently supported by this plugin and will not be included in the backup:
+<br>
+<ul>
+<li>Program completions</li>
+<li>Random Glossary</li>
+<li>Report table</li>
+<li>Report graph</li>
+</ul>
+</p>
+<p><strong>Unsupported block data</strong>
+<br>Some blocks contain data that may not be present on the destination site, e.g. recommendations, audience IDs, course/program IDs, tags. This data will not be included in the backup for these blocks:
+<br>
+<ul>
+<li>Carousel</li>
+<li>Isotope</li>
+<li>Recommendations</li>
+<li>RSS feeds</li>
+</ul>
+</p>
+";s:23:"exportsiteconfiguration";s:20:"Export configuration";s:23:"importsiteconfiguration";s:20:"Import configuration";s:21:"deleteotherdashboards";s:23:"Delete other dashboards";s:9:"createnew";s:10:"Create new";s:12:"globalblocks";s:13:"Global blocks";s:9:"frontpage";s:10:"Front page";s:12:"applychanges";s:13:"Apply changes";s:22:"needchoosingatleastone";s:39:"You need to choose at least one element";s:6:"plugin";s:6:"Plugin";s:10:"configname";s:11:"Config name";s:11:"sourcevalue";s:12:"Source value";s:12:"currentvalue";s:13:"Current value";s:6:"update";s:6:"Update";s:10:"onthissite";s:12:"On this site";s:23:"selectedsettingsapplied";s:25:"Selected settings applied";s:10:"nomatching";s:11:"No matching";s:13:"warning_label";s:8:"WARNING!";s:7:"warning";s:532:"
+<p><strong>TKE version</strong>
+<br>It is not possible to restore configuration from one version of TKE to a different version as this could result in conflicts in the data that might cause the site to stop working as expected.</p>
+<p><strong>Dashboards</strong>
+<br>If you are updating existing dashboards be aware that they are matched on the dashboard name, which are not necessarily unique. Give your dashboards unique names to ensure they match correctly.</p>
+<p>Additional guidance is provided in the upload tooltip.</p>";s:15:"version_warning";s:145:"This operation is not permitted as the TKE version of "{$a->source}" in your backup does not match the current version of this site "{$a->dest}".";s:14:"cancel_restore";s:14:"Cancel restore";s:17:"restore_cancelled";s:17:"Restore cancelled";}

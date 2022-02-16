@@ -18,6 +18,7 @@ use Behat\Behat\Context\Step\Given as Given,
 
 class behat_rate_course extends behat_base {
 
+
     /**
      * Click the button in rate course block
      *
@@ -152,7 +153,67 @@ class behat_rate_course extends behat_base {
         $this->getSession()->wait(self::TIMEOUT*1000, '($.active===0)');
     }
 
+    /**
+     * @Given I delete the rating of course
+     */
+    public function iDeleteTheRatingOfCourse()
+    {
+        $page = $this->getSession()->getPage();
+        $page->find("xpath", "(//p[@class='course-review-delete']//a[text()='Delete'])[1]")->press();
 
+    }
+
+    /**
+     * @Given I recommend the course to another User
+     */
+    public function iRecommendTheCourse()
+    {
+        $page = $this->getSession()->getPage();
+        $page->find("xpath", "(//div[@title='Recommend this course']//a)[1]")->Click();
+        $page->find("xpath", "//a[@class='select2-choice select2-default']")->Click();
+        $page->find("xpath", "//input[@id='s2id_autogen2_search']")->setValue("A");
+        sleep(5);
+        $page->find("xpath", "(//li[@class='select2-results-dept-0 select2-result select2-result-selectable'])[1]")->click();
+        sleep(2);
+        $page->find("xpath", "//button[text()='Recommend course']")->Click();
+
+    }
+    /**
+     * @When I configure rate course common block
+     */
+    public function iConfigureRateCourseCommBlock()
+    {
+        $page = $this->getSession()->getPage();
+        $page->find("xpath", "//*[contains(@data-dock-title,'Rate Course')]//..//ul[1]//li[2]")->Click();
+        $page->find("xpath", "//*[contains(@data-dock-title,'Rate Course')]//..//ul[2]//li[1]")->Click();
+        $this->assertSession()->pageTextContains($this->fixStepArgument("Block Configuration"));
+
+        //Common Block Setting
+        $this->assertSession()->checkboxNotChecked($this->fixStepArgument("cs_override_title"));
+        $this->assertSession()->checkboxChecked($this->fixStepArgument("cs_enable_hiding"));
+        $this->assertSession()->checkboxChecked($this->fixStepArgument("cs_enable_docking"));
+
+        $page->find("xpath", "//input[@value='Save changes']")->Click();
+    }
+    /**
+     * @Given I add the :arg1
+     */
+    public function iAddTheBlock($blockname)
+    {
+        if (!$this->running_javascript()) {
+            throw new DriverException('Adding blocks requires JavaScript.');
+        }
+
+        $regionname ='side-pre';
+        $this->execute(
+            "behat_general::i_click_on_in_the",
+            array('.addBlock--trigger', 'css_element', '#block-region-' . $regionname, 'css_element')
+        );
+        $this->execute(
+            "behat_general::i_click_on",
+            array(".addBlock .popover .addBlockPopover--results_list_item[data-addblockpopover-blocktitle='" . $this->escape($blockname) . "']", "css_element")
+        );
+}
 
 }
 
