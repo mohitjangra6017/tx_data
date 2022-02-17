@@ -1,3 +1,4 @@
-{
-    "git.ignoreLimitWarning": true
-}
+"cucumberautocomplete.steps": [
+    "features/step_definitions/*.rb"
+],
+"cucumberautocomplete.syncfeatures": "features/*feature"

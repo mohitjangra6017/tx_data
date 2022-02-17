@@ -1,0 +1,11 @@
+
+/**
+ * This module depends on the real jquery - and returns the non-global version of it.
+ *
+ * @module     jquery-private
+ * @package    core
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+define(['jquery'],function($){$(document).on('ajaxSuccess',function(event,response){require(['core/jqueryajaxhandler'],function(handler){handler.success(response)})});$(document).on('ajaxError',function(event,response,options){require(['core/jqueryajaxhandler'],function(handler){handler.error(response,options)})});if(M.cfg.behatsiterunning===!0){var totara_generate_id=(function(){var idcount=0;return function(){return'totara-amd-genid-'+(idcount++)}}());if(M.util.js_pending!=='undefined'){$(document).on("ajaxSend",function(ev,jqxhr){jqxhr.totaraxhrid=totara_generate_id();M.util.js_pending(jqxhr.totaraxhrid)}).on("ajaxComplete",function(ev,jqxhr){M.util.js_complete(jqxhr.totaraxhrid)})}}
+return $.noConflict(!0)})

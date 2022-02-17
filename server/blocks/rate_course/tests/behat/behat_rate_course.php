@@ -14,6 +14,7 @@ require_once(__DIR__.'/../../../../lib/behat/behat_base.php');
 
 use Behat\Behat\Context\Step\Given as Given,
     Behat\Mink\Exception\ExpectationException,
+    Behat\MinkExtension\Context\MinkContext,
     Behat\Mink\Element\NodeElement;
 
 class behat_rate_course extends behat_base {
@@ -171,7 +172,7 @@ class behat_rate_course extends behat_base {
         $page = $this->getSession()->getPage();
         $page->find("xpath", "(//div[@title='Recommend this course']//a)[1]")->Click();
         $page->find("xpath", "//a[@class='select2-choice select2-default']")->Click();
-        $page->find("xpath", "//input[@id='s2id_autogen2_search']")->setValue("A");
+        $page->find("xpath", "//input[@id='s2id_autogen2_search']")->setValue("testrecom2");
         sleep(5);
         $page->find("xpath", "(//li[@class='select2-results-dept-0 select2-result select2-result-selectable'])[1]")->click();
         sleep(2);
@@ -179,21 +180,34 @@ class behat_rate_course extends behat_base {
 
     }
     /**
-     * @When I configure rate course common block
+     * @When I configure rate course Allow block hiding and docking
      */
     public function iConfigureRateCourseCommBlock()
     {
         $page = $this->getSession()->getPage();
         $page->find("xpath", "//*[contains(@data-dock-title,'Rate Course')]//..//ul[1]//li[2]")->Click();
         $page->find("xpath", "//*[contains(@data-dock-title,'Rate Course')]//..//ul[2]//li[1]")->Click();
-        $this->assertSession()->pageTextContains($this->fixStepArgument("Block Configuration"));
+        $page->find("xpath","//input[@id='id_cs_override_title']")->check();
+        $page->find("xpath","//input[@id='id_cs_enable_hiding']")->uncheck();
+        $page->find("xpath","//input[@id='id_cs_enable_docking']")->uncheck();
+        $page->find("xpath", "//input[@id='id_submitbutton']")->Click();
 
-        //Common Block Setting
-        $this->assertSession()->checkboxNotChecked($this->fixStepArgument("cs_override_title"));
-        $this->assertSession()->checkboxChecked($this->fixStepArgument("cs_enable_hiding"));
-        $this->assertSession()->checkboxChecked($this->fixStepArgument("cs_enable_docking"));
+    }
+    /**
+     * @When I configure rate course disable the show button under General block
+     */
+    public function iConfigureRateCourseGenBlock()
+    {
+        $page = $this->getSession()->getPage();
+        $page->find("xpath", "//*[contains(@data-dock-title,'Rate Course')]//..//ul[1]//li[2]")->Click();
+        $page->find("xpath", "//*[contains(@data-dock-title,'Rate Course')]//..//ul[2]//li[1]")->Click();
+        $page->find("xpath", "//a[text()='General block settings']")->Click();
+        sleep(3);
+        $page->find("xpath", "//input[@id='id_config_showbuttons']")->uncheck();
+        sleep(3);
+        $page->find("xpath", "//input[@id='id_submitbutton']")->Click();
+        sleep(2);
 
-        $page->find("xpath", "//input[@value='Save changes']")->Click();
     }
     /**
      * @Given I add the :arg1
@@ -214,7 +228,50 @@ class behat_rate_course extends behat_base {
             array(".addBlock .popover .addBlockPopover--results_list_item[data-addblockpopover-blocktitle='" . $this->escape($blockname) . "']", "css_element")
         );
 }
+    /**
+     * @Given I set the course rating to :starnum stars and review
+     */
+    public function iSetTheCourseRatingToStars($starnum)
+    {
+        $page = $this->getSession()->getPage();
+        $page->find("xpath", "//button[@id='btn-review-rate']")->press();
+//        $star = $page->find("xpath","(//div[@class='rating-stars'])[2]");
+//        $star->setValue("")
+        $position = $starnum * 20;    // one star is around 20 pixels
+        if ($starnum == 5) {
+            $position += 10;
+        }
+        $this->getSession()->executeScript("$('#rating').data().rating.setStars($position)");
+//        $this->assert_page_contains_text("Five Stars");
+//        $this->i_set_the_field_to("Review", "Highly recommended for new staff" );
+//        $this->press_button("Submit my rating");
+        $page->find("xpath", "//button[text()='Submit my rating']")->press();
+    }
 
+    /**
+     * Returns fixed step argument (with \\" replaced back to ")
+     *
+     * @param string $argument
+     *
+     * @return string
+     */
+    protected function fixStepArgument($argument)
+    {
+        return str_replace('\\"', '"', $argument);
+    }
+
+    /**
+     * @Then I view average rating count
+     * @throws ExpectationException
+     */
+    public function iViewAverageRatingCount()
+    {
+        $this->getSession()->getPage();
+//        $this->i_should_see_stars_highlighted("5");
+        $ratingcount = $this->find("xpath","//span[@id='ratingcount']")->isVisible();
+
+
+    }
 }
 
 
