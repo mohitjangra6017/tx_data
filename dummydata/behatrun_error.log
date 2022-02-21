@@ -1,4 +1,6 @@
-[18-Feb-2022 02:09:28 Australia/Perth] 
-[18-Feb-2022 02:09:28 Australia/Perth] Behat suite start: default
-[18-Feb-2022 02:09:28 Australia/Perth] Feature start: User can rate a course and see how well the course is rated with the block rate course # D:\Kineo\testing-xperts-automation\server\blocks\rate_course\tests\behat\rate_course.feature
-[18-Feb-2022 02:10:30 Australia/Perth] Behat suite finish: default
+[22-Feb-2022 01:53:44 Australia/Perth] 
+[22-Feb-2022 01:53:44 Australia/Perth] Behat suite start: default
+[22-Feb-2022 01:53:46 Australia/Perth] Feature start: Atto styles # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\styles\tests\behat\styles.feature
+[22-Feb-2022 01:55:02 Australia/Perth] Failed step: I navigate to "Plugins > Text editors > Atto HTML editor > Styles settings" in site administration # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\styles\tests\behat\styles.feature:38
+[22-Feb-2022 01:55:02 Australia/Perth] Exception: Sub-navigation node "Plugins" not found under "Site administration" (Behat\Mink\Exception\ExpectationException)
+[22-Feb-2022 01:55:03 Australia/Perth] Behat suite finish: default

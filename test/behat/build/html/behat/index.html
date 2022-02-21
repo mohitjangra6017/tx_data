@@ -333,45 +333,51 @@
         <div class="feature">
             <h2>
                 <span id="feat1" class="keyword"> Feature: </span>
-                <span class="title">User can rate a course and see how well the course is rated with the block rate course</span>
+                <span class="title">Atto styles</span>
             </h2>
-            <p>In order to know the most useful course from the user (students & teachers) perspective
-As a user enrolled into the course
-I could rate and recommend a course to another user and see the rating and receive recommendation</p>
+            <p>To add and use block and inline styles with one and two classes each</p>
             <ul class="tags">
-                <li>@block</li>
-                <li>@block_rate_course</li>
-                <li>@SmokeTest</li>
+                <li>@editor</li>
+                <li>@editor_atto</li>
+                <li>@atto</li>
+                <li>@atto_styles</li>
             </ul>
             <div class="scenario">
                 <ul class="tags">
                     <li>@javascript</li>
-                    <li>@Kineo_RC_08</li>
+                    <li>@Kineo_AS_04</li>
                 </ul>
                 <h3>
                     <span class="keyword"> Scenario: </span>
-                    <span class="title">Verify that Learner can view average ratings for the course with a count of ratings</span>
+                    <span class="title">Verify that user can remove the Atto styles if its already added</span>
                 </h3>
                 <ol>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">Given </span>
-                            <span class="text">the following &quot;courses&quot; exist: </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>fullname</td><td>shortname</td><td>category</td><td>groupmode</td></tr></thead><tbody><tr class="row"><td>Course 1</td><td>C1</td><td>0</td><td>0</td></tr></tbody></table></pre>
+                            <span class="text">the following &quot;users&quot; exist: </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>username</td><td>firstname</td><td>lastname</td></tr></thead><tbody><tr class="row"><td>user1</td><td>Username</td><td>1</td></tr></tbody></table></pre>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">the following &quot;users&quot; exist: </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>username</td><td>firstname</td><td>lastname</td><td>email</td></tr></thead><tbody><tr class="row"><td>teststudent1</td><td>Student</td><td>First</td><td>student1@mail.com</td></tr><tr class="row"><td>testrecom2</td><td>Student</td><td>Second</td><td>fhdsgf@gmail.com</td></tr></tbody></table></pre>
+                            <span class="text">the following &quot;courses&quot; exist: </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>fullname</td><td>shortname</td></tr></thead><tbody><tr class="row"><td>Course 1</td><td>C1</td></tr></tbody></table></pre>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
                             <span class="text">the following &quot;course enrolments&quot; exist: </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>user</td><td>course</td><td>role</td></tr></thead><tbody><tr class="row"><td>teststudent1</td><td>C1</td><td>student</td></tr></tbody></table></pre>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>user</td><td>course</td><td>role</td></tr></thead><tbody><tr class="row"><td>user1</td><td>C1</td><td>student</td></tr></tbody></table></pre>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">the following &quot;activities&quot; exist: </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>activity</td><td>name</td><td>course</td><td>idnumber</td><td>section</td><td>assignsubmission_onlinetext_enabled</td></tr></thead><tbody><tr class="row"><td>assign</td><td>Text Edit</td><td>C1</td><td>assign1</td><td>0</td><td>1</td></tr></tbody></table></pre>
                         </div>
                     </li>
                     <li class="passed">
@@ -381,107 +387,40 @@ I could rate and recommend a course to another user and see the rating and recei
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
-                    <li class="passed">
+                    <li class="failed">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I am on homepage </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                            <span class="text">I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Styles settings&quot; in site administration </span>
+                            <span class="path">behat_navigation::i_navigate_to_in_site_administration()</span>
                         </div>
+                        <pre class="backtrace">Sub-navigation node "Plugins" not found under "Site administration"</pre><a href="./assets/screenshots/Attostyles/VerifythatusercanremovetheAttostylesifitsalreadyadded.png">Screenshot</a>
                     </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I am on course index </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">Given </span>
-                            <span class="text">I follow &quot;Course 1&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I follow &quot;Turn editing on&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I add the &quot;Rate Course&quot; block </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
+                    <li class="skipped">
                         <div class="step">
                             <span class="keyword">Then </span>
-                            <span class="text">I should see &quot;Rate Course&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                            <span class="text">I should see &quot;Styles settings&quot; </span>
+                            <span class="path">behat_general::assert_page_contains_text()</span>
                         </div>
                     </li>
-                    <li class="passed">
+                    <li class="skipped">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I log out </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                            <span class="text">I set the field &quot;Styles configuration&quot; to &quot;bold, charmap&quot; </span>
+                            <span class="path">behat_forms::i_set_the_field_to()</span>
                         </div>
                     </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">Given </span>
-                            <span class="text">I log in as &quot;teststudent1&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
+                    <li class="skipped">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I am on homepage </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I follow &quot;Course 1&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">Then </span>
-                            <span class="text">I should see &quot;Rate Course&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">Then </span>
-                            <span class="text">I set the course rating to &quot;5&quot; stars and review </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">Then </span>
-                            <span class="text">I should see &quot;Rate Course&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I view average rating count </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                            <span class="text">I press &quot;Save changes&quot; </span>
+                            <span class="path">behat_forms::press_button()</span>
                         </div>
                     </li>
                 </ol>
             </div>
-            <div class="featureResult passed">Feature has passed
+            <div class="featureResult failed">Feature has failed
+                <span>Scenarios passed : 0%,
+                Scenarios failed : 100%</span>
             </div>
         </div><!DOCTYPE html>
 <html lang="en">
@@ -523,7 +462,7 @@ I could rate and recommend a course to another user and see the rating and recei
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Automated test report - 18/02/2022 02:10:30</a>
+            <a class="navbar-brand" href="#">Automated test report - 22/02/2022 01:55:03</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -542,7 +481,7 @@ I could rate and recommend a course to another user and see the rating and recei
             <div class="chart-summary title">
                 1 Features:
             </div>
-            <div class="chart-summary failed">0 failed</div>
+            <div class="chart-summary failed">1 failed</div>
         </div>
         <div class="col-sm-4">
             <div class="canvas-holder">
@@ -552,7 +491,7 @@ I could rate and recommend a course to another user and see the rating and recei
                 1
                 Scenarios:
             </div>
-            <div class="chart-summary failed">0 failed</div>
+            <div class="chart-summary failed">1 failed</div>
             <div class="chart-summary undefined">0 undefined</div>
             <div class="chart-summary skipped">0 skipped</div>
         </div>
@@ -561,10 +500,10 @@ I could rate and recommend a course to another user and see the rating and recei
                 <canvas id="chart-steps" width="300" height="300"/>
             </div>
             <div class="chart-summary title">
-                18
+                6
                 Steps:
             </div>
-            <div class="chart-summary failed">0 failed</div>
+            <div class="chart-summary failed">1 failed</div>
             <div class="chart-summary undefined">0 undefined</div>
             <div class="chart-summary skipped">0 skipped</div>
         </div>
@@ -601,24 +540,23 @@ I could rate and recommend a course to another user and see the rating and recei
 
                     <div class="row">
                                                     <div class="col-sm-4 feature" data-id="feature-1">
-                                <div class="card passed">
+                                <div class="card failed">
                                     <div class="header">
-                                        <h2>Feature: User can rate a course and see how well the course is rated with the block rate course</h2>
+                                        <h2>Feature: Atto styles</h2>
                                     </div>
                                     <div class="info">
-                                        <p>In order to know the most useful course from the user (students & teachers) perspective<br />
-As a user enrolled into the course<br />
-I could rate and recommend a course to another user and see the rating and receive recommendation</p>
+                                        <p>To add and use block and inline styles with one and two classes each</p>
                                     </div>
                                     <div class="footer">
                                         <div class="tags">
-                                                                                            <span class="badge">block</span>
-                                                                                            <span class="badge">block_rate_course</span>
-                                                                                            <span class="badge">SmokeTest</span>
+                                                                                            <span class="badge">editor</span>
+                                                                                            <span class="badge">editor_atto</span>
+                                                                                            <span class="badge">atto</span>
+                                                                                            <span class="badge">atto_styles</span>
                                                                                     </div>
                                                                                     <div class="progress">
                                                 <div class="progress-bar progress-bar-green" role="progressbar"
-                                                     style="width: 100%">
+                                                     style="width: 0%">
                                                     <span class="sr-only">40% Complete (success)</span>
                                                 </div>
                                                 <div class="progress-bar progress-bar-warning" role="progressbar"
@@ -626,7 +564,7 @@ I could rate and recommend a course to another user and see the rating and recei
                                                     <span class="sr-only">40% Complete (success)</span>
                                                 </div>
                                                 <div class="progress-bar progress-bar-red" role="progressbar"
-                                                     style="width: 0%">
+                                                     style="width: 100%">
                                                     <span class="sr-only">40% Complete (success)</span>
                                                 </div>
                                             </div>
@@ -641,24 +579,23 @@ I could rate and recommend a course to another user and see the rating and recei
     <div id="scenario-overview" class="row">
                                                                             <div class="feature" data-id="feature-1">
                     <div class="col-sm-4">
-                        <div class="card passed">
+                        <div class="card failed">
                             <div class="header">
-                                <h2>Feature: User can rate a course and see how well the course is rated with the block rate course</h2>
+                                <h2>Feature: Atto styles</h2>
                             </div>
                             <div class="info">
-                                <p>In order to know the most useful course from the user (students & teachers) perspective<br />
-As a user enrolled into the course<br />
-I could rate and recommend a course to another user and see the rating and receive recommendation</p>
+                                <p>To add and use block and inline styles with one and two classes each</p>
                             </div>
                             <div class="footer">
                                 <div class="tags">
-                                                                            <span class="badge">block</span>
-                                                                            <span class="badge">block_rate_course</span>
-                                                                            <span class="badge">SmokeTest</span>
+                                                                            <span class="badge">editor</span>
+                                                                            <span class="badge">editor_atto</span>
+                                                                            <span class="badge">atto</span>
+                                                                            <span class="badge">atto_styles</span>
                                                                     </div>
                                                                     <div class="progress">
                                         <div class="progress-bar progress-bar-green" role="progressbar"
-                                             style="width: 100%">
+                                             style="width: 0%">
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning" role="progressbar"
@@ -666,7 +603,7 @@ I could rate and recommend a course to another user and see the rating and recei
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                         <div class="progress-bar progress-bar-red" role="progressbar"
-                                             style="width: 0%">
+                                             style="width: 100%">
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                     </div>
@@ -674,20 +611,20 @@ I could rate and recommend a course to another user and see the rating and recei
                         </div>
                     </div>
                     <div class="col-sm-8 details panel-group" role="tablist" aria-multiselectable="true">
-                                                    <div class="panel panel-default passed">
+                                                    <div class="panel panel-default failed">
                                 <div class="panel-heading" role="tab">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion"
                                            href="#scenario-1-1"
                                            aria-expanded="true"
                                            aria-controls="scenario-1-1">
-                                            Scenario: Verify that Learner can view average ratings for the course with a count of ratings
+                                            Scenario: Verify that user can remove the Atto styles if its already added
                                         </a>
 
                                         <div class="tags pull-right">
                                                                                             <span class="badge">javascript</span>
-                                                                                            <span class="badge">Kineo_RC_08</span>
-                                                                                                                                    <a class="label label-default" href="./assets/screenshots/Usercanrateacourseandseehowwellthecourseisratedwiththeblockratecourse/VerifythatLearnercanviewaverageratingsforthecoursewithacountofratings.png" target="_blank">Screenshot</a>
+                                                                                            <span class="badge">Kineo_AS_04</span>
+                                                                                                                                    <a class="label label-default" href="./assets/screenshots/Attostyles/VerifythatusercanremovetheAttostylesifitsalreadyadded.png" target="_blank">Screenshot</a>
                                                                                     </div>
                                     </h4>
                                 </div>
@@ -696,66 +633,41 @@ I could rate and recommend a course to another user and see the rating and recei
                                      aria-labelledby="headingOne">
                                     <ul class="list-group">
                                                                                     <li class="list-group-item alert alert-success">
-                                                <b>Given</b> the following &quot;courses&quot; exist:
+                                                <b>Given</b> the following &quot;users&quot; exist:
                                                                                                                                                             <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | Course 1 |  C1 |  0 |  0 |                                                         </p>
+                                                            | user1 |  Username |  1 |                                                         </p>
                                                                                                                                                                                                                                                                                                 </li>
                                                                                                                                                                                                                         <li class="list-group-item alert alert-success">
-                                                <b>And</b> the following &quot;users&quot; exist:
+                                                <b>And</b> the following &quot;courses&quot; exist:
                                                                                                                                                             <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | teststudent1 |  Student |  First |  student1@mail.com |                                                         </p>
-                                                                                                            <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | testrecom2 |  Student |  Second |  fhdsgf@gmail.com |                                                         </p>
+                                                            | Course 1 |  C1 |                                                         </p>
                                                                                                                                                                                                                                                                                                 </li>
                                                                                                                                                                                                                         <li class="list-group-item alert alert-success">
                                                 <b>And</b> the following &quot;course enrolments&quot; exist:
                                                                                                                                                             <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | teststudent1 |  C1 |  student |                                                         </p>
+                                                            | user1 |  C1 |  student |                                                         </p>
+                                                                                                                                                                                                                                                                                                </li>
+                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
+                                                <b>And</b> the following &quot;activities&quot; exist:
+                                                                                                                                                            <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
+                                                            | assign |  Text Edit |  C1 |  assign1 |  0 |  1 |                                                         </p>
                                                                                                                                                                                                                                                                                                 </li>
                                                                                                                                                                                                                         <li class="list-group-item alert alert-success">
                                                 <b>Given</b> I log in as &quot;admin&quot;
                                                                                                                                                                                                                                                                                                                                                 </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I am on homepage
+                                                                                                                                                                                                                        <li class="list-group-item alert alert-danger">
+                                                <b>And</b> I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Styles settings&quot; in site administration
+                                                                                                                                                                                                                                                        <br>
+                                                    <p style="padding-left:2em ; color:gray">(Sub-navigation node &quot;Plugins&quot; not found under &quot;Site administration&quot;)</p>
+                                                                                                                                                                                            </li>
+                                                                                                                                                                                                                        <li class="list-group-item alert alert-info">
+                                                <b>Then</b> I should see &quot;Styles settings&quot;
                                                                                                                                                                                                                                                                                                                                                 </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I am on course index
+                                                                                                                                                                                                                        <li class="list-group-item alert alert-info">
+                                                <b>And</b> I set the field &quot;Styles configuration&quot; to &quot;bold, charmap&quot;
                                                                                                                                                                                                                                                                                                                                                 </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Given</b> I follow &quot;Course 1&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I follow &quot;Turn editing on&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I add the &quot;Rate Course&quot; block
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Then</b> I should see &quot;Rate Course&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I log out
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Given</b> I log in as &quot;teststudent1&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I am on homepage
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I follow &quot;Course 1&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Then</b> I should see &quot;Rate Course&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Then</b> I set the course rating to &quot;5&quot; stars and review
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Then</b> I should see &quot;Rate Course&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I view average rating count
+                                                                                                                                                                                                                        <li class="list-group-item alert alert-info">
+                                                <b>And</b> I press &quot;Save changes&quot;
                                                                                                                                                                                                                                                                                                                                                 </li>
                                                                                                                                                                                                                 </ul>
                                 </div>
@@ -778,21 +690,21 @@ I could rate and recommend a course to another user and see the rating and recei
         new Chart(featureChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed', 'Pending', 'Passed'],
                 datasets: [{
-                    data: [0, 0, 1],
+                    data: [1, 0, 0],
                     backgroundColor: ['#F7464A', 'e38d13', '#00a65a'],
                 }],
             }});
         new Chart(scenarioChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed', 'Passed'],
                 datasets: [{
-                    data: [0, 1],
+                    data: [1, 0],
                     backgroundColor: ["#F7464A", "#00a65a"],
                 }],
             }});
         new Chart(stepChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed','Passed'],
                 datasets: [{
-                    data: [0, 18],
+                    data: [1, 5],
                     backgroundColor: ["#F7464A", "#00a65a"],
                 }],
             }});
@@ -851,19 +763,19 @@ I could rate and recommend a course to another user and see the rating and recei
 </body>
 </html>
 
-        <div class="summary passed">
+        <div class="summary failed">
             <div class="counters">
                 <p class="features">
-                    1 features ( <strong class="passed">1 success</strong> )
+                    1 features ( <strong class="failed">1 fail</strong> )
                 </p>
                 <p class="scenarios">
-                    1 scenarios ( <strong class="passed">1 success</strong> )
+                    1 scenarios ( <strong class="failed">1 fail</strong> )
                 </p>
                 <p class="steps">
-                    18 steps ( <strong class="passed">18 success</strong> )
+                    9 steps ( <strong class="passed">5 success</strong> <strong class="skipped">3 skipped</strong> <strong class="failed">1 fail</strong> )
                 </p>
                 <p class="time">
-                1m20.15s - 68.24Mb
+                1m58.03s - 88.50Mb
                 </p>
             </div>
             <div class="switchers">
