@@ -1,6 +1,7 @@
-[22-Feb-2022 01:53:44 Australia/Perth] 
-[22-Feb-2022 01:53:44 Australia/Perth] Behat suite start: default
-[22-Feb-2022 01:53:46 Australia/Perth] Feature start: Atto styles # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\styles\tests\behat\styles.feature
-[22-Feb-2022 01:55:02 Australia/Perth] Failed step: I navigate to "Plugins > Text editors > Atto HTML editor > Styles settings" in site administration # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\styles\tests\behat\styles.feature:38
-[22-Feb-2022 01:55:02 Australia/Perth] Exception: Sub-navigation node "Plugins" not found under "Site administration" (Behat\Mink\Exception\ExpectationException)
-[22-Feb-2022 01:55:03 Australia/Perth] Behat suite finish: default
+[22-Feb-2022 23:54:35 Australia/Perth] 
+[22-Feb-2022 23:54:35 Australia/Perth] Behat suite start: default
+[22-Feb-2022 23:54:35 Australia/Perth] Feature start: User can add and configure required learning block # D:\Kineo\testing-xperts-automation\server\blocks\related_courses\tests\behat\related_course.feature
+[22-Feb-2022 15:55:23 UTC] PHP Warning:  Undefined array key 2 in D:\Kineo\testing-xperts-automation\server\lib\requirejs.php on line 53
+[22-Feb-2022 23:55:23 Australia/Perth] Failed step: I configure related course block under General block # D:\Kineo\testing-xperts-automation\server\blocks\related_courses\tests\behat\related_course.feature:40
+[22-Feb-2022 23:55:23 Australia/Perth] Exception: Fatal error: Call to a member function Click() on null (Behat\Testwork\Call\Exception\FatalThrowableError)
+[22-Feb-2022 23:55:25 Australia/Perth] Behat suite finish: default

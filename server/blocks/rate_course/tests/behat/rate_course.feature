@@ -14,7 +14,6 @@ Feature: User can rate a course and see how well the course is rated with the bl
       | teststudent1 | Student   | First    | student1@mail.com |
       | testrecom2   | Student   | Second   | fhdsgf@gmail.com  |
 
-
     And the following "course enrolments" exist:
       | user         | course | role    |
       | teststudent1 | C1     | student |
@@ -25,11 +24,10 @@ Feature: User can rate a course and see how well the course is rated with the bl
     Given I log in as "admin"
     And I am on homepage
     And I am on course index
-    Given I follow "Course 1"
+    When I follow "Course 1"
     And I follow "Turn editing on"
     And I add the "Rate Course" block
     Then I should see "Rate Course"
-
 
   @javascript @Kineo_RC_02
   Scenario: Verify that Learner can give the rating of course
