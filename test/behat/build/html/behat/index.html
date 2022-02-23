@@ -333,22 +333,24 @@
         <div class="feature">
             <h2>
                 <span id="feat1" class="keyword"> Feature: </span>
-                <span class="title">User can add and configure required learning block</span>
+                <span class="title">User can rate a course and see how well the course is rated with the block rate course</span>
             </h2>
-            <p>User can configure required learning block settings
-User can access the Program under required Learning block on dashboard</p>
+            <p>In order to know the most useful course from the user (students & teachers) perspective
+As a user enrolled into the course
+I could rate and recommend a course to another user and see the rating and receive recommendation</p>
             <ul class="tags">
                 <li>@block</li>
-                <li>@block_related_course</li>
+                <li>@block_rate_course</li>
+                <li>@SmokeTest</li>
             </ul>
             <div class="scenario">
                 <ul class="tags">
                     <li>@javascript</li>
-                    <li>@Kineo_RELC_02</li>
+                    <li>@Kineo_RC_01</li>
                 </ul>
                 <h3>
                     <span class="keyword"> Scenario: </span>
-                    <span class="title">Verify that user can configure related courses block</span>
+                    <span class="title">Verify that admin can add rate course block</span>
                 </h3>
                 <ol>
                     <li class="passed">
@@ -393,41 +395,13 @@ User can access the Program under required Learning block on dashboard</p>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">When </span>
-                            <span class="text">I follow &quot;Course 1&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I follow &quot;Turn editing on&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I add the &quot;Related courses&quot; block </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">Then </span>
-                            <span class="text">I should see &quot;Related courses&quot; </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div>
-                    </li>
                     <li class="failed">
                         <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">I configure related course block under General block </span>
-                            <span class="path">behat_related_course::iConfigureRateCourseGenBlock()</span>
+                            <span class="keyword">When </span>
+                            <span class="text">I follow &quot;Course 1234&quot; </span>
+                            <span class="path">behat_general::click_link()</span>
                         </div>
-                        <pre class="backtrace">Fatal error: Call to a member function Click() on null</pre><a href="./assets/screenshots/Usercanaddandconfigurerequiredlearningblock/Verifythatusercanconfigurerelatedcoursesblock.png">Screenshot</a>
+                        <pre class="backtrace">Link matching locator "'Course 1234'" not found.</pre><a href="./assets/screenshots/Usercanrateacourseandseehowwellthecourseisratedwiththeblockratecourse/Verifythatadmincanaddratecourseblock.png">Screenshot</a>
                     </li>
                 </ol>
             </div>
@@ -475,7 +449,7 @@ User can access the Program under required Learning block on dashboard</p>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Automated test report - 22/02/2022 23:55:25</a>
+            <a class="navbar-brand" href="#">Automated test report - 24/02/2022 00:11:47</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -513,7 +487,7 @@ User can access the Program under required Learning block on dashboard</p>
                 <canvas id="chart-steps" width="300" height="300"/>
             </div>
             <div class="chart-summary title">
-                11
+                7
                 Steps:
             </div>
             <div class="chart-summary failed">1 failed</div>
@@ -555,16 +529,18 @@ User can access the Program under required Learning block on dashboard</p>
                                                     <div class="col-sm-4 feature" data-id="feature-1">
                                 <div class="card failed">
                                     <div class="header">
-                                        <h2>Feature: User can add and configure required learning block</h2>
+                                        <h2>Feature: User can rate a course and see how well the course is rated with the block rate course</h2>
                                     </div>
                                     <div class="info">
-                                        <p>User can configure required learning block settings<br />
-User can access the Program under required Learning block on dashboard</p>
+                                        <p>In order to know the most useful course from the user (students & teachers) perspective<br />
+As a user enrolled into the course<br />
+I could rate and recommend a course to another user and see the rating and receive recommendation</p>
                                     </div>
                                     <div class="footer">
                                         <div class="tags">
                                                                                             <span class="badge">block</span>
-                                                                                            <span class="badge">block_related_course</span>
+                                                                                            <span class="badge">block_rate_course</span>
+                                                                                            <span class="badge">SmokeTest</span>
                                                                                     </div>
                                                                                     <div class="progress">
                                                 <div class="progress-bar progress-bar-green" role="progressbar"
@@ -593,16 +569,18 @@ User can access the Program under required Learning block on dashboard</p>
                     <div class="col-sm-4">
                         <div class="card failed">
                             <div class="header">
-                                <h2>Feature: User can add and configure required learning block</h2>
+                                <h2>Feature: User can rate a course and see how well the course is rated with the block rate course</h2>
                             </div>
                             <div class="info">
-                                <p>User can configure required learning block settings<br />
-User can access the Program under required Learning block on dashboard</p>
+                                <p>In order to know the most useful course from the user (students & teachers) perspective<br />
+As a user enrolled into the course<br />
+I could rate and recommend a course to another user and see the rating and receive recommendation</p>
                             </div>
                             <div class="footer">
                                 <div class="tags">
                                                                             <span class="badge">block</span>
-                                                                            <span class="badge">block_related_course</span>
+                                                                            <span class="badge">block_rate_course</span>
+                                                                            <span class="badge">SmokeTest</span>
                                                                     </div>
                                                                     <div class="progress">
                                         <div class="progress-bar progress-bar-green" role="progressbar"
@@ -629,13 +607,13 @@ User can access the Program under required Learning block on dashboard</p>
                                            href="#scenario-1-1"
                                            aria-expanded="true"
                                            aria-controls="scenario-1-1">
-                                            Scenario: Verify that user can configure related courses block
+                                            Scenario: Verify that admin can add rate course block
                                         </a>
 
                                         <div class="tags pull-right">
                                                                                             <span class="badge">javascript</span>
-                                                                                            <span class="badge">Kineo_RELC_02</span>
-                                                                                                                                    <a class="label label-default" href="./assets/screenshots/Usercanaddandconfigurerequiredlearningblock/Verifythatusercanconfigurerelatedcoursesblock.png" target="_blank">Screenshot</a>
+                                                                                            <span class="badge">Kineo_RC_01</span>
+                                                                                                                                    <a class="label label-default" href="./assets/screenshots/Usercanrateacourseandseehowwellthecourseisratedwiththeblockratecourse/Verifythatadmincanaddratecourseblock.png" target="_blank">Screenshot</a>
                                                                                     </div>
                                     </h4>
                                 </div>
@@ -669,22 +647,10 @@ User can access the Program under required Learning block on dashboard</p>
                                                                                                                                                                                                                         <li class="list-group-item alert alert-success">
                                                 <b>And</b> I am on course index
                                                                                                                                                                                                                                                                                                                                                 </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>When</b> I follow &quot;Course 1&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I follow &quot;Turn editing on&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> I add the &quot;Related courses&quot; block
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>Then</b> I should see &quot;Related courses&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
                                                                                                                                                                                                                         <li class="list-group-item alert alert-danger">
-                                                <b>And</b> I configure related course block under General block
+                                                <b>When</b> I follow &quot;Course 1234&quot;
                                                                                                                                                                                                                                                         <br>
-                                                    <p style="padding-left:2em ; color:gray">(Fatal error: Call to a member function Click() on null)</p>
+                                                    <p style="padding-left:2em ; color:gray">(Link matching locator &quot;&#039;Course 1234&#039;&quot; not found.)</p>
                                                                                                                                                                                             </li>
                                                                                                                                                                                                                 </ul>
                                 </div>
@@ -721,7 +687,7 @@ User can access the Program under required Learning block on dashboard</p>
         new Chart(stepChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed','Passed'],
                 datasets: [{
-                    data: [1, 10],
+                    data: [1, 6],
                     backgroundColor: ["#F7464A", "#00a65a"],
                 }],
             }});
@@ -789,10 +755,10 @@ User can access the Program under required Learning block on dashboard</p>
                     1 scenarios ( <strong class="failed">1 fail</strong> )
                 </p>
                 <p class="steps">
-                    11 steps ( <strong class="passed">10 success</strong> <strong class="failed">1 fail</strong> )
+                    7 steps ( <strong class="passed">6 success</strong> <strong class="failed">1 fail</strong> )
                 </p>
                 <p class="time">
-                1m2.82s - 68.36Mb
+                0m47.10s - 67.87Mb
                 </p>
             </div>
             <div class="switchers">
