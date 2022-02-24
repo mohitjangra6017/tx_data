@@ -1,6 +1,6 @@
-[24-Feb-2022 00:11:13 Australia/Perth] 
-[24-Feb-2022 00:11:13 Australia/Perth] Behat suite start: default
-[24-Feb-2022 00:11:14 Australia/Perth] Feature start: User can rate a course and see how well the course is rated with the block rate course # D:\Kineo\testing-xperts-automation\server\blocks\rate_course\tests\behat\rate_course.feature
-[24-Feb-2022 00:11:45 Australia/Perth] Failed step: I follow "Course 1234" # D:\Kineo\testing-xperts-automation\server\blocks\rate_course\tests\behat\rate_course.feature:27
-[24-Feb-2022 00:11:45 Australia/Perth] Exception: Link matching locator "'Course 1234'" not found. (Behat\Mink\Exception\ElementNotFoundException)
-[24-Feb-2022 00:11:47 Australia/Perth] Behat suite finish: default
+[24-Feb-2022 19:45:31 Australia/Perth] 
+[24-Feb-2022 19:45:31 Australia/Perth] Behat suite start: default
+[24-Feb-2022 19:45:32 Australia/Perth] Feature start: Atto fullscreen editor button # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\fullscreen\tests\behat\fullscreen.feature
+[24-Feb-2022 19:45:48 Australia/Perth] Failed step: the following "activities" exist: # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\fullscreen\tests\behat\fullscreen.feature:16
+[24-Feb-2022 19:45:48 Australia/Perth] Exception: 'assign' activity can not be added using this step, use the step 'I add a "ACTIVITY_OR_RESOURCE_NAME_STRING" to section "SECTION_NUMBER"' instead (Exception)
+[24-Feb-2022 19:45:50 Australia/Perth] Behat suite finish: default

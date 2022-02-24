@@ -1,3 +1,0 @@
-a:8:{s:14:"host_url_error";s:30:"Unable to load Zoom Start URL.";s:10:"pluginname";s:12:"Zoom Meeting";s:10:"plugindesc";s:44:"Provide Zoom Meeting integration via OAuth2.";s:18:"setting_header_app";s:15:"App credentials";s:23:"setting_header_app_desc";s:278:"Please <a href="https://help.totaralearning.com/display/DEV/Setting+up+Zoom+Virtualmeeting+Plugin">follow our documentation</a> to set up your app as a Zoom adminstrator.
-
-The <strong>Redirect URL for OAuth</strong> should be set to: <pre><code>{$a->redirect_url}</code></pre>";s:17:"setting_client_id";s:9:"Client ID";s:22:"setting_client_id_help";s:49:"As found on the App Credentials page of your app.";s:21:"setting_client_secret";s:13:"Client secret";}

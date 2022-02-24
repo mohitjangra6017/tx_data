@@ -51,6 +51,7 @@ Feature: Atto fullscreen editor button
   @javascript @Kineo_AFS_04
   Scenario: Verify that Admin can remove the full screen option
     And I log in as "admin"
+    And I wait "3" seconds
     And I navigate to "Plugins > Text editors > Atto HTML editor > Atto toolbar settings" in site administration
     And I set the field "Toolbar config" to "other = html, bold, charmap"
     And I press "Save changes"
