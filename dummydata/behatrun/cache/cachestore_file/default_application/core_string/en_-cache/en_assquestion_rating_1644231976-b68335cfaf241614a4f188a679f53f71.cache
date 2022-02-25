@@ -1,0 +1,5 @@
+a:13:{s:10:"pluginname";s:6:"Rating";s:18:"availableresponses";s:19:"Available responses";s:7:"default";s:7:"Default";s:6:"maxval";s:2:"To";s:11:"maxval_help";s:102:"The highest selectable number.
+
+* If grading is enabled for this question, this value is worth 100%.";s:6:"minval";s:4:"From";s:11:"minval_help";s:99:"The lowest selectable number.
+
+* If grading is enabled for this question, this value is worth 0%.";s:8:"noanswer";s:11:"No response";s:8:"selected";s:9:"Selection";s:10:"usedefault";s:11:"Use default";s:14:"error_badrange";s:58:""To" value must be an integer larger than the "From" value";s:14:"error:badvalue";s:38:"Range value must be a positive integer";s:18:"error:outsiderange";s:39:"Default must be within configured range";}

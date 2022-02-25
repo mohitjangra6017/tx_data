@@ -1,4 +1,4 @@
-@block @block_rate_course @SmokeTest
+@block @block_rate_course
 Feature: User can rate a course and see how well the course is rated with the block rate course
   In order to know the most useful course from the user (students & teachers) perspective
   As a user enrolled into the course
@@ -19,7 +19,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
       | teststudent1 | C1     | student |
 
 
-  @javascript @Kineo_RC_01
+  @javascript @Kineo_RC_01 @DEVTXAUTO-10
   Scenario: Verify that admin can add rate course block
     Given I log in as "admin"
     And I am on homepage

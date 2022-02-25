@@ -1,1 +1,1 @@
-a:0:{}
+a:2:{i:0;a:2:{s:4:"name";s:6:"images";s:10:"properties";a:2:{i:0;a:3:{s:4:"name";s:29:"formimages_field_displaylogin";s:4:"type";s:7:"boolean";s:5:"value";s:4:"true";}i:1;a:3:{s:4:"name";s:29:"formimages_field_loginalttext";s:4:"type";s:4:"text";s:5:"value";s:12:"Totara Login";}}}i:1;a:2:{s:4:"name";s:5:"brand";s:10:"properties";a:1:{i:0;a:3:{s:4:"name";s:27:"formbrand_field_logoalttext";s:4:"type";s:4:"text";s:5:"value";s:11:"Totara Logo";}}}}

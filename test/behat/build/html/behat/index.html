@@ -335,7 +335,7 @@
                 <span id="feat1" class="keyword"> Feature: </span>
                 <span class="title">Atto fullscreen editor button</span>
             </h2>
-            <p>In order to edit big text
+            <p>User can access Atto Full Screen Settings
 I need to use an editing tool to expand editor.</p>
             <ul class="tags">
                 <li>@editor</li>
@@ -346,68 +346,73 @@ I need to use an editing tool to expand editor.</p>
             <div class="scenario">
                 <ul class="tags">
                     <li>@javascript</li>
-                    <li>@Kineo_AFS_01</li>
+                    <li>@Kineo_AFS_05</li>
+                    <li>@DEVTXAUTO-33</li>
                 </ul>
                 <h3>
                     <span class="keyword"> Scenario: </span>
-                    <span class="title">Verify that Admin can access Atto Full Screen Settings under Atto HTML Editor</span>
+                    <span class="title">Verify Admin Can True or Enable Full Screen Setting Checkbox</span>
                 </h3>
                 <ol>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">Given </span>
-                            <span class="text">the following &quot;users&quot; exist: </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>username</td><td>firstname</td><td>lastname</td></tr></thead><tbody><tr class="row"><td>user1</td><td>Username</td><td>1</td></tr></tbody></table></pre>
+                            <span class="text">I log in as &quot;admin&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">the following &quot;courses&quot; exist: </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>fullname</td><td>shortname</td></tr></thead><tbody><tr class="row"><td>Course 1</td><td>C1</td></tr></tbody></table></pre>
-                        </div>
-                    </li>
-                    <li class="passed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">the following &quot;course enrolments&quot; exist: </span>
-                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>user</td><td>course</td><td>role</td></tr></thead><tbody><tr class="row"><td>user1</td><td>C1</td><td>student</td></tr></tbody></table></pre>
-                        </div>
-                    </li>
-                    <li class="failed">
-                        <div class="step">
-                            <span class="keyword">And </span>
-                            <span class="text">the following &quot;activities&quot; exist: </span>
-                            <span class="path">behat_data_generators::the_following_exist()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>activity</td><td>name</td><td>course</td><td>idnumber</td><td>section</td><td>assignsubmission_onlinetext_enabled</td></tr></thead><tbody><tr class="row"><td>assign</td><td>Text Edit</td><td>C1</td><td>assign1</td><td>0</td><td>1</td></tr></tbody></table></pre>
-                        </div>
-                        <pre class="backtrace">'assign' activity can not be added using this step, use the step 'I add a "ACTIVITY_OR_RESOURCE_NAME_STRING" to section "SECTION_NUMBER"' instead</pre>
-                    </li>
-                    <li class="skipped">
                         <div class="step">
                             <span class="keyword">Given </span>
-                            <span class="text">I log in as &quot;admin&quot; </span>
-                            <span class="path">behat_auth::i_log_in_as()</span>
+                            <span class="text">I am on homepage </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
-                    <li class="skipped">
+                    <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
                             <span class="text">I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Atto toolbar settings&quot; in site administration </span>
-                            <span class="path">behat_navigation::i_navigate_to_in_site_administration()</span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
-                    <li class="skipped">
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I set the field &quot;Toolbar config&quot; to &quot;other = html, fullscreen, bold, charmap&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I press &quot;Save changes&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">When </span>
+                            <span class="text">I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Full screen settings&quot; in site administration </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I set the field &quot;Require editing&quot; to &quot;1&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
                         <div class="step">
                             <span class="keyword">Then </span>
-                            <span class="text">I should see &quot;Atto toolbar settings&quot; </span>
-                            <span class="path">behat_general::assert_page_contains_text()</span>
-                        </div>
+                            <span class="text">I press &quot;Save changes&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div><pre class="backtrace">Expected Result Is Passed</pre><a href="./assets/screenshots/Attofullscreeneditorbutton/VerifyAdminCanTrueorEnableFullScreenSettingCheckbox.png">Pass Step Screenshot Here!</a>
                     </li>
                 </ol>
             </div>
-            <div class="featureResult failed">Feature has failed
-                <span>Scenarios passed : 0%,
-                Scenarios failed : 100%</span>
+            <div class="featureResult passed">Feature has passed
             </div>
         </div><!DOCTYPE html>
 <html lang="en">
@@ -441,7 +446,13 @@ I need to use an editing tool to expand editor.</p>
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
+        <div id="navbar" class="navbar-collapse collapse">
+
+        </div>
         <div class="navbar-header">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+            </ul>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                     aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -449,12 +460,10 @@ I need to use an editing tool to expand editor.</p>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Automated test report - 24/02/2022 19:45:50</a>
+
+            <a class="navbar-brand" href="#">Mohit Jangra - 26/02/2022 00:27:25</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                            </ul>
-        </div>
+
         <!--/.nav-collapse -->
     </div>
 </nav>
@@ -468,7 +477,7 @@ I need to use an editing tool to expand editor.</p>
             <div class="chart-summary title">
                 1 Features:
             </div>
-            <div class="chart-summary failed">1 failed</div>
+            <div class="chart-summary failed">0 failed</div>
         </div>
         <div class="col-sm-4">
             <div class="canvas-holder">
@@ -478,7 +487,7 @@ I need to use an editing tool to expand editor.</p>
                 1
                 Scenarios:
             </div>
-            <div class="chart-summary failed">1 failed</div>
+            <div class="chart-summary failed">0 failed</div>
             <div class="chart-summary undefined">0 undefined</div>
             <div class="chart-summary skipped">0 skipped</div>
         </div>
@@ -487,10 +496,10 @@ I need to use an editing tool to expand editor.</p>
                 <canvas id="chart-steps" width="300" height="300"/>
             </div>
             <div class="chart-summary title">
-                4
+                8
                 Steps:
             </div>
-            <div class="chart-summary failed">1 failed</div>
+            <div class="chart-summary failed">0 failed</div>
             <div class="chart-summary undefined">0 undefined</div>
             <div class="chart-summary skipped">0 skipped</div>
         </div>
@@ -527,12 +536,12 @@ I need to use an editing tool to expand editor.</p>
 
                     <div class="row">
                                                     <div class="col-sm-4 feature" data-id="feature-1">
-                                <div class="card failed">
+                                <div class="card passed">
                                     <div class="header">
                                         <h2>Feature: Atto fullscreen editor button</h2>
                                     </div>
                                     <div class="info">
-                                        <p>In order to edit big text<br />
+                                        <p> User can access Atto Full Screen Settings<br />
 I need to use an editing tool to expand editor.</p>
                                     </div>
                                     <div class="footer">
@@ -544,7 +553,7 @@ I need to use an editing tool to expand editor.</p>
                                                                                     </div>
                                                                                     <div class="progress">
                                                 <div class="progress-bar progress-bar-green" role="progressbar"
-                                                     style="width: 0%">
+                                                     style="width: 100%">
                                                     <span class="sr-only">40% Complete (success)</span>
                                                 </div>
                                                 <div class="progress-bar progress-bar-warning" role="progressbar"
@@ -552,7 +561,7 @@ I need to use an editing tool to expand editor.</p>
                                                     <span class="sr-only">40% Complete (success)</span>
                                                 </div>
                                                 <div class="progress-bar progress-bar-red" role="progressbar"
-                                                     style="width: 100%">
+                                                     style="width: 0%">
                                                     <span class="sr-only">40% Complete (success)</span>
                                                 </div>
                                             </div>
@@ -567,12 +576,12 @@ I need to use an editing tool to expand editor.</p>
     <div id="scenario-overview" class="row">
                                                                             <div class="feature" data-id="feature-1">
                     <div class="col-sm-4">
-                        <div class="card failed">
+                        <div class="card passed">
                             <div class="header">
                                 <h2>Feature: Atto fullscreen editor button</h2>
                             </div>
                             <div class="info">
-                                <p>In order to edit big text<br />
+                                <p>User can access Atto Full Screen Settings<br />
 I need to use an editing tool to expand editor.</p>
                             </div>
                             <div class="footer">
@@ -584,7 +593,7 @@ I need to use an editing tool to expand editor.</p>
                                                                     </div>
                                                                     <div class="progress">
                                         <div class="progress-bar progress-bar-green" role="progressbar"
-                                             style="width: 0%">
+                                             style="width: 100%">
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning" role="progressbar"
@@ -592,7 +601,7 @@ I need to use an editing tool to expand editor.</p>
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                         <div class="progress-bar progress-bar-red" role="progressbar"
-                                             style="width: 100%">
+                                             style="width: 0%">
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                     </div>
@@ -600,57 +609,36 @@ I need to use an editing tool to expand editor.</p>
                         </div>
                     </div>
                     <div class="col-sm-8 details panel-group" role="tablist" aria-multiselectable="true">
-                                                    <div class="panel panel-default failed">
-                                <div class="panel-heading" role="tab">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion"
-                                           href="#scenario-1-1"
-                                           aria-expanded="true"
-                                           aria-controls="scenario-1-1">
-                                            Scenario: Verify that Admin can access Atto Full Screen Settings under Atto HTML Editor
-                                        </a>
+                                                    <div class="panel panel-default passed">
 
-                                        <div class="tags pull-right">
-                                                                                            <span class="badge">javascript</span>
-                                                                                            <span class="badge">Kineo_AFS_01</span>
-                                                                                                                                </div>
-                                    </h4>
-                                </div>
                                 <div id="scenario-1-1" class="panel-collapse collapse in"
                                      role="tabpanel"
                                      aria-labelledby="headingOne">
                                     <ul class="list-group">
-                                                                                    <li class="list-group-item alert alert-success">
-                                                <b>Given</b> the following &quot;users&quot; exist:
-                                                                                                                                                            <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | user1 |  Username |  1 |                                                         </p>
-                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> the following &quot;courses&quot; exist:
-                                                                                                                                                            <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | Course 1 |  C1 |                                                         </p>
-                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-success">
-                                                <b>And</b> the following &quot;course enrolments&quot; exist:
-                                                                                                                                                            <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | user1 |  C1 |  student |                                                         </p>
-                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-danger">
-                                                <b>And</b> the following &quot;activities&quot; exist:
-                                                                                                                                                            <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
-                                                            | assign |  Text Edit |  C1 |  assign1 |  0 |  1 |                                                         </p>
-                                                                                                                                                                                                        <br>
-                                                    <p style="padding-left:2em ; color:gray">(&#039;assign&#039; activity can not be added using this step, use the step &#039;I add a &quot;ACTIVITY_OR_RESOURCE_NAME_STRING&quot; to section &quot;SECTION_NUMBER&quot;&#039; instead)</p>
-                                                                                                                                                                                            </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-info">
-                                                <b>Given</b> I log in as &quot;admin&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-info">
-                                                <b>And</b> I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Atto toolbar settings&quot; in site administration
-                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                        <li class="list-group-item alert alert-info">
-                                                <b>Then</b> I should see &quot;Atto toolbar settings&quot;
-                                                                                                                                                                                                                                                                                                                                                </li>
+                                                                                <li class="list-group-item alert alert-success">
+                                            <b>Given</b> I log in as &quot;admin&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>Given</b> I am on homepage
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Atto toolbar settings&quot; in site administration
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I set the field &quot;Toolbar config&quot; to &quot;other = html, fullscreen, bold, charmap&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I press &quot;Save changes&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>When</b> I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Full screen settings&quot; in site administration
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I set the field &quot;Require editing&quot; to &quot;1&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>Then</b> I press &quot;Save changes&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
                                                                                                                                                                                                                 </ul>
                                 </div>
                             </div>
@@ -672,21 +660,21 @@ I need to use an editing tool to expand editor.</p>
         new Chart(featureChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed', 'Pending', 'Passed'],
                 datasets: [{
-                    data: [1, 0, 0],
+                    data: [0, 0, 1],
                     backgroundColor: ['#F7464A', 'e38d13', '#00a65a'],
                 }],
             }});
         new Chart(scenarioChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed', 'Passed'],
                 datasets: [{
-                    data: [1, 0],
+                    data: [0, 1],
                     backgroundColor: ["#F7464A", "#00a65a"],
                 }],
             }});
         new Chart(stepChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed','Passed'],
                 datasets: [{
-                    data: [1, 3],
+                    data: [0, 8],
                     backgroundColor: ["#F7464A", "#00a65a"],
                 }],
             }});
@@ -745,19 +733,19 @@ I need to use an editing tool to expand editor.</p>
 </body>
 </html>
 
-        <div class="summary failed">
+        <div class="summary passed">
             <div class="counters">
                 <p class="features">
-                    1 features ( <strong class="failed">1 fail</strong> )
+                    1 features ( <strong class="passed">1 success</strong> )
                 </p>
                 <p class="scenarios">
-                    1 scenarios ( <strong class="failed">1 fail</strong> )
+                    1 scenarios ( <strong class="passed">1 success</strong> )
                 </p>
                 <p class="steps">
-                    7 steps ( <strong class="passed">3 success</strong> <strong class="skipped">3 skipped</strong> <strong class="failed">1 fail</strong> )
+                    8 steps ( <strong class="passed">8 success</strong> )
                 </p>
                 <p class="time">
-                0m40.12s - 72.49Mb
+                0m56.55s - 63.23Mb
                 </p>
             </div>
             <div class="switchers">

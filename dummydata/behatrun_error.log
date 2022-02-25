@@ -1,6 +1,4 @@
-[24-Feb-2022 19:45:31 Australia/Perth] 
-[24-Feb-2022 19:45:31 Australia/Perth] Behat suite start: default
-[24-Feb-2022 19:45:32 Australia/Perth] Feature start: Atto fullscreen editor button # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\fullscreen\tests\behat\fullscreen.feature
-[24-Feb-2022 19:45:48 Australia/Perth] Failed step: the following "activities" exist: # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\fullscreen\tests\behat\fullscreen.feature:16
-[24-Feb-2022 19:45:48 Australia/Perth] Exception: 'assign' activity can not be added using this step, use the step 'I add a "ACTIVITY_OR_RESOURCE_NAME_STRING" to section "SECTION_NUMBER"' instead (Exception)
-[24-Feb-2022 19:45:50 Australia/Perth] Behat suite finish: default
+[26-Feb-2022 00:26:42 Australia/Perth] 
+[26-Feb-2022 00:26:42 Australia/Perth] Behat suite start: default
+[26-Feb-2022 00:26:43 Australia/Perth] Feature start: Atto fullscreen editor button # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\fullscreen\tests\behat\fullscreen.feature
+[26-Feb-2022 00:27:25 Australia/Perth] Behat suite finish: default
