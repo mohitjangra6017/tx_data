@@ -48,6 +48,7 @@ default:
         - behat_gradingform_rubric
         - behat_groups
         - behat_hooks
+        - behat_isotope_block
         - behat_login
         - behat_message
         - behat_message_popup
@@ -76,7 +77,9 @@ default:
         - behat_question
         - behat_question_base
         - behat_rate_course
+        - behat_record_of_learning
         - behat_repository_upload
+        - behat_required_learning
         - behat_search
         - behat_styles
         - behat_theme_msteams
@@ -160,6 +163,7 @@ default:
         - behat_gradingform_rubric
         - behat_groups
         - behat_hooks
+        - behat_isotope_block
         - behat_login
         - behat_message
         - behat_message_popup
@@ -188,7 +192,9 @@ default:
         - behat_question
         - behat_question_base
         - behat_rate_course
+        - behat_record_of_learning
         - behat_repository_upload
+        - behat_required_learning
         - behat_search
         - behat_styles
         - behat_theme_msteams
@@ -231,6 +237,7 @@ default:
         - behat_workshopallocation_manual
     default:
       paths:
+        - 'D:/Kineo/testing-xperts-automation/server/blocks/isotope/tests/behat/Isotop_block.feature'
         - 'D:/Kineo/testing-xperts-automation/server/lib/editor/atto/plugins/accessibilitychecker/tests/behat/accessibilitychecker.feature'
         - 'D:/Kineo/testing-xperts-automation/server/lib/editor/atto/plugins/accessibilityhelper/tests/behat/accessibilityhelper.feature'
         - 'D:/Kineo/testing-xperts-automation/server/lib/tests/behat/action_menu.feature'
@@ -1514,12 +1521,13 @@ default:
         - 'D:/Kineo/testing-xperts-automation/server/totara/certification/tests/behat/recertification.feature'
         - 'D:/Kineo/testing-xperts-automation/server/mod/assign/tests/behat/recertification_reset.feature'
         - 'D:/Kineo/testing-xperts-automation/server/container/type/workspace/tests/behat/recommended_disabled.feature'
-        - 'D:/Kineo/testing-xperts-automation/server/blocks/required_learning/tests/behat/required_learning.feature'
+        - 'D:/Kineo/testing-xperts-automation/server/blocks/record_of_learning/tests/behat/record_of_learning_block.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/plan/tests/behat/record_of_learning_course_visibility.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/plan/tests/behat/record_of_learning_disabled.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/plan/tests/behat/record_of_learning_progress.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/plan/tests/behat/record_of_learning_unenrolled_course_visibility.feature'
         - 'D:/Kineo/testing-xperts-automation/server/blocks/tests/behat/region_list.feature'
+        - 'D:/Kineo/testing-xperts-automation/server/blocks/related_courses/tests/behat/related_course.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/playlist/tests/behat/related_playlists.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/engage/resources/article/tests/behat/related_resources.feature'
         - 'D:/Kineo/testing-xperts-automation/server/auth/tests/behat/remember_username.feature'
@@ -1546,6 +1554,7 @@ default:
         - 'D:/Kineo/testing-xperts-automation/server/totara/reportedcontent/tests/behat/report_workspace_comments.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/contentmarketplace/tests/behat/reports.feature'
         - 'D:/Kineo/testing-xperts-automation/server/mod/data/tests/behat/required_entries.feature'
+        - 'D:/Kineo/testing-xperts-automation/server/blocks/required_learning/tests/behat/required_learning.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/program/tests/behat/required_learning_visibility.feature'
         - 'D:/Kineo/testing-xperts-automation/server/mod/customcert/tests/behat/required_minutes.feature'
         - 'D:/Kineo/testing-xperts-automation/server/totara/core/tests/behat/required_profile_fields.feature'
@@ -1995,6 +2004,7 @@ default:
         - behat_gradingform_rubric
         - behat_groups
         - behat_hooks
+        - behat_isotope_block
         - behat_login
         - behat_message
         - behat_message_popup
@@ -2023,7 +2033,9 @@ default:
         - behat_question
         - behat_question_base
         - behat_rate_course
+        - behat_record_of_learning
         - behat_repository_upload
+        - behat_required_learning
         - behat_search
         - behat_styles
         - behat_theme_msteams
@@ -2136,6 +2148,7 @@ default:
         behat_gradingform_rubric: 'D:\Kineo\testing-xperts-automation\server\grade\grading\form\rubric\tests\behat\behat_gradingform_rubric.php'
         behat_groups: 'D:\Kineo\testing-xperts-automation\server\group\tests\behat\behat_groups.php'
         behat_hooks: 'D:\Kineo\testing-xperts-automation\server\lib\tests\behat\behat_hooks.php'
+        behat_isotope_block: 'D:\Kineo\testing-xperts-automation\server\blocks\isotope\tests\behat\behat_isotope_block.php'
         behat_login: 'D:\Kineo\testing-xperts-automation\server\login\tests\behat\behat_login.php'
         behat_message: 'D:\Kineo\testing-xperts-automation\server\message\tests\behat\behat_message.php'
         behat_message_popup: 'D:\Kineo\testing-xperts-automation\server\message\output\popup\tests\behat\behat_message_popup.php'
@@ -2164,7 +2177,9 @@ default:
         behat_question: 'D:\Kineo\testing-xperts-automation\server\question\tests\behat\behat_question.php'
         behat_question_base: 'D:\Kineo\testing-xperts-automation\server\question\tests\behat\behat_question_base.php'
         behat_rate_course: 'D:\Kineo\testing-xperts-automation\server\blocks\rate_course\tests\behat\behat_rate_course.php'
+        behat_record_of_learning: 'D:\Kineo\testing-xperts-automation\server\blocks\record_of_learning\tests\behat\behat_record_of_learning.php'
         behat_repository_upload: 'D:\Kineo\testing-xperts-automation\server\repository\upload\tests\behat\behat_repository_upload.php'
+        behat_required_learning: 'D:\Kineo\testing-xperts-automation\server\blocks\required_learning\tests\behat\behat_required_learning.php'
         behat_search: 'D:\Kineo\testing-xperts-automation\server\search\tests\behat\behat_search.php'
         behat_styles: 'D:\Kineo\testing-xperts-automation\server\lib\tests\behat\behat_styles.php'
         behat_theme_msteams: 'D:\Kineo\testing-xperts-automation\server\theme\msteams\tests\behat\behat_theme_msteams.php'

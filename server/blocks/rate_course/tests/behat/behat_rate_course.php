@@ -172,9 +172,10 @@ class behat_rate_course extends behat_base {
         $page = $this->getSession()->getPage();
         $page->find("xpath", "(//div[@title='Recommend this course']//a)[1]")->Click();
         $page->find("xpath", "//a[@class='select2-choice select2-default']")->Click();
-        $page->find("xpath", "//input[@id='s2id_autogen2_search']")->setValue("testrecom2");
+        $page->find("xpath", "//input[@id='s2id_autogen2_search']")->setValue("Student Second");
         sleep(5);
-        $page->find("xpath", "(//li[@class='select2-results-dept-0 select2-result select2-result-selectable'])[1]")->click();
+        $result = $page->find("xpath", "//ul[@id='select2-results-2']//li")->isVisible();
+        $result->click();
         sleep(2);
         $page->find("xpath", "//button[text()='Recommend course']")->Click();
 

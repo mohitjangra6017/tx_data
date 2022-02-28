@@ -1,3 +1,0 @@
-a:7:{s:4:"name";s:24:"Rating scale: Competency";s:9:"help_text";s:235:"The Competency rating scale question references the rating scale for the selected competency. 
-Participants can choose a rating which will be captured in the performance activity. 
-However it would not be submitted to the competency.";s:33:"include_rating_scale_descriptions";s:33:"Include rating scale descriptions";s:21:"error_answer_required";s:18:"Answer is required";s:10:"pluginname";s:17:"Competency Rating";s:18:"option_description";s:16:"{$a} description";s:19:"scale_value_deleted";s:19:"Scale value deleted";}

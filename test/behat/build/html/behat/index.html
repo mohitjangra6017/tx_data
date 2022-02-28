@@ -333,82 +333,149 @@
         <div class="feature">
             <h2>
                 <span id="feat1" class="keyword"> Feature: </span>
-                <span class="title">Atto fullscreen editor button</span>
+                <span class="title">User can add and configure record of learning block</span>
             </h2>
-            <p>User can access Atto Full Screen Settings
-I need to use an editing tool to expand editor.</p>
+            <p>User can configure record of learning block settings
+User can access the Program under record of Learning block on dashboard</p>
             <ul class="tags">
-                <li>@editor</li>
-                <li>@editor_atto</li>
-                <li>@atto</li>
-                <li>@atto_fullscreen</li>
+                <li>@block</li>
+                <li>@block_record_of_learning</li>
             </ul>
             <div class="scenario">
                 <ul class="tags">
                     <li>@javascript</li>
-                    <li>@Kineo_AFS_05</li>
-                    <li>@DEVTXAUTO-33</li>
+                    <li>@Kineo_RCL_03</li>
                 </ul>
                 <h3>
                     <span class="keyword"> Scenario: </span>
-                    <span class="title">Verify Admin Can True or Enable Full Screen Setting Checkbox</span>
+                    <span class="title">Verify Admin Can check the functionality of the default course tab.</span>
                 </h3>
                 <ol>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">Given </span>
+                            <span class="text">the following &quot;courses&quot; exist: </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>fullname</td><td>shortname</td><td>category</td><td>groupmode</td></tr></thead><tbody><tr class="row"><td>Course 1</td><td>C1</td><td>0</td><td>0</td></tr></tbody></table></pre>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">the following &quot;users&quot; exist: </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>username</td><td>firstname</td><td>lastname</td><td>email</td></tr></thead><tbody><tr class="row"><td>teststudent1</td><td>Student</td><td>First</td><td>student1@mail.com</td></tr></tbody></table></pre>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">the following &quot;course enrolments&quot; exist: </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span><br><pre class="argument"><table class="argument"> <thead><tr class="row"><td>user</td><td>course</td><td>role</td></tr></thead><tbody><tr class="row"><td>teststudent1</td><td>C1</td><td>student</td></tr></tbody></table></pre>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">When </span>
                             <span class="text">I log in as &quot;admin&quot; </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I navigate to &quot;Dashboards&quot; node in &quot;Site administration &gt; Navigation&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I press &quot;Create dashboard&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I set the field &quot;Name&quot; to &quot;mohit&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I press &quot;Create dashboard&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I should see &quot;Dashboard saved&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
                             <span class="keyword">Given </span>
-                            <span class="text">I am on homepage </span>
+                            <span class="text">I follow &quot;mohit&quot; </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Atto toolbar settings&quot; in site administration </span>
+                            <span class="text">I add the &quot;Record of Learning&quot; block </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I set the field &quot;Toolbar config&quot; to &quot;other = html, fullscreen, bold, charmap&quot; </span>
+                            <span class="text">I should see &quot;Record of Learning&quot; </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I press &quot;Save changes&quot; </span>
+                            <span class="text">I log out </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">When </span>
-                            <span class="text">I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Full screen settings&quot; in site administration </span>
+                            <span class="text">I log in as &quot;teststudent1&quot; </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">And </span>
-                            <span class="text">I set the field &quot;Require editing&quot; to &quot;1&quot; </span>
+                            <span class="text">I follow &quot;mohit&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I follow &quot;Go to Record of Learning&quot; </span>
+                            <span class="path">behat_hooks::i_look_for_exceptions()</span>
+                        </div>
+                    </li>
+                    <li class="passed">
+                        <div class="step">
+                            <span class="keyword">And </span>
+                            <span class="text">I should see &quot;Record of Learning : Active Courses&quot; </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
                         </div>
                     </li>
                     <li class="passed">
                         <div class="step">
                             <span class="keyword">Then </span>
-                            <span class="text">I press &quot;Save changes&quot; </span>
+                            <span class="text">I Check Active Course Tab Functionality </span>
                             <span class="path">behat_hooks::i_look_for_exceptions()</span>
-                        </div><pre class="backtrace">Expected Result Is Passed</pre><a href="./assets/screenshots/Attofullscreeneditorbutton/VerifyAdminCanTrueorEnableFullScreenSettingCheckbox.png">Pass Step Screenshot Here!</a>
+                        </div><pre class="backtrace">Expected Result Is Passed</pre><a href="./assets/screenshots/Usercanaddandconfigurerecordoflearningblock/VerifyAdminCancheckthefunctionalityofthedefaultcoursetab.png">Pass Step Screenshot Here!</a>
                     </li>
                 </ol>
             </div>
@@ -461,7 +528,7 @@ I need to use an editing tool to expand editor.</p>
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand" href="#">Mohit Jangra - 26/02/2022 00:27:25</a>
+            <a class="navbar-brand" href="#">Mohit Jangra - 28/02/2022 17:58:01</a>
         </div>
 
         <!--/.nav-collapse -->
@@ -496,7 +563,7 @@ I need to use an editing tool to expand editor.</p>
                 <canvas id="chart-steps" width="300" height="300"/>
             </div>
             <div class="chart-summary title">
-                8
+                18
                 Steps:
             </div>
             <div class="chart-summary failed">0 failed</div>
@@ -538,18 +605,16 @@ I need to use an editing tool to expand editor.</p>
                                                     <div class="col-sm-4 feature" data-id="feature-1">
                                 <div class="card passed">
                                     <div class="header">
-                                        <h2>Feature: Atto fullscreen editor button</h2>
+                                        <h2>Feature: User can add and configure record of learning block</h2>
                                     </div>
                                     <div class="info">
-                                        <p> User can access Atto Full Screen Settings<br />
-I need to use an editing tool to expand editor.</p>
+                                        <p> User can configure record of learning block settings<br />
+User can access the Program under record of Learning block on dashboard</p>
                                     </div>
                                     <div class="footer">
                                         <div class="tags">
-                                                                                            <span class="badge">editor</span>
-                                                                                            <span class="badge">editor_atto</span>
-                                                                                            <span class="badge">atto</span>
-                                                                                            <span class="badge">atto_fullscreen</span>
+                                                                                            <span class="badge">block</span>
+                                                                                            <span class="badge">block_record_of_learning</span>
                                                                                     </div>
                                                                                     <div class="progress">
                                                 <div class="progress-bar progress-bar-green" role="progressbar"
@@ -578,18 +643,16 @@ I need to use an editing tool to expand editor.</p>
                     <div class="col-sm-4">
                         <div class="card passed">
                             <div class="header">
-                                <h2>Feature: Atto fullscreen editor button</h2>
+                                <h2>Feature: User can add and configure record of learning block</h2>
                             </div>
                             <div class="info">
-                                <p>User can access Atto Full Screen Settings<br />
-I need to use an editing tool to expand editor.</p>
+                                <p>User can configure record of learning block settings<br />
+User can access the Program under record of Learning block on dashboard</p>
                             </div>
                             <div class="footer">
                                 <div class="tags">
-                                                                            <span class="badge">editor</span>
-                                                                            <span class="badge">editor_atto</span>
-                                                                            <span class="badge">atto</span>
-                                                                            <span class="badge">atto_fullscreen</span>
+                                                                            <span class="badge">block</span>
+                                                                            <span class="badge">block_record_of_learning</span>
                                                                     </div>
                                                                     <div class="progress">
                                         <div class="progress-bar progress-bar-green" role="progressbar"
@@ -616,28 +679,64 @@ I need to use an editing tool to expand editor.</p>
                                      aria-labelledby="headingOne">
                                     <ul class="list-group">
                                                                                 <li class="list-group-item alert alert-success">
-                                            <b>Given</b> I log in as &quot;admin&quot;
+                                            <b>Given</b> the following &quot;courses&quot; exist:
+                                                                                                                                                <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
+                                                        | Course 1 |  C1 |  0 |  0 |                                                     </p>
+                                                                                                                                                                                                                                                                            </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> the following &quot;users&quot; exist:
+                                                                                                                                                <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
+                                                        | teststudent1 |  Student |  First |  student1@mail.com |                                                     </p>
+                                                                                                                                                                                                                                                                            </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> the following &quot;course enrolments&quot; exist:
+                                                                                                                                                <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">
+                                                        | teststudent1 |  C1 |  student |                                                     </p>
+                                                                                                                                                                                                                                                                            </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>When</b> I log in as &quot;admin&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>Given</b> I am on homepage
+                                            <b>And</b> I navigate to &quot;Dashboards&quot; node in &quot;Site administration &gt; Navigation&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>And</b> I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Atto toolbar settings&quot; in site administration
+                                            <b>And</b> I press &quot;Create dashboard&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>And</b> I set the field &quot;Toolbar config&quot; to &quot;other = html, fullscreen, bold, charmap&quot;
+                                            <b>And</b> I set the field &quot;Name&quot; to &quot;mohit&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>And</b> I press &quot;Save changes&quot;
+                                            <b>And</b> I press &quot;Create dashboard&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>When</b> I navigate to &quot;Plugins &gt; Text editors &gt; Atto HTML editor &gt; Full screen settings&quot; in site administration
+                                            <b>And</b> I should see &quot;Dashboard saved&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>And</b> I set the field &quot;Require editing&quot; to &quot;1&quot;
+                                            <b>Given</b> I follow &quot;mohit&quot;
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                     <li class="list-group-item alert alert-success">
-                                            <b>Then</b> I press &quot;Save changes&quot;
+                                            <b>And</b> I add the &quot;Record of Learning&quot; block
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I should see &quot;Record of Learning&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I log out
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>When</b> I log in as &quot;teststudent1&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I follow &quot;mohit&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I follow &quot;Go to Record of Learning&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>And</b> I should see &quot;Record of Learning : Active Courses&quot;
+                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                    <li class="list-group-item alert alert-success">
+                                            <b>Then</b> I Check Active Course Tab Functionality
                                                                                                                                                                                                                                                                                                                         </li>
                                                                                                                                                                                                                 </ul>
                                 </div>
@@ -674,7 +773,7 @@ I need to use an editing tool to expand editor.</p>
         new Chart(stepChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed','Passed'],
                 datasets: [{
-                    data: [0, 8],
+                    data: [0, 18],
                     backgroundColor: ["#F7464A", "#00a65a"],
                 }],
             }});
@@ -742,10 +841,10 @@ I need to use an editing tool to expand editor.</p>
                     1 scenarios ( <strong class="passed">1 success</strong> )
                 </p>
                 <p class="steps">
-                    8 steps ( <strong class="passed">8 success</strong> )
+                    18 steps ( <strong class="passed">18 success</strong> )
                 </p>
                 <p class="time">
-                0m56.55s - 63.23Mb
+                0m48.46s - 69.17Mb
                 </p>
             </div>
             <div class="switchers">
