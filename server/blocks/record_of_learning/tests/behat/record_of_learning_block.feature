@@ -52,38 +52,33 @@ Feature: User can add and configure record of learning block
     And I should see "Record of Learning : Active Courses"
     Then I Check Active Course Tab Functionality
 
-  @javascript @Kineo_RQL_02 @Kineo_RQL_03
-  Scenario: Verify that Admin can configure the Required Learning block
-    Given I log in as "admin"
-    And I am on homepage
-    When I press "Customise this page"
-    And I add the "Required Learning" block
-    Then I should see "Required Learning"
-    And I configure general block settings under required learning block
-
-
-  @javascript @Kineo_RQL_04
-  Scenario: Verify Learner can clicking on "Go To Required Learning" link to the bottom of the page redirects the user to correct destination.
-    Given I log in as "admin"
-    And I am on homepage
-    When I press "Customise this page"
-    And I add the "Required Learning" block
-    Then I should see "Required Learning"
-#    And I log out
-#    Then I log in as "teststudent1"
-    And I follow "Go to Required Learning"
-    Then I should see "Required Learning"
-
-
-  @javascript @Kineo_RQL_05
-  Scenario: Verify that Learner can access the Program under required Learning block on dashboard.
-    Given I log in as "admin"
-    And I am on homepage
-    When I press "Customise this page"
-    And I add the "Required Learning" block
-    Then I should see "Required Learning"
+  @javascript @Kineo_RCL_04
+  Scenario: Verify Learner Can Check the availability and functionality of the search button.
+    Given I follow "My Dashboard"
+    And I add the "Record of Learning" block
+    And I should see "Record of Learning"
     And I log out
-    Then I log in as "teststudent1"
-    And I follow "Go to Required Learning"
-    Then I should see "Required Learning"
-    And I follow "Course Program"
+    When I log in as "teststudent1"
+    And I follow "My Dashboard"
+    And I follow "Go to Record of Learning"
+    And I should see "Record of Learning : Active Courses"
+    When I search "Course 2" Course
+    And I should not see "Course 2"
+    When I search "Course 1" Course
+    Then I should see "Course 1"
+
+
+  @javascript @Kineo_RCL_05
+  Scenario: Verify Learner Can Check the availability and functionality of Export button under Courses tab.
+    Given I follow "My Dashboard"
+    And I add the "Record of Learning" block
+    And I should see "Record of Learning"
+    And I log out
+    When I log in as "teststudent1"
+    And I follow "My Dashboard"
+    And I follow "Go to Record of Learning"
+    And I should see "Export as"
+    Then I download format file
+    And I Verify exist file then delete
+
+

@@ -1,0 +1,10 @@
+s:988:"<p>The H5P activity module enables you to create interactive content such as Interactive Videos, Question Sets, Drag and Drop Questions, Multi-Choice Questions, Presentations and much more.</p>
+
+<p>In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reuse and sharing of content.</p>
+
+<p>User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook. Note that it is currently possible for people with programming skills to cheat in H5P interactions and obtain the full score without knowing the correct answers. H5Ps must not be used for exams or similar.</p>
+
+<p>You add interactive H5P content by creating content using the built-in authoring tool or uploading H5P files found on other H5P enabled sites.</p>
+
+<div class="helpdoclink"><a href="https://h5p.org/moodle-more-help" class="helplinkpopup"><span class="flex-icon ft-fw ft tfont-var-info_filled"></span>More help</a></div>
+";

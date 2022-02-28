@@ -1,0 +1,2 @@
+M.totara_reportbuilder_export=M.totara_reportbuilder_export||{Y:null,init:function(Y,args){this.Y=Y;if(typeof $==='undefined'){throw new Error('M.totara_reportbuilder_export.init()-> jQuery dependency required for this module to function.')}
+$('body').on('click','#id_export',M.totara_reportbuilder_export.opentab)},opentab:function(event){return!0}}

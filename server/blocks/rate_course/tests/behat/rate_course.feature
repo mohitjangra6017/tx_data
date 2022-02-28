@@ -29,7 +29,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
     And I add the "Rate Course" block
     Then I should see "Rate Course"
 
-  @javascript @Kineo_RC_02
+  @javascript @Kineo_RC_02 @DEVTXAUTO-11
   Scenario: Verify that Learner can give the rating of course
     Given I log in as "admin"
     And I am on homepage
@@ -45,7 +45,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
     Then I should see "Rate Course"
     Then I set the course rating to "5" stars and review
 
-  @javascript @Kineo_RC_03
+  @javascript @Kineo_RC_03 @DEVTXAUTO-12
   Scenario: Verify that Admin can delete the rating of course
     Given I log in as "admin"
     And I am on homepage
@@ -67,7 +67,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
     Then I should see "Rate Course"
     And I delete the rating of course
 
-  @javascript @Kineo_RC_04
+  @javascript @Kineo_RC_04 @DEVTXAUTO-13
   Scenario: Verify that Learner can recommend the course
     Given I log in as "admin"
     And I am on homepage
@@ -81,9 +81,11 @@ Feature: User can rate a course and see how well the course is rated with the bl
     And I am on homepage
     And I follow "Course 1"
     Then I should see "Rate Course"
+    Then I follow "btn-review-recommend"
+
     And I recommend the course to another User
 
-  @javascript @Kineo_RC_06
+  @javascript @Kineo_RC_06 @DEVTXAUTO-14
   Scenario: Verify that admin user can configure the rate course block under Common block setting
     Given I log in as "admin"
     And I am on homepage
@@ -94,7 +96,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
     Then I should see "Rate Course"
     And I configure rate course Allow block hiding and docking
 
-  @javascript @Kineo_RC_07
+  @javascript @Kineo_RC_07 @DEVTXAUTO-15
   Scenario: Verify that Admin can disable the show button under General block settings
     Given I log in as "admin"
     And I am on homepage
@@ -105,7 +107,7 @@ Feature: User can rate a course and see how well the course is rated with the bl
     Then I should see "Rate Course"
     And I configure rate course disable the show button under General block
 
-  @javascript @Kineo_RC_08
+  @javascript @Kineo_RC_08 @DEVTXAUTO-17
   Scenario: Verify that Learner can view average ratings for the course with a count of ratings
     Given I log in as "admin"
     And I am on homepage

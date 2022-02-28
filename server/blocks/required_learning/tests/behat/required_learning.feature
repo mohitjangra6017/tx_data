@@ -1,4 +1,4 @@
-@block @block_record_of_learning
+@block @block_required_learning
 Feature: User can add and configure required learning block
   User can configure required learning block settings
   User can access the Program under required Learning block on dashboard

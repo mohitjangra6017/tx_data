@@ -16,6 +16,7 @@ use Behat\Behat\Context\Step\Given as Given,
     Behat\Mink\Exception\ExpectationException,
     Behat\MinkExtension\Context\MinkContext,
     Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 class behat_rate_course extends behat_base {
 
@@ -170,7 +171,7 @@ class behat_rate_course extends behat_base {
     public function iRecommendTheCourse()
     {
         $page = $this->getSession()->getPage();
-        $page->find("xpath", "(//div[@title='Recommend this course']//a)[1]")->Click();
+        $this->click_link("btn-review-recommend");
         $page->find("xpath", "//a[@class='select2-choice select2-default']")->Click();
         $page->find("xpath", "//input[@id='s2id_autogen2_search']")->setValue("Student Second");
         sleep(5);
