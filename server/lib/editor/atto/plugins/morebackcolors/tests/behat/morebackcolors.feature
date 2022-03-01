@@ -5,13 +5,13 @@ Feature: Atto more font background colours button
   Background:
     Given I log in as "admin"
 
-  @javascript @Kineo_MFBC_01
+  @javascript @Kineo_MFBC_01 @DEVTXAUTO-53
   Scenario: Verify that Admin can access more font background colors under Atto HTML Editor
     Given I navigate to "Plugins > Text editors > Atto HTML editor > More font background colors" in site administration
     Then I should see "More font background colors"
 
 
-  @javascript @Kineo_MFBC_02
+  @javascript @Kineo_MFBC_02 @DEVTXAUTO-54
   Scenario: Verify that Admin can add new font background colors
     Given the following config values are set as admin:
       | toolbar         | style1 = bold, morebackcolors | editor_atto         |
