@@ -1,4 +1,0 @@
-M.totara_reportbuilder_showhide=M.totara_reportbuilder_showhide||{Y:null,init:function(Y,args){this.Y=Y;if(typeof $==='undefined'){throw new Error('M.totara_reportbuilder_showhide.init()-> jQuery dependency required for this module to function.')}
-if(args.length){for(col in args){$(args[col]).hide()}}
-if(window.id===undefined){return}
-$('#show-showhide-dialog').css('display','inline');var path=M.cfg.wwwroot+'/totara/reportbuilder/';var handler=new totaraDialog_handler();var name='showhide';var buttons={};buttons[M.util.get_string('ok','moodle')]=function(){handler._cancel()};var querystring=window.location.search;totaraDialogs[name]=new totaraDialog(name,'show-'+name+'-dialog',{buttons:buttons,title:'<h2>'+M.util.get_string('showhidecolumns','totara_reportbuilder')+'</h2>'},path+'showhide.php?id='+id.toString()+querystring.replace('?','&'),handler)}}

@@ -1,4 +1,4 @@
-[01-Mar-2022 14:58:19 Australia/Perth] 
-[01-Mar-2022 14:58:19 Australia/Perth] Behat suite start: default
-[01-Mar-2022 14:58:20 Australia/Perth] Feature start: Atto more font background colours button # D:\Kineo\testing-xperts-automation\server\lib\editor\atto\plugins\morebackcolors\tests\behat\morebackcolors.feature
-[01-Mar-2022 14:58:50 Australia/Perth] Behat suite finish: default
+[07-Mar-2022 21:59:45 Australia/Perth] 
+[07-Mar-2022 21:59:45 Australia/Perth] Behat suite start: default
+[07-Mar-2022 21:59:46 Australia/Perth] Feature start: User can access Completion by Course report # D:\Kineo\Working\kineo\server\local\completionreport\tests\behat\completionByCourseReport.feature
+[07-Mar-2022 22:00:49 Australia/Perth] Behat suite finish: default
